@@ -1,0 +1,17 @@
+reset_start:
+	platform_early start;
+	jump to os_start;
+reset_end:
+
+os_start:
+	platform_init;
+	init_timer;
+	init_schduler;
+	dispatch_task;
+os_end:
+
+scheduler_start:
+	context_save;
+	context_switch;
+	context_restore;
+scheduler_end:
