@@ -1,4 +1,37 @@
-all:
-	echo "<hi>"
+#*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
+#--------< Arc Top Level Makefile >--------#
+#*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
+
+SHELL		:= /bin/bash
+
+N_HOSTS		:= $(shell grep -c ^processor /proc/cpuinfo)
+
+default:
+	make all -j $(N_HOSTS)
+
+include mk/help.mk
+include mk/path.mk
+include mk/tools.mk
+include mk/project_search.mk
+
+ifneq ($(MAKECMDGOALS),help)
+ifneq ($(MAKECMDGOALS),project_search)
+ifneq ($(MAKECMDGOALS),get_tools)
+include $(SRC)/sources.mk
+endif
+endif
+endif
+
+.PHONY: all --dependency clean
+all: --dependency libraries objects executable
+	$(info < / > Done !)
+
+--dependency:
+	mkdir -p $(OUT)
+
+clean:
+	$(info < ! > Removing binaries ...)
+	rm -rf $(OUT)
+
 
 .SILENT:
