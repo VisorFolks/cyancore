@@ -9,9 +9,9 @@ list:
 	$(info Available projects are :)
 	ls -1 $(SRC)/projects/
 
-ifeq ($(MAKECMDGOALS), help)
-ifeq ($(MAKECMDGOALS), init)
-ifeq ($(MAKECMDGOALS), list)
+ifneq ($(MAKECMDGOALS),help)
+ifneq ($(MAKECMDGOALS),get_tools)
+ifneq ($(MAKECMDGOALS),list)
 ifeq ($(PROJECT),)
 $(info < x > Project name was not specified...)
 $(info < ! > Please try running `make help` for more details)

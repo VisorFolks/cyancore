@@ -9,29 +9,30 @@ N_HOSTS		:= $(shell grep -c ^processor /proc/cpuinfo)
 default:
 	make all -j $(N_HOSTS)
 
-include mk/help.mk
-include mk/path.mk
-include mk/tools.mk
-include mk/project_search.mk
-
-ifneq ($(MAKECMDGOALS),help)
-ifneq ($(MAKECMDGOALS),project_search)
-ifneq ($(MAKECMDGOALS),get_tools)
-include $(SRC)/sources.mk
-endif
-endif
-endif
-
-.PHONY: all --dependency clean
-all: --dependency libraries objects executable
-	$(info < / > Done !)
-
+.PHONY: --dependency clean
 --dependency:
 	mkdir -p $(OUT)
 
 clean:
 	$(info < ! > Removing binaries ...)
 	rm -rf $(OUT)
+
+include mk/help.mk
+include mk/path.mk
+include mk/tools.mk
+include mk/project_search.mk
+
+ifneq ($(MAKECMDGOALS),help)
+ifneq ($(MAKECMDGOALS),list)
+ifneq ($(MAKECMDGOALS),get_tools)
+include $(SRC)/sources.mk
+endif
+endif
+endif
+
+.PHONY: all
+all: --dependency libraries objects executable
+	$(info < / > Done !)
 
 
 .SILENT:
