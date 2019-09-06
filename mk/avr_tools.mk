@@ -1,9 +1,9 @@
 include mk/path.mk
 
 ifeq ($(ARCH),avr)
-TC	:= $(TOOLS_ROOT)/arm-toolchain/
-TI	:= $(TOOLS_ROOT)/arm-toolchain/
-TL	:= $(TOOLS_ROOT)/arm-toolchain/
+TC	:= $(TOOLS_ROOT)/avr-toolchain/bin/avr
+TI	:= $(TOOLS_ROOT)/avr-toolchain/avr/include/
+TL	:= $(TOOLS_ROOT)/avr-toolchain/avr/lib/
 AS	:= $(TC)-as
 CC	:= $(TC)-gcc
 LD	:= $(TC)-ld

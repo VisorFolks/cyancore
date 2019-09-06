@@ -1,9 +1,9 @@
 include mk/path.mk
 
 ifeq ($(ARCH),arm)
-TC	:= $(TOOLS_ROOT)/arm-toolchain/
-TI	:= $(TOOLS_ROOT)/arm-toolchain/
-TL	:= $(TOOLS_ROOT)/arm-toolchain/
+TC	:= $(TOOLS_ROOT)/arm-toolchain/bin/arm-none-eabi
+TI	:= $(TOOLS_ROOT)/arm-toolchain/arm-none-eabi/include
+TL	:= $(TOOLS_ROOT)/arm-toolchain/arm-none-eabi/lib
 AS	:= $(TC)-as
 CC	:= $(TC)-gcc
 LD	:= $(TC)-ld
