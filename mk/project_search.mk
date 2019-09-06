@@ -10,10 +10,10 @@ list:
 	ls -1 $(SRC)/projects/
 
 ifneq ($(MAKECMDGOALS),help)
-ifneq ($(MAKECMDGOALS),get_all_tools)
-ifneq ($(MAKECMDGOALS),get_arm_tools)
-ifneq ($(MAKECMDGOALS),get_avr_tools)
-ifneq ($(MAKECMDGOALS),get_riscv_tools)
+ifneq ($(MAKECMDGOALS),get_all_tc)
+ifneq ($(MAKECMDGOALS),get_arm_tc)
+ifneq ($(MAKECMDGOALS),get_avr_tc)
+ifneq ($(MAKECMDGOALS),get_riscv_tc)
 ifneq ($(MAKECMDGOALS),list)
 ifeq ($(PROJECT),)
 $(info < x > Project name was not specified...)
