@@ -1,16 +1,33 @@
-.PHONY: get_arm_tools
+include mk/path.mk
+
+ifeq ($(ARCH),arm)
+TC	:= $(TOOLS_ROOT)/arm-toolchain/
+TI	:= $(TOOLS_ROOT)/arm-toolchain/
+TL	:= $(TOOLS_ROOT)/arm-toolchain/
+AS	:= $(TC)-as
+CC	:= $(TC)-gcc
+LD	:= $(TC)-ld
+OD	:= $(TC)-objdump
+OC	:= $(TC)-objcopy
+STRIP	:= $(TC)-strip
+A2L	:= $(TC)-addr2line
+endif
 
 ifeq ($(MAKECMDGOALS),get_arm_tools)
-ifeq ($(realpath $(TOOLS_ROOT)),)
-$(error < ! > ARM-Toolchain is already present)
+ifneq ($(realpath $(TOOLS_ROOT)/arm-toolchain/bin/),)
+$(error < ! > ARM-Toolchain is already present!)
 endif
 endif
 
+.PHONY: get_arm_tools
+
 get_arm_tools:
-	echo "< / > Fetching ARM Toolchain ..."
+	$(info < ! > Fetching ARM Toolchain ...)
+	$(info < ? > Please be patient as this might take a while ...)
 	mkdir -p toolchain
-	cd toolchain; rm -rf *-arm-*\
-	wget -q $(ARM_TOOLS_LINK) -o arm-toolchain.tar.gz;\
-	tar -xzf arm-toolchain.tar.gz;\
-	mv *.tar.gz arm_tc;\
-	rm -f *.tar.gz
+	cd toolchain;	\
+	wget -q $(ARM_TC_LINK) -O arm-toolchain.tar.bz2;		\
+	tar -xjf arm-toolchain.tar.bz2;		\
+	mv gcc-arm-none-eabi* arm_toolchain;	\
+	rm -f *.tar.bz2
+	echo "< / > Done !"

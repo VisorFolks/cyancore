@@ -1,16 +1,33 @@
-.PHONY: get_avr_tools
+include mk/path.mk
+
+ifeq ($(ARCH),avr)
+TC	:= $(TOOLS_ROOT)/arm-toolchain/
+TI	:= $(TOOLS_ROOT)/arm-toolchain/
+TL	:= $(TOOLS_ROOT)/arm-toolchain/
+AS	:= $(TC)-as
+CC	:= $(TC)-gcc
+LD	:= $(TC)-ld
+OD	:= $(TC)-objdump
+OC	:= $(TC)-objcopy
+STRIP	:= $(TC)-strip
+A2L	:= $(TC)-addr2line
+endif
 
 ifeq ($(MAKECMDGOALS),get_avr_tools)
-ifeq ($(realpath $(TOOLS_ROOT)),)
-$(error < ! > AVR-Toolchain is already present)
+ifneq ($(realpath $(TOOLS_ROOT)/avr-toolchain/bin/),)
+$(error < ! > AVR-Toolchain is already present!)
 endif
 endif
 
+.PHONY: get_avr_tools
+
 get_avr_tools:
-	echo "< / > Fetching AVR Toolchain ..."
+	$(info < ! > Fetching AVR Toolchain ...)
+	$(info < ? > Please be patient as this might take a while ...)
 	mkdir -p toolchain
-	cd toolchain; rm -rf avr8*\
-	wget -q $(AVR_TOOLS_LINK) -o avr-toolchain.tar.gz;\
-	tar -xzf avr-toolchain.tar.gz;\
-	mv *.tar.gz avr_tc;\
+	cd toolchain;		\
+	wget -q $(AVR_TC_LINK) -O avr-toolchain.tar.gz;	\
+	tar -xzf avr-toolchain.tar.gz;		\
+	mv avr8-gnu-toolchain* avr-toolchain;		\
 	rm -f *.tar.gz
+	echo "< / > Done !"

@@ -10,7 +10,10 @@ list:
 	ls -1 $(SRC)/projects/
 
 ifneq ($(MAKECMDGOALS),help)
-ifneq ($(MAKECMDGOALS),get_tools)
+ifneq ($(MAKECMDGOALS),get_all_tools)
+ifneq ($(MAKECMDGOALS),get_arm_tools)
+ifneq ($(MAKECMDGOALS),get_avr_tools)
+ifneq ($(MAKECMDGOALS),get_riscv_tools)
 ifneq ($(MAKECMDGOALS),list)
 ifeq ($(PROJECT),)
 $(info < x > Project name was not specified...)
@@ -20,6 +23,9 @@ else ifeq ($(filter $(PROJECT), $(shell ls $(SRC)/projects)),)
 $(info < x > Invalid project name...)
 $(info < ! > Run `make list` to get list of projects)
 $(error < x > Build Failed!)
+endif
+endif
+endif
 endif
 endif
 endif

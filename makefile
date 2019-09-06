@@ -24,8 +24,14 @@ include mk/project_search.mk
 
 ifneq ($(MAKECMDGOALS),help)
 ifneq ($(MAKECMDGOALS),list)
-ifneq ($(MAKECMDGOALS),get_tools)
+ifneq ($(MAKECMDGOALS),get_all_tools)
+ifneq ($(MAKECMDGOALS),get_arm_tools)
+ifneq ($(MAKECMDGOALS),get_avr_tools)
+ifneq ($(MAKECMDGOALS),get_riscv_tools)
 include $(SRC)/sources.mk
+endif
+endif
+endif
 endif
 endif
 endif

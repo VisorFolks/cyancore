@@ -2,3 +2,4 @@ out
 *.old
 *.temp
 *.swp
+toolchain/
