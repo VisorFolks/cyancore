@@ -6,19 +6,19 @@ ARM_TC_LINK	:= https://developer.arm.com/-/media/Files/downloads/gnu-rm/7-2018q2
 
 .PHONY: get_all_tc get_avr_tc get_arm_tc get_riscv_tc
 
-ifeq ($(MAKECMDGOALS),get_arm_tools)
+ifeq ($(MAKECMDGOALS),get_arm_tc)
 ifneq ($(realpath $(TOOLS_ROOT)/arm-toolchain/bin/),)
 $(error < ! > ARM-Toolchain is already present!)
 endif
 endif
 
-ifeq ($(MAKECMDGOALS),get_avr_tools)
+ifeq ($(MAKECMDGOALS),get_avr_tc)
 ifneq ($(realpath $(TOOLS_ROOT)/avr-toolchain/bin/),)
 $(error < ! > AVR-Toolchain is already present!)
 endif
 endif
 
-ifeq ($(MAKECMDGOALS),get_riscv_tools)
+ifeq ($(MAKECMDGOALS),get_riscv_tc)
 ifneq ($(realpath $(TOOLS_ROOT)/riscv-toolchain/bin/),)
 $(error < ! > RISC-V Toolchain is alredy present!)
 endif
@@ -27,7 +27,7 @@ endif
 
 get_all_tc: get_avr_tc get_arm_tc get_riscv_tc
 
-get_arm_tools:
+get_arm_tc:
 	$(info < ! > Fetching ARM Toolchain ...)
 	$(info < ? > Please be patient as this might take a while ...)
 	mkdir -p toolchain
@@ -38,7 +38,7 @@ get_arm_tools:
 	rm -f *.tar.bz2
 	echo "< / > Done !"
 
-get_avr_tools:
+get_avr_tc:
 	$(info < ! > Fetching AVR Toolchain ...)
 	$(info < ? > Please be patient as this might take a while ...)
 	mkdir -p toolchain
@@ -49,7 +49,7 @@ get_avr_tools:
 	rm -f *.tar.gz
 	echo "< / > Done !"
 
-get_riscv_tools:
+get_riscv_tc:
 	$(info < ! > Fetching RISC-V Toolchain ...)
 	$(info < ? > Please be patient as this might take a while ...)
 	mkdir -p toolchain
