@@ -5,18 +5,31 @@
  * ============================================================
  */
 
-#include <platform.h>
+#include <avr/io.h>
+#include <avr/interrupt.h>
 #include <arch.h>
 
 void arch_init()
 {
-	cli();
+	arch_cli();
 	return;
 }
 
 void arch_idle()
 {
-	SLEEP;
+	asm volatile("SLEEP");
+	return;
+}
+
+void arch_cli()
+{
+	cli();
+	return;
+}
+
+void arch_sei()
+{
+	sei();
 	return;
 }
 

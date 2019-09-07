@@ -1,6 +1,6 @@
 DIR		:= $(GET_PATH)
 
-DEPS_SRCS	:= init.c		\
-		   arch.c
+DEPS_SRCS	:= vectors.S		\
+		   isr.c
 
 include mk/obj.mk

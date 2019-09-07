@@ -6,9 +6,10 @@
  */
 
 #include <arc.h>
+#include <avr/io.h>
 #include <stdint.h>
 
-extern uint16_t START_START, BSS_START, BSS_END;
+extern uint16_t STACK_START, * BSS_START, * BSS_END;
 
 void bss_clear()
 {
