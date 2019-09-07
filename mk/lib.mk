@@ -29,11 +29,11 @@ $(LIB): $(LIB_OBJS)
 
 $(C_OBJS): $(OUT)/%.o: $(DIR)/%.c
 	echo "Compiling $(subst .o,.c,$(notdir $@)) ..."
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -I $(LIB_INCLUDE_PATH) -c $< -o $@
 
-$(S_OBJS): $(OUT)/.o: $(DIR)/%.S
+$(S_OBJS): $(OUT)/%.o: $(DIR)/%.S
 	echo "Assembling $(subst .o,.S,$(notdir $@)) ..."
-	$(CC) -E $(CFLAGS) -c $< > $(subst .o,.pS,$@)
+	$(CC) -E $(CFLAGS) -I $(LIB_INCLUDE_PATH) -c $< > $(subst .o,.pS,$@)
 	$(AS) $(ASFLAGS) $(subst .o,.pS,$@) -o $@
 	rm $(subst .o,.pS,$@)
 

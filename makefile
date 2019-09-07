@@ -6,7 +6,7 @@ SHELL		:= /bin/bash
 N_HOSTS		:= $(shell grep -c ^processor /proc/cpuinfo)
 
 default:
-	make all -j $(N_HOSTS)
+	make all -j$(N_HOSTS)
 
 .PHONY: all --dependency clean
 

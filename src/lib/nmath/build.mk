@@ -6,8 +6,6 @@ LIB		:= libnmath.a
 
 LIB_INCLUDE_PATH:= $(DIR)/include
 
-PROJECT_INCLUDES+= -I $(LIB_INCLUDE_PATH)
-
 LIB_HEADER	:= nmath.h
 
 include mk/lib.mk
