@@ -20,7 +20,7 @@ LIB_OBJS	+= $(S_OBJS)
 
 libraries: copy_lib_headers $(LIB)
 
-copy_lib_headers:
+copy_lib_headers: --dependency
 	cp $(LIB_INCLUDE_PATH)/$(LIB_HEADER) $(OUT)
 
 $(LIB): $(LIB_OBJS)
