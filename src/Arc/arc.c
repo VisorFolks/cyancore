@@ -1,5 +1,4 @@
 #include <arc.h>
-#include <platform.h>
 #include <project.h>
 #include <arch.h>
 
