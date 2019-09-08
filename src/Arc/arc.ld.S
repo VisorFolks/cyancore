@@ -33,6 +33,9 @@ SECTIONS
 		KEEP(*(.text))
 		*(.text)
 		*(.text.*)
+		. = ALIGN(4);
+		*(.version)
+		KEEP(*(.version))
 	} > vma_imem AT > lma_imem
 
 	.data :
@@ -75,9 +78,4 @@ SECTIONS
 		_bss_end = . ;
 	} > vma_dmem AT > lma_dmem
 
-	.version :
-	{
-		*(.version)
-		KEEP(*(.version))
-	}
 }

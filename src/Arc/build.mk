@@ -2,8 +2,7 @@ DIR		:= $(GET_PATH)
 
 ELF		:= arc.elf
 
-DEPS_SRCS	:= arc.c	\
-		   version.S
+DEPS_SRCS	:= arc.c
 
 LD_TEMPLATE	:= $(DIR)/arc.ld.S
 

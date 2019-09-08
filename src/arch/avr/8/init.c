@@ -20,6 +20,8 @@ void bss_clear()
 	}
 }
 
+
+void init() __attribute__((section(".text")));
 void init()
 {
 	SP = _stack_start;

@@ -1,8 +1,6 @@
-DIR		:= $(GET_PATH)
+ATMEGA328P_DIR		:= $(GET_PATH)
 
-PLAT_INCLUDE	+= -I $(DIR)/
+PLAT_INCLUDE	+= -I $(ATMEGA328P_DIR)/
 
-DEPS_SRCS	:= plat_vectors.S	\
-		   isr.c
-
-include mk/obj.mk
+include $(ATMEGA328P_DIR)/arch/build.mk
+include $(ATMEGA328P_DIR)/peripherals/build.mk
