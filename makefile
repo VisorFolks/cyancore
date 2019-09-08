@@ -38,7 +38,7 @@ endif
 
 include mk/tc.mk
 
-all: --dependency libraries objects #executable
+all: version --dependency libraries objects executable
 	$(info < / > Done !)
 
 .SILENT:

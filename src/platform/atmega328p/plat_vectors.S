@@ -1,8 +1,7 @@
-.section .archvectors, "ax"
-ArchVectors:
+.section .platvectors, "ax"
+PlatVectors:
 .org 0x00
-	rjmp	init
-	rjmp	int0
+/*	rjmp	int0
 	rjmp	int1
 	rjmp	pcint0
 	rjmp	pcint1
@@ -26,4 +25,4 @@ ArchVectors:
 	rjmp	ee_ready
 	rjmp	a_comp
 	rjmp	twi
-	rjmp	smp_ready
+	rjmp	smp_ready*/

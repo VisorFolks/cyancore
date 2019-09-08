@@ -1,0 +1,83 @@
+#include <platform.h>
+
+#ifndef PROG_MEM
+#define PROG_MEM	0
+#endif
+
+MEMORY
+{
+	/* VM Addresses */
+	vma_imem	: ORIGIN = IMEM_START, LENGTH = IMEM_LENGTH
+	vma_dmem	: ORIGIN = DMEM_START, LENGTH = DMEM_LENGTH
+
+	/* LM Addresses */
+	lma_imem	: ORIGIN = PROG_MEM + IMEM_START, LENGTH = IMEM_LENGTH
+	lma_dmem	: ORIGIN = PROG_MEM + DMEM_START, LENGTH = DMEM_LENGTH
+}
+
+SECTIONS
+{
+	.vectors :
+	{
+		. = ALIGN(4);
+		KEEP(*(.vectors))
+		*(.archvectors)
+		KEEP(*(.archvectors))
+		*(.platvectors)
+		KEEP(*(.platvectors))
+	} > vma_imem AT > lma_imem
+
+	.text :
+	{
+		. = ALIGN(4);
+		KEEP(*(.text))
+		*(.text)
+		*(.text.*)
+	} > vma_imem AT > lma_imem
+
+	.data :
+	{
+		. = ALIGN(4);
+		*(.data)
+		*(.data.*)
+		KEEP(*(.data))
+		*(.rodata)
+		*(.rodata.*)
+		KEEP(*(.rodata))
+
+		. = ALIGN(4);
+		. = . + STACK_SIZE;
+		. = ALIGN(4);
+		stack = . ;
+		_stack_start = . ;
+		KEEP(*(.stack))
+		*(.stack)
+	} > vma_dmem AT > lma_dmem
+
+	.bss :
+	{
+		. = ALIGN(4);
+		_bss_start = . ;
+		. = ALIGN(4);
+		. = . + 0X01;
+		. = ALIGN(4);
+		global = . ;
+		_gptr = . ;
+		*(.global)
+		KEEP(*(.global))
+		*(.bss)
+		*(.bss.*)
+		KEEP(*(.bss))
+		*(.sbss)
+		*(.sbss.*)
+		KEEP(*(.sbss))
+		*(COMMON)
+		_bss_end = . ;
+	} > vma_dmem AT > lma_dmem
+
+	.version :
+	{
+		*(.version)
+		KEEP(*(.version))
+	}
+}

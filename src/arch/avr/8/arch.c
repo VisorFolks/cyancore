@@ -6,7 +6,6 @@
  */
 
 #include <avr/io.h>
-#include <avr/interrupt.h>
 #include <arch.h>
 
 void arch_init()
@@ -23,13 +22,13 @@ void arch_idle()
 
 void arch_cli()
 {
-	cli();
+	asm volatile("cli");
 	return;
 }
 
 void arch_sei()
 {
-	sei();
+	asm volatile("sei");
 	return;
 }
 

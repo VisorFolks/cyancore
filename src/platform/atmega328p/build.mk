@@ -1,6 +1,8 @@
 DIR		:= $(GET_PATH)
 
-DEPS_SRCS	:= vectors.S		\
+PLAT_INCLUDE	+= -I $(DIR)/
+
+DEPS_SRCS	:= plat_vectors.S	\
 		   isr.c
 
 include mk/obj.mk

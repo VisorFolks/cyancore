@@ -1,4 +1,4 @@
-void projects_setup()
+void project_setup()
 {
 	return;
 }

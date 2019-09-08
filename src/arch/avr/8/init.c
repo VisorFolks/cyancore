@@ -9,12 +9,12 @@
 #include <avr/io.h>
 #include <stdint.h>
 
-extern uint16_t STACK_START, * BSS_START, * BSS_END;
+extern uint16_t _stack_start, * _bss_start, * _bss_end;
 
 void bss_clear()
 {
 	uint16_t *ptr;
-	for(ptr = BSS_START; ptr <= BSS_END; ptr++)
+	for(ptr = _bss_start; ptr <= _bss_end; ptr++)
 	{
 		*(volatile uint16_t *)(ptr)=0x00;
 	}
@@ -22,8 +22,8 @@ void bss_clear()
 
 void init()
 {
-	SP = STACK_START;
+	SP = _stack_start;
 	bss_clear();
 	arc();
-	return;
+	asm volatile("jmp	.");
 }

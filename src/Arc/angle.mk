@@ -1,11 +1,15 @@
 
 .PHONY:	version
 NAME	= point
-DEGREES	= 1
-MINUTES	= 0
-SECONDS	= 0
+VERSION	= 0x00000100
+
+CFLAGS	+= -DVERSION=$(VERSION)
 
 version:
-	$(info Arc Version  : $(DEGREES)°$(MINUTES)'$(SECONDS)")
-	$(info Arc Codename : $(NAME))
-.SILENT:
+	$(info Building Project $(PROJECT))
+	$(info ------------------------------------)
+	$(info Platform          : $(PLATFORM))
+	$(info Architecture      : $(ARCH)-$(BIT))
+	$(info Arc Version       : $(VERSION))
+	$(info Arc Codename      : $(NAME))
+	$(info )

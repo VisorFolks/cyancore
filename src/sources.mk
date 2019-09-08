@@ -2,18 +2,27 @@
 #----------< Sources Makefile >----------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
 
+DEBUG		?=
 TARGET_FLAGS	?=
+
 INCLUDE		+= -I $(SRC)/include	\
 		   -I $(TI)		\
+		   -I $(OUT)		\
+		   $(PLAT_INCLUDE)	\
 		   $(PROJECT_INCLUDES)
 
 CFLAGS		+= $(INCLUDE)		\
 		   $(TARGET_FLAGS)	\
+		   -DDEBUG=$(DEBUG)	\
 		   -Wall -Werror	\
 		   -ffunction-sections	\
 		   -fdata-sections
 
-LD_SCRIPT	:= $(OUT)/Arc.ld
+ASFLAGS		+= $(INCLUDE)		\
+		   $(TARGET_FLAGS)	\
+		   --fatal-warnings
+
+LD_SCRIPT	:= $(OUT)/arc.ld
 
 LD_FLAGS	+= --error-unresolved-symbols	\
 		   --warn-common		\
@@ -22,7 +31,9 @@ LD_FLAGS	+= --error-unresolved-symbols	\
 
 LIB_PATH	+=
 LIBS		+=
+
 DEPS_OBJS	:=
+PLAT_INCLUDE	:=
 PROJECT_INCLUDES:=
 
 include $(SRC)/lib/build.mk
@@ -31,4 +42,4 @@ include $(SRC)/arch/build.mk
 #include $(SRC)/kernel/build.mk
 include $(SRC)/platform/build.mk
 #include $(SRC)/network/build.mk
-#include $(SRC)/init/build.mk
+include $(SRC)/Arc/build.mk
