@@ -2,8 +2,7 @@
 #------------< ELF Builder >-------------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
 
-OBJ_EXE	:= $(patsubst %.elf,%.o,$(EXE))
-OBJ_EXE	:= $(addprefix $(OUT)/,$(OBJ_EXE))
+OBJ_ELF	:= $(addprefix $(OUT)/,$(OBJ_ELF:.elf=.o))
 
 .PHONY: executable
 
@@ -18,4 +17,4 @@ $(OUT)/$(ELF): $(DEPS_OBJS) $(OBJ_EXE)
 	$(OD) -Dx $@ > $(subst .elf,.dis,$@)
 	echo "----------------------------------------------------------------------"
 	echo "Size of Binaries:"
-	cd $(OUT); size *.o *.elf
+	cd $(OUT); $(SIZE) *.o *.elf

@@ -15,6 +15,25 @@ ifneq ($(MAKECMDGOALS),get_arm_tc)
 ifneq ($(MAKECMDGOALS),get_avr_tc)
 ifneq ($(MAKECMDGOALS),get_riscv_tc)
 ifneq ($(MAKECMDGOALS),list)
+
+ifneq ($(firstword $(MAKECMDGOALS)),clean)
+ifneq ($(firstword $(MAKECMDGOALS)),default)
+ifneq ($(firstword $(MAKECMDGOALS)),all)
+PROJECT		:= $(firstword $(MAKECMDGOALS))
+CMD		:= $(word 2,$(MAKECMDGOALS))
+ifeq ($(CMD),)
+CMD		:= default
+else
+CMD		:=
+endif
+.PHONY: $(PROJECT)
+
+$(PROJECT): $(CMD)
+	echo > /dev/null
+endif
+endif
+endif
+
 ifeq ($(PROJECT),)
 $(info < x > Project name was not specified...)
 $(info < ! > Please try running `make help` for more details)

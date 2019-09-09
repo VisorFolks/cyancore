@@ -2,21 +2,17 @@
 #------------< Library Builder >-------------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
 
-C_SRCS		:= $(filter %.c,$(notdir $(DEPS_SRCS)))
-S_SRCS		:= $(filter %.S,$(notdir $(DEPS_SRCS)))
+C_OBJS		:= $(notdir $(wildcard $(DIR)/*.c))
+S_OBJS		:= $(notdir $(wildcard $(DIR)/*.S))
 
-C_OBJS		:= $(patsubst %.c,%.o,$(C_SRCS))
-S_OBJS		:= $(patsubst %.S,%.o,$(S_SRCS))
-
-C_OBJS		:= $(addprefix $(OUT)/,$(C_OBJS)) 
-S_OBJS		:= $(addprefix $(OUT)/,$(S_OBJS))
+C_OBJS		:= $(addprefix $(OUT)/,$(C_OBJS:.c=.o)) 
+S_OBJS		:= $(addprefix $(OUT)/,$(S_OBJS:.S=.o))
 
 LIB		:= $(addprefix $(OUT)/,$(LIB))
 
-LIB_OBJS	+= $(C_OBJS)
-LIB_OBJS	+= $(S_OBJS)
+LIB_OBJS	+= $(C_OBJS) $(S_OBJS)
 
-.PHONY: libraries
+.PHONY: libraries copy_lib_headers 
 
 libraries: copy_lib_headers $(LIB)
 
@@ -40,9 +36,6 @@ $(S_OBJS): $(OUT)/%.o: $(DIR)/%.S
 LIB_OBJS	:=
 
 LIB		:=
-
-C_SRCS		:=
-S_SRCS		:=
 
 C_OBJS		:=
 S_OBJS		:=

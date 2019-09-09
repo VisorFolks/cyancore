@@ -6,7 +6,7 @@ SHELL		:= /bin/bash
 N_HOSTS		:= $(shell grep -c ^processor /proc/cpuinfo)
 
 default:
-	make all -j$(N_HOSTS)
+	make $(PROJECT) all -j$(N_HOSTS)
 
 .PHONY: all --dependency clean
 
@@ -14,7 +14,7 @@ default:
 	mkdir -p $(OUT)
 
 clean:
-	$(info < ! > Removing binaries ...)
+	$(info < ! > Removing $(PROJECT) binaries ...)
 	rm -rf $(OUT)
 
 include mk/help.mk

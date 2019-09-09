@@ -26,4 +26,5 @@ OD	:= $(TC)-objdump
 OC	:= $(TC)-objcopy
 STRIP	:= $(TC)-strip
 A2L	:= $(TC)-addr2line
+SIZE	:= $(TC)-size
 endif

@@ -2,17 +2,13 @@
 #------------< Object Builder >-------------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*#
 
-C_SRCS		:= $(filter %.c,$(notdir $(DEPS_SRCS)))
-S_SRCS		:= $(filter %.S,$(notdir $(DEPS_SRCS)))
+C_OBJS		:= $(notdir $(wildcard $(DIR)/*.c))
+S_OBJS		:= $(notdir $(wildcard $(DIR)/*.S))
 
-C_OBJS		:= $(patsubst %.c,%.o,$(C_SRCS))
-S_OBJS		:= $(patsubst %.S,%.o,$(S_SRCS))
+C_OBJS		:= $(addprefix $(OUT)/,$(C_OBJS:.c=.o)) 
+S_OBJS		:= $(addprefix $(OUT)/,$(S_OBJS:.S=.o))
 
-C_OBJS		:= $(addprefix $(OUT)/,$(C_OBJS)) 
-S_OBJS		:= $(addprefix $(OUT)/,$(S_OBJS))
-
-DEPS_OBJS	+= $(C_OBJS)
-DEPS_OBJS	+= $(S_OBJS)
+DEPS_OBJS	+= $(C_OBJS) $(S_OBJS)
 
 .PHONY: objects
 
@@ -27,9 +23,6 @@ $(S_OBJS): $(OUT)/%.o: $(DIR)/%.S
 	$(CC) -E $(CFLAGS) -c $< > $(subst .o,.pS,$@)
 	$(AS) $(ASFLAGS) $(subst .o,.pS,$@) -o $@
 	rm $(subst .o,.pS,$@)
-
-C_SRCS		:=
-S_SRCS		:=
 
 C_OBJS		:=
 S_OBJS		:=
