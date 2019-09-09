@@ -1,5 +1,6 @@
 out
 *.old
 *.temp
+*.tmp
 *.swp
 toolchain/
