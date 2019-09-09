@@ -10,9 +10,9 @@ S_OBJS		:= $(addprefix $(OUT)/,$(S_OBJS:.S=.o))
 
 DEPS_OBJS	+= $(C_OBJS) $(S_OBJS)
 
-.PHONY: objects
+.PHONY: obj
 
-objects: $(C_OBJS) $(S_OBJS)
+obj: $(C_OBJS) $(S_OBJS)
 
 $(C_OBJS): $(OUT)/%.o: $(DIR)/%.c
 	echo "Compiling $(subst .o,.c,$(notdir $@)) ..."

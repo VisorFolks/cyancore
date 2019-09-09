@@ -4,9 +4,9 @@
 
 OBJ_ELF	:= $(addprefix $(OUT)/,$(OBJ_ELF:.elf=.o))
 
-.PHONY: executable
+.PHONY: elf
 
-executable: $(OUT)/$(ELF)
+elf: $(OUT)/$(ELF)
 
 $(OUT)/$(ELF): $(DEPS_OBJS) $(OBJ_EXE)
 	echo "Generating $(notdir $@) ..."

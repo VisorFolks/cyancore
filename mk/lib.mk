@@ -12,11 +12,11 @@ LIB		:= $(addprefix $(OUT)/,$(LIB))
 
 LIB_OBJS	+= $(C_OBJS) $(S_OBJS)
 
-.PHONY: libraries copy_lib_headers 
+.PHONY: lib --copy_lib_headers 
 
-libraries: copy_lib_headers $(LIB)
+lib: --copy_lib_headers $(LIB)
 
-copy_lib_headers: --dependency
+--copy_lib_headers: --dependency
 	cp $(LIB_INCLUDE_PATH)/$(LIB_HEADER) $(OUT)
 
 $(LIB): $(LIB_OBJS)
