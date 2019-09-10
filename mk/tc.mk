@@ -1,6 +1,6 @@
 include mk/path.mk
 
-ifeq ($(ARCH),arm)
+ifeq ($(ARCH),arm-v7)
 TC	:= $(TOOLS_ROOT)/arm-toolchain/bin/arm-none-eabi
 TI	:= $(TOOLS_ROOT)/arm-toolchain/arm-none-eabi/include
 TL	:= $(TOOLS_ROOT)/arm-toolchain/arm-none-eabi/lib

@@ -34,7 +34,7 @@ get_arm_tc:
 	cd toolchain;	\
 	wget -q $(ARM_TC_LINK) -O arm-toolchain.tar.bz2;		\
 	tar -xjf arm-toolchain.tar.bz2;		\
-	mv gcc-arm-none-eabi* arm_toolchain;	\
+	mv gcc-arm-none-eabi* arm-toolchain;	\
 	rm -f *.tar.bz2
 	echo "< / > Done !"
 
