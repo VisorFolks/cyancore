@@ -2,7 +2,7 @@
 #----------< Sources Makefile >----------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
 
-DEBUG		?=
+DEBUG		?=0
 TARGET_FLAGS	?=
 
 INCLUDE		+= -I $(SRC)/include	\
@@ -42,4 +42,5 @@ include $(SRC)/arch/build.mk
 include $(SRC)/platform/build.mk
 #include $(SRC)/kernel/build.mk
 #include $(SRC)/network/build.mk
+#incldue $(SRC)/fs/build.mk
 include $(SRC)/Arc/build.mk
