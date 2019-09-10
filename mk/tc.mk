@@ -28,3 +28,9 @@ STRIP	:= $(TC)-strip
 A2L	:= $(TC)-addr2line
 SIZE	:= $(TC)-size
 endif
+
+ifeq ($(realpath $(TI)),)
+$(info < ! > Toolchain is not available !)
+$(info < ! > Try running 'make help' ...)
+$(error < x > Build Failed !)
+endif

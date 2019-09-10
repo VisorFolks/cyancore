@@ -4,7 +4,7 @@ AVR_TC_LINK	:= http://ww1.microchip.com/downloads/en/DeviceDoc/avr8-gnu-toolchai
 RISC_V_TC_LINK	:= https://static.dev.sifive.com/dev-tools/riscv64-unknown-elf-gcc-8.2.0-2019.05.3-x86_64-linux-ubuntu14.tar.gz
 ARM_TC_LINK	:= https://developer.arm.com/-/media/Files/downloads/gnu-rm/7-2018q2/gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2
 
-.PHONY: get_all_tc get_avr_tc get_arm_tc get_riscv_tc
+.PHONY: get_all_tc --tc_clear get_avr_tc get_arm_tc get_riscv_tc
 
 ifeq ($(MAKECMDGOALS),get_arm_tc)
 ifneq ($(realpath $(TOOLS_ROOT)/arm-toolchain/bin/),)
@@ -19,13 +19,16 @@ endif
 endif
 
 ifeq ($(MAKECMDGOALS),get_riscv_tc)
-ifneq ($(realpath $(TOOLS_ROOT)/riscv-toolchain/bin/),)
+ifneq ($(realpath $(TOOLS_ROOT)/risc-v-toolchain/bin/),)
 $(error < ! > RISC-V Toolchain is alredy present!)
 endif
 endif
 
 
-get_all_tc: get_avr_tc get_arm_tc get_riscv_tc
+get_all_tc: --tc_clear get_avr_tc get_arm_tc get_riscv_tc
+
+--tc_clear:
+	rm -rf $(TOOLS_ROOT)
 
 get_arm_tc:
 	$(info < ! > Fetching ARM Toolchain ...)

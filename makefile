@@ -29,14 +29,13 @@ ifneq ($(MAKECMDGOALS),get_arm_tc)
 ifneq ($(MAKECMDGOALS),get_avr_tc)
 ifneq ($(MAKECMDGOALS),get_riscv_tc)
 include $(SRC)/sources.mk
-endif
-endif
-endif
-endif
-endif
-endif
-
 include mk/tc.mk
+endif
+endif
+endif
+endif
+endif
+endif
 
 all: version --dependency lib obj elf
 	$(info < / > Done !)
