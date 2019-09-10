@@ -36,7 +36,7 @@ PlatVectors:
 #else
 	jmp	arch_panic_handler
 #endif
-#if USE_T3CMPB
+#if USE_T2CMPB
 	jmp	t2cmpb
 #else
 	jmp	arch_panic_handler
