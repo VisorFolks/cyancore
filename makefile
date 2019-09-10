@@ -5,17 +5,6 @@
 SHELL		:= /bin/bash
 N_HOSTS		:= $(shell grep -c ^processor /proc/cpuinfo)
 
-default:
-	make $(PROJECT) all -j$(N_HOSTS)
-
-.PHONY: all --dependency clean
-
---dependency:
-	mkdir -p $(OUT)
-
-clean:
-	$(info < ! > Removing $(PROJECT) binaries ...)
-	rm -rf $(OUT)
 
 include mk/help.mk
 include mk/path.mk
@@ -36,8 +25,5 @@ endif
 endif
 endif
 endif
-
-all: version --dependency lib obj elf
-	$(info < / > Done !)
 
 .SILENT:

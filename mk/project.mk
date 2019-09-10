@@ -4,7 +4,21 @@
 
 include mk/path.mk
 
-.PHONY: list
+default:
+	make $(PROJECT) all -j$(N_HOSTS)
+
+.PHONY: all --dependency clean list
+
+all: version --dependency lib obj elf
+	$(info < / > Done !)
+
+--dependency:
+	mkdir -p $(OUT)
+
+clean:
+	$(info < ! > Removing $(PROJECT) binaries ...)
+	rm -rf $(OUT)
+
 list:
 	$(info Available projects are :)
 	ls -1 $(SRC)/projects/
@@ -43,9 +57,11 @@ $(info < x > Invalid project name...)
 $(info < ! > Run `make list` to get list of projects)
 $(error < x > Build Failed!)
 endif
+
 endif
 endif
 endif
 endif
 endif
 endif
+
