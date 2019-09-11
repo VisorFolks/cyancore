@@ -2,127 +2,127 @@
 PlatVectors:
 .org 0x00
 #if USE_INT0
-	jmp	int0
+	rjmp	int0
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_INT1
-	jmp	int1
+	rjmp	int1
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_PCINT0
-	jmp	pcint0
+	rjmp	pcint0
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_PCINT1
-	jmp	pcint1
+	rjmp	pcint1
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_PCINT2
-	jmp	pcint2
+	rjmp	pcint2
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_WDR
-	jmp	wdt
+	rjmp	wdt
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_T2CMPA
-	jmp	t2cmpa
+	rjmp	t2cmpa
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_T2CMPB
-	jmp	t2cmpb
+	rjmp	t2cmpb
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_T2OVF
-	jmp	t2ovf
+	rjmp	t2ovf
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_T2CAPT
-	jmp	t1capt
+	rjmp	t1capt
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_T1CMPA
-	jmp	t1cmpa
+	rjmp	t1cmpa
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_T1CMPB
-	jmp	t1cmpb
+	rjmp	t1cmpb
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_T1OVF
-	jmp	t1ovf
+	rjmp	t1ovf
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_T0CMPA
-	jmp	t0cmpa
+	rjmp	t0cmpa
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_T0CMPB
-	jmp	t0cmpb
+	rjmp	t0cmpb
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_T0OVF
-	jmp	t0ovf
+	rjmp	t0ovf
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_SPI
-	jmp	spi
+	rjmp	spi
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_UART_RX
-	jmp	uart_rx
+	rjmp	uart_rx
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_UART_UDRE
-	jmp	uart_udre
+	rjmp	uart_udre
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_UART_TX
-	jmp	uart_tx
+	rjmp	uart_tx
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_ADC
-	jmp	adc
+	rjmp	adc
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_EE_READY
-	jmp	ee_ready
+	rjmp	ee_ready
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_A_COMP
-	jmp	a_comp
+	rjmp	a_comp
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_TWI
-	jmp	twi
+	rjmp	twi
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
 #if USE_SMP_READY
-	jmp	smp_ready
+	rjmp	smp_ready
 #else
-	jmp	arch_panic_handler
+	rjmp	arch_panic_handler
 #endif
