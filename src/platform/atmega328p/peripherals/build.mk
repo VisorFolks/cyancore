@@ -1,5 +1,7 @@
 PERIPHERALS_DIR	:= $(GET_PATH)
 
+include $(PERIPHERALS_DIR)/clkctl/build.mk
+include $(PERIPHERALS_DIR)/gpio/build.mk
 include $(PERIPHERALS_DIR)/adc/build.mk
 include $(PERIPHERALS_DIR)/eeprom/build.mk
 include $(PERIPHERALS_DIR)/i2c/build.mk
