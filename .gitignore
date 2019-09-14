@@ -1,4 +1,7 @@
 out/
+toolchain/
+backup/
+bkp/
 *.elf
 *.bin
 *.o
@@ -13,4 +16,3 @@ out/
 *.temp
 *.tmp
 *.swp
-toolchain/
