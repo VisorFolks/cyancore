@@ -1,4 +1,4 @@
-#include <platform.h>
+#include <platform_mem.h>
 
 #ifndef PROG_MEM
 #define PROG_MEM	0

@@ -1,6 +1,11 @@
 #pragma once
 
-void volatile assert(char condition)
+extern void plat_panic_handler();
+
+void assert(char condition)
 {
-	plat_panic_handler();
+	if(!condition)
+	{
+		plat_panic_handler();
+	}
 }
