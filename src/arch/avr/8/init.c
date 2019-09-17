@@ -6,7 +6,7 @@
  */
 
 #include <arc.h>
-#include <avr/io.h>
+#include <platform.h>
 #include <stdint.h>
 
 extern uint16_t _stack_start, * _bss_start, * _bss_end;
@@ -24,7 +24,8 @@ void bss_clear()
 void init() __attribute__((section(".text")));
 void init()
 {
-	SP = _stack_start;
+	REG(SPL) = (uint8_t)(_stack_start & 0x00ff);
+	REG(SPH) = (uint8_t)((_stack_start >> 8) & 0x00ff);
 	bss_clear();
 	arc();
 	asm volatile("jmp	.");
