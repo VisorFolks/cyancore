@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h>
 
 typedef enum adc_prescale_clk
 {
@@ -14,3 +15,6 @@ typedef enum adc_refv
 {
 	i1_1, ivref, aref
 } adc_refv;
+
+void adc_setup(adc_prescale_clk);
+uint16_t adc_read(uint8_t, adc_refv, adc_res);
