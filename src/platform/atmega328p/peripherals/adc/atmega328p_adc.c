@@ -1,7 +1,7 @@
 #include <adc.h>
 #include <assert.h>
 #include <stdint.h>
-#include <platform.h>
+#include <platform_api.h>
 
 // PRR bit field
 #define PRADC		0
