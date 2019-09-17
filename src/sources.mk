@@ -40,6 +40,7 @@ include $(SRC)/lib/build.mk
 include $(SRC)/projects/$(PROJECT)/build.mk
 include $(SRC)/platform/build.mk
 include $(SRC)/arch/build.mk
+include $(SRC)/driver/build.mk
 #include $(SRC)/kernel/build.mk
 #include $(SRC)/network/build.mk
 #incldue $(SRC)/fs/build.mk
