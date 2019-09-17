@@ -2,6 +2,6 @@ DIR		:= $(GET_PATH)
 
 PLATFORM	:= atmega328p
 
-CFLAGS		+= -std=gnu99 -O1
+CFLAGS		+= -O2
 
 include mk/obj.mk
