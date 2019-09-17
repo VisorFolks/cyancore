@@ -12,6 +12,8 @@
 
 //===============< Register Addresses >===============//
 
+#define REG(X)		*(volatile uint8_t *)(X)
+
 #define PINB		0x23
 #define DDRB		0x24
 #define PORTB		0x25
