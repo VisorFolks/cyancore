@@ -30,7 +30,7 @@ LD_FLAGS	+= --error-unresolved-symbols	\
 		   --gc-sections
 
 LIB_PATH	+=
-LIBS		+=
+DEP_LIBS	+=
 
 DEPS_OBJS	:=
 PLAT_INCLUDE	:=

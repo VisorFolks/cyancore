@@ -1,3 +1,8 @@
 DIR		:= $(GET_PATH)
+LIB_OBJS	:=
 
-include mk/obj.mk
+LIB		:= libadc.a
+LIB_INCLUDE_PATH:=
+LIB_HEADER	:=
+
+include mk/lib.mk
