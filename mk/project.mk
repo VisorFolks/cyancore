@@ -9,7 +9,7 @@ default:
 
 .PHONY: all --dependency clean list
 
-all: version --dependency lib obj elf
+all: version --dependency elf
 	$(info < / > Done !)
 
 --dependency:

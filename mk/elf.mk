@@ -2,13 +2,16 @@
 #------------< ELF Builder >-------------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
 
-OBJ_ELF	:= $(addprefix $(OUT)/,$(OBJ_ELF:.elf=.o))
+include mk/obj.mk
+
+OBJ_EXE	:= $(addprefix $(OUT)/,$(ELF:.elf=.o))
+ELF	:= $(addprefix $(OUT)/,$(ELF))
 
 .PHONY: elf
 
-elf: $(OUT)/$(ELF)
+elf: lib $(ELF)
 
-$(OUT)/$(ELF): $(DEPS_OBJS) $(OBJ_EXE)
+$(ELF): $(DEPS_OBJS) $(OBJ_EXE)
 	echo "Generating $(notdir $@) ..."
 	$(CC) $(CFLAGS) -E -P -o $(LD_SCRIPT) $(LD_TEMPLATE)
 	$(LD) -T $(LD_SCRIPT) $(LD_FLAGS) -o $@ $^ $(LIB_PATH) $(LIBS) -Map=$(subst .elf,.map,$@)
