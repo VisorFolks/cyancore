@@ -9,7 +9,7 @@ ELF	:= $(addprefix $(OUT)/,$(ELF))
 
 .PHONY: elf
 
-elf: lib $(ELF)
+elf: lib slib $(ELF)
 
 $(ELF): $(DEPS_OBJS) $(OBJ_EXE)
 	echo "Generating $(notdir $@) ..."

@@ -7,7 +7,7 @@ include mk/path.mk
 default:
 	make $(PROJECT) all -j$(N_HOSTS)
 
-.PHONY: all --dependency clean list
+.PHONY: all --dependency clean list lib elf slib
 
 all: version --dependency elf
 	$(info < / > Done !)
