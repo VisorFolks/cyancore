@@ -1,7 +1,8 @@
-ARCH		:= avr
-BIT		:= 8
-PLATFORM	:= atmega328p
-TARGET_FLAGS	+= -mmcu=atmega328p
+ARCH		:= riscv
+BIT		:= 32
+PLATFORM	:= freedom_e310
+TARGET_FLAGS	+= -march=rv32imac	\
+		   -mabi=ilp32
 
 DIR		:= $(GET_PATH)
 
