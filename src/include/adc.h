@@ -16,5 +16,13 @@ typedef enum adc_refv
 	i1_1, ivref, aref
 } adc_refv;
 
-void adc_setup(adc_prescale_clk);
-uint16_t adc_read(uint8_t, adc_refv, adc_res);
+typedef struct adc_config
+{
+	uint8_t a_pin;
+	uint8_t res;
+	uint8_t refv;
+} adc_config;
+
+void adc_enable(adc_prescale_clk);
+void adc_setup(adc_config *, adc_refv, adc_res);
+uint16_t adc_read(adc_config *);

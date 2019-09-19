@@ -17,7 +17,7 @@
 // Vaiable to define resolution used by adc instance
 volatile adc_res use_res;
 
-void platform_adc_setup(adc_prescale_clk ps)
+void platform_adc_enable(adc_prescale_clk ps)
 {
 	assert(ps <= div128);
 	// Enable clock to adc module
@@ -37,48 +37,44 @@ void platform_adc_setup(adc_prescale_clk ps)
 	REG(ADCSRA) |= (ps & 0x07);
 }
 
-void platform_adc_refv(adc_refv v)
+uint8_t platform_adc_refv(adc_refv v)
 {
 	// Configure adc reference voltage
 	switch(v)
 	{
 		case i1_1:
-			REG(ADMUX) |= (3 << REFS);
-			break;
+			return 3;
 		case ivref:
-			REG(ADMUX) |= (0 << REFS);
-			break;
+			return 0;
 		case aref:
-			REG(ADMUX) |= (1 << REFS);
-			break;
+			return 1;
 		default:
 			assert(0);
 	}
+	return 1;
 }
 
-void platform_adc_res(adc_res res)
+uint8_t platform_adc_res(adc_res res)
 {
-	use_res = res;
 	// Configure res (left align)
 	switch(res)
 	{
 		case bit8:
-			REG(ADMUX) |= (1 << ADLAR);
-			break;
+			return 1;
 		case bit10:
-			REG(ADMUX) &= ~(1 << ADLAR);
-			break;
+			return 0;
 		default:
 			assert(0);
 	}
+	return 0;
 }
 
-uint16_t platform_adc_read(uint8_t pin)
+uint16_t platform_adc_read(adc_config * config)
 {
 	uint8_t adch, adcl;
-	assert(pin <= 7);
-	// Set pin number
-	REG(ADMUX) |= (pin & 0x07);
+	assert(config -> a_pin <= 7);
+	// Set pin number, ref voltage, res
+	REG(ADMUX) = (config -> a_pin & 0x07) | (config -> refv << REFS) | (config -> res << ADLAR);
 	// Start ADC Conversion
 	REG(ADCSRA) |= (1 << ADSC);
 	while(REG(ADCSRA) & (1 << ADSC));	// busy wait till the conversion is done
