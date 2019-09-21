@@ -9,9 +9,9 @@ void platform_early_setup()
 	{
 		.architecture		= ARCHITECTURE,
 		.datawidth		= BITWIDTH,
-		.n_adc			= 1,
-		.adc_base_addr[0]	= ADCL,
-		.adc_interrupt_id[0]	= 22,
+//		.n_adc			= 1,
+//		.adc_base_addr[0]	= ADCL,
+//		.adc_interrupt_id[0]	= 22,
 	};
 	UPDATE_SHI(config);
 	return;
