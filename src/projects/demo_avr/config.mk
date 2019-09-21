@@ -1,4 +1,4 @@
 # Drivers
 
-ADC		:= 0
+ADC		:= 1
 UART		:= 0
