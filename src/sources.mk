@@ -29,7 +29,7 @@ LD_FLAGS	+= --error-unresolved-symbols	\
 		   --fatal-warnings		\
 		   --gc-sections
 
-LIB_PATH	+=
+DEP_LIB_PATH	+= -L $(OUT)
 DEP_LIBS	+=
 
 DEPS_OBJS	:=
@@ -37,6 +37,7 @@ PLAT_INCLUDE	:=
 PROJECT_INCLUDES:=
 
 include $(SRC)/lib/build.mk
+include $(SRC)/projects/$(PROJECT)/config.mk
 include $(SRC)/projects/$(PROJECT)/build.mk
 include $(SRC)/platform/build.mk
 include $(SRC)/arch/build.mk
