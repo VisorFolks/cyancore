@@ -1,6 +1,11 @@
 #pragma once
 #include <stdint.h>
 #include <platform.h>
+#include <adc.h>
+
+//===============< Platform APIs >===============//
+void platform_early_setup();
+void platform_setup();
 
 //===============< Peripheral APIs >===============//
 
