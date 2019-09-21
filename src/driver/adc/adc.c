@@ -1,10 +1,16 @@
 #include <adc.h>
+#include <shi.h>
 #include <platform_api.h>
 #include <assert.h>
 #include <stdint.h>
 
-void adc_enable(adc_prescale_clk ps)
+SYSTEM_HARDWARE_INFO;
+
+void adc_enable(uint8_t module, adc_prescale_clk ps)
 {
+	shi * config;
+	FETCH_SHI(config);
+	assert(config -> n_adc > 0);
 	platform_adc_enable(ps);
 }
 
