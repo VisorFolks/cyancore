@@ -7,7 +7,7 @@
 
 #include <arch.h>
 
-void arch_init()
+void arch_setup()
 {
 	arch_cli();
 	return;

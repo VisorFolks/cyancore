@@ -10,4 +10,7 @@ $(info < ! > CPU - Data Width is not defined !)
 $(error < x > Build Failed !)
 endif
 
+CFLAGS		+= -DARCHITECTURE=$(ARCH)	\
+		   -DBITWIDTH=$(BIT)
+
 include $(ARCH_DIR)/$(ARCH)/$(BIT)/build.mk
