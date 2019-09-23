@@ -3,6 +3,9 @@
 #define __AVR_ATMEGA328P__
 #define ARCH_AVR
 
+#define N_INT		26
+#define N_IRQ		(N_INT - 1)
+
 //===============< Register Addresses >===============//
 
 #define REG(X)		*(volatile uint8_t *)(X)
@@ -59,9 +62,9 @@
 
 #define SPMCSR		0x57
 
-#define SPL		0x5d
-#define SPH		0x5e
-#define SREG		0x5f
+#define SPL		0x3d
+#define SPH		0x3e
+#define SREG		0x3f
 
 #define WDTCSR		0x60
 #define CLKPR		0x61
