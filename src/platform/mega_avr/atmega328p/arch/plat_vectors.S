@@ -26,4 +26,3 @@ PlatVectors:
 	rjmp	int_23
 	rjmp	int_24
 	rjmp	int_25
-	rjmp	int_26
