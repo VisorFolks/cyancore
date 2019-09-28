@@ -87,7 +87,7 @@ arch_panic_handler:
 .type int_\id, "function"
 int_\id:
 	push	r18
-	ldi	r24, \id
+	ldi	r18, \id
 	rjmp	isr
 .endm
 
