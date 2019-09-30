@@ -21,3 +21,4 @@ $(ELF): $(DEPS_OBJS) $(OBJ_EXE)
 	echo "=================================================="
 	echo "Size of Executable:"
 	cd $(OUT); $(SIZE) *.elf
+	echo ""
