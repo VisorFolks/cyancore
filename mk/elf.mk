@@ -18,6 +18,6 @@ $(ELF): $(DEPS_OBJS) $(OBJ_EXE)
 	$(OC) -O binary $@ $(subst .elf,.bin,$@)
 	echo "Disassembling $(notdir $@) ..."
 	$(OD) -Dx $@ > $(subst .elf,.dis,$@)
-	echo "----------------------------------------------------------------------"
-	echo "Size of Binaries:"
-	cd $(OUT); $(SIZE) *.o *.elf
+	echo "=================================================="
+	echo "Size of Executable:"
+	cd $(OUT); $(SIZE) *.elf
