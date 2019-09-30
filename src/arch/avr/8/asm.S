@@ -28,12 +28,12 @@ arch_panic_handler:
 	push	r15
 	push	r16
 	push	r17
+	push	r18
 	push	r19
 	push	r20
 	push	r21
 	push	r22
 	push	r23
-	push	r24
 	push	r25
 	push	r26
 	push	r27
@@ -51,12 +51,12 @@ arch_panic_handler:
 	pop	r27
 	pop	r26
 	pop	r25
-	pop	r24
 	pop	r23
 	pop	r22
 	pop	r21
 	pop	r20
 	pop	r19
+	pop	r18
 	pop	r17
 	pop	r16
 	pop	r15
@@ -77,7 +77,7 @@ arch_panic_handler:
 	out	SREG, r0
 	pop	r0
 	pop	r1
-	pop	r18
+	pop	r24
 	reti
 .endm
 
@@ -86,8 +86,8 @@ arch_panic_handler:
 .section .text.int_\id
 .type int_\id, "function"
 int_\id:
-	push	r18
-	ldi	r18, \id
+	push	r24
+	ldi	r24, \id
 	rjmp	isr
 .endm
 
