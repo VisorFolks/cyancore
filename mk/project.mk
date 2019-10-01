@@ -4,12 +4,12 @@
 
 include mk/path.mk
 
-default:
-	make $(PROJECT) all -j$(N_HOSTS)
+default: dependency_targets
+	make $(PROJECT) arc -j$(N_HOSTS)
 
-.PHONY: all --dependency clean list lib elf slib dependency_targets
+.PHONY: arc --dependency clean list lib elf slib dependency_targets
 
-all: dependency_targets version --dependency elf
+arc: version --dependency elf
 	$(info < / > Done !)
 
 --dependency:
@@ -32,7 +32,7 @@ ifneq ($(MAKECMDGOALS),list)
 
 ifneq ($(firstword $(MAKECMDGOALS)),clean)
 ifneq ($(firstword $(MAKECMDGOALS)),default)
-ifneq ($(firstword $(MAKECMDGOALS)),all)
+ifneq ($(firstword $(MAKECMDGOALS)),arc)
 PROJECT		:= $(firstword $(MAKECMDGOALS))
 CMD		:= $(word 2,$(MAKECMDGOALS))
 ifeq ($(CMD),)
