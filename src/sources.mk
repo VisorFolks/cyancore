@@ -11,7 +11,10 @@ INCLUDE		+= -I $(SRC)/include	\
 		   $(PLAT_INCLUDE)	\
 		   $(PROJECT_INCLUDES)
 
+OPTIMIZATION	?= 0
+
 CFLAGS		+= $(INCLUDE)		\
+		   -O$(strip $(OPTIMIZATION))	\
 		   $(TARGET_FLAGS)	\
 		   -DDEBUG=$(DEBUG)	\
 		   -Wall -Werror	\
