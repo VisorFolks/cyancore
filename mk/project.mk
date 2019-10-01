@@ -7,9 +7,9 @@ include mk/path.mk
 default:
 	make $(PROJECT) all -j$(N_HOSTS)
 
-.PHONY: all --dependency clean list lib elf slib
+.PHONY: all --dependency clean list lib elf slib dependency_targets
 
-all: version --dependency elf
+all: dependency_targets version --dependency elf
 	$(info < / > Done !)
 
 --dependency:
@@ -40,10 +40,10 @@ CMD		:= default
 else
 CMD		:=
 endif
-.PHONY: $(PROJECT)
 
+.PHONY: $(PROJECT)
 $(PROJECT): $(CMD)
-	echo > /dev/null
+
 endif
 endif
 endif
