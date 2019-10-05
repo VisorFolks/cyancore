@@ -1,11 +1,8 @@
-ARCH		:= riscv
-BIT		:= 32
-PLATFORM	:= freedom_e310
-TARGET_FLAGS	+= -march=rv32imac	\
-		   -mabi=ilp32
-
 DIR		:= $(GET_PATH)
 
-CFLAGS		+= -O2
+FAMILY		:= sifive
+PLATFORM	:= fe310g002
+
+OPTIMIZATION	:= 2
 
 include mk/obj.mk
