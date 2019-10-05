@@ -4,6 +4,8 @@ ARCH		:= avr
 BIT		:= 8
 TARGET_FLAGS	+= -mmcu=atmega328p
 
+OUTPUT_FORMAT	:= elf32-avr
+
 PLAT_INCLUDE	+= -I $(ATMEGA328P_DIR)/include
 
 include $(ATMEGA328P_DIR)/arch/build.mk
