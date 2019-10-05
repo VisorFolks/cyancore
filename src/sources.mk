@@ -5,6 +5,8 @@
 DEBUG		?=0
 TARGET_FLAGS	?=
 
+GENERATE_BIN	?= 0
+
 INCLUDE		+= -I $(SRC)/include	\
 		   -I $(TI)		\
 		   -I $(OUT)		\
