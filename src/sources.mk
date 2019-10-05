@@ -30,7 +30,8 @@ LD_SCRIPT	:= $(OUT)/arc.ld
 LD_FLAGS	+= --error-unresolved-symbols	\
 		   --warn-common		\
 		   --fatal-warnings		\
-		   --gc-sections
+		   --gc-sections		\
+		   -b $(OUTPUT_FORMAT)
 
 DEP_LIB_PATH	+= -L $(OUT)
 DEP_LIBS	+=
