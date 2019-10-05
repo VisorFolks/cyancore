@@ -1,0 +1,9 @@
+#pragma once
+#include <fe310g002.h>
+
+#define PROG_MEM	0X00000000
+#define IMEM_START	0x20000000
+#define IMEM_LENGTH	0x20000000
+#define DMEM_START	0x80000000
+#define DMEM_LENGTH	0x4000
+#define STACK_SIZE	0x1000
