@@ -20,13 +20,15 @@ void bss_clear()
 	}
 }
 
+extern void zero_reg(void);
 
 void init() __attribute__((section(".text")));
 void init()
 {
+	zero_reg();
 	REG(SPL) = (uint8_t)(_stack_start & 0x00ff);
 	REG(SPH) = (uint8_t)((_stack_start >> 8) & 0x00ff);
 	bss_clear();
 	arc();
-	asm volatile("jmp	.");
+	asm volatile ("rjmp	.");
 }

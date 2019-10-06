@@ -1,5 +1,41 @@
 #include <platform.h>
 
+.global zero_reg
+.section .text
+.type zero_reg, "function"
+zero_reg:
+	mov	r0, r1
+	mov	r2, r1
+	mov	r3, r1
+	mov	r4, r1
+	mov	r5, r1
+	mov	r6, r1
+	mov	r7, r1
+	mov	r8, r1
+	mov	r9, r1
+	mov	r10, r1
+	mov	r11, r1
+	mov	r12, r1
+	mov	r13, r1
+	mov	r14, r1
+	mov	r15, r1
+	mov	r16, r1
+	mov	r17, r1
+	mov	r18, r1
+	mov	r19, r1
+	mov	r20, r1
+	mov	r21, r1
+	mov	r22, r1
+	mov	r23, r1
+	mov	r24, r1
+	mov	r25, r1
+	mov	r26, r1
+	mov	r27, r1
+	mov	r28, r1
+	mov	r29, r1
+	mov	r30, r1
+	mov	r31, r1
+
 .global arch_panic_handler
 .section .text
 .type arch_panic_handler, "function"

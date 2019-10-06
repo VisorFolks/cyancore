@@ -9,7 +9,7 @@
 
 void arch_setup()
 {
-	arch_cli();
+	arch_di();
 	return;
 }
 
@@ -19,13 +19,13 @@ void arch_idle()
 	return;
 }
 
-void arch_cli()
+void arch_di()
 {
 	asm volatile("cli");
 	return;
 }
 
-void arch_sei()
+void arch_ei()
 {
 	asm volatile("sei");
 	return;
