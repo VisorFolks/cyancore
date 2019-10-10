@@ -36,7 +36,7 @@ LD_FLAGS	+= --error-unresolved-symbols	\
 		   -b $(OUTPUT_FORMAT)
 
 DEP_LIB_PATH	+= -L $(OUT)
-DEP_LIBS	+=
+DEP_LIBS	+= -lnmath
 
 DEPS_OBJS	:=
 PLAT_INCLUDE	:=

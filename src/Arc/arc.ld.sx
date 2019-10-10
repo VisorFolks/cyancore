@@ -4,6 +4,10 @@
 #define PROG_MEM	0
 #endif
 
+#ifndef DATA_MEM
+#define DATA_MEM	PROG_MEM
+#endif
+
 MEMORY
 {
 	/* VM Addresses */
@@ -12,7 +16,7 @@ MEMORY
 
 	/* LM Addresses */
 	lma_imem	: ORIGIN = PROG_MEM + IMEM_START, LENGTH = IMEM_LENGTH
-	lma_dmem	: ORIGIN = PROG_MEM + DMEM_START, LENGTH = DMEM_LENGTH
+	lma_dmem	: ORIGIN = DATA_MEM + DMEM_START, LENGTH = DMEM_LENGTH
 }
 
 SECTIONS

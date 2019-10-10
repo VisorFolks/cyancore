@@ -2,5 +2,5 @@
 
 void arch_setup();
 void arch_idle();
-void arch_cli();
-void arch_sei();
+void arch_di();
+void arch_ei();
