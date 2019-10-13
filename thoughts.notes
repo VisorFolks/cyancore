@@ -1,0 +1,24 @@
+Current Software stack
+
+application (userspace|dedicated task)
+
+          Kernel
+driver      MM         Libs
+HAL + MM    Arch        MM
+
+          Arch
+core     platform       Memory
+power     HAL           SHI
+perf      SHI
+clk       power
+
+Driver:
+-Need to provide api to attach and release the drivers
+-Needs memory management modules
+
+MM:
+-Come up with approach to run mm on non-mmu platforms
+-permision and security are debatable...
+MM Qs:
+-Do u need MM on 2kb ram platform ?
+-does it make sense to have one, at what cost then?
