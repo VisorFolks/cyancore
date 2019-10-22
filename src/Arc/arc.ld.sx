@@ -8,12 +8,8 @@
 #define V_DMEM_START	0
 #endif
 
-#ifndef L_IMEM_START
-#define L_IMEM_START	0
-#endif
-
-#ifndef L_DMEM_START
-#define L_DMEM_START	0
+#ifndef L_MEM_START
+#define L_MEM_START	0
 #endif
 
 MEMORY
@@ -23,8 +19,7 @@ MEMORY
 	vma_dmem	: ORIGIN = V_DMEM_START, LENGTH = DMEM_LENGTH
 
 	/* LM Addresses */
-	lma_imem	: ORIGIN = L_IMEM_START, LENGTH = IMEM_LENGTH
-	lma_dmem	: ORIGIN = L_DMEM_START, LENGTH = DMEM_LENGTH
+	lma_mem		: ORIGIN = L_MEM_START, LENGTH = L_MEM_LENGTH
 }
 
 SECTIONS
@@ -37,7 +32,7 @@ SECTIONS
 		KEEP(*(.archvectors))
 		*(.platvectors)
 		KEEP(*(.platvectors))
-	} > vma_imem AT > lma_imem
+	} > vma_imem AT > lma_mem
 
 	.text :
 	{
@@ -48,7 +43,7 @@ SECTIONS
 		. = ALIGN(4);
 		*(.version)
 		KEEP(*(.version))
-	} > vma_imem AT > lma_imem
+	} > vma_imem AT > lma_mem
 
 	.data :
 	{
@@ -67,7 +62,7 @@ SECTIONS
 		_stack_start = . ;
 		KEEP(*(.stack))
 		*(.stack)
-	} > vma_dmem AT > lma_dmem
+	} > vma_dmem AT > lma_mem
 
 	.bss :
 	{
@@ -88,5 +83,5 @@ SECTIONS
 		KEEP(*(.sbss))
 		*(COMMON)
 		_bss_end = . ;
-	} > vma_dmem AT > lma_dmem
+	} > vma_dmem AT > lma_mem
 }
