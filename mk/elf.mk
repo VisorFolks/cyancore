@@ -27,4 +27,5 @@ ifeq ($(GENERATE_BIN),1)
 $(BIN): $(ELF)
 	echo "Generating $(notdir $(BIN)) ..."
 	$(OC) -O binary $^ $@
+	$(OC) -O ihex $^ $@
 endif
