@@ -1,22 +1,30 @@
 #include <platform.h>
 
-#ifndef PROG_MEM
-#define PROG_MEM	0
+#ifndef V_IMEM_START
+#define V_IMEM_START	0
 #endif
 
-#ifndef DATA_MEM
-#define DATA_MEM	PROG_MEM
+#ifndef V_DMEM_START
+#define V_DMEM_START	0
+#endif
+
+#ifndef L_IMEM_START
+#define L_IMEM_START	0
+#endif
+
+#ifndef L_DMEM_START
+#define L_DMEM_START	0
 #endif
 
 MEMORY
 {
 	/* VM Addresses */
-	vma_imem	: ORIGIN = IMEM_START, LENGTH = IMEM_LENGTH
-	vma_dmem	: ORIGIN = DMEM_START, LENGTH = DMEM_LENGTH
+	vma_imem	: ORIGIN = V_IMEM_START, LENGTH = IMEM_LENGTH
+	vma_dmem	: ORIGIN = V_DMEM_START, LENGTH = DMEM_LENGTH
 
 	/* LM Addresses */
-	lma_imem	: ORIGIN = PROG_MEM + IMEM_START, LENGTH = IMEM_LENGTH
-	lma_dmem	: ORIGIN = DATA_MEM + DMEM_START, LENGTH = DMEM_LENGTH
+	lma_imem	: ORIGIN = L_IMEM_START, LENGTH = IMEM_LENGTH
+	lma_dmem	: ORIGIN = L_DMEM_START, LENGTH = DMEM_LENGTH
 }
 
 SECTIONS
@@ -81,5 +89,4 @@ SECTIONS
 		*(COMMON)
 		_bss_end = . ;
 	} > vma_dmem AT > lma_dmem
-
 }
