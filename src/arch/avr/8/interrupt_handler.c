@@ -12,7 +12,7 @@ void register_interrupt_handler(unsigned int id, void (* handler)(void))
 	int_handler[id] = handler;
 }
 
-void interrupt_handler(unsigned int id)
+void interrupt_handler(unsigned char id)
 {
 	void (*handler)(void) = NULL;
 	assert((id > 0) && (id <= N_IRQ));
