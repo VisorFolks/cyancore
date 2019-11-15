@@ -14,6 +14,7 @@ clk       power
 
 Driver:
 -Need to provide api to attach and release the drivers
+-Needs probing api
 -Needs memory management modules
 
 MM:
