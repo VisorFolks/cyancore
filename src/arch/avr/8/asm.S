@@ -35,6 +35,7 @@ zero_reg:
 	mov	r29, r1
 	mov	r30, r1
 	mov	r31, r1
+	ret
 
 .global arch_panic_handler
 .section .text
