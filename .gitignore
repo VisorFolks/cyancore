@@ -12,6 +12,7 @@ bkp/
 *.bkp
 *.backup
 *.b
+*.dev
 *.old
 *.temp
 *.tmp
