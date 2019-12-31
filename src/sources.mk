@@ -13,12 +13,12 @@ INCLUDE		+= -I $(SRC)/include	\
 
 OPTIMIZATION	?= 0
 
-CFLAGS		+= $(INCLUDE)		\
+CFLAGS		+= $(INCLUDE)			\
 		   -O$(strip $(OPTIMIZATION))	\
-		   $(TARGET_FLAGS)	\
-		   -DDEBUG=$(DEBUG)	\
-		   -Wall -Werror	\
-		   -ffunction-sections	\
+		   $(TARGET_FLAGS)		\
+		   -DDEBUG=$(DEBUG)		\
+		   -Wall -Wextra -Werror	\
+		   -ffunction-sections		\
 		   -fdata-sections
 
 ASFLAGS		+= $(INCLUDE)		\
