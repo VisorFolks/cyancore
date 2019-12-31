@@ -7,6 +7,11 @@
 
 #include <arch.h>
 
+void arch_early_setup()
+{
+	return;
+}
+
 void arch_setup()
 {
 	arch_di();

@@ -30,5 +30,6 @@ void init()
 	REG(SPH) = (uint8_t)((_stack_start >> 8) & 0x00ff);
 	bss_clear();
 	arc();
-	asm volatile ("rjmp	.");
+	asm volatile ("end:");
+	asm volatile ("rjmp	end");
 }
