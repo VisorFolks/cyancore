@@ -3,7 +3,6 @@
 .global zero_reg
 .section .text
 .type zero_reg, "function"
-//THIS HAS A BUG
 zero_reg:
 	mov	r0, r1
 	mov	r2, r1
