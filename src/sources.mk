@@ -36,8 +36,8 @@ LD_FLAGS	+= --error-unresolved-symbols	\
 		   --gc-sections		\
 		   -b $(OUTPUT_FORMAT)
 
-DEP_LIB_PATH	+= -L $(OUT)
-DEP_LIBS	+=
+DEP_LIB_PATH	:=
+DEP_LIBS	:=
 
 DEPS_OBJS	:=
 PLAT_INCLUDE	:=

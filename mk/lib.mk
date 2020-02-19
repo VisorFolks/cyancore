@@ -5,6 +5,7 @@
 include mk/lobj.mk
 
 LIB		:= $(addprefix $(OUT)/$(DIR)/,$(LIB))
+DEP_LIB_PATH	+= -L $(OUT)/$(DIR)
 HEADER		:= $(addprefix $(LIB_INCLUDE_PATH)/,$(LIB_HEADER))
 INCLUDE		+= -I $(dir $(OUT)/$(HEADER))
 
