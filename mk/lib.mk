@@ -4,8 +4,9 @@
 
 include mk/lobj.mk
 
-LIB		:= $(addprefix $(OUT)/,$(LIB))
+LIB		:= $(addprefix $(OUT)/$(DIR)/,$(LIB))
 HEADER		:= $(addprefix $(LIB_INCLUDE_PATH)/,$(LIB_HEADER))
+INCLUDE		+= -I $(dir $(OUT)/$(HEADER))
 
 .PHONY: lib
 
@@ -16,7 +17,8 @@ $(LIB): $(HEADER) $(LIB_OBJS)
 	$(AR) rc $@ $^
 
 $(HEADER): --dependency
-	cp $@ $(OUT)
+	mkdir -p $(OUT)/$(dir $@)
+	cp $@ $(OUT)/$(dir $@)
 
 LIB_INCLUDE_PATH:=
 LIB_HEADER	:=

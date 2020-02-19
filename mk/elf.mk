@@ -4,12 +4,11 @@
 
 include mk/obj.mk
 
-OBJ_EXE	:= $(addprefix $(OUT)/,$(ELF:.elf=.o))
-ELF	:= $(addprefix $(OUT)/,$(ELF))
+ELF	:= $(addprefix $(OUT)/,$(PROJECT).elf)
 
 elf: lib slib $(ELF)
 
-$(ELF): $(DEPS_OBJS) $(OBJ_EXE)
+$(ELF): $(DEPS_OBJS)
 	echo "Generating $(notdir $@) ..."
 	$(CC) $(CFLAGS) -E -P -o $(LD_SCRIPT) $(LD_TEMPLATE)
 	$(LD) -T $(LD_SCRIPT) $(LD_FLAGS) -o $@ $^ $(DEP_LIB_PATH) $(DEP_LIBS) -Map=$(subst .elf,.map,$@)

@@ -2,10 +2,10 @@
 #----------< Sources Makefile >----------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
 
-DEBUG		?=0
+DEBUG		?=1
 TARGET_FLAGS	?=
 
-INCLUDE		+= -I $(SRC)/include	\
+INCLUDE		+= -I $(SRC)/include/	\
 		   -I $(TI)		\
 		   -I $(OUT)		\
 		   $(PLAT_INCLUDE)	\
@@ -16,10 +16,13 @@ OPTIMIZATION	?= 0
 CFLAGS		+= $(INCLUDE)			\
 		   -O$(strip $(OPTIMIZATION))	\
 		   $(TARGET_FLAGS)		\
-		   -DDEBUG=$(DEBUG)		\
 		   -Wall -Wextra -Werror	\
 		   -ffunction-sections		\
 		   -fdata-sections
+ifeq ($(DEBUG),1)
+CFLAGS		+= -g				\
+		   -DDEBUG=$(DEBUG)
+endif
 
 ASFLAGS		+= $(INCLUDE)		\
 		   $(TARGET_FLAGS)	\

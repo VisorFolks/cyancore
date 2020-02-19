@@ -2,10 +2,10 @@
 #------------< Paths >-------------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
 
-ARC_ROOT	:= $(PWD)
-TOOLS_ROOT	:= $(ARC_ROOT)/toolchain
+ARC_ROOT	:= .
+TOOLS_ROOT	:= $(PWD)/toolchain
 
-SRC		:= $(PWD)/src
-OUT		?= $(PWD)/out/$(PROJECT)
+SRC		:= $(ARC_ROOT)/src
+OUT		?= $(ARC_ROOT)/out/$(PROJECT)
 
-GET_PATH	= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+GET_PATH	= $(patsubst %/,%,./$(dir $(lastword $(MAKEFILE_LIST))))
