@@ -2,7 +2,7 @@
 Usage   : make <option> <command>
 option  : {list | get_all_tc | get_arm_tc | get_avr_tv |
            get_riscv_tc | help} or <Project Name>
-command : default (implicit) | all | clean
+command : default (implicit) | arc | clean
 ---------------------------------------------------------
 > Project Name:
 * The project name is the name of directory under

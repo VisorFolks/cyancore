@@ -13,12 +13,12 @@ DEPS_OBJS	+= $(C_OBJS) $(S_OBJS)
 $(C_OBJS): $(OUT)/%.o: %.c
 	mkdir -p $(dir $@)
 	echo "Compiling $(subst .o,.c,$(notdir $@)) ..."
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ -nostdlib
 
 $(S_OBJS): $(OUT)/%.o: %.S
 	mkdir -p $(dir $@)
 	echo "Assembling $(subst .o,.S,$(notdir $@)) ..."
-	$(CC) -E $(CFLAGS) -c $< > $(subst .o,.pS,$@)
+	$(CC) -E $(CFLAGS) -c $< > $(subst .o,.pS,$@) -nostdlib
 	$(AS) $(ASFLAGS) $(subst .o,.pS,$@) -o $@
 	rm $(subst .o,.pS,$@)
 
