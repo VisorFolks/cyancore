@@ -2,7 +2,7 @@
 #----------< Sources Makefile >----------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
 
-DEBUG		?=1
+DEBUG		?= 1
 TARGET_FLAGS	?=
 
 INCLUDE		+= -I $(SRC)/include/	\
