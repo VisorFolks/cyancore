@@ -9,7 +9,8 @@ int amcmp(const void *i, const void *j, size_t size)
 	const unsigned char *d = j;
 	while(size--)
 	{
-		ret = (*s++) - (*d++);
+		ret = (*s++);
+		ret -= (*d++);
 		if(ret)
 			return ret;
 	}

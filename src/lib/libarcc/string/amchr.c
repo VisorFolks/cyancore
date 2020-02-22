@@ -2,10 +2,10 @@
 #include <arc/stdint.h>
 #include <arc/string.h>
 
-void *amchr(const void *i, int r, size_t size)
+void *amchr(const void *i, int r, size_t n)
 {
 	const unsigned char *src = i;
-	while(size--)
+	while(n--)
 	{
 		if(*src == (unsigned char)r)
 			return (void *)src;

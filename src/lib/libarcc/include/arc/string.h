@@ -4,15 +4,13 @@
 #include <stddef.h>
 
 /*
- * Memcpy function
- * i = destination
- * j = source
- * size = number of bytes to be copied
- * ret = destination
+ * Memchr function
+ * i = source
+ * r = reference
+ * n = first n locations
+ * ret = source
  */
-void *amcpy(void *i, const void *j, size_t size);
-
-//void *memmove(void *dst, const void *src, size_t len);
+void *amchr(const void *i, int r, size_t n);
 
 /*
  * Memcmp function
@@ -23,13 +21,94 @@ void *amcpy(void *i, const void *j, size_t size);
  */
 int amcmp(const void *i, const void *j, size_t size);
 
-//int strcmp(const char *s1, const char *s2);
-//int strncmp(const char *s1, const char *s2, size_t n);
-//void *memchr(const void *src, int c, size_t len);
-//void *memrchr(const void *src, int c, size_t len);
-//char *strchr(const char *s, int c);
-//void *memset(void *dst, int val, size_t count);
-//size_t strlen(const char *s);
-//size_t strnlen(const char *s, size_t maxlen);
-//char *strrchr(const char *p, int ch);
-//size_t strlcpy(char * dst, const char * src, size_t dsize);
+/*
+ * Memcpy function
+ * i = destination
+ * j = source
+ * size = number of bytes to be copied
+ * ret = destination
+ */
+void *amcpy(void *i, const void *j, size_t size);
+
+/*
+ * Memmove function
+ * i = destination
+ * j = source
+ * size - number of bytes to be copied
+ * ret = destination
+ */
+void *ammove(void *i, const void *j, size_t size);
+
+/*
+ * Memrchr function
+ * i = source
+ * r = reference
+ * n = first n locations
+ * ret = source
+ */
+void *amrchr(const void *i, int r, size_t n);
+
+/*
+ * Memset function
+ * i = pointer
+ * n = value
+ * size = size to be populated
+ * ret = source
+ */
+void *amset(void *i, int n, size_t size);
+/*
+ * Strchar fcuntion
+ * i = source
+ * r = reference
+ * ret = pointer of reference char in source
+ */
+char *astrchr(const char *i, int r);
+
+/*
+ * Strcmp function
+ * i = source 1
+ * j = source 2
+ * ret = difference
+ */
+int astrcmp(const char *i, const char *j);
+
+/*
+ * Strlcpy function
+ * i = destination
+ * j = source
+ * size = size to be copied
+ * ret = size copied
+ */
+size_t astrlcpy(char *i, const char *j, size_t size);
+
+/*
+ * Strlen function
+ * i = source
+ * ret = length of string
+ */
+size_t astrlen(const char *i);
+
+/*
+ * Strncmp function
+ * i = source 1
+ * j = source 1
+ * n = locations to be compared
+ * ret = difference
+ */
+int astrncmp(const char *i, const char *j, size_t n);
+
+/*
+ * Strnlen function
+ * i = source
+ * size = size
+ * ret = actual size
+ */
+size_t strnlen(const char *i, size_t size);
+
+/*
+ * Strrchr
+ * i = source
+ * r = reference
+ * ret = pointer to first occurance
+ */
+char *astrrchr(const char *i, int r);
