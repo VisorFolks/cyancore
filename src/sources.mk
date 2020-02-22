@@ -6,8 +6,8 @@ DEBUG		?=1
 TARGET_FLAGS	?=
 
 INCLUDE		+= -I $(SRC)/include/	\
-		   -I $(TI)		\
 		   -I $(OUT)		\
+		   $(LIB_INCLUDE)	\
 		   $(PLAT_INCLUDE)	\
 		   $(PROJECT_INCLUDES)
 
@@ -15,13 +15,15 @@ OPTIMIZATION	?= 0
 
 CFLAGS		+= $(INCLUDE)			\
 		   -O$(strip $(OPTIMIZATION))	\
-		   $(TARGET_FLAGS)		\
+		   $(TARGET_FLAGS) -DARCH_$(BIT)\
 		   -Wall -Wextra -Werror	\
 		   -ffunction-sections		\
 		   -fdata-sections
 ifeq ($(DEBUG),1)
 CFLAGS		+= -g				\
 		   -DDEBUG=$(DEBUG)
+else
+LD_FLAGS	+= --gc-sections
 endif
 
 ASFLAGS		+= $(INCLUDE)		\
@@ -33,7 +35,6 @@ LD_SCRIPT	:= $(OUT)/arc.ld
 LD_FLAGS	+= --error-unresolved-symbols	\
 		   --warn-common		\
 		   --fatal-warnings		\
-		   --gc-sections		\
 		   -b $(OUTPUT_FORMAT)
 
 DEP_LIB_PATH	:=
@@ -42,6 +43,7 @@ DEP_LIBS	:=
 DEPS_OBJS	:=
 PLAT_INCLUDE	:=
 PROJECT_INCLUDES:=
+LIB_INCLUDES	:=
 
 include $(SRC)/lib/build.mk
 include $(SRC)/projects/$(PROJECT)/config.mk

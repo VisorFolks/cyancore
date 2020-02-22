@@ -1,7 +1,7 @@
 #include <arc.h>
 #include <project.h>
 #include <arch.h>
-#include <stdint.h>
+#include <arc/stdint.h>
 
 volatile uint32_t ArcVersion __attribute__((section(".version"))) = VERSION;
 
