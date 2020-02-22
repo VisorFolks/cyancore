@@ -20,7 +20,7 @@ void arch_setup()
 
 void arch_idle()
 {
-	asm volatile("SLEEP");
+	asm volatile("sleep");
 	return;
 }
 
