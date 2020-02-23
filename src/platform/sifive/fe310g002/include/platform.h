@@ -11,3 +11,7 @@
 #define DMEM_LENGTH	0x4000
 
 #define STACK_SIZE	0x0400
+
+#define N_CORES		1
+
+#define MEMBUF_SIZE	512
