@@ -1,5 +1,5 @@
 #include <arc/stdio.h>
-#include <console.h>
+#include <driver/console.h>
 
 int console_init()
 {
