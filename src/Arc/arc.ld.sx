@@ -49,16 +49,9 @@ SECTIONS
 	{
 		. = ALIGN(4);
 		__data_start = .;
-		__data_load_start = .;
 		*(.data)
 		*(.data.*)
 		KEEP(*(.data))
-		. = ALIGN(4);
-		*(.driver)
-		*(.driver.*)
-		_driver_table_start = .;
-		KEEP(*(.driver))
-		_driver_table_end = .;
 		*(.rodata)
 		*(.rodata.*)
 		KEEP(*(.rodata))
@@ -70,6 +63,13 @@ SECTIONS
 		KEEP(*(.stack))
 		*(.stack)
 		__data_end = .;
+		__data_load_start = .;
+		. = ALIGN(4);
+		*(.driver)
+		*(.driver.*)
+		_driver_table_start = .;
+		KEEP(*(.driver))
+		_driver_table_end = .;
 	} > vma_dmem AT > lma_mem
 
 	.bss :
