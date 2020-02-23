@@ -7,7 +7,8 @@
 
 #include <arc.h>
 #include <platform.h>
-#include <stdint.h>
+#include <arc/stdint.h>
+#include <arc/stdlib.h>
 
 extern uint16_t _stack_start, * _bss_start, * _bss_end;
 
@@ -22,7 +23,6 @@ void bss_clear()
 
 extern void zero_reg(void);
 
-void init() __attribute__((section(".text")));
 void init()
 {
 	REG(SPL) = (uint8_t)(_stack_start & 0x00ff);
@@ -30,6 +30,5 @@ void init()
 	zero_reg();
 	bss_clear();
 	arc();
-	asm volatile ("end:");
-	asm volatile ("rjmp	end");
+	exit(EXIT_FAILURE);
 }

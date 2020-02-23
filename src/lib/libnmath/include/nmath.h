@@ -1,5 +1,5 @@
 #pragma once
 
-uint32_t clog2(uint32_t);
+unsigned int clog2(unsigned int);
 
-uint64_t ceiling(uint32_t, uint32_t);
+unsigned long ceiling(unsigned long, unsigned long);
