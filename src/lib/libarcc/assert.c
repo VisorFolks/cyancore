@@ -1,6 +1,6 @@
 #include <arc/assert.h>
 #include <arc/stdio.h>
-#include <console.h>
+#include <driver/console.h>
 
 extern void plat_panic_handler();
 void __assert(const char *file, unsigned int line, const char *assertion)

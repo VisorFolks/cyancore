@@ -4,7 +4,7 @@
 #include <arc/stdbool.h>
 #include <arc/stdint.h>
 #include <arc/stdio.h>
-#include <console.h>
+#include <driver/console.h>
 
 
 #define get_num_va_args(_args, _lcount)			\
