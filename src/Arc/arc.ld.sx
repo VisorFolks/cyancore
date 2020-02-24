@@ -69,6 +69,7 @@ SECTIONS
 		*(.driver.*)
 		_driver_table_start = .;
 		KEEP(*(.driver))
+		KEEP(*(.driver.*))
 		_driver_table_end = .;
 	} > vma_dmem AT > lma_mem
 

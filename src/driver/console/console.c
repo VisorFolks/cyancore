@@ -1,12 +1,25 @@
 #include <arc/stdio.h>
+#include <status.h>
 #include <driver/console.h>
 
-int console_init()
+console_t *con;
+
+void console_attach_driver(console_t *pcon)
+{
+	con = pcon;
+}
+
+int console_early_setup()
 {
 	return 0;
 }
 
-int console_putc(int c)
+int console_setup()
+{
+	return 0;
+}
+
+int console_putc(const char c)
 {
 	return c;
 }
