@@ -45,7 +45,7 @@ PLAT_INCLUDE	:=
 PROJECT_INCLUDES:=
 LIB_INCLUDES	:=
 
-include $(SRC)/lib/build.mk
+# Below order needs to be strictly maintained
 include $(SRC)/projects/$(PROJECT)/config.mk
 include $(SRC)/projects/$(PROJECT)/build.mk
 include $(SRC)/platform/build.mk
@@ -54,4 +54,5 @@ include $(SRC)/driver/build.mk
 #include $(SRC)/kernel/build.mk
 #include $(SRC)/network/build.mk
 #incldue $(SRC)/fs/build.mk
+include $(SRC)/lib/build.mk
 include $(SRC)/Arc/build.mk
