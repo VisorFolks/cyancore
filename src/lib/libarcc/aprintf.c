@@ -4,6 +4,7 @@
 #include <arc/stdbool.h>
 #include <arc/stdint.h>
 #include <arc/stdio.h>
+#include <status.h>
 #include <driver/console.h>
 
 

@@ -4,7 +4,7 @@
 #include <stddef.h>
 
 /*
- * Memchr function
+ * Memchr like function
  * i = source
  * r = reference
  * n = first n locations
@@ -13,7 +13,7 @@
 void *amchr(const void *i, int r, size_t n);
 
 /*
- * Memcmp function
+ * Memcmp like function
  * i = source 1
  * j = source 2
  * size = number of bytes to be compared
@@ -22,7 +22,7 @@ void *amchr(const void *i, int r, size_t n);
 int amcmp(const void *i, const void *j, size_t size);
 
 /*
- * Memcpy function
+ * Memcpy like function
  * i = destination
  * j = source
  * size = number of bytes to be copied
@@ -31,7 +31,7 @@ int amcmp(const void *i, const void *j, size_t size);
 void *amcpy(void *i, const void *j, size_t size);
 
 /*
- * Memmove function
+ * Memmove like function
  * i = destination
  * j = source
  * size - number of bytes to be copied
@@ -40,16 +40,16 @@ void *amcpy(void *i, const void *j, size_t size);
 void *ammove(void *i, const void *j, size_t size);
 
 /*
- * Memrchr function
+ * Memrchr like function
  * i = source
  * r = reference
  * n = first n locations
  * ret = source
  */
-void *amrchr(const void *i, int r, size_t n);
+void *amchr_rev(const void *i, int r, size_t n);
 
 /*
- * Memset function
+ * Memset like function
  * i = pointer
  * n = value
  * size = size to be populated
@@ -65,7 +65,7 @@ void *amset(void *i, int n, size_t size);
 char *astrchr(const char *i, int r);
 
 /*
- * Strcmp function
+ * Strcmp like function
  * i = source 1
  * j = source 2
  * ret = difference
@@ -73,7 +73,7 @@ char *astrchr(const char *i, int r);
 int astrcmp(const char *i, const char *j);
 
 /*
- * Strlcpy function
+ * Strlcpy like function
  * i = destination
  * j = source
  * size = size to be copied
@@ -82,14 +82,14 @@ int astrcmp(const char *i, const char *j);
 size_t astrlcpy(char *i, const char *j, size_t size);
 
 /*
- * Strlen function
+ * Strlen like function
  * i = source
  * ret = length of string
  */
 size_t astrlen(const char *i);
 
 /*
- * Strncmp function
+ * Strncmp like function
  * i = source 1
  * j = source 1
  * n = locations to be compared
@@ -98,7 +98,7 @@ size_t astrlen(const char *i);
 int astrncmp(const char *i, const char *j, size_t n);
 
 /*
- * Strnlen function
+ * Strnlen like function
  * i = source
  * size = size
  * ret = actual size
@@ -111,4 +111,4 @@ size_t strnlen(const char *i, size_t size);
  * r = reference
  * ret = pointer to first occurance
  */
-char *astrrchr(const char *i, int r);
+char *astrchr_rev(const char *i, int r);

@@ -1,5 +1,6 @@
 #include <arc/assert.h>
 #include <arc/stdio.h>
+#include <status.h>
 #include <driver/console.h>
 
 extern void plat_panic_handler();
