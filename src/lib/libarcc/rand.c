@@ -1,7 +1,7 @@
 #include <arc/stdint.h>
 #include <arc/rand.h>
 
-unsigned long randseed = 0x;
+unsigned long randseed = 0x252745;
 
 void srand(unsigned long seed)
 {
