@@ -1,4 +1,6 @@
 # Drivers
 
+EARLYCON_MEMBUF	:= 1
+CONSOLE_MEMBUF	:= 1
 ADC		:= 0
 UART		:= 0
