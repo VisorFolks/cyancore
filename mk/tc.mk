@@ -15,7 +15,7 @@ endif
 ifeq ($(ARCH),avr)
 TC	:= $(TOOLS_ROOT)/avr-toolchain/bin/avr
 TI	:= $(TOOLS_ROOT)/avr-toolchain/avr/include/
-TL	:= $(TOOLS_ROOT)/avr-toolchain/avr/lib/
+TL	:= $(TOOLS_ROOT)/avr-toolchain/avr/lib
 endif
 
 ifneq ($(ARCH),)

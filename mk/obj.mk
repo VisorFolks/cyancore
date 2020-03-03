@@ -18,7 +18,7 @@ $(C_OBJS): $(OUT)/%.o: %.c
 $(S_OBJS): $(OUT)/%.o: %.S
 	mkdir -p $(dir $@)
 	echo "Assembling $(subst .o,.S,$(notdir $@)) ..."
-	$(CC) -E $(CFLAGS) -c $< > $(subst .o,.pS,$@) -nostdlib
+	$(CC) -E $(CFLAGS) -c $< > $(subst .o,.pS,$@)
 	$(AS) $(ASFLAGS) $(subst .o,.pS,$@) -o $@
 	rm $(subst .o,.pS,$@)
 
