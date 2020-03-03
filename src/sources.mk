@@ -2,12 +2,12 @@
 #----------< Sources Makefile >----------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
 
-DEBUG		?= 0
+DEBUG		?= 1
 TARGET_FLAGS	?=
 AUTOINIT	?= 0
 
 INCLUDE		+= $(SRC)/include/	\
-		   $(OUT)		\
+		   $(TI)		\
 		   $(LIB_INCLUDE)	\
 		   $(PLAT_INCLUDE)	\
 		   $(PROJECT_INCLUDES)
@@ -23,7 +23,7 @@ CFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 		   -ffunction-sections			\
 		   -fdata-sections			\
 		   -fno-builtin				\
-		   -nostdlib
+		   -nostdinc -nostdlib
 
 ifeq ($(DEBUG),1)
 CFLAGS		+= -g
@@ -43,6 +43,7 @@ LD_FLAGS	+= --error-unresolved-symbols	\
 		   -nostdlib			\
 		   -b $(OUTPUT_FORMAT)
 
+LIBGCC_PATH	:=
 DEP_LIB_PATH	:=
 DEP_LIBS	:=
 DEPS_OBJS	:=

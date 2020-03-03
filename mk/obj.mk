@@ -13,7 +13,7 @@ DEPS_OBJS	+= $(C_OBJS) $(S_OBJS)
 $(C_OBJS): $(OUT)/%.o: %.c
 	mkdir -p $(dir $@)
 	echo "Compiling $(subst .o,.c,$(notdir $@)) ..."
-	$(CC) $(CFLAGS) -c $< -o $@ -nostdlib
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(S_OBJS): $(OUT)/%.o: %.S
 	mkdir -p $(dir $@)
