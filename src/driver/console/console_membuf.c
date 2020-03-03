@@ -1,4 +1,4 @@
-#include <arc/stdint.h>
+#include <stdint.h>
 #include <platform.h>
 #include <status.h>
 #include <driver.h>
@@ -10,37 +10,37 @@
  */
 char membuf[MEMBUF_SIZE];
 
-status_t membuf_putc(const char c)
+status_t membuf_writeb(const char c)
 {
 	static size_t pointer = 0;
-	if(pointer == MEMBUF_SIZE)
+	if(pointer == MEMBUF_SIZE)	// Roll over after buffer is full
 		pointer = 0;
 	membuf[pointer++] = c;
 	return success;
 }
 
-status_t membuf_puts(const char *s)
-{
-	while(*s != '\0')
-		membuf_putc(*s++);
-	return success;
-}
-
 status_t membuf_flush()
 {
+	// This is necessary for cpus that uses cache
 	return success;
 }
 
 console_t membuf_driver =
 {
-	.putc	= membuf_putc,
-	.puts	= membuf_puts,
+	.write	= membuf_writeb,
+	.error	= membuf_writeb,
 	.flush	= membuf_flush
 };
 
-void membuf_driver_setup()
+status_t membuf_driver_setup()
 {
-	console_attach_driver(&membuf_driver);
+	return console_attach_device(&membuf_driver);
 }
 
+#if EARLYCON_MEMBUF==1
+INCLUDE_DRIVER(earlycon, &membuf_driver_setup);
+#endif
+
+#if CONSOLE_MEMBUF==1
 INCLUDE_DRIVER(console, &membuf_driver_setup);
+#endif

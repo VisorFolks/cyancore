@@ -1,5 +1,5 @@
-#include <arc/stdlib.h>
-#include <arc/stdbool.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
 static void (*exit_func)(int status);
 

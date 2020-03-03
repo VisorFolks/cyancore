@@ -1,7 +1,7 @@
-#include <arc/assert.h>
-#include <arc/stdarg.h>
-#include <arc/stdint.h>
-#include <arc/stdio.h>
+#include <assert.h>
+#include <stdarg.h>
+#include <stdint.h>
+#include <stdio.h>
 
 extern void plat_panic_handler();
 
@@ -101,7 +101,7 @@ int asnprintf(char *s, size_t n, const char *fmt, ...)
 					unsigned_dec_print(&s, n, &chars_printed, unum);
 					break;
 				default:
-					aprintf("snprintf: specifier with ASCII code '%d' not supported.", *fmt);
+					printf("snprintf: specifier with ASCII code '%d' not supported.", *fmt);
 					plat_panic_handler();
 			}
 			fmt++;

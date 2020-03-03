@@ -5,8 +5,8 @@
 
 #define EOF		-1
 
-int aprintf(const char *fmt, ...);
-int asnprintf(char *s, size_t n, const char *fmt, ...);
+int printf(const char *fmt, ...);
+int snprintf(char *s, size_t n, const char *fmt, ...);
 int putch(int c);
 int puts(const char *s);
 

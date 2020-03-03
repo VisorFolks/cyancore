@@ -2,34 +2,37 @@
 #----------< Sources Makefile >----------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
 
-DEBUG		?= 1
+DEBUG		?= 0
 TARGET_FLAGS	?=
 AUTOINIT	?= 0
 
-INCLUDE		+= -I $(SRC)/include/	\
-		   -I $(OUT)		\
+INCLUDE		+= $(SRC)/include/	\
+		   $(OUT)		\
 		   $(LIB_INCLUDE)	\
 		   $(PLAT_INCLUDE)	\
 		   $(PROJECT_INCLUDES)
 
 OPTIMIZATION	?= 0
 
-CFLAGS		+= $(INCLUDE)			\
-		   -DAUTOINIT=$(AUTOINIT)	\
-		   -O$(strip $(OPTIMIZATION))	\
-		   $(TARGET_FLAGS) -DARCH_$(BIT)\
-		   -Wall -Wextra -Werror	\
-		   -ffunction-sections		\
-		   -fdata-sections
+CFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
+		   -DDEBUG=$(DEBUG)			\
+		   -DAUTOINIT=$(AUTOINIT)		\
+		   -O$(strip $(OPTIMIZATION))		\
+		   $(TARGET_FLAGS) -DARCH_$(BIT)	\
+		   -Wall -Wextra -Werror		\
+		   -ffunction-sections			\
+		   -fdata-sections			\
+		   -fno-builtin				\
+		   -nostdlib
+
 ifeq ($(DEBUG),1)
-CFLAGS		+= -g				\
-		   -DDEBUG=$(DEBUG)
+CFLAGS		+= -g
 else
 LD_FLAGS	+= --gc-sections
 endif
 
-ASFLAGS		+= $(INCLUDE)		\
-		   $(TARGET_FLAGS)	\
+ASFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
+		   $(TARGET_FLAGS)			\
 		   --fatal-warnings
 
 LD_SCRIPT	:= $(OUT)/arc.ld
@@ -37,11 +40,11 @@ LD_SCRIPT	:= $(OUT)/arc.ld
 LD_FLAGS	+= --error-unresolved-symbols	\
 		   --warn-common		\
 		   --fatal-warnings		\
+		   -nostdlib			\
 		   -b $(OUTPUT_FORMAT)
 
 DEP_LIB_PATH	:=
 DEP_LIBS	:=
-
 DEPS_OBJS	:=
 PLAT_INCLUDE	:=
 PROJECT_INCLUDES:=

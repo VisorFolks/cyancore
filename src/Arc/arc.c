@@ -1,8 +1,8 @@
 #include <arc.h>
 #include <project.h>
-#include <arc/stdbool.h>
-#include <arc/stdlib.h>
-#include <arc/stdint.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <stdint.h>
 #include <status.h>
 
 volatile uint32_t ArcVersion __attribute__((section(".version"))) = VERSION;
@@ -12,7 +12,7 @@ status_t autoinit();
 #endif
 
 void arc()
-{	
+{
 #if AUTOINIT==1
 	autoinit();
 #endif
@@ -21,5 +21,6 @@ void arc()
 
 	while(true)
 		project_loop();
+
 	exit(EXIT_FAILURE);
 }

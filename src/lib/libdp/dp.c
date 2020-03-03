@@ -1,5 +1,5 @@
-#include <arc/stdint.h>
-#include <arc/stdio.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <platform.h>
 #include <status.h>
 #include <dp.h>

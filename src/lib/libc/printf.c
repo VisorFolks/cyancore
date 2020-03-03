@@ -1,9 +1,8 @@
-#include <arc/assert.h>
-#include <arc/stddef.h>
-#include <arc/stdarg.h>
-#include <arc/stdbool.h>
-#include <arc/stdint.h>
-#include <arc/stdio.h>
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <status.h>
 #include <driver/console.h>
 
@@ -158,7 +157,7 @@ loop:
 	return ret;
 }
 
-int aprintf(const char *fmt, ...)
+int printf(const char *fmt, ...)
 {
 	int ret;
 	va_list va;

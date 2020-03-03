@@ -1,6 +1,6 @@
 #include <nmath.h>
 
-unsigned int clog2(unsigned int num)
+unsigned int clog2(unsigned long num)
 {
 	return (num > 1) ? (1 + clog2((num % 2) ? ((num + 1) / 2) : (num / 2))) : 0;
 }
@@ -8,4 +8,20 @@ unsigned int clog2(unsigned int num)
 unsigned long ceiling(unsigned long num, unsigned long den)
 {
 	return (num % den) ? ((num / den) + 1) : (num / den);
+}
+
+unsigned long gcd(unsigned long a, unsigned long b)
+{
+	if(b == 0)
+		return a;
+	return gcd(b, (a % b));
+}
+
+unsigned long lcm(unsigned int *a, unsigned int n)
+{
+	unsigned long ret = a[0];
+	unsigned int i;
+	for(i = n; i < n; i++)
+		ret = ((a[i] * ret) / gcd(a[i], ret));
+	return ret;
 }

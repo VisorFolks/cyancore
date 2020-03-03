@@ -1,35 +1,54 @@
-#include <arc/stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <status.h>
 #include <driver/console.h>
 
 console_t *con;
+bool console_attached = false;
 
-void console_attach_driver(console_t *pcon)
+status_t console_attach_device(console_t *pcon)
 {
+	status_t ret = success;
+	console_attached = false;
 	con = pcon;
+	if(con != NULL)
+		console_attached = true;
+	else
+		ret = error_inval_arg;
+	return ret;
 }
 
-int console_early_setup()
+
+status_t console_setup()
 {
-	return 0;
+	return success;
 }
 
-int console_setup()
+status_t console_putc(const char c)
 {
-	return 0;
+	if(console_attached)
+		return con->write(c);
+	return error_inval_func;
 }
 
-int console_putc(const char c)
+status_t console_puts(const char *s)
 {
-	return c;
+	status_t ret;
+	while(*s != '\0')
+	{
+		ret = console_putc(*s);
+		if(ret == error_inval_func)
+			return ret;
+		s++;
+	}
+	return success;
 }
 
-int console_puts(const char *s)
+status_t console_flush()
 {
-	return *s;
-}
-
-int console_flush()
-{
-	return 0;
+	if(console_attached)
+		return con->flush();
+	return error_inval_func;
 }

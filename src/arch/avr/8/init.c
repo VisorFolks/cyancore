@@ -7,8 +7,8 @@
 
 #include <arc.h>
 #include <platform.h>
-#include <arc/stdint.h>
-#include <arc/stdlib.h>
+#include <stdint.h>
+#include <stdlib.h>
 
 extern uint16_t _stack_start, * _bss_start, * _bss_end;
 

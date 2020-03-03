@@ -1,6 +1,6 @@
 #include <platform.h>
-#include <arc/stddef.h>
-#include <arc/assert.h>
+#include <stddef.h>
+#include <assert.h>
 
 extern void plat_panic_handler(void);
 static void (* int_handler[N_IRQ])(void) = {NULL};

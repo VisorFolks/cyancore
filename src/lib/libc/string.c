@@ -1,9 +1,9 @@
-#include <arc/stddef.h>
-#include <arc/stdbool.h>
-#include <arc/stdint.h>
-#include <arc/string.h>
+#include <stddef.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <string.h>
 
-void *amchr(const void *i, int r, size_t n)
+void *memchr(const void *i, int r, size_t n)
 {
 	const unsigned char *src = i;
 	while(n--)
@@ -15,7 +15,7 @@ void *amchr(const void *i, int r, size_t n)
 	return NULL;
 }
 
-int amcmp(const void *i, const void *j, size_t size)
+int memcmp(const void *i, const void *j, size_t size)
 {
 	int ret = 0;
 	const unsigned char *s = i;
@@ -30,7 +30,7 @@ int amcmp(const void *i, const void *j, size_t size)
 	return ret;
 }
 
-void *amcpy(void *i, const void *j, size_t size)
+void *memcpy(void *i, const void *j, size_t size)
 {
 	const char *src = j;
 	char *dst = i;
@@ -41,12 +41,12 @@ void *amcpy(void *i, const void *j, size_t size)
 	return i;
 }
 
-void *ammove(void *i, const void *j, size_t size)
+void *memmove(void *i, const void *j, size_t size)
 {
 	// Check if the source and destination dont overlap
 	if((size_t)i - (size_t)j >= size)
 	{
-		amcpy(i, j, size);
+		memcpy(i, j, size);
 	}
 	/*
 	 * If memory overlaps the copying backwards is better idea
@@ -69,7 +69,7 @@ void *ammove(void *i, const void *j, size_t size)
 	return i;
 }
 
-void *amchr_rev(const void *i, int r, size_t n)
+void *memchr_rev(const void *i, int r, size_t n)
 {
 	const unsigned char *src = i + n - 1;
 	while(n--)
@@ -81,7 +81,7 @@ void *amchr_rev(const void *i, int r, size_t n)
 	return NULL;
 }
 
-void *amset(void *i, int n, size_t size)
+void *memset(void *i, int n, size_t size)
 {
 	char *p = i;
 	while(size--)
@@ -91,7 +91,7 @@ void *amset(void *i, int n, size_t size)
 	return i;
 }
 
-char *astrchr(const char *i, int r)
+char *strchr(const char *i, int r)
 {
 	char *ret = NULL;
 	while(true)
@@ -111,7 +111,7 @@ char *astrchr(const char *i, int r)
 	return ret;
 }
 
-int astrcmp(const char *i, const char *j)
+int strcmp(const char *i, const char *j)
 {
 	while(*i == *j++)
 		if(*i++ == '\0')
@@ -119,7 +119,7 @@ int astrcmp(const char *i, const char *j)
 	return (*(const unsigned char *)i - *(const unsigned char *)(j - 1));
 }
 
-size_t astrlcpy(char *i, const char *j, size_t size)
+size_t strlcpy(char *i, const char *j, size_t size)
 {
 	const char *j1 = j;
 	size_t end = size;
@@ -139,7 +139,7 @@ size_t astrlcpy(char *i, const char *j, size_t size)
 	return (j - j1 - 1);
 }
 
-size_t astrlen(const char *i)
+size_t strlen(const char *i)
 {
 	const char *p = i;
 	while(*p)
@@ -147,7 +147,7 @@ size_t astrlen(const char *i)
 	return (p - i);
 }
 
-int astrncmp(const char *i, const char *j, size_t n)
+int strncmp(const char *i, const char *j, size_t n)
 {
 	int ret = 0;
 	if(!n)
@@ -169,7 +169,7 @@ int astrncmp(const char *i, const char *j, size_t n)
 	return ret;
 }
 
-size_t astrnlen(const char *i, size_t size)
+size_t strnlen(const char *i, size_t size)
 {
 	size_t ret;
 	for(ret = 0; ret < size; ret++, i++)
@@ -180,7 +180,7 @@ size_t astrnlen(const char *i, size_t size)
 	return ret;
 }
 
-char *astrchr_rev(const char *i, int r)
+char *strchr_rev(const char *i, int r)
 {
 	char *ret = NULL;
 	while(true)

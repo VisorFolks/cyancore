@@ -1,9 +1,9 @@
 #include <status.h>
 #include <arch.h>
-#include <arc/stdbool.h>
-#include <arc/stdint.h>
-#include <arc/stdlib.h>
-#include <arc/stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <lock/spinlock.h>
 
 #if AUTOINIT==1
@@ -15,8 +15,8 @@ extern volatile uint32_t ArcVersion;
 status_t autoinit()
 {
 	static uint8_t boot_done = 0;
-	spinlock_t arc_lock;
 	static uint8_t n_cpu_online = 0;
+	spinlock_t arc_lock;
 	bool boot = false;
 	
 	arch_early_setup();
@@ -38,12 +38,12 @@ status_t autoinit()
 
 	if(boot)
 	{
-		aprintf("< ! > Arc Framework version %x\n", ArcVersion);
+		printf("< ! > Arc Framework version %x\n", ArcVersion);
 		platform_early_setup();
 		platform_setup();
 	}
 	platform_cpu_setup();
-	aprintf("< ! > ARC: Boot complete!\n");
+	printf("< ! > ARC: Boot complete!\n");
 
 	n_cpu_online++;
 

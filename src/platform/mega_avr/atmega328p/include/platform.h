@@ -13,3 +13,5 @@
 #define STACK_SIZE	0x0200
 
 #define N_CORES		1
+
+#define MEMBUF_SIZE	512
