@@ -12,7 +12,7 @@ INCLUDE		+= $(SRC)/include/	\
 		   $(PLAT_INCLUDE)	\
 		   $(PROJECT_INCLUDES)
 
-OPTIMIZATION	?= 0
+OPTIMIZATION	?= s
 
 CFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 		   -DDEBUG=$(DEBUG)			\
@@ -20,10 +20,8 @@ CFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 		   -O$(strip $(OPTIMIZATION))		\
 		   $(TARGET_FLAGS) -DARCH_$(BIT)	\
 		   -Wall -Wextra -Werror		\
-		   -ffunction-sections			\
-		   -fdata-sections			\
-		   -fno-builtin				\
-		   -nostdinc -nostdlib
+		   -ffunction-sections -fdata-sections	\
+		   -fno-builtin	-nostdinc -nostdlib
 
 ifeq ($(DEBUG),1)
 CFLAGS		+= -g
