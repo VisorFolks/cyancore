@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <driver.h>
-#include <lock/spinlock.h>
 #include <driver/console.h>
+#include <platform.h>
 
 #if AUTOINIT==1
 extern void platform_early_setup();
@@ -23,14 +23,11 @@ char *ARC_LOGO = \
 status_t autoinit()
 {
 	static uint8_t n_cpu_online = 0;
-	spinlock_t arc_lock;
 	static bool boot = false;
 	
 	arch_early_setup();
 	arch_setup();
 
-	// Critical section start
-	spinlock_acquire(&arc_lock);
 	if(!boot_done)
 	{
 		boot_done = 1;
@@ -40,8 +37,6 @@ status_t autoinit()
 	{
 		boot = false;
 	}
-	spinlock_release(&arc_lock);
-	// Critical section end
 
 	if(boot)
 	{
