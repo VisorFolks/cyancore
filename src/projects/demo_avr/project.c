@@ -7,14 +7,14 @@ extern void platform_early_setup();
 
 void project_setup()
 {
-	printf("Demo AVR: Running Blinky... [ ]");
+	printf("Demo AVR: Running Blinky... [ ]\b");
 	MMIO8(DDRB) = 0x30;
 	return;
 }
 
 void delay()
 {
-	for(long i =0; i < 1000000; i++)
+	for(long i =0; i < 500000; i++)
 		asm volatile("nop");
 }
 
