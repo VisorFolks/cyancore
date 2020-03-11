@@ -3,7 +3,7 @@
 #define LB8(X)	(X & 0xff)
 
 .global copy_data
-.section .text
+.section .text.copy_data, "ax", @progbits
 .type copy_data, "function"
 copy_data:
 	ldi	r17, hi8((V_DMEM_START + _data_size))

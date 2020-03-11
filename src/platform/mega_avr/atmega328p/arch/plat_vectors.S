@@ -1,4 +1,4 @@
-.section .platvectors, "ax"
+.section .platvectors, "ax", %progbits
 PlatVectors:
 .org 0x00
 	rjmp	int_1
