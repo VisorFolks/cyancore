@@ -14,6 +14,8 @@ INCLUDE		+= $(SRC)/include/	\
 
 OPTIMIZATION	?= s
 
+add_define	= -D$(1)=$($(1))
+
 CFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 		   -DDEBUG=$(DEBUG)			\
 		   -DAUTOINIT=$(AUTOINIT)		\
@@ -25,8 +27,6 @@ CFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 
 ifeq ($(DEBUG),1)
 CFLAGS		+= -g
-else
-LD_FLAGS	+= --gc-sections
 endif
 
 ASFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
@@ -38,7 +38,7 @@ LD_SCRIPT	:= $(OUT)/arc.ld
 LD_FLAGS	+= --error-unresolved-symbols	\
 		   --warn-common		\
 		   --fatal-warnings		\
-		   -nostdlib			\
+		   -nostdlib --gc-sections	\
 		   -b $(OUTPUT_FORMAT)
 
 LIBGCC_PATH	:=

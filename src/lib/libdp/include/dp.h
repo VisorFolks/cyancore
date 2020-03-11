@@ -34,7 +34,7 @@ typedef struct device_properties
 {
 	cpu_t core[N_CORES];
 	uint8_t datawidth;
-	size_t base_clock;
+	unsigned long base_clock;
 	memory_t memory;
 #if UART0
 	module_t uart0;
@@ -62,8 +62,10 @@ typedef struct device_properties
 #endif
 } dp_t;
 
+status_t dp_init(dp_t *);
+
 #define DP_PROTOTYPE_MODULE_FUNCTION(mod)	\
-	module_t *dp_get_##mod##_info();
+	module_t dp_get_##mod##_info();
 
 #if UART0
 DP_PROTOTYPE_MODULE_FUNCTION(uart0)

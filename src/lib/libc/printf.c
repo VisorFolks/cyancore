@@ -15,17 +15,15 @@
 	(((_lcount) >= 1)  ? va_arg(_args, unsigned long) :	\
 			    va_arg(_args, unsigned int))
 
-int putch(int i)
-{
-	int ret;
-	ret = console_putc(i);
-	return ret;
-}
-
 int puts(const char *i)
 {
-	int ret;
-	ret = console_puts(i);
+	int ret = 0;
+	while(*i != '\0')
+	{
+		console_putc(*i);
+		ret++;
+		i++;
+	}
 	return ret;
 }
 
@@ -49,14 +47,14 @@ static int unumprint(unsigned long unum, unsigned int radix, char padc, int padn
 	{
 		while(i < padn)
 		{
-			(void)putch((int)padc);
+			console_putc(padc);
 			ret++;
 			padn--;
 		}
 	}
 	while(--i >= 0)
 	{
-		(void)putch((int)buf[i]);
+		console_putc(buf[i]);
 		ret++;
 	}
 	return ret;
@@ -87,7 +85,7 @@ loop:
 					num = get_num_va_args(args, l_ret);
 					if (num < 0)
 					{
-						(void)putch((int)'-');
+						console_putc('-');
 						unum = (unsigned long)-num;
 						padn--;
 					}
@@ -97,7 +95,7 @@ loop:
 					break;
 				case 'c':
 					str = va_arg(args, char *);
-					ret += putch((int)str);
+					ret += console_putc((int)str);
 					break;
 				case 's':
 					str = va_arg(args, char *);
@@ -115,6 +113,7 @@ loop:
 					break;
 				case 'x':
 					unum = get_unum_va_args(args, l_ret);
+					ret += puts("0x");
 					ret += unumprint(unum, 16, padc, padn);
 					break;
 				case 'z':
@@ -150,7 +149,10 @@ loop:
 			fmt++;
 			continue;
 		}
-		(void)putch((int)*fmt);
+
+		else if(*fmt == '\n')
+			console_putc('\r');
+		console_putc(*fmt);
 		fmt++;
 		ret++;
 	}

@@ -13,6 +13,7 @@ status_t serial_setup(uart_port_t *port, direction_t d, baud_t rate, parity_t p)
 {
 	status_t ret = success;
 	assert_ndbg(port);
+	MMIO8(port->baddr + UCSRA_OFFSET) = 0x00;
 
 	// Enable module based on direction
 	uint8_t en = 0;
@@ -79,17 +80,17 @@ status_t serial_setup(uart_port_t *port, direction_t d, baud_t rate, parity_t p)
 
 bool serial_buffer_available(uart_port_t *port)
 {
-	return (bool)(MMIO8(port->baddr + UCSRA_OFFSET) >> UDRE);
+	return (bool)(MMIO8(port->baddr + UCSRA_OFFSET) >> UDRE) & 0x01;
 }
 
 bool serial_tx_done(uart_port_t *port)
 {
-	return (bool)(MMIO8(port->baddr + UCSRA_OFFSET) >> TXC);
+	return (bool)(MMIO8(port->baddr + UCSRA_OFFSET) >> TXC) & 0x01;
 }
 
 bool serial_rx_done(uart_port_t *port)
 {
-	return (bool)(MMIO8(port->baddr + UCSRA_OFFSET) >> RXC);
+	return (bool)(MMIO8(port->baddr + UCSRA_OFFSET) >> RXC) * 0x01;
 }
 
 bool serial_frame_error(uart_port_t *port)
@@ -102,30 +103,21 @@ bool serial_frame_error(uart_port_t *port)
 
 status_t serial_tx(uart_port_t *port, const char data)
 {
-	status_t ret = error_busy;
 	assert_ndbg(port);
-	if(serial_buffer_available(port) == 0)
-	{
-		MMIO8(port->baddr + UDR_OFFSET) = data;
-		while(serial_tx_done(port) == 0);
-		ret = success;
-	}
-	return ret;
+	while(!serial_buffer_available(port));
+	MMIO8(port->baddr + UDR_OFFSET) = data;
+	return success;
 }
 
 status_t serial_rx(uart_port_t *port, char *data)
 {
-	status_t ret = error_busy;
 	uint8_t *d = (uint8_t *)data;
 	assert_ndbg(port);
-	if(serial_rx_done(port))
-	{
-		if(serial_frame_error(port))
-			return error_data;
-		*d = MMIO8(port->baddr + UDR_OFFSET);
-		ret = success;
-	}
-	return ret;
+	while(!serial_rx_done(port));
+	if(serial_frame_error(port))
+		return error_data;
+	*d = MMIO8(port->baddr + UDR_OFFSET);
+	return success;
 }
 
 status_t serial_rx_int_en(uart_port_t *port)

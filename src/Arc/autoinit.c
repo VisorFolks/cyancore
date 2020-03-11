@@ -4,20 +4,27 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <driver.h>
 #include <lock/spinlock.h>
+#include <driver/console.h>
 
 #if AUTOINIT==1
 extern void platform_early_setup();
 extern void platform_setup();
 extern void platform_cpu_setup();
 extern volatile uint32_t ArcVersion;
+uint8_t boot_done;
+
+char *ARC_LOGO = \
+"< ! >=========================< ! >\n\
+       ARC Framework V%04x\n\
+< ! >=========================< ! >\n";
 
 status_t autoinit()
 {
-	static uint8_t boot_done = 0;
 	static uint8_t n_cpu_online = 0;
 	spinlock_t arc_lock;
-	bool boot = false;
+	static bool boot = false;
 	
 	arch_early_setup();
 	arch_setup();
@@ -38,12 +45,14 @@ status_t autoinit()
 
 	if(boot)
 	{
-		printf("< ! > Arc Framework version %x\n", ArcVersion);
 		platform_early_setup();
+		driver_setup("earlycon");
+		printf(ARC_LOGO, ArcVersion);
 		platform_setup();
+		boot=false;
 	}
 	platform_cpu_setup();
-	printf("< ! > ARC: Boot complete!\n");
+	printf("< / > ARC: Boot complete!\n");
 
 	n_cpu_online++;
 

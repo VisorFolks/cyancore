@@ -14,17 +14,15 @@ status_t console_attach_device(console_t *pcon)
 	console_attached = false;
 	con = pcon;
 	if(con != NULL)
+	{
 		console_attached = true;
+		ret = con->setup();
+	}
 	else
 		ret = error_inval_arg;
 	return ret;
 }
 
-
-status_t console_setup()
-{
-	return success;
-}
 
 status_t console_putc(const char c)
 {

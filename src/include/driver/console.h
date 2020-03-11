@@ -1,4 +1,5 @@
 #pragma once
+#define _CONSOLE_H_
 
 typedef struct console
 {

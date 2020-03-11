@@ -1,8 +1,7 @@
 DRIVER_PATH	:= $(GET_PATH)
+#LD_SCRIPT	+= -T $(DRIVER_PATH)/driver.ld
 
 include $(DRIVER_PATH)/console/build.mk
-include $(DRIVER_PATH)/chipset/$(FAMILY)/build.mk
-
 
 DIR		:=$(DRIVER_PATH)
 include mk/obj.mk

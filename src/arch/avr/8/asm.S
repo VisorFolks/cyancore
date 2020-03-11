@@ -1,4 +1,26 @@
 #include <platform.h>
+#define UB8(x)	(X >> 8)
+#define LB8(X)	(X & 0xff)
+
+.global copy_data
+.section .text
+.type copy_data, "function"
+copy_data:
+	ldi	r17, hi8((V_DMEM_START + _data_size))
+	ldi	r26, lo8(V_DMEM_START)
+	ldi	r27, hi8(V_DMEM_START)
+	ldi	r30, lo8(_data_start)
+	ldi	r31, hi8(_data_start)
+	rjmp	check
+copy_loop:
+	lpm	r0, Z+
+	st	X+, r0
+check:
+	cpi	r26, lo8((V_DMEM_START + _data_size))
+	cpc	r27, r17
+	brne	copy_loop
+	ret
+
 
 .global zero_reg
 .section .text

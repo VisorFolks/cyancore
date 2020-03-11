@@ -1,28 +1,37 @@
-#include <arc/stdio.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
 #include <status.h>
 #include <driver.h>
 
-extern device_t *_driver_table_start, *_driver_table_end;
+extern device_t _driver_table_start, _driver_table_end;
 
-void driver_setup_all()
+status_t driver_setup_all()
 {
-	device_t *ptr = _driver_table_start;
-	while(ptr <= _driver_table_end)
+	status_t ret = error_inval_arg;
+	device_t *ptr = &_driver_table_start;
+	while(ptr <= &_driver_table_end)
 	{
-		if(ptr->driver_setup)
+		ret = ptr->driver_setup();
+		ptr++;
+	}
+	return ret;
+}
+
+status_t driver_setup(const char *name)
+{
+	status_t ret = error_inval_func;
+	device_t *ptr = &_driver_table_start;
+	while(ptr < &_driver_table_end)
+	{
+		if(strcmp(ptr->name, name) == 0)
 		{
-			aprintf("< ! > %s: Loading... ", ptr->name);
-			ptr->driver_setup();
-			aprintf("Done!\n");
+			ret = ptr->driver_setup();
+			break;
 		}
 		ptr++;
 	}
-}
-
-status_t driver_setup(device_t *dev)
-{
-	dev->driver_setup();
-	return success;
+	return ret;
 }
 
 status_t driver_register(device_t *dev)

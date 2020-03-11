@@ -1,4 +1,3 @@
-
 .PHONY:	version
 NAME	= point
 VERSION	= 0x00000100

@@ -1,4 +1,5 @@
 #pragma once
+#define _DRIVER_H_
 
 typedef struct device
 {

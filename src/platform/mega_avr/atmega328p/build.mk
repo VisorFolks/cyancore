@@ -10,6 +10,7 @@ OUTPUT_FORMAT	:= elf32-avr
 
 PLAT_INCLUDE	+= $(ATMEGA328P_DIR)/include
 
+include $(ATMEGA328P_DIR)/config.mk
 include $(ATMEGA328P_DIR)/arch/build.mk
 include $(ATMEGA328P_DIR)/platform/build.mk
 include $(ATMEGA328P_DIR)/../common/build.mk

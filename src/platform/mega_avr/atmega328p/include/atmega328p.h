@@ -62,8 +62,8 @@
 
 #define SPMCSR		0x57
 
-#define SPL		0x3d
-#define SPH		0x3e
+#define SPL		0x5d
+#define SPH		0x5e
 #define SREG		0x3f
 
 #define WDTCSR		0x60

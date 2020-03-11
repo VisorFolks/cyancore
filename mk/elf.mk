@@ -12,7 +12,7 @@ $(ELF): $(DEPS_OBJS)
 	echo "Generating $(notdir $@) ..."
 	$(CC) $(CFLAGS) -E -P -o $(LD_SCRIPT) $(LD_TEMPLATE)
 	$(LD) -T $(LD_SCRIPT) $(LD_FLAGS) -Map=$(subst .elf,.map,$@) -o $@ $^ $(DEP_LIB_PATH) $(DEP_LIBS) $(LIBGCC_PATH) -lgcc
-	$(OD) -Dx $@ > $(subst .elf,.dis,$@)
+	$(OD) -Dx -h -S $@ > $(subst .elf,.dis,$@)
 	$(OC) -O binary $@ $(subst .elf,.bin,$@)
 	$(OC) -O ihex $@ $(subst .elf,.hex,$@)
 	echo "=================================================="

@@ -16,7 +16,6 @@ void arc()
 #if AUTOINIT==1
 	autoinit();
 #endif
-
 	project_setup();
 
 	while(true)
