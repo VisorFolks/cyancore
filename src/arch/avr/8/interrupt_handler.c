@@ -2,8 +2,8 @@
 #include <stddef.h>
 #include <assert.h>
 
-extern void plat_panic_handler(void);
-static void (* int_handler[N_IRQ])(void) = {NULL};
+extern void arch_panic_handler();
+static void (* int_handler[N_IRQ])(void) = {arch_panic_handler};
 
 void register_interrupt_handler(unsigned int id, void (* handler)(void))
 {
@@ -14,7 +14,7 @@ void register_interrupt_handler(unsigned int id, void (* handler)(void))
 
 void interrupt_handler(unsigned char id)
 {
-	void (*handler)(void) = NULL;
+	void (*handler)(void);
 	assert((id > 0) && (id <= N_IRQ));
 	id --;
 	handler = int_handler[id];

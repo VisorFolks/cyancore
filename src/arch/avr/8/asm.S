@@ -11,14 +11,14 @@ copy_data:
 	ldi	r27, hi8(V_DMEM_START)
 	ldi	r30, lo8(_data_start)
 	ldi	r31, hi8(_data_start)
-	rjmp	check
-copy_loop:
+	rjmp	1f
+2:
 	lpm	r0, Z+
 	st	X+, r0
-check:
+1:
 	cpi	r26, lo8((V_DMEM_START + _data_size))
 	cpc	r27, r17
-	brne	copy_loop
+	brne	2b
 	ret
 
 
@@ -26,6 +26,7 @@ check:
 .section .text
 .type zero_reg, "function"
 zero_reg:
+	eor	r1, r1
 	mov	r0, r1
 	mov	r2, r1
 	mov	r3, r1

@@ -4,12 +4,12 @@
 .type spinlock_acquire, "function"
 spinlock_acquire:
 	movw	r30, r24
-poll:
+1:
 	ld	r18, Z
 	ldd	r19, Z+1
 	cpi	r18, 0x01
 	cpc	r19, r1
-	breq	poll
+	breq	1b
 	cli
 	ldi	r18, 0x01
 	mov	r19, r1
