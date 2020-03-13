@@ -65,7 +65,7 @@ typedef struct device_properties
 status_t dp_init(dp_t *);
 
 #define DP_PROTOTYPE_MODULE_FUNCTION(mod)	\
-	module_t dp_get_##mod##_info();
+	module_t *dp_get_##mod##_info();
 
 #if UART0
 DP_PROTOTYPE_MODULE_FUNCTION(uart0)

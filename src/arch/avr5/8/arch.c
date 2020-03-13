@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 #include <status.h>
+#include <machine_call.h>
 #include <arch.h>
 
 void arch_early_setup()
@@ -38,11 +39,11 @@ void arch_ei()
 	return;
 }
 
-void machine_call(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int *, status_t *);
+void machine_call(unsigned int, unsigned int, unsigned int, unsigned int, mret_t *);
 
-unsigned int arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsigned int a2, status_t *status)
+mret_t arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsigned int a2)
 {
-	unsigned int ret;
-	machine_call(code, a0, a1, a2, &ret, status);
+	mret_t ret;
+	machine_call(code, a0, a1, a2, &ret);
 	return ret;
 }

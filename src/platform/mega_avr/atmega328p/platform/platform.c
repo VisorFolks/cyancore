@@ -12,7 +12,7 @@ dp_t device_prop;
 
 void platform_early_setup()
 {
-	memcpy(device_prop.core[0].name, "avr", 3);
+	memcpy(device_prop.core[0].name, "avr5", 4);
 	device_prop.core[0].id = 0x0000;
 	device_prop.datawidth = 8;
 	device_prop.base_clock = FCLK;
@@ -39,26 +39,22 @@ void platform_cpu_setup()
 	return;
 }
 
-status_t platform_fetch_dp(unsigned int dev_info, unsigned int *ret)
+mret_t platform_fetch_dp(unsigned int dev)
 {
-	status_t status = error;
-	module_t module;
-	switch(dev_info)
+	mret_t ret;
+	switch(dev)
 	{
-		case DEV_CONSOLE_ID:
-			module = dp_get_uart0_info();
-			*ret = module.id;
-			status = success;
-			break;
-		case DEV_CONSOLE_BADDR:
-			module = dp_get_uart0_info();
-			*ret = module.baddr;
-			status = success;
+		case DEV_CONSOLE:
+			ret.p = (uintptr_t)dp_get_uart0_info();
+			ret.size = sizeof(module_t);
+			ret.status = success;
 			break;
 		default:
-			status = error_inval_dev_id;
+			ret.p = (uintptr_t)NULL;
+			ret.size = 0x00;
+			ret.status = error_inval_dev_id;
 			break;
 	}
 
-	return status;
+	return ret;
 }

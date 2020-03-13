@@ -6,4 +6,6 @@ void arch_setup();
 void arch_idle();
 void arch_di();
 void arch_ei();
-unsigned int arch_machine_call(unsigned  int, unsigned int, unsigned  int, unsigned  int, status_t *);
+#ifdef _MACHINE_CALL_H_
+mret_t arch_machine_call(unsigned  int, unsigned int, unsigned  int, unsigned  int);
+#endif

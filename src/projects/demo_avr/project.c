@@ -8,7 +8,7 @@ extern void platform_early_setup();
 void project_setup()
 {
 	printf("Demo AVR: Running Blinky... [ ]\b");
-	MMIO8(DDRB) = 0x30;
+	MMIO8(DDRB) = 0x20;
 	return;
 }
 

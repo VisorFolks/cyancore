@@ -41,9 +41,9 @@ memory_t *dp_get_memory_info()
 }
 
 #define DP_CREATE_MODULE_FUNCTION(mod)		\
-	module_t dp_get_##mod##_info()		\
+	module_t *dp_get_##mod##_info()		\
 	{					\
-		return dev_prop->mod;	\
+		return &dev_prop->mod;	\
 	}
 
 #if UART0

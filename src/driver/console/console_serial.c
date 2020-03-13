@@ -17,13 +17,15 @@ uart_port_t port;
 
 status_t console_serial_setup()
 {
-	status_t ret;
-	port.port_id = arch_machine_call(FETCH_DP, DEV_CONSOLE_ID, 0, 0, &ret);
-	if(ret != success)
-		return ret;
-	port.baddr = arch_machine_call(FETCH_DP, DEV_CONSOLE_BADDR, 0, 0, &ret);
-	if(ret != success)
-		return ret;
+	mret_t mres;
+	module_t *dp;
+	mres = arch_machine_call(FETCH_DP, DEV_CONSOLE, 0, 0);
+	if(mres.status != success)
+		return mres.status;
+	dp = (module_t *)mres.p;
+	port.port_id = dp->id;
+	port.baddr = dp->baddr;
+	port.stride = dp->stride;
 	/*
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
