@@ -50,7 +50,6 @@ PROJECT_INCLUDES:=
 LIB_INCLUDES	:=
 
 # Below order needs to be strictly maintained
-include $(SRC)/projects/$(PROJECT)/config.mk
 include $(SRC)/projects/$(PROJECT)/build.mk
 include $(SRC)/platform/build.mk
 include $(SRC)/arch/build.mk
