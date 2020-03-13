@@ -1,6 +1,6 @@
 ATMEGA328P_DIR	:= $(GET_PATH)
 
-ARCH		:= avr
+ARCH		:= avr5
 BIT		:= 8
 TARGET_FLAGS	+= -mmcu=atmega328p
 

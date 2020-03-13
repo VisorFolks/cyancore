@@ -12,7 +12,7 @@ TI	:= $(TOOLS_ROOT)/risc-v-toolchain/riscv64-unknown-elf/include
 TL	:= $(TOOLS_ROOT)/risc-v-toolchain/riscv64-unknown-elf/lib
 endif
 
-ifeq ($(ARCH),avr)
+ifeq ($(ARCH),avr5)
 TC	:= $(TOOLS_ROOT)/avr-toolchain/bin/avr
 TI	:= $(TOOLS_ROOT)/avr-toolchain/lib/gcc/avr/5.4.0/include-fixed
 TL	:= $(TOOLS_ROOT)/avr-toolchain/avr/lib
