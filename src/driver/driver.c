@@ -34,6 +34,22 @@ status_t driver_setup(const char *name)
 	return ret;
 }
 
+status_t driver_exit(const char *name)
+{
+	status_t ret = error_inval_func;
+	device_t *ptr = &_driver_table_start;
+	while(ptr < &_driver_table_end)
+	{
+		if(strcmp(ptr->name, name) == 0)
+		{
+			ret = ptr->driver_exit();
+			break;
+		}
+		ptr++;
+	}
+	return ret;
+}
+
 status_t driver_register(device_t *dev)
 {
 	dev->driver_setup();

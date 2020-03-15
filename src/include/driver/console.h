@@ -11,6 +11,7 @@ typedef struct console
 } console_t;
 
 status_t console_attach_device(console_t *);
+status_t console_release_device();
 status_t console_setup();
 status_t console_putc(const char);
 status_t console_puts(const char *);

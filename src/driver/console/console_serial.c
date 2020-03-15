@@ -24,6 +24,7 @@ status_t console_serial_setup()
 		return mres.status;
 	dp = (module_t *)mres.p;
 	port.port_id = dp->id;
+	port.clk_id = dp->clk_id;
 	port.baddr = dp->baddr;
 	port.stride = dp->stride;
 	/*
@@ -58,12 +59,20 @@ status_t console_serial_driver_setup()
 	return console_attach_device(&console_serial_driver);
 }
 
+status_t console_serial_driver_exit()
+{
+	status_t ret;
+	ret = console_release_device();
+	ret |= serial_shutdown(&port);
+	return ret;
+}
+
 #endif
 
 #if EARLYCON_SERIAL==1
-INCLUDE_DRIVER(earlycon, console_serial_driver_setup);
+INCLUDE_DRIVER(earlycon, console_serial_driver_setup, console_serial_driver_exit);
 #endif
 
 #if CONSOLE_SERIAL==1
-INCLUDE_DRIVER(console, console_serial_driver_setup);
+INCLUDE_DRIVER(console, console_serial_driver_setup, console_serial_driver_exit);
 #endif

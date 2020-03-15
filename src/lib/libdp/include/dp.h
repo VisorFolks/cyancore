@@ -26,6 +26,7 @@ typedef struct module
 	uintptr_t baddr;
 	uintptr_t stride;
 	unsigned long clock;
+	unsigned int clk_id;
 	size_t interrupt_id;
 	int_trigger_t interrupt_trigger;
 } module_t;

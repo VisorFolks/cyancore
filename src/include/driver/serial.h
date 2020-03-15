@@ -4,6 +4,7 @@
 typedef struct uart_port
 {
 	uint8_t port_id;
+	unsigned int clk_id;
 	uintptr_t baddr;
 	uintptr_t stride;
 } uart_port_t;
@@ -37,6 +38,7 @@ typedef enum parity
 //spinlock_t serial_spinlock;
 
 status_t serial_setup(uart_port_t *, direction_t, baud_t, parity_t);
+status_t serial_shutdown(uart_port_t *);
 bool serial_rx_done(uart_port_t *);
 status_t serial_tx(uart_port_t *, const char);
 status_t serial_rx(uart_port_t *, char *);

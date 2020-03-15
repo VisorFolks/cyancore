@@ -1,11 +1,11 @@
 #include <stdint.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <assert.h>
 #include <status.h>
 #include <mmio.h>
 #include <lock/spinlock.h>
 #include <driver/serial.h>
+#include <mega_avr_platform.h>
 #include "uart_private.h"
 
 
@@ -14,6 +14,7 @@ status_t serial_setup(uart_port_t *port, direction_t d, baud_t rate, parity_t p)
 	status_t ret = success;
 	assert_ndbg(port);
 	MMIO8(port->baddr + UCSRA_OFFSET) = 0x00;
+	platform_clk_en(port->clk_id);
 
 	// Enable module based on direction
 	uint8_t en = 0;
@@ -76,6 +77,11 @@ status_t serial_setup(uart_port_t *port, direction_t d, baud_t rate, parity_t p)
 	MMIO8(port->baddr + UCSRC_OFFSET) |= (p << UPM0);	// Set Parity
 	MMIO8(port->baddr + UCSRC_OFFSET) |= (3 << UCSZ0);	// 8bit frame
 	return ret;
+}
+
+status_t serial_shutdown(uart_port_t *port)
+{
+	return platform_clk_dis(port->clk_id);
 }
 
 bool serial_buffer_available(uart_port_t *port)

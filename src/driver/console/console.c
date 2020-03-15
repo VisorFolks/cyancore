@@ -23,6 +23,13 @@ status_t console_attach_device(console_t *pcon)
 	return ret;
 }
 
+status_t console_release_device()
+{
+	con = NULL;
+	console_attached = false;
+	return success;
+}
+
 
 status_t console_putc(const char c)
 {

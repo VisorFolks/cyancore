@@ -1,8 +1,8 @@
 .PHONY:	version
-NAME	= point
-VERSION	= 0x00000100
+NAME		= point
+VERSION		= 0x00000100
 
-CFLAGS	+= -DVERSION=$(VERSION)
+CFLAGS		+= -DVERSION=$(VERSION)
 
 version:
 	$(info Building Project $(PROJECT))
