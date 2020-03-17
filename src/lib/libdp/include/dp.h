@@ -20,12 +20,17 @@ typedef struct memory_info
 	uintptr_t size;
 } memory_t;
 
+typedef struct gpio_module
+{
+	uintptr_t baddr;
+	uintptr_t stride;
+} gpio_module_t;
+
 typedef struct module
 {
 	uint8_t id;
 	uintptr_t baddr;
 	uintptr_t stride;
-	unsigned long clock;
 	unsigned int clk_id;
 	size_t interrupt_id;
 	int_trigger_t interrupt_trigger;
@@ -37,6 +42,9 @@ typedef struct device_properties
 	uint8_t datawidth;
 	unsigned long base_clock;
 	memory_t memory;
+#if N_PORT
+	gpio_module_t port[N_PORT];
+#endif
 #if UART0
 	module_t uart0;
 #endif
@@ -64,6 +72,10 @@ typedef struct device_properties
 } dp_t;
 
 status_t dp_init(dp_t *);
+
+#if N_PORT
+gpio_module_t *dp_get_port_info(uint8_t);
+#endif
 
 #define DP_PROTOTYPE_MODULE_FUNCTION(mod)	\
 	module_t *dp_get_##mod##_info();

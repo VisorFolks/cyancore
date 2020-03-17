@@ -40,6 +40,13 @@ memory_t *dp_get_memory_info()
 	return &dev_prop->memory;
 }
 
+#if N_PORT
+gpio_module_t *dp_get_port_info(uint8_t id)
+{
+	return &dev_prop->port[id];
+}
+#endif
+
 #define DP_CREATE_MODULE_FUNCTION(mod)		\
 	module_t *dp_get_##mod##_info()		\
 	{					\

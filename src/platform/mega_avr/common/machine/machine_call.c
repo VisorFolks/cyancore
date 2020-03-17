@@ -11,7 +11,7 @@ void machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsigned 
 	switch(code)
 	{
 		case FETCH_DP:
-			*ret = platform_fetch_dp(a0);
+			*ret = platform_fetch_dp(a0, a1);
 			break;
 		default:
 			ret->p = (uintptr_t)NULL;

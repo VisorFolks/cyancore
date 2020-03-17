@@ -12,3 +12,5 @@
 #define ALIGN_BOUND	2
 
 #define STACK_SIZE	0x0200
+
+#define N_PORT		3
