@@ -1,14 +1,6 @@
 #pragma once
 #define _SERIAL_H_
 
-typedef struct uart_port
-{
-	uint8_t port_id;
-	unsigned int clk_id;
-	uintptr_t baddr;
-	uintptr_t stride;
-} uart_port_t;
-
 typedef enum direction
 {
 	tx = 1,
@@ -34,6 +26,16 @@ typedef enum parity
 	e_parity = 2,
 	o_parity = 3,
 } parity_t;
+
+typedef struct uart_port
+{
+	uint8_t port_id;
+	unsigned int clk_id;
+	uintptr_t baddr;
+	uintptr_t stride;
+	baud_t baud;
+} uart_port_t;
+
 
 //spinlock_t serial_spinlock;
 

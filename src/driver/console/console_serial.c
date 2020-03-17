@@ -27,11 +27,12 @@ status_t console_serial_setup()
 	port.clk_id = dp->clk_id;
 	port.baddr = dp->baddr;
 	port.stride = dp->stride;
+	port.baud = dp->clk;
 	/*
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
 	 */
-	serial_setup(&port, tx, b9600, no_parity);
+	serial_setup(&port, tx, port.baud, no_parity);
 	return success;
 }
 

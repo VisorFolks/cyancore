@@ -31,6 +31,7 @@ typedef struct module
 	uint8_t id;
 	uintptr_t baddr;
 	uintptr_t stride;
+	unsigned int clk;
 	unsigned int clk_id;
 	size_t interrupt_id;
 	int_trigger_t interrupt_trigger;
