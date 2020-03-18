@@ -29,7 +29,7 @@ status_t gpio_setup()
 
 status_t gpio_pin_config(uint8_t port_id, uint8_t pin, gpio_mode_t mode)
 {
-	if(port_id > N_PORT)
+	if(port_id >= N_PORT)
 		return error_inval_arg;
 
 	switch(mode)
@@ -50,7 +50,7 @@ status_t gpio_pin_config(uint8_t port_id, uint8_t pin, gpio_mode_t mode)
 
 status_t gpio_pin_set(uint8_t port_id, uint8_t pin)
 {
-	if(port_id > N_PORT)
+	if(port_id >= N_PORT)
 		return error_inval_arg;
 	MMIO8(port_baddr[port_id] + PORT_OFFSET) |= (1 << pin);
 	return success;
@@ -58,7 +58,7 @@ status_t gpio_pin_set(uint8_t port_id, uint8_t pin)
 
 status_t gpio_pin_clear(uint8_t port_id, uint8_t pin)
 {
-	if(port_id > N_PORT)
+	if(port_id >= N_PORT)
 		return error_inval_arg;
 	MMIO8(port_baddr[port_id] + PORT_OFFSET) &= ~(1 << pin);
 	return success;
@@ -66,7 +66,7 @@ status_t gpio_pin_clear(uint8_t port_id, uint8_t pin)
 
 status_t gpio_pin_toggle(uint8_t port_id, uint8_t pin)
 {
-	if(port_id > N_PORT)
+	if(port_id >= N_PORT)
 		return error_inval_arg;
 	MMIO8(port_baddr[port_id] + PORT_OFFSET) ^= (1 << pin);
 	return success;
@@ -74,14 +74,14 @@ status_t gpio_pin_toggle(uint8_t port_id, uint8_t pin)
 
 bool gpio_pin_read(uint8_t port_id, uint8_t pin)
 {
-	if(port_id > N_PORT)
+	if(port_id >= N_PORT)
 		return false;
 	return (MMIO8(port_baddr[port_id] + PIN_OFFSET) & (1 << pin)) ? true : false;
 }
 
 status_t gpio_port_write(uint8_t port_id, uint8_t val)
 {
-	if(port_id > N_PORT)
+	if(port_id >= N_PORT)
 		return error_inval_arg;
 	MMIO8(port_baddr[port_id] + PORT_OFFSET) = val;
 	return success;
@@ -89,7 +89,7 @@ status_t gpio_port_write(uint8_t port_id, uint8_t val)
 
 status_t gpio_port_read(uint8_t port_id, uint8_t *val)
 {
-	if(port_id > N_PORT)
+	if(port_id >= N_PORT)
 		return error_inval_arg;
 	*val = MMIO8(port_baddr[port_id] + PIN_OFFSET);
 	return success;

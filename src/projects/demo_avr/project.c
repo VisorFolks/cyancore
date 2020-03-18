@@ -20,19 +20,14 @@ void delay()
 		asm volatile("nop");
 }
 
+char arr[] = {'|', '/', '-', '\\'};
+
 void project_loop()
 {
+	static uint8_t i = 0;
 	gpio_pin_toggle(0, 5);
-	printf("\b|");
-	delay();
-	gpio_pin_toggle(0, 5);
-	printf("\b/");
-	delay();
-	gpio_pin_toggle(0, 5);
-	printf("\b-");
-	delay();
-	gpio_pin_toggle(0, 5);
-	printf("\b\\");
+	printf("\b%c", arr[i]);
+	i = i >= 3 ? 0 : (i + 1);
 	delay();
 	return;
 }
