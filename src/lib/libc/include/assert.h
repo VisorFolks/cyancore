@@ -1,7 +1,7 @@
 #pragma once
 
-#define assert(X)	(X ? (void)0 : __assert(__func__, __LINE__))
-#define assert_ndbg(X)	(X ? (void)0 : __assert_nodbg())
+#define assert_dbg(X)	(X ? (void)0 : __assert_dbg(__func__, __LINE__))
+#define assert(X)	(X ? (void)0 : __assert())
 
-void __assert(const char *, unsigned int);
-void __assert_nodbg();
+void __assert_dbg(const char *, unsigned int);
+void __assert();

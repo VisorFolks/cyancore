@@ -46,7 +46,7 @@ static void unsigned_dec_print(char **s, size_t n, size_t *chars_printed,
 	}
 }
 
-int asnprintf(char *s, size_t n, const char *fmt, ...)
+int snprintf(char *s, size_t n, const char *fmt, ...)
 {
 	va_list args;
 	int num;
@@ -101,7 +101,6 @@ int asnprintf(char *s, size_t n, const char *fmt, ...)
 					unsigned_dec_print(&s, n, &chars_printed, unum);
 					break;
 				default:
-					printf("snprintf: specifier with ASCII code '%d' not supported.", *fmt);
 					plat_panic_handler();
 			}
 			fmt++;

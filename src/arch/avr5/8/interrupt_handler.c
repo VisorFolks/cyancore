@@ -1,4 +1,3 @@
-#include <stddef.h>
 #include <assert.h>
 
 extern void arch_panic_handler();

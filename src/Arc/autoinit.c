@@ -14,11 +14,6 @@ extern void platform_cpu_setup();
 extern volatile uint32_t ArcVersion;
 uint8_t boot_done;
 
-char *ARC_LOGO = \
-"< ! >=========================< ! >\n\
-       ARC Framework V%04x\n\
-< ! >=========================< ! >\n";
-
 status_t autoinit()
 {
 	static uint8_t n_cpu_online = 0;
@@ -41,12 +36,10 @@ status_t autoinit()
 	{
 		platform_early_setup();
 		driver_setup("earlycon");
-		printf(ARC_LOGO, ArcVersion);
 		platform_setup();
 		boot=false;
 	}
 	platform_cpu_setup();
-	printf("< / > ARC: Boot complete!\n");
 
 	n_cpu_online++;
 

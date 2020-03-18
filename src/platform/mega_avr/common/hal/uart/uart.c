@@ -12,7 +12,7 @@
 status_t serial_setup(uart_port_t *port, direction_t d, baud_t rate, parity_t p)
 {
 	status_t ret = success;
-	assert_ndbg(port);
+	assert(port);
 	MMIO8(port->baddr + UCSRA_OFFSET) = 0x00;
 	platform_clk_en(port->clk_id);
 
@@ -109,7 +109,7 @@ bool serial_frame_error(uart_port_t *port)
 
 status_t serial_tx(uart_port_t *port, const char data)
 {
-	assert_ndbg(port);
+	assert(port);
 	while(!serial_buffer_available(port));
 	MMIO8(port->baddr + UDR_OFFSET) = data;
 	return success;
@@ -118,7 +118,7 @@ status_t serial_tx(uart_port_t *port, const char data)
 status_t serial_rx(uart_port_t *port, char *data)
 {
 	uint8_t *d = (uint8_t *)data;
-	assert_ndbg(port);
+	assert(port);
 	while(!serial_rx_done(port));
 	if(serial_frame_error(port))
 		return error_data;
@@ -128,7 +128,7 @@ status_t serial_rx(uart_port_t *port, char *data)
 
 status_t serial_rx_int_en(uart_port_t *port)
 {
-	assert_ndbg(port);
+	assert(port);
 	MMIO8(port->baddr + UCSRB_OFFSET) = (1 << RXCIE);
 	return success;
 }
