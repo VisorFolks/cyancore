@@ -3,11 +3,11 @@
 #include <stdbool.h>
 #include <mmio.h>
 #include <platform.h>
-#include <driver/gpio.h>
 #include <dp.h>
 #include <machine_call.h>
 #include <arch.h>
 #include <device.h>
+#include <hal/gpio.h>
 #include "gpio_private.h"
 
 #if N_PORT

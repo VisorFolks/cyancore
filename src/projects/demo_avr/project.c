@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <status.h>
-#include <driver/gpio.h>
+#include <hal/gpio.h>
 
 extern void platform_early_setup();
 

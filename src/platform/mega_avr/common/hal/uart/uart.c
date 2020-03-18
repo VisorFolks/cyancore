@@ -4,8 +4,8 @@
 #include <status.h>
 #include <mmio.h>
 #include <lock/spinlock.h>
-#include <driver/serial.h>
 #include <mega_avr_platform.h>
+#include <hal/serial.h>
 #include "uart_private.h"
 
 

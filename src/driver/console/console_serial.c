@@ -8,7 +8,7 @@
 #include <arch.h>
 #include <driver.h>
 #include <device.h>
-#include <driver/serial.h>
+#include <hal/serial.h>
 #include <driver/console.h>
 
 #if EARLYCON_SERIAL || CONSOLE_SERIAL

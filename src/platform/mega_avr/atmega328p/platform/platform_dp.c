@@ -7,7 +7,7 @@
 #include <dp.h>
 #include <device.h>
 #include <machine_call.h>
-#include <driver/serial.h>
+#include <hal/serial.h>
 #include <mega_avr_platform.h>
 
 dp_t device_prop;
