@@ -14,3 +14,5 @@ status_t gpio_pin_set(uint8_t, uint8_t);
 status_t gpio_pin_clear(uint8_t, uint8_t);
 status_t gpio_pin_toggle(uint8_t, uint8_t);
 bool gpio_pin_read(uint8_t, uint8_t);
+status_t gpio_port_write(uint8_t, uint8_t);
+status_t gpio_port_read(uint8_t, uint8_t *);
