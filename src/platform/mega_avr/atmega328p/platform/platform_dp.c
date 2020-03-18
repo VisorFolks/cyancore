@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <status.h>
-#include <platform.h>
+#include <plat_mem.h>
 #include <dp.h>
 #include <device.h>
 #include <machine_call.h>

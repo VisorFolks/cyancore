@@ -6,6 +6,15 @@ CFLAGS		+= $(call add_define,FCLK)
 N_CORES		:= 1
 CFLAGS          += $(call add_define,N_CORES)
 
+N_INT		:= 26
+CFLAGS		+= $(call add_define,N_INT)
+
+N_IRQ		:= $(N_INT)-1
+CFLAGS		+= $(call add_define,N_IRQ)
+
+N_PORT		:= 3
+CFLAGS          += $(call add_define,N_PORT)
+
 MEMBUF_SIZE	:= 512
 CFLAGS          += $(call add_define,MEMBUF_SIZE)
 

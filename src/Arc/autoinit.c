@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <driver.h>
 #include <driver/console.h>
-#include <platform.h>
 
 #if AUTOINIT==1
 extern void platform_early_setup();

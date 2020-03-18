@@ -2,7 +2,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <mmio.h>
-#include <platform.h>
 #include <dp.h>
 #include <machine_call.h>
 #include <arch.h>

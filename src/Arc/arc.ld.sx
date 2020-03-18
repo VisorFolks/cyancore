@@ -1,4 +1,4 @@
-#include <platform.h>
+#include <plat_mem.h>
 
 #ifndef L_MEM_START
 #define L_MEM_START	0

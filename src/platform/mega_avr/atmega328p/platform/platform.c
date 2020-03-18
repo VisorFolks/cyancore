@@ -1,7 +1,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <status.h>
-#include <platform.h>
 #include <hal/gpio.h>
 #include <mega_avr_platform.h>
 

@@ -1,6 +1,5 @@
-#include <platform.h>
-#define UB8(x)	(X >> 8)
-#define LB8(X)	(X & 0xff)
+#include <plat_arch.h>
+#include <plat_mem.h>
 
 .global copy_data
 .section .text.copy_data, "ax", @progbits
