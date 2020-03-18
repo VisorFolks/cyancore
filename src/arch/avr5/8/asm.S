@@ -22,7 +22,7 @@ copy_data:
 
 
 .global zero_reg
-.section .text
+.section .text.zero_reg
 .type zero_reg, "function"
 zero_reg:
 	eor	r1, r1
@@ -60,7 +60,7 @@ zero_reg:
 	ret
 
 .global arch_panic_handler
-.section .text
+.section .text.arcj_panic_handler
 .type arch_panic_handler, "function"
 arch_panic_handler:
 	SLEEP
