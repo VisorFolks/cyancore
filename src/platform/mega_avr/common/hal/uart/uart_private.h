@@ -1,7 +1,5 @@
 #pragma once
 
-#define FCLK	16000000
-
 // This is necessary
 #ifndef	FCLK
 #error < x > FCLK is not defined...
@@ -13,6 +11,8 @@
 #define	UBRRL_OFFSET	0x4
 #define	UBRRH_OFFSET	0x5
 #define	UDR_OFFSET	0x6
+
+#define BAUD_RATE_VALUE(X)	(uint16_t)(((FCLK + ((X) << 3)) / ((X) << 4) - 1))
 
 /**
  * UCSRA Register bitfields
@@ -49,14 +49,3 @@
 #define	UPM1	5
 #define	UMSEL0	6
 #define	UMSEL1	7
-
-#if FCLK==16000000
-#define	B2400		416
-#define	B4800		207
-#define	B9600		103
-#define	B19200		51
-#define	B38400		25
-#define B115200		8
-#define	B230400		3
-#define	B250000		3
-#endif

@@ -32,7 +32,7 @@ status_t console_serial_setup()
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
 	 */
-	serial_setup(&port, tx, port.baud, no_parity);
+	serial_setup(&port, tx, no_parity);
 	return success;
 }
 

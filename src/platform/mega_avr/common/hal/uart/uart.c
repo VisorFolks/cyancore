@@ -9,7 +9,7 @@
 #include "uart_private.h"
 
 
-status_t serial_setup(uart_port_t *port, direction_t d, baud_t rate, parity_t p)
+status_t serial_setup(uart_port_t *port, direction_t d, parity_t p)
 {
 	status_t ret = success;
 	assert(port);
@@ -35,38 +35,7 @@ status_t serial_setup(uart_port_t *port, direction_t d, baud_t rate, parity_t p)
 	MMIO8(port->baddr + UCSRB_OFFSET) |= en;
 
 	// Set baud rate
-	uint16_t b = 0;
-	switch(rate)
-	{
-		case b2400:
-			b = B2400;
-			break;
-		case b4800:
-			b = B4800;
-			break;
-		case b9600:
-			b = B9600;
-			break;
-		case b19k2:
-			b = B19200;
-			break;
-		case b38k4:
-			b = B38400;
-			break;
-		case b115k2:
-			b = B115200;
-			break;
-		case b230k4:
-			b = B230400;
-			break;
-		case b250k0:
-			b = B250000;
-			break;
-		default:
-			b = 0;
-			ret = error_inval_arg;
-			break;
-	}
+	uint16_t b = BAUD_RATE_VALUE(port->baud);
 	MMIO8(port->baddr + UBRRH_OFFSET) = (b >> 8);
 	MMIO8(port->baddr + UBRRL_OFFSET) = (b & 0xff);
 

@@ -29,18 +29,21 @@ status_t gpio_setup()
 
 status_t gpio_pin_config(uint8_t port_id, uint8_t pin, gpio_mode_t mode)
 {
+	uintptr_t pbaddr;
 	if(port_id >= N_PORT)
 		return error_inval_arg;
+
+	pbaddr = port_baddr[port_id];
 
 	switch(mode)
 	{
 		case out:
-			MMIO8(port_baddr[port_id] + DDR_OFFSET) |= (1 << pin);
+			MMIO8(pbaddr + DDR_OFFSET) |= (1 << pin);
 			break;
 		case pull_up:
-			MMIO8(port_baddr[port_id] + PORT_OFFSET) |= (1 << pin);
+			MMIO8(pbaddr + PORT_OFFSET) |= (1 << pin);
 		case in:
-			MMIO8(port_baddr[port_id] + DDR_OFFSET) &= ~(1 << pin);
+			MMIO8(pbaddr + DDR_OFFSET) &= ~(1 << pin);
 			break;
 		default:
 			return error_inval_arg;

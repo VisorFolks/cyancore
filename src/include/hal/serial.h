@@ -8,18 +8,6 @@ typedef enum direction
 	trx = 3
 } direction_t;
 
-typedef enum baud
-{
-	b2400=1,
-	b4800=2,
-	b9600=3,
-	b19k2=4,
-	b38k4=5,
-	b115k2=6,
-	b230k4=7,
-	b250k0=8
-} baud_t;
-
 typedef enum parity
 {
 	no_parity = 0,
@@ -31,15 +19,15 @@ typedef struct uart_port
 {
 	uint8_t port_id;
 	unsigned int clk_id;
+	unsigned long baud;
 	uintptr_t baddr;
 	uintptr_t stride;
-	baud_t baud;
 } uart_port_t;
 
 
 //spinlock_t serial_spinlock;
 
-status_t serial_setup(uart_port_t *, direction_t, baud_t, parity_t);
+status_t serial_setup(uart_port_t *, direction_t, parity_t);
 status_t serial_shutdown(uart_port_t *);
 bool serial_rx_done(uart_port_t *);
 status_t serial_tx(uart_port_t *, const char);

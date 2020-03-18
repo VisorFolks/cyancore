@@ -1,11 +1,7 @@
-#include <status.h>
-#include <arch.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <driver.h>
-#include <driver/console.h>
+#include <status.h>
+#include <arch.h>
 
 #if AUTOINIT==1
 extern void platform_early_setup();
@@ -35,7 +31,6 @@ status_t autoinit()
 	if(boot)
 	{
 		platform_early_setup();
-		driver_setup("earlycon");
 		platform_setup();
 		boot=false;
 	}

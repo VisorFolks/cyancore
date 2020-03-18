@@ -1,10 +1,7 @@
-#include <stdint.h>
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <status.h>
 #include <hal/gpio.h>
-
-extern void platform_early_setup();
 
 void project_setup()
 {

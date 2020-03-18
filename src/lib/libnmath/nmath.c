@@ -2,7 +2,7 @@
 
 unsigned int clog2(unsigned long num)
 {
-	return (num > 1) ? (1 + clog2((num % 2) ? ((num + 1) / 2) : (num / 2))) : 0;
+	return (num > 1) ? (1 + clog2((num & 0x01) ? ((num + 1) >> 1) : (num >> 1))) : 0;
 }
 
 unsigned long ceiling(unsigned long num, unsigned long den)

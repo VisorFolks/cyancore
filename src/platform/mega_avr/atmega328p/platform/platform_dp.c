@@ -7,7 +7,6 @@
 #include <dp.h>
 #include <device.h>
 #include <machine_call.h>
-#include <hal/serial.h>
 #include <mega_avr_platform.h>
 
 dp_t device_prop;
@@ -26,7 +25,7 @@ void platform_dp_setup()
 	device_prop.uart0.baddr = 0xc0;
 	device_prop.uart0.clk_id = 0x01;
 	device_prop.uart0.stride = 0x06;
-	device_prop.uart0.clk = b19k2;
+	device_prop.uart0.clk = 19200;
 	device_prop.uart0.interrupt_id = 19;
 	device_prop.uart0.interrupt_trigger = i_level;
 
