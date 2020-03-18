@@ -8,7 +8,7 @@
 #include <arch.h>
 #include <driver.h>
 #include <device.h>
-#include <hal/serial.h>
+#include <hal/uart.h>
 #include <driver/console.h>
 
 #if EARLYCON_SERIAL || CONSOLE_SERIAL
@@ -32,13 +32,13 @@ status_t console_serial_setup()
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
 	 */
-	serial_setup(&port, tx, no_parity);
+	uart_setup(&port, tx, no_parity);
 	return success;
 }
 
 status_t console_serial_write(const char c)
 {
-	serial_tx(&port, c);
+	uart_tx(&port, c);
 	return success;
 }
 
@@ -64,7 +64,7 @@ status_t console_serial_driver_exit()
 {
 	status_t ret;
 	ret = console_release_device();
-	ret |= serial_shutdown(&port);
+	ret |= uart_shutdown(&port);
 	return ret;
 }
 

@@ -5,11 +5,11 @@
 #include <mmio.h>
 #include <lock/spinlock.h>
 #include <mega_avr_platform.h>
-#include <hal/serial.h>
+#include <hal/uart.h>
 #include "uart_private.h"
 
 
-status_t serial_setup(uart_port_t *port, direction_t d, parity_t p)
+status_t uart_setup(uart_port_t *port, direction_t d, parity_t p)
 {
 	status_t ret = success;
 	assert(port);
@@ -48,27 +48,27 @@ status_t serial_setup(uart_port_t *port, direction_t d, parity_t p)
 	return ret;
 }
 
-status_t serial_shutdown(uart_port_t *port)
+status_t uart_shutdown(uart_port_t *port)
 {
 	return platform_clk_dis(port->clk_id);
 }
 
-bool serial_buffer_available(uart_port_t *port)
+bool uart_buffer_available(uart_port_t *port)
 {
 	return (bool)(MMIO8(port->baddr + UCSRA_OFFSET) >> UDRE) & 0x01;
 }
 
-bool serial_tx_done(uart_port_t *port)
+bool uart_tx_done(uart_port_t *port)
 {
 	return (bool)(MMIO8(port->baddr + UCSRA_OFFSET) >> TXC) & 0x01;
 }
 
-bool serial_rx_done(uart_port_t *port)
+bool uart_rx_done(uart_port_t *port)
 {
 	return (bool)(MMIO8(port->baddr + UCSRA_OFFSET) >> RXC) * 0x01;
 }
 
-bool serial_frame_error(uart_port_t *port)
+bool uart_frame_error(uart_port_t *port)
 {
 	bool ret = false;
 	if(MMIO8(port->baddr + UCSRC_OFFSET) & (1 << UPM0))
@@ -76,26 +76,26 @@ bool serial_frame_error(uart_port_t *port)
 	return ret;
 }
 
-status_t serial_tx(uart_port_t *port, const char data)
+status_t uart_tx(uart_port_t *port, const char data)
 {
 	assert(port);
-	while(!serial_buffer_available(port));
+	while(!uart_buffer_available(port));
 	MMIO8(port->baddr + UDR_OFFSET) = data;
 	return success;
 }
 
-status_t serial_rx(uart_port_t *port, char *data)
+status_t uart_rx(uart_port_t *port, char *data)
 {
 	uint8_t *d = (uint8_t *)data;
 	assert(port);
-	while(!serial_rx_done(port));
-	if(serial_frame_error(port))
+	while(!uart_rx_done(port));
+	if(uart_frame_error(port))
 		return error_data;
 	*d = MMIO8(port->baddr + UDR_OFFSET);
 	return success;
 }
 
-status_t serial_rx_int_en(uart_port_t *port)
+status_t uart_rx_int_en(uart_port_t *port)
 {
 	assert(port);
 	MMIO8(port->baddr + UCSRB_OFFSET) = (1 << RXCIE);
