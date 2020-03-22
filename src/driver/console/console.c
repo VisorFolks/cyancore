@@ -51,6 +51,13 @@ status_t console_puts(const char *s)
 	return success;
 }
 
+status_t console_getc(char *c)
+{
+	if(console_attached)
+		return con->read(c);
+	return error_inval_func;
+}
+
 status_t console_flush()
 {
 	if(console_attached)

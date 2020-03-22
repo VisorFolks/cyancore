@@ -5,11 +5,12 @@
 #include <mmio.h>
 #include <lock/spinlock.h>
 #include <mega_avr_platform.h>
+#include <interrupt.h>
 #include <hal/uart.h>
 #include "uart_private.h"
 
 
-status_t uart_setup(uart_port_t *port, direction_t d, parity_t p)
+status_t uart_setup(uart_port_t *port, direction_t d, parity_t p, unsigned int irq, void (*handler)(void))
 {
 	status_t ret = success;
 	assert(port);
@@ -24,6 +25,8 @@ status_t uart_setup(uart_port_t *port, direction_t d, parity_t p)
 			en |= (1 << TXEN);
 		case rx:
 			en |= (1 << RXEN);
+			uart_rx_int_en(port);
+			link_interrupt(arch, irq, handler);
 			break;
 		case tx:
 			en |= (1 << TXEN);
@@ -88,7 +91,6 @@ status_t uart_rx(uart_port_t *port, char *data)
 {
 	uint8_t *d = (uint8_t *)data;
 	assert(port);
-	while(!uart_rx_done(port));
 	if(uart_frame_error(port))
 		return error_data;
 	*d = MMIO8(port->baddr + UDR_OFFSET);
@@ -98,6 +100,6 @@ status_t uart_rx(uart_port_t *port, char *data)
 status_t uart_rx_int_en(uart_port_t *port)
 {
 	assert(port);
-	MMIO8(port->baddr + UCSRB_OFFSET) = (1 << RXCIE);
+	MMIO8(port->baddr + UCSRB_OFFSET) |= (1 << RXCIE);
 	return success;
 }

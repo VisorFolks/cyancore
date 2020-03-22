@@ -9,7 +9,7 @@ CFLAGS          += $(call add_define,N_CORES)
 N_INT		:= 26
 CFLAGS		+= $(call add_define,N_INT)
 
-N_IRQ		:= $(N_INT)-1
+N_IRQ		:= 25
 CFLAGS		+= $(call add_define,N_IRQ)
 
 N_PORT		:= 3

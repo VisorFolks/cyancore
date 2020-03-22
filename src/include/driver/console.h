@@ -15,4 +15,5 @@ status_t console_release_device();
 status_t console_setup();
 status_t console_putc(const char);
 status_t console_puts(const char *);
+status_t console_getc(char *);
 status_t console_flush(void);

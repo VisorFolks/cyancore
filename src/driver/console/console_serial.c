@@ -8,12 +8,15 @@
 #include <arch.h>
 #include <driver.h>
 #include <device.h>
+#include <interrupt.h>
 #include <hal/uart.h>
 #include <driver/console.h>
 
 #if EARLYCON_SERIAL || CONSOLE_SERIAL
 
 uart_port_t port;
+
+void console_serial_read_irq_handler(void);
 
 status_t console_serial_setup()
 {
@@ -32,13 +35,27 @@ status_t console_serial_setup()
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
 	 */
-	uart_setup(&port, tx, no_parity);
+	uart_setup(&port, trx, no_parity, dp->interrupt_id, console_serial_read_irq_handler);
 	return success;
 }
 
 status_t console_serial_write(const char c)
 {
 	uart_tx(&port, c);
+	return success;
+}
+
+int_wait_t con_read_wait;
+
+void console_serial_read_irq_handler()
+{
+	wait_release_on_irq(&con_read_wait);
+}
+
+status_t console_serial_read(char *c)
+{
+	wait_till_irq(&con_read_wait);
+	uart_rx(&port, c);
 	return success;
 }
 
@@ -52,6 +69,7 @@ console_t console_serial_driver =
 	.setup = console_serial_setup,
 	.write = console_serial_write,
 	.error = console_serial_write,
+	.read = console_serial_read,
 	.flush = console_serial_flush
 };
 

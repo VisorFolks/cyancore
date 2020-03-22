@@ -27,7 +27,7 @@ typedef struct uart_port
 
 //spinlock_t uart_spinlock;
 
-status_t uart_setup(uart_port_t *, direction_t, parity_t);
+status_t uart_setup(uart_port_t *, direction_t, parity_t, unsigned int, void (*)(void));
 status_t uart_shutdown(uart_port_t *);
 bool uart_rx_done(uart_port_t *);
 status_t uart_tx(uart_port_t *, const char);

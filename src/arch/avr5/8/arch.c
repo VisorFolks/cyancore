@@ -7,6 +7,8 @@
 
 #include <stdint.h>
 #include <status.h>
+#include <plat_arch.h>
+#include <mmio.h>
 #include <machine_call.h>
 #include <arch.h>
 
@@ -21,8 +23,10 @@ void arch_setup()
 	return;
 }
 
-void arch_idle()
+void arch_wfi()
 {
+	MMIO8(SMCR) = 0x00;
+	arch_ei();
 	asm volatile("sleep");
 	return;
 }

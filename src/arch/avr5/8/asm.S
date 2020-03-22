@@ -155,7 +155,7 @@ int_\id:
 .type isr, "function"
 isr:
 	CONTEXT_SAVE
-	rjmp	interrupt_handler
+	call	interrupt_handler
 	CONTEXT_RESTORE
 
 /*==========< Interrupt functions >==========*/
