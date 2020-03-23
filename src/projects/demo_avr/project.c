@@ -12,14 +12,6 @@ void project_setup()
 	return;
 }
 
-/*
-void delay()
-{
-	for(long i = 0; i < 500000; i++)
-		asm volatile("nop");
-}
-*/
-
 void console_loop_back()
 {
 	char c;
@@ -30,7 +22,6 @@ void console_loop_back()
 void project_loop()
 {
 	gpio_pin_toggle(0, 5);
-//	delay();
 	console_loop_back();
 	return;
 }
