@@ -10,7 +10,7 @@ bool console_attached = false;
 
 status_t console_attach_device(console_t *pcon)
 {
-	status_t ret = success;
+	status_t ret;
 	console_attached = false;
 	con = pcon;
 	if(con != NULL)

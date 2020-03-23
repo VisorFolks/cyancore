@@ -63,7 +63,7 @@ zero_reg:
 .section .text.arcj_panic_handler
 .type arch_panic_handler, "function"
 arch_panic_handler:
-	SLEEP
+	call	arch_wfi
 	rjmp	arch_panic_handler
 
 .macro CONTEXT_SAVE

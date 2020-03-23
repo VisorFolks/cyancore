@@ -35,14 +35,12 @@ status_t console_serial_setup()
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
 	 */
-	uart_setup(&port, trx, no_parity, dp->interrupt_id, console_serial_read_irq_handler);
-	return success;
+	return uart_setup(&port, trx, no_parity, dp->interrupt_id, console_serial_read_irq_handler);
 }
 
 status_t console_serial_write(const char c)
 {
-	uart_tx(&port, c);
-	return success;
+	return uart_tx(&port, c);
 }
 
 int_wait_t con_read_wait;
@@ -55,8 +53,7 @@ void console_serial_read_irq_handler()
 status_t console_serial_read(char *c)
 {
 	wait_till_irq(&con_read_wait);
-	uart_rx(&port, c);
-	return success;
+	return uart_rx(&port, c);
 }
 
 status_t console_serial_flush()

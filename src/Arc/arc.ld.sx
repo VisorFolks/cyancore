@@ -71,5 +71,7 @@ SECTIONS
 		PROVIDE(_bss_end = .);
 	} > vma_dmem
 
+	PROVIDE(_bss_size = SIZEOF(.bss));
+
 	_stack_start = _bss_end + STACK_SIZE;
 }

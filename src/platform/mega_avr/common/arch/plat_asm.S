@@ -2,5 +2,5 @@
 .section .text.plat_panic_handler
 .type plat_panic_handler, "function"
 plat_panic_handler:
-	SLEEP
+	call	arch_wfi
 	rjmp	plat_panic_handler
