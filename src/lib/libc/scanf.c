@@ -19,7 +19,7 @@ char getchar()
         temp = getch();
         if(c == 0)
             c = temp;
-        console_putc(c);
+        console_putc(temp);
     }
     while(temp != '\r');
     return c;
