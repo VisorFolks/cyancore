@@ -33,7 +33,7 @@ typedef struct module
 	uintptr_t stride;
 	unsigned long clk;
 	unsigned int clk_id;
-	size_t interrupt_id;
+	size_t interrupt_id[MAX_INTERRUPTS_PER_DEVICE];
 	int_trigger_t interrupt_trigger;
 } module_t;
 

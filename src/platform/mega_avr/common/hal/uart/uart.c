@@ -9,8 +9,9 @@
 #include <hal/uart.h>
 #include "uart_private.h"
 
+void temp_handler();
 
-status_t uart_setup(uart_port_t *port, direction_t d, parity_t p, unsigned int irq, void (*handler)(void))
+status_t uart_setup(uart_port_t *port, direction_t d, parity_t p)
 {
 	status_t ret = success;
 	assert(port);
@@ -23,13 +24,18 @@ status_t uart_setup(uart_port_t *port, direction_t d, parity_t p, unsigned int i
 	{
 		case trx:
 			en |= (1 << TXEN);
+			link_interrupt(arch, port->tx_irq, port->tx_handler);
+			uart_tx_int_en(port);
 		case rx:
 			en |= (1 << RXEN);
 			uart_rx_int_en(port);
-			link_interrupt(arch, irq, handler);
+			link_interrupt(arch, port->rx_irq, port->rx_handler);
+			uart_rx_int_en(port);
 			break;
 		case tx:
 			en |= (1 << TXEN);
+			link_interrupt(arch, port->tx_irq, port->tx_handler);
+			uart_tx_int_en(port);
 			break;
 		default:
 			en = 0;
@@ -94,6 +100,13 @@ status_t uart_rx(uart_port_t *port, char *data)
 	if(uart_frame_error(port))
 		return error_data;
 	*d = MMIO8(port->baddr + UDR_OFFSET);
+	return success;
+}
+
+status_t uart_tx_int_en(uart_port_t *port)
+{
+	assert(port);
+	MMIO8(port->baddr + UCSRB_OFFSET) |= (1 << TXCIE);
 	return success;
 }
 

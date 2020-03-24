@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <status.h>
 #include <driver/console.h>
 #include <hal/gpio.h>
@@ -12,16 +13,10 @@ void project_setup()
 	return;
 }
 
-void console_loop_back()
-{
-	char c;
-	console_getc(&c);
-	console_putc(c);
-}
-
 void project_loop()
 {
+	char c = getchar();
+	printf("You Entered: %c\n", c);
 	gpio_pin_toggle(0, 5);
-	console_loop_back();
 	return;
 }

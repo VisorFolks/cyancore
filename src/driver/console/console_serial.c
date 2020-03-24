@@ -16,6 +16,7 @@
 
 uart_port_t port;
 
+void console_serial_write_irq_handler(void);
 void console_serial_read_irq_handler(void);
 
 status_t console_serial_setup()
@@ -31,16 +32,30 @@ status_t console_serial_setup()
 	port.baddr = dp->baddr;
 	port.stride = dp->stride;
 	port.baud = dp->clk;
+	port.tx_irq = dp->interrupt_id[1];
+	port.tx_handler = console_serial_write_irq_handler;
+	port.rx_irq = dp->interrupt_id[0];
+	port.rx_handler = console_serial_read_irq_handler;
 	/*
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
 	 */
-	return uart_setup(&port, trx, no_parity, dp->interrupt_id, console_serial_read_irq_handler);
+	return uart_setup(&port, trx, no_parity);
+}
+
+int_wait_t con_write_wait;
+
+void console_serial_write_irq_handler()
+{
+	wait_release_on_irq(&con_write_wait);
 }
 
 status_t console_serial_write(const char c)
 {
-	return uart_tx(&port, c);
+	status_t ret;
+	ret = uart_tx(&port, c);
+	wait_till_irq(&con_write_wait);
+	return ret;
 }
 
 int_wait_t con_read_wait;

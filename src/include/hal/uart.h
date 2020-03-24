@@ -22,14 +22,19 @@ typedef struct uart_port
 	unsigned long baud;
 	uintptr_t baddr;
 	uintptr_t stride;
+	size_t tx_irq;
+	void (*tx_handler)(void);
+	size_t rx_irq;
+	void (*rx_handler)(void);
 } uart_port_t;
 
 
 //spinlock_t uart_spinlock;
 
-status_t uart_setup(uart_port_t *, direction_t, parity_t, unsigned int, void (*)(void));
+status_t uart_setup(uart_port_t *, direction_t, parity_t);
 status_t uart_shutdown(uart_port_t *);
 bool uart_rx_done(uart_port_t *);
 status_t uart_tx(uart_port_t *, const char);
 status_t uart_rx(uart_port_t *, char *);
+status_t uart_tx_int_en(uart_port_t *);
 status_t uart_rx_int_en(uart_port_t *);

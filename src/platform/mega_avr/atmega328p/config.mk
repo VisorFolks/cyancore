@@ -9,6 +9,9 @@ CFLAGS          += $(call add_define,N_CORES)
 N_INT		:= 26
 CFLAGS		+= $(call add_define,N_INT)
 
+MAX_INTERRUPTS_PER_DEVICE		:= 2
+CFLAGS		+= $(call add_define,MAX_INTERRUPTS_PER_DEVICE)
+
 N_IRQ		:= 25
 CFLAGS		+= $(call add_define,N_IRQ)
 
