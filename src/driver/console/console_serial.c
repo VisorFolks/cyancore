@@ -44,16 +44,19 @@ status_t console_serial_write(const char c)
 }
 
 int_wait_t con_read_wait;
+char con_char;
 
 void console_serial_read_irq_handler()
 {
 	wait_release_on_irq(&con_read_wait);
+	uart_rx(&port, &con_char);
 }
 
 status_t console_serial_read(char *c)
 {
 	wait_till_irq(&con_read_wait);
-	return uart_rx(&port, c);
+	*c = con_char;
+	return success;
 }
 
 status_t console_serial_flush()
