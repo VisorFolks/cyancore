@@ -25,7 +25,7 @@ void arch_setup()
 
 void arch_wfi()
 {
-	MMIO8(SMCR) = 0x00;
+	MMIO8(SMCR) = 0x01;
 	arch_ei();
 	asm volatile("sleep");
 	return;
