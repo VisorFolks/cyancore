@@ -34,7 +34,7 @@ typedef struct module
 	unsigned long clk;
 	unsigned int clk_id;
 	size_t interrupt_id[MAX_INTERRUPTS_PER_DEVICE];
-	int_trigger_t interrupt_trigger;
+	int_trigger_t interrupt_trigger[MAX_INTERRUPTS_PER_DEVICE];
 } module_t;
 
 typedef struct device_properties

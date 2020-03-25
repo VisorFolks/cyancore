@@ -28,7 +28,8 @@ void platform_dp_setup()
 	device_prop.uart0.clk = 19200;
 	device_prop.uart0.interrupt_id[0] = 18;
 	device_prop.uart0.interrupt_id[1] = 20;
-	device_prop.uart0.interrupt_trigger = i_level;
+	device_prop.uart0.interrupt_trigger[0] = i_level;
+	device_prop.uart0.interrupt_trigger[1] = i_level;
 
 	device_prop.port[0].baddr = 0x23;
 	device_prop.port[0].stride = 3;
