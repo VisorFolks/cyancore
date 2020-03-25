@@ -113,7 +113,6 @@ loop:
 					break;
 				case 'x':
 					unum = get_unum_va_args(args, l_ret);
-					ret += puts("0x");
 					ret += unumprint(unum, 16, padc, padn);
 					break;
 				case 'z':
