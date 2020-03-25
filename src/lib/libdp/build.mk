@@ -1,9 +1,9 @@
-SHI_PATH	:= $(GET_PATH)
+DP_PATH		:= $(DP_PATH)
 LIB_OBJS	:=
 
 LIB		:= libdp.a
-LIB_INCLUDE	+= $(SHI_PATH)/include/
+LIB_INCLUDE	+= $(DP_PATH)/include/
 DEP_LIBS	+= -ldp
 
-DIR		:= $(SHI_PATH)
+DIR		:= $(DP_PATH)
 include mk/lib.mk
