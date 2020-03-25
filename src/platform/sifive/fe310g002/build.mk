@@ -2,6 +2,7 @@ FE310G002_DIR	:= $(GET_PATH)
 
 ARCH		:= riscv
 BIT		:= 32
+ARCH_VARIANT	:= imac
 TARGET_FLAGS	:= -march=rv32imac	\
 		   -mabi=ilp32
 

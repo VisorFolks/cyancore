@@ -1,7 +1,8 @@
 ATMEGA328P_DIR	:= $(GET_PATH)
 
-ARCH		:= avr5
+ARCH		:= avr
 BIT		:= 8
+ARCH_VARIANT	:= 5
 TARGET_FLAGS	+= -mmcu=atmega328p
 LIBGCC_PATH	+= -L toolchain/avr-toolchain/lib/gcc/avr/5.4.0
 PLAT_INCLUDE	+= $(ATMEGA328P_DIR)/include
