@@ -1,4 +1,4 @@
-DP_PATH		:= $(DP_PATH)
+DP_PATH		:= $(GET_PATH)
 LIB_OBJS	:=
 
 LIB		:= libdp.a
