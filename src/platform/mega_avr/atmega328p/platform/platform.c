@@ -17,12 +17,12 @@ void platform_setup()
 {
 	driver_setup("earlycon");
 	gpio_setup();
-	arch_ei();
 	return;
 }
 
 void platform_cpu_setup()
 {
+	arch_ei();
 	return;
 }
 

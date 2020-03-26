@@ -12,19 +12,29 @@
 #include <machine_call.h>
 #include <arch.h>
 
+unsigned int arch_core_id()
+{
+	return 0;
+}
+
 void arch_early_setup()
 {
+	arch_di();
+	MMIO8(MCUCR) = 0;
+	MMIO8(SMCR) = 0;
+	MMIO8(WDTCSR) = 0;
 	return;
 }
 
 void arch_setup()
 {
-	arch_di();
 	return;
 }
 
 void arch_wfi()
 {
+	// For interruptable sleep
+	// Enable Idle mode
 	MMIO8(SMCR) = 0x01;
 	arch_ei();
 	asm volatile("sleep");
@@ -40,6 +50,12 @@ void arch_di()
 void arch_ei()
 {
 	asm volatile("sei");
+	return;
+}
+
+void arch_watchdog_reset()
+{
+	asm volatile("wdr");
 	return;
 }
 

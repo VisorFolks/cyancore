@@ -4,6 +4,7 @@
 #define __AVR_ATMEGA328P__
 #define ARCH_AVR
 
+#define GPIOR0		0x3e
 #define GPIOR1		0x4a
 #define GPIOR2		0x4b
 #define MCUSR		0x54
