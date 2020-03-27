@@ -25,6 +25,9 @@ CFLAGS		+= $(call add_define,MAX_INTERRUPTS_PER_DEVICE)
 N_PORT		:= 3
 CFLAGS          += $(call add_define,N_PORT)
 
+USE_SPINLOCK	?= 1
+CFLAGS		+= $(call add_define,USE_SPINLOCK)
+
 #======================================================================
 # MEMBUF Configuration
 #======================================================================
