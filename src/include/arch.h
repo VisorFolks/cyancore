@@ -1,6 +1,7 @@
 #pragma once
 #define _ARCH_H_
 
+unsigned int arch_core_id();
 void arch_early_setup();
 void arch_setup();
 void arch_wfi();

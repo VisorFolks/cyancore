@@ -37,4 +37,6 @@ bool uart_rx_done(uart_port_t *);
 status_t uart_tx(uart_port_t *, const char);
 status_t uart_rx(uart_port_t *, char *);
 status_t uart_tx_int_en(uart_port_t *);
+status_t uart_tx_int_dis(uart_port_t *);
 status_t uart_rx_int_en(uart_port_t *);
+status_t uart_rx_int_dis(uart_port_t *);
