@@ -106,11 +106,10 @@ status_t uart_tx(uart_port_t *port, const char data)
 
 status_t uart_rx(uart_port_t *port, char *data)
 {
-	uint8_t *d = (uint8_t *)data;
 	assert(port);
 	if(uart_frame_error(port))
 		return error_data;
-	*d = MMIO8(port->baddr + UDR_OFFSET);
+	*data = MMIO8(port->baddr + UDR_OFFSET);
 	return success;
 }
 
