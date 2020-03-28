@@ -12,7 +12,7 @@
 #define	UBRRH_OFFSET	0x5
 #define	UDR_OFFSET	0x6
 
-#define BAUD_RATE_VALUE(X)	(uint16_t)(((FCLK + ((X) << 3)) / ((X) << 4) - 1))
+#define BAUD_RATE_VALUE(clk, X)	(uint16_t)((((clk) + ((X) << 3)) / ((X) << 4) - 1))
 
 /**
  * UCSRA Register bitfields

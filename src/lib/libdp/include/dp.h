@@ -43,7 +43,7 @@ typedef struct device_properties
 	uint8_t datawidth;
 	unsigned long base_clock;
 	memory_t memory;
-#if N_PORT
+#if GPIO
 	gpio_module_t port[N_PORT];
 #endif
 #if UART0
@@ -73,8 +73,12 @@ typedef struct device_properties
 } dp_t;
 
 status_t dp_init(dp_t *);
+cpu_t *dp_get_cpu_info(uint8_t);
+uint8_t *dp_get_datawidth();
+unsigned long *dp_get_base_clock();
+memory_t *dp_get_memory_info();
 
-#if N_PORT
+#if GPIO
 gpio_module_t *dp_get_port_info(uint8_t);
 #endif
 

@@ -9,6 +9,9 @@
 N_CORES		:= 1
 CFLAGS          += $(call add_define,N_CORES)
 
+PRIMARY_CORE_ID:= 0
+CFLAGS          += $(call add_define,PRIMARY_CORE_ID)
+
 # Call this FLAG from Project config file if needed
 FCLK		?= 16000000
 CFLAGS		+= $(call add_define,FCLK)
@@ -21,9 +24,6 @@ CFLAGS		+= $(call add_define,N_IRQ)
 
 MAX_INTERRUPTS_PER_DEVICE	:= 2
 CFLAGS		+= $(call add_define,MAX_INTERRUPTS_PER_DEVICE)
-
-N_PORT		:= 3
-CFLAGS          += $(call add_define,N_PORT)
 
 USE_SPINLOCK	?= 1
 CFLAGS		+= $(call add_define,USE_SPINLOCK)
@@ -52,6 +52,10 @@ endif
 #======================================================================
 # Call this FLAG from Project config file
 GPIO		?= 0
+ifeq ($(GPIO),1)
+N_PORT		:= 3
+CFLAGS          += $(call add_define,N_PORT)
+endif
 #======================================================================
 
 #======================================================================
@@ -59,7 +63,6 @@ GPIO		?= 0
 #======================================================================
 # UART can directly be used by Adding UART0 to Project config file
 UART0		?= 0
-
 ifeq ($(CONSOLE),1)
 # Call this FLAG from Project config file
 EARLYCON_SERIAL	?= 0
