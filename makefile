@@ -4,6 +4,7 @@
 
 SHELL		:= /bin/bash
 N_HOSTS		:= $(shell grep -c ^processor /proc/cpuinfo)
+HOST_ARCH	:= $(shell lscpu | grep -Po '(?<='Architecture:'        )[^"]*')
 
 
 include mk/help.mk
