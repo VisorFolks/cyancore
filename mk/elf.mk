@@ -18,5 +18,4 @@ $(ELF): $(DEPS_OBJS)
 	echo "=================================================="
 	echo "Size of Executable:"
 	cd $(OUT); $(SIZE) *.elf
-	echo $(HOST_ARCH)
 	echo ""
