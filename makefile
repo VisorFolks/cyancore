@@ -11,7 +11,6 @@ include mk/help.mk
 include mk/path.mk
 include mk/tc_get.mk
 include mk/project.mk
-
 ifneq ($(MAKECMDGOALS),help)
 ifneq ($(MAKECMDGOALS),list)
 ifneq ($(MAKECMDGOALS),get_all_tc)
