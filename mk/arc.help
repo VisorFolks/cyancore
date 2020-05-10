@@ -1,0 +1,61 @@
+====================< Arc Make Help >====================
+Usage   : make <option> <command>
+option  : {list | get_all_tc | get_arm_tc | get_avr_tv |
+           get_riscv_tc | help} or <Project Name>
+command : default (implicit) | arc | clean
+---------------------------------------------------------
+> Project Name:
+* The project name is the name of directory under
+  src/project which needs to be built.
+* To get the list of projects run 'make list'.
+---------------------------------------------------------
+> list:
+* This option lists the available projects.
+> get_all_tc:
+* This option fetches all the toolchains of supported
+  platforms.
+> get_arm_tc:
+* This option fetches ARM-v7 toolchain.
+> get_avr_tc:
+* This option fetches AVR-8 toolchain.
+> get_riscv_tc:
+* This option fetched RISC-V toolchain.
+=========================================================
+
+> Directory Structure:
+root	: ./
+	+- mk		--> consists of all build system files
+	+- src		--> consists of all the sources necessary to build any project with Arc framework
+	+- makefile	--> This is the top level makefile
+
+src	: root/src/
+	+- Arc		--> consists of the sources, entry point of framework after init (POR)
+	+- arch		--> consists of all the architecture related sources
+	+- driver	--> consists of driver sources
+	+- fs		--> consists of file systems related sources
+	+- include	--> consists of all the dependency header files
+	+- kernel	--> consists of kernel sources
+	+- lib		--> consists of libraries necessary to build other sources
+	+- network	--> consists of networking related sources
+	+- platform	--> consists of platform definitaions and HAL sources of supported architecture
+	+- projects	--> consists of all the project user wishes to build with this framework
+	+- sources.mk	--> This is second level makefile necessary to build Arc
+
+> Support Architecture:
+* Atmel AVR	- 8-bit
+* RISC-V
+* ARM-v7
+
+> Supported Platforms:
+* Mega AVR	-+
+		 +- ATMega328P
+		 +- ATMega2560
+
+* Tiny AVR	-+
+		 +- ATTiny85
+
+* Freedom Board	-+
+		 +- freedom e310
+
+* TIVA		-+
+		 +- tm4c123gxl

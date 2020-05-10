@@ -1,0 +1,77 @@
+#include <plat_mem.h>
+
+#ifndef L_MEM_START
+#define L_MEM_START	0
+#endif
+
+MEMORY
+{
+	/* VM Addresses */
+	vma_imem	: ORIGIN = V_IMEM_START, LENGTH = IMEM_LENGTH
+	vma_dmem	: ORIGIN = V_DMEM_START, LENGTH = DMEM_LENGTH
+
+	/* LM Addresses */
+	lma_mem		: ORIGIN = L_MEM_START, LENGTH = IMEM_LENGTH
+}
+
+SECTIONS
+{
+	.vectors :
+	{
+		. = ALIGN(ALIGN_BOUND);
+		KEEP(*(.vectors))
+		*(.archvectors)
+		KEEP(*(.archvectors))
+		*(.platvectors)
+		KEEP(*(.platvectors))
+	} > vma_imem AT > lma_mem
+
+	.text :
+	{
+		. = ALIGN(ALIGN_BOUND);
+		*(.text)
+		*(.text.*)
+		KEEP(*(.text))
+	} > vma_imem AT > lma_mem
+
+	.data :
+	{
+		. = ALIGN(ALIGN_BOUND);
+		*(.version)
+		KEEP(*(.version))
+		*(.rodata)
+		*(.rodata.*)
+		KEEP(*(.rodata))
+		*(.data)
+		*(.data.*)
+		KEEP(*(.data))
+		PROVIDE(_driver_table_start = .);
+		*(.driver)
+		KEEP(*(.driver))
+		PROVIDE(_driver_table_end = .);
+	} > vma_dmem AT > lma_mem
+
+	_data_start = LOADADDR(.data);
+	_data_size = SIZEOF(.data);
+	_data_end = _data_start + _data_size;
+
+	.bss :
+	{
+		. = ALIGN(ALIGN_BOUND);
+		. = . + ALIGN_BOUND;
+		PROVIDE(_bss_start = .);
+		PROVIDE(_gptr = .);
+		*(.bss)
+		*(.bss.*)
+		KEEP(*(.bss))
+		*(.sbss)
+		*(.sbss.*)
+		KEEP(*(.sbss))
+		*(COMMON)
+		PROVIDE(_bss_end = .);
+	} > vma_dmem
+
+	PROVIDE(_bss_size = SIZEOF(.bss));
+
+	_stack_start = _bss_end + STACK_SIZE;
+}
