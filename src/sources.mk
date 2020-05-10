@@ -33,7 +33,7 @@ ASFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 		   $(TARGET_FLAGS)			\
 		   --fatal-warnings
 
-LD_SCRIPT	:= $(OUT)/arc.ld
+LD_SCRIPT	:= $(OUT)/LattiX.ld
 
 LD_FLAGS	+= --error-unresolved-symbols	\
 		   --warn-common		\
