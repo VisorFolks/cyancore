@@ -9,6 +9,6 @@ version:
 	$(info ------------------------------------)
 	$(info Platform          : $(PLATFORM))
 	$(info Architecture      : $(ARCH)-$(BIT))
-	$(info LattiX Version    : $(VERSION))
-	$(info LattiX Codename   : $(NAME))
+	$(info Cyancore Version  : $(VERSION))
+	$(info Cyancore Codename : $(NAME))
 	$(info )

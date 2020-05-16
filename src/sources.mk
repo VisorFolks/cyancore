@@ -14,8 +14,6 @@ INCLUDE		+= $(SRC)/include/	\
 
 OPTIMIZATION	?= s
 
-add_define	= -D$(1)=$($(1))
-
 CFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 		   -DDEBUG=$(DEBUG)			\
 		   -DAUTOINIT=$(AUTOINIT)		\
@@ -33,7 +31,7 @@ ASFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 		   $(TARGET_FLAGS)			\
 		   --fatal-warnings
 
-LD_SCRIPT	:= $(OUT)/LattiX.ld
+LD_SCRIPT	:= $(OUT)/sections.ld
 
 LD_FLAGS	+= --error-unresolved-symbols	\
 		   --warn-common		\
@@ -55,4 +53,4 @@ include $(SRC)/arch/build.mk
 include $(SRC)/driver/build.mk
 include $(SRC)/visor/build.mk
 include $(SRC)/lib/build.mk
-include $(SRC)/LattiX/build.mk
+include $(SRC)/engine/build.mk

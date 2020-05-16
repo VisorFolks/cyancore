@@ -3,7 +3,7 @@
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
 
 ARC_ROOT	:= .
-TOOLS_ROOT	?= $(PWD)/toolchain
+TOOLS_ROOT	?= $(abspath $(ARC_ROOT))/toolchain
 
 SRC		:= $(ARC_ROOT)/src
 OUT		?= $(ARC_ROOT)/out/$(PROJECT)

@@ -10,7 +10,7 @@
 #include <string.h>
 #include <mmio.h>
 #include <plat_arch.h>
-#include <lattix.h>
+#include <engine.h>
 
 extern uint16_t _stack_start;
 
@@ -23,6 +23,6 @@ void init()
 	MMIO8(SPL) = (uint8_t)((uint16_t)stack_location & 0x00ff);
 	MMIO8(SPH) = (uint8_t)(((uint16_t)stack_location >> 8) & 0x00ff);
 	zero_reg();
-	lattix();
+	engine();
 	exit(EXIT_FAILURE);
 }

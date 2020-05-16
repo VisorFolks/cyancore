@@ -1,5 +1,5 @@
  
-# LattiX Framework
+# Cyancore Framework
 ###### *A unified platform for embedded system projects ...*
 ---
 

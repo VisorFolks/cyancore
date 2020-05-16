@@ -3,6 +3,7 @@
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*#
 
 include mk/path.mk
+include mk/mk_helper.mk
 
 default: dependency_targets
 	make $(PROJECT) arc -j$(N_HOSTS)
