@@ -12,8 +12,6 @@
 #include <hal/uart.h>
 #include <driver/console.h>
 
-#if EARLYCON_SERIAL || CONSOLE_SERIAL
-
 uart_port_t port;
 
 void console_serial_write_irq_handler(void);
@@ -100,8 +98,6 @@ status_t console_serial_driver_exit()
 	ret |= uart_shutdown(&port);
 	return ret;
 }
-
-#endif
 
 #if EARLYCON_SERIAL==1
 INCLUDE_DRIVER(earlycon, console_serial_driver_setup, console_serial_driver_exit);
