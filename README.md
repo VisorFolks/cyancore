@@ -1,4 +1,4 @@
-# <img src="./docs/pics/cyancore.png" width="30" height="30"> Cyancore Framework
+# <img src="./docs/pics/cyancore.png" height="40"> Cyancore Framework
 ###### *A unified platform for embedded system projects ...*
 ---
 
