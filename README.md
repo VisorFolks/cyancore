@@ -1,5 +1,4 @@
- 
-# Cyancore Framework
+# ![](./docs/pics/cyancore.png =50x50) Cyancore Framework
 ###### *A unified platform for embedded system projects ...*
 ---
 

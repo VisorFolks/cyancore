@@ -1,4 +1,4 @@
 .PHONY: help
 
 help:
-	less mk/arc.help
+	less docs/usage_help.txt
