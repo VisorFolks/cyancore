@@ -12,12 +12,12 @@ LIB_OBJS	+= $(C_OBJS) $(S_OBJS)
 
 $(C_OBJS): $(OUT)/%.o: %.c $(LIB_INCLUDE_PATH)/
 	mkdir -p $(dir $@)
-	echo "Compiling $(subst .o,.c,$(notdir $@)) ..."
+	@echo "Compiling $(subst .o,.c,$(notdir $@)) ..."
 	$(CC) $(CFLAGS) $(addprefix -I,$(+D)) -c $< -o $@
 
 $(S_OBJS): $(OUT)/%.o: %.S $(LIB_INCLUDE_PATH)/
 	mkdir -p $(dir $@)
-	echo "Assembling $(subst .o,.S,$(notdir $@)) ..."
+	@echo "Assembling $(subst .o,.S,$(notdir $@)) ..."
 	$(CC) -E $(CFLAGS) $(addprefix -I,$(+D)) -c $< > $(subst .o,.pS,$@)
 	$(AS) $(ASFLAGS) $(subst .o,.pS,$@) -o $@
 	rm $(subst .o,.pS,$@)
