@@ -65,8 +65,14 @@ status_t uart_setup(uart_port_t *port, direction_t d, parity_t p)
 
 status_t uart_shutdown(uart_port_t *port)
 {
+	status_t ret = success;
 	assert(port);
-	return platform_clk_dis(port->clk_id);
+	ret |= uart_tx_int_dis(port);
+	ret |= uart_rx_int_dis(port);
+	ret |= unlink_interrupt(arch, port->rx_irq);
+	ret |= unlink_interrupt(arch, port->tx_irq);
+	ret |= platform_clk_dis(port->clk_id);
+	return ret;
 }
 
 bool uart_buffer_available(uart_port_t *port)
