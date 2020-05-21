@@ -63,16 +63,20 @@ mret_t platform_fetch_dp(unsigned int dev, unsigned int a0)
 			ret.size = sizeof(unsigned long);
 			ret.status = success;
 			break;
+#if UART0==1
 		case DEV_CONSOLE:
 			ret.p = (uintptr_t)dp_get_uart0_info();
 			ret.size = sizeof(module_t);
 			ret.status = success;
 			break;
+#endif
+#if GPIO==1
 		case DEV_GPIO:
 			ret.p = (uintptr_t)dp_get_port_info(a0);
 			ret.size = sizeof(gpio_module_t);
 			ret.status = success;
 			break;
+#endif
 		default:
 			ret.p = (uintptr_t)NULL;
 			ret.size = 0x00;

@@ -26,4 +26,6 @@ endif
 endif
 endif
 
+ifneq ($(V),1)
 .SILENT:
+endif

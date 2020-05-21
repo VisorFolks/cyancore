@@ -66,7 +66,7 @@ UART0		?= 0
 ifeq ($(CONSOLE),1)
 # Call this FLAG from Project config file
 EARLYCON_SERIAL	?= 0
-ifeq ($(EARLYCON_SERIAL), 1)
+ifeq ($(EARLYCON_SERIAL),1)
 UART0		:= 1
 endif
 # Call this FLAG from Project config file

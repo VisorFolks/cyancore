@@ -7,7 +7,6 @@
  * membuf is present in bss section hence will
  * be cleared during plaform boot
  */
-#if EARLYCON_MEMBUF||CONSOLE_MEMBUF
 
 char membuf[MEMBUF_SIZE];
 
@@ -48,8 +47,6 @@ status_t membuf_driver_exit()
 {
 	return console_release_device();
 }
-
-#endif
 
 #if EARLYCON_MEMBUF==1
 INCLUDE_DRIVER(earlycon, membuf_driver_setup, membuf_driver_exit);
