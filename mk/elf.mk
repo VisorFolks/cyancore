@@ -8,7 +8,8 @@ ELF	:= $(addprefix $(OUT)/,$(PROJECT).elf)
 
 elf: lib slib $(ELF)
 
-$(ELF): $(DEPS_OBJS)
+.SECONDEXPANSION:
+$(ELF): $(DEPS_OBJS) | $$(@D)/
 	@echo "Generating $(notdir $@) ..."
 	$(CC) $(CFLAGS) -E -P -o $(LD_SCRIPT) $(LD_TEMPLATE)
 	$(LD) -T $(LD_SCRIPT) $(LD_FLAGS) -Map=$(subst .elf,.map,$@) -o $@ $^ $(DEP_LIB_PATH) $(DEP_LIBS) -L $(TL) -lgcc
@@ -17,5 +18,5 @@ $(ELF): $(DEPS_OBJS)
 	$(OC) -O ihex $@ $(subst .elf,.hex,$@)
 	@echo "=================================================="
 	@echo "Size of Executable:"
-	@cd $(OUT); $(SIZE) *.elf
+	@cd $(@D); $(SIZE) *.elf
 	@echo ""

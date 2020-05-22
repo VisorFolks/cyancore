@@ -6,15 +6,12 @@ include mk/path.mk
 include mk/mk_helper.mk
 
 default: dependency_targets
-	make $(PROJECT) arc -j$(N_HOSTS)
+	make $(PROJECT) cyancore -j$(N_HOSTS)
 
-.PHONY: arc --dependency clean list lib elf slib dependency_targets
+.PHONY: cyancore clean list lib elf slib dependency_targets
 
-arc: version --dependency elf
+cyancore: version elf
 	$(info < / > Done !)
-
---dependency:
-	mkdir -p $(OUT)
 
 clean:
 	$(info < ! > Removing $(PROJECT) binaries ...)
@@ -33,7 +30,7 @@ ifneq ($(MAKECMDGOALS),list)
 
 ifneq ($(firstword $(MAKECMDGOALS)),clean)
 ifneq ($(firstword $(MAKECMDGOALS)),default)
-ifneq ($(firstword $(MAKECMDGOALS)),arc)
+ifneq ($(firstword $(MAKECMDGOALS)),cyancore)
 PROJECT		:= $(firstword $(MAKECMDGOALS))
 CMD		:= $(word 2,$(MAKECMDGOALS))
 ifeq ($(CMD),)

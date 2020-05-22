@@ -10,13 +10,12 @@ S_OBJS		:= $(addprefix $(OUT)/,$(S_OBJS:.S=.o))
 
 DEPS_OBJS	+= $(C_OBJS) $(S_OBJS)
 
-$(C_OBJS): $(OUT)/%.o: %.c
-	mkdir -p $(dir $@)
+.SECONDEXPANSION:
+$(C_OBJS): $(OUT)/%.o: %.c | $$(@D)/
 	@echo "Compiling $(subst .o,.c,$(notdir $@)) ..."
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(S_OBJS): $(OUT)/%.o: %.S
-	mkdir -p $(dir $@)
+$(S_OBJS): $(OUT)/%.o: %.S | $$(@D)/
 	@echo "Assembling $(subst .o,.S,$(notdir $@)) ..."
 	$(CC) -E $(CFLAGS) -c $< > $(subst .o,.pS,$@)
 	$(AS) $(ASFLAGS) $(subst .o,.pS,$@) -o $@
