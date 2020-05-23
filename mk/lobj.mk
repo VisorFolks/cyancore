@@ -10,13 +10,11 @@ S_OBJS		:= $(addprefix $(OUT)/,$(S_OBJS:.S=.o))
 
 LIB_OBJS	+= $(C_OBJS) $(S_OBJS)
 
-.SECONDEXPANSION:
-
-$(C_OBJS): $(OUT)/%.o: %.c $(LIB_INCLUDE_PATH)/ | $$(@D)/
+$(C_OBJS): $(OUT)/%.o: %.c $(LIB_INCLUDE_PATH)/ | $(OUT)/$(DIR)/
 	@echo "Compiling $(subst .o,.c,$(notdir $@)) ..."
 	$(CC) $(CFLAGS) $(addprefix -I,$(+D)) -c $< -o $@
 
-$(S_OBJS): $(OUT)/%.o: %.S $(LIB_INCLUDE_PATH)/ | $$(@D)/
+$(S_OBJS): $(OUT)/%.o: %.S $(LIB_INCLUDE_PATH)/ | $(OUT)/$(DIR)/
 	@echo "Assembling $(subst .o,.S,$(notdir $@)) ..."
 	$(CC) -E $(CFLAGS) $(addprefix -I,$(+D)) -c $< > $(subst .o,.pS,$@)
 	$(AS) $(ASFLAGS) $(subst .o,.pS,$@) -o $@

@@ -6,13 +6,12 @@ include mk/obj.mk
 
 ELF	:= $(addprefix $(OUT)/,$(PROJECT).elf)
 
-elf: lib slib $(ELF)
+elf: $(ELF)
 
-.SECONDEXPANSION:
-$(ELF): $(DEPS_OBJS) | $$(@D)/
+$(ELF): $(DEP_LIBS) $(DEP_OBJS) | $(OUT)
 	@echo "Generating $(notdir $@) ..."
 	$(CC) $(CFLAGS) -E -P -o $(LD_SCRIPT) $(LD_TEMPLATE)
-	$(LD) -T $(LD_SCRIPT) $(LD_FLAGS) -Map=$(subst .elf,.map,$@) -o $@ $^ $(DEP_LIB_PATH) $(DEP_LIBS) -L $(TL) -lgcc
+	$(LD) -T $(LD_SCRIPT) $(LD_FLAGS) -Map=$(subst .elf,.map,$@) -o $@ $(DEP_OBJS) $(DEP_LIB_PATH) $(DEP_LIBS_ARG) -L $(TL) -lgcc
 	$(OD) -Dx -h $@ > $(subst .elf,.lst,$@)
 	$(OC) -O binary $@ $(subst .elf,.bin,$@)
 	$(OC) -O ihex $@ $(subst .elf,.hex,$@)

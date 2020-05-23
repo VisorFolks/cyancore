@@ -3,7 +3,7 @@ LIB_OBJS	:=
 
 LIB		:= libdp.a
 LIB_INCLUDE	+= $(DP_PATH)/include/
-DEP_LIBS	+= -ldp
+DEP_LIBS_ARG	+= -ldp
 
 DIR		:= $(DP_PATH)
 include mk/lib.mk

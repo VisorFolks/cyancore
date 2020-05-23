@@ -40,8 +40,9 @@ LD_FLAGS	+= --error-unresolved-symbols	\
 		   -b $(OUTPUT_FORMAT)
 
 DEP_LIB_PATH	:=
+DEP_LIBS_ARG	:=
 DEP_LIBS	:=
-DEPS_OBJS	:=
+DEP_OBJS	:=
 PLAT_INCLUDE	:=
 PROJECT_INCLUDES:=
 LIB_INCLUDES	:=
