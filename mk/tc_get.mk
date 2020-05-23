@@ -6,8 +6,6 @@ AVR_TC_REPO	:= git@192.168.3.101:Toolchains/avr-toolchain.git -b linux_x64_v5.4.
 RISC_V_TC_REPO	:= git@192.168.3.101:Toolchains/risc-v-toolchain.git -b linux_x64_v8.2.0
 ARM_TC_REPO	:= git@192.168.3.101:Toolchains/arm-toolchain.git -b linux_x64_v7.3.1
 
-.PHONY: get_all_tc --tc_clear get_avr_tc get_arm_tc get_riscv_tc
-
 get_all_tc: --tc_clear get_avr_tc get_arm_tc get_riscv_tc
 
 --tc_clear:

@@ -19,6 +19,3 @@ $(S_OBJS): $(OUT)/%.o: %.S $(LIB_INCLUDE_PATH)/ | $(OUT)/$(DIR)/
 	$(CC) -E $(CFLAGS) $(addprefix -I,$(+D)) -c $< > $(subst .o,.pS,$@)
 	$(AS) $(ASFLAGS) $(subst .o,.pS,$@) -o $@
 	rm $(subst .o,.pS,$@)
-
-C_OBJS		:=
-S_OBJS		:=
