@@ -4,7 +4,7 @@
 #include <status.h>
 #include <mmio.h>
 #include <lock/spinlock.h>
-#include <mega_avr_platform.h>
+#include <platform.h>
 #include <interrupt.h>
 #include <hal/uart.h>
 #include <device.h>

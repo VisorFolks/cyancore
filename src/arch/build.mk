@@ -15,8 +15,13 @@ $(info < ! > CPU - Architecture Variant is not defined !)
 $(error < x > Build Failed !)
 endif
 
+ifeq ($(EXE_MODE),)
+$(info < ! > CPU - Execution mode is not defined !)
+$(error < x > Build Failed !)
+endif
+
 CFLAGS		+= -DARCHITECTURE=$(ARCH)	\
 		   -DBITWIDTH=$(BIT)		\
 		   -DARCH_VARIANT=$(ARCH_VARIANT)
 
-include $(ARCH_DIR)/$(ARCH)/$(BIT)/$(ARCH_VARIANT)/build.mk
+include $(ARCH_DIR)/$(ARCH)/$(BIT)/$(ARCH_VARIANT)/$(EXE_MODE)/build.mk

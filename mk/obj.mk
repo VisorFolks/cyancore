@@ -10,12 +10,13 @@ S_OBJS		:= $(addprefix $(OUT)/,$(S_OBJS:.S=.o))
 
 DEP_OBJS	+= $(C_OBJS) $(S_OBJS)
 
-$(C_OBJS): $(OUT)/%.o: %.c | $(OUT)/$(DIR)/
-	@echo "Compiling $(notdir $(@:.o=.c)) ..."
+.SECONDEXPANSION:
+$(C_OBJS): $(OUT)/%.o: %.c | $$(@D)/
+	@echo "Elf: Compiling $(notdir $<) ..."
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(S_OBJS): $(OUT)/%.o: %.S | $(OUT)/$(DIR)/
-	@echo "Assembling $(notdir $(@:.o=.S)) ..."
+$(S_OBJS): $(OUT)/%.o: %.S | $$(@D)/
+	@echo "Elf: Assembling $(notdir $<) ..."
 	$(CC) -E $(CFLAGS) -c $< -o $(@:.o=.pS)
 	$(AS) $(ASFLAGS) $(@:.o=.pS) -o $@
 	rm $(@:.o=.pS)

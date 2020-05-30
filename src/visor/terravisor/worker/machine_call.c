@@ -2,7 +2,7 @@
 #include <stddef.h>
 #include <status.h>
 #include <machine_call.h>
-#include <mega_avr_platform.h>
+#include <platform.h>
 #include <dp.h>
 
 void machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsigned int a2, mret_t *ret)

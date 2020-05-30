@@ -6,7 +6,7 @@
 #include <hal/gpio.h>
 #include <arch.h>
 #include <driver.h>
-#include <mega_avr_platform.h>
+#include <platform.h>
 
 void platform_early_setup()
 {

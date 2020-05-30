@@ -9,7 +9,7 @@ DEP_LIB_PATH	+= -L $(OUT)/$(DIR)
 DEP_LIBS	+= $(LIB)
 
 $(LIB): $(LIB_OBJS)
-	@echo "Generating $(notdir $@) ..."
+	@echo "Lib: Generating $(@F) ..."
 	$(AR) rc $@ $^
 
 LIB_INCLUDE_PATH:=

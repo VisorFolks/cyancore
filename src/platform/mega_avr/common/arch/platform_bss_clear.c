@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <status.h>
-#include <mega_avr_platform.h>
+#include <platform.h>
 
 extern uint16_t _bss_start, _bss_size;
 
