@@ -7,9 +7,9 @@
 
 #include <stdint.h>
 #include <status.h>
+#include <machine_call.h>
 #include <plat_arch.h>
 #include <mmio.h>
-#include <machine_call.h>
 #include <arch.h>
 
 unsigned int arch_core_id()
@@ -59,11 +59,13 @@ void arch_watchdog_reset()
 	return;
 }
 
-void machine_call(unsigned int, unsigned int, unsigned int, unsigned int, mret_t *);
+void (*mcall)(unsigned int, unsigned int, unsigned int, unsigned int, mret_t *);
 
 mret_t arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsigned int a2)
 {
 	mret_t ret;
-	machine_call(code, a0, a1, a2, &ret);
+	mcall(code, a0, a1, a2, &ret);
 	return ret;
 }
+
+
