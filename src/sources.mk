@@ -4,7 +4,6 @@
 
 DEBUG		?= 1
 TARGET_FLAGS	?=
-AUTOINIT	?= 0
 
 INCLUDE		+= $(SRC)/include/	\
 		   $(TI)		\
@@ -16,7 +15,6 @@ OPTIMIZATION	?= s
 
 CFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 		   -DDEBUG=$(DEBUG)			\
-		   -DAUTOINIT=$(AUTOINIT)		\
 		   -O$(strip $(OPTIMIZATION))		\
 		   $(TARGET_FLAGS) -DARCH_$(BIT)	\
 		   -Wall -Wextra -Werror		\

@@ -4,9 +4,11 @@
 #include <status.h>
 #include <driver/console.h>
 #include <hal/gpio.h>
+#include <terravisor/bootloader.h>
 
 void project_setup()
 {
+	bootloader();
 	gpio_pin_config(0, 5, out);
 	gpio_pin_clear(0, 5);
 	printf("Demo Program!\n");
