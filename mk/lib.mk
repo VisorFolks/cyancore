@@ -6,16 +6,12 @@ include mk/lobj.mk
 
 LIB		:= $(addprefix $(OUT)/$(DIR)/,$(LIB))
 DEP_LIB_PATH	+= -L $(OUT)/$(DIR)
+DEP_LIBS	+= $(LIB)
 
-.PHONY: lib
-
-lib: $(LIB)
-
-$(LIB): $(HEADER) $(LIB_OBJS)
-	@echo "Generating $(notdir $@) ..."
+$(LIB): $(LIB_OBJS)
+	@echo "Lib: Generating $(@F) ..."
 	$(AR) rc $@ $^
 
 LIB_INCLUDE_PATH:=
-LIB_HEADER	:=
 LIB_OBJS	:=
 LIB		:=

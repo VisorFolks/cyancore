@@ -7,7 +7,7 @@
 #include <dp.h>
 #include <device.h>
 #include <machine_call.h>
-#include <mega_avr_platform.h>
+#include <platform.h>
 
 #ifndef FCLK
 #define FCLK 0

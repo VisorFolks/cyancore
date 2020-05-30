@@ -5,16 +5,15 @@
 include mk/path.mk
 include mk/mk_helper.mk
 
+T_WHITELIST	+= help list
+
+.PHONY: dependency_targets
+
 default: dependency_targets
-	make $(PROJECT) arc -j$(N_HOSTS)
+	make $(PROJECT) cyancore -j$(N_HOSTS)
 
-.PHONY: arc --dependency clean list lib elf slib dependency_targets
-
-arc: version --dependency elf
+cyancore: version elf
 	$(info < / > Done !)
-
---dependency:
-	mkdir -p $(OUT)
 
 clean:
 	$(info < ! > Removing $(PROJECT) binaries ...)
@@ -24,16 +23,10 @@ list:
 	$(info Available projects are :)
 	ls $(SRC)/projects/ -I *.template
 
-ifneq ($(MAKECMDGOALS),help)
-ifneq ($(MAKECMDGOALS),get_all_tc)
-ifneq ($(MAKECMDGOALS),get_arm_tc)
-ifneq ($(MAKECMDGOALS),get_avr_tc)
-ifneq ($(MAKECMDGOALS),get_riscv_tc)
-ifneq ($(MAKECMDGOALS),list)
-
+ifeq ($(findstring $(MAKECMDGOALS),$(T_WHITELIST)),)
 ifneq ($(firstword $(MAKECMDGOALS)),clean)
 ifneq ($(firstword $(MAKECMDGOALS)),default)
-ifneq ($(firstword $(MAKECMDGOALS)),arc)
+ifneq ($(firstword $(MAKECMDGOALS)),cyancore)
 PROJECT		:= $(firstword $(MAKECMDGOALS))
 CMD		:= $(word 2,$(MAKECMDGOALS))
 ifeq ($(CMD),)
@@ -58,11 +51,4 @@ $(info < x > Invalid project name...)
 $(info < ! > Run `make list` to get list of projects)
 $(error < x > Build Failed!)
 endif
-
 endif
-endif
-endif
-endif
-endif
-endif
-

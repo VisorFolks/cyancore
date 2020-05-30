@@ -3,7 +3,7 @@ LIB_OBJS	:=
 
 LIB		:= libc.a
 LIB_INCLUDE	+= $(LIBC_PATH)/include/
-DEP_LIBS	+= -lc
+DEP_LIBS_ARG	+= -lc
 
 DIR		:= $(LIBC_PATH)
 include mk/lib.mk

@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <assert.h>
 #include <mmio.h>
-#include <mega_avr_platform.h>
+#include <platform.h>
 #include <interrupt.h>
 #include <hal/gpio.h>
 #include <hal/spi.h>

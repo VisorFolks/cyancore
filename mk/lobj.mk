@@ -10,17 +10,13 @@ S_OBJS		:= $(addprefix $(OUT)/,$(S_OBJS:.S=.o))
 
 LIB_OBJS	+= $(C_OBJS) $(S_OBJS)
 
-$(C_OBJS): $(OUT)/%.o: %.c $(LIB_INCLUDE_PATH)/
-	mkdir -p $(dir $@)
-	@echo "Compiling $(subst .o,.c,$(notdir $@)) ..."
-	$(CC) $(CFLAGS) $(addprefix -I,$(+D)) -c $< -o $@
+.SECONDEXPANSION:
+$(C_OBJS): $(OUT)/%.o: %.c | $$(@D)/
+	@echo "Lib: Compiling $(notdir $<) ..."
+	$(CC) $(CFLAGS) -c $< -o $@
 
-$(S_OBJS): $(OUT)/%.o: %.S $(LIB_INCLUDE_PATH)/
-	mkdir -p $(dir $@)
-	@echo "Assembling $(subst .o,.S,$(notdir $@)) ..."
-	$(CC) -E $(CFLAGS) $(addprefix -I,$(+D)) -c $< > $(subst .o,.pS,$@)
-	$(AS) $(ASFLAGS) $(subst .o,.pS,$@) -o $@
-	rm $(subst .o,.pS,$@)
-
-C_OBJS		:=
-S_OBJS		:=
+$(S_OBJS): $(OUT)/%.o: %.S | $$(@D)/
+	@echo "Lib: Assembling $(notdir $<) ..."
+	$(CC) -E $(CFLAGS) -c $< -o $(@:.o=.pS)
+	$(AS) $(ASFLAGS) $(@:.o=.pS) -o $@
+	rm $(@:.o=.pS)

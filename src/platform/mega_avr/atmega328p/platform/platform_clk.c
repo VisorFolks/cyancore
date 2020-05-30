@@ -2,7 +2,7 @@
 #include <status.h>
 #include <mmio.h>
 #include <plat_arch.h>
-#include <mega_avr_platform.h>
+#include <platform.h>
 
 status_t platform_clk_reset()
 {
