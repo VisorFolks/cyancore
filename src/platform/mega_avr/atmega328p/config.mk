@@ -9,8 +9,8 @@
 N_CORES		:= 1
 $(eval $(call add_define,N_CORES))
 
-PRIMARY_CORE_ID:= 0
-$(eval $(call add_define,PRIMARY_CORE_ID))
+BOOT_CORE_ID:= 0
+$(eval $(call add_define,BOOT_CORE_ID))
 
 # Call this FLAG from Project config file if needed
 FCLK		?= 16000000

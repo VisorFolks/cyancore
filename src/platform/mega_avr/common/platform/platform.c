@@ -6,6 +6,7 @@
 #include <hal/gpio.h>
 #include <arch.h>
 #include <driver.h>
+#include <terravisor/platform.h>
 #include <platform.h>
 
 void platform_early_setup()
