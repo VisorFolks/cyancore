@@ -43,6 +43,8 @@ status_t driver_setup(const char *name)
 		}
 		ptr++;
 	}
+	if(ret == success)
+		printf("< / > Started %s\n", name);
 	return ret;
 }
 
