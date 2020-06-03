@@ -12,3 +12,4 @@ status_t platform_dp_setup();
 status_t platform_clk_reset();
 status_t platform_clk_en(unsigned int);
 status_t platform_clk_dis(unsigned int);
+status_t platform_mcall_update(void *);

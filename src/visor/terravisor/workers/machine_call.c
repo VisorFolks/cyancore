@@ -5,7 +5,7 @@
 #include <platform.h>
 #include <dp.h>
 
-void machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsigned int a2, mret_t *ret)
+void machine_call(unsigned int code, unsigned int a0 _UNUSED, unsigned int a1 _UNUSED, unsigned int a2 _UNUSED, mret_t *ret)
 {
 	switch(code)
 	{
@@ -16,7 +16,6 @@ void machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsigned 
 			ret->p = (uintptr_t)NULL;
 			ret->size = 0x00;
 			ret->status = error_inval_code;
-			a2 = a1 + a2;
 			break;
 	}
 

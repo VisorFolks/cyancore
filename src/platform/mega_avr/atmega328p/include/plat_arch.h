@@ -18,3 +18,7 @@
 #define CLKPR		0x61
 #define PRR		0x64
 #define OSCCAL		0x66
+
+#ifdef _MACHINE_CALL_H_
+extern void (*mcall)(unsigned int, unsigned int, unsigned int, unsigned int, mret_t *);
+#endif

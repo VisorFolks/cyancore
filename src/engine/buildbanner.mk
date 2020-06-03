@@ -1,5 +1,5 @@
 .PHONY:	version
-NAME		= point
+NAME		= Aurora
 VERSION		= 0x00000100
 
 CFLAGS		+= -DVERSION=$(VERSION)

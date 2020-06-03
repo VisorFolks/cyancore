@@ -11,7 +11,7 @@
 
 #ifndef FCLK
 #define FCLK 0
-#warning FCLK is not defined!
+WARN(< ! > FCLK is not defined!)
 #endif
 
 dp_t device_prop;
@@ -53,7 +53,7 @@ status_t platform_dp_setup()
 	return ret;
 }
 
-mret_t platform_fetch_dp(unsigned int dev, unsigned int a0)
+mret_t platform_fetch_dp(unsigned int dev, unsigned int a0 _UNUSED)
 {
 	mret_t ret;
 	switch(dev)

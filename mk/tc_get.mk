@@ -16,7 +16,7 @@ $(TOOLS_ROOT)/arm-toolchain/bin/arm-none-eabi-gcc:
 	$(info < ! > Fetching ARM Toolchain ...)
 	$(info < ? > Please be patient as this might take a while ...)
 	mkdir -p toolchain
-	cd $(TOOLS_ROOT); git clone $(ARM_TC_REPO)
+	cd $(TOOLS_ROOT); git clone $(ARM_TC_REPO); chmod +x -R $(@D)/..
 	echo "< / > Done !"
 
 get_avr_tc: $(TOOLS_ROOT)/avr-toolchain/bin/avr-gcc
@@ -24,7 +24,7 @@ $(TOOLS_ROOT)/avr-toolchain/bin/avr-gcc:
 	$(info < ! > Fetching AVR Toolchain ...)
 	$(info < ? > Please be patient as this might take a while ...)
 	mkdir -p toolchain
-	cd $(TOOLS_ROOT); git clone $(AVR_TC_REPO)
+	cd $(TOOLS_ROOT); git clone $(AVR_TC_REPO); chmod +x -R $(@D)/..
 	echo "< / > Done !"
 
 get_riscv_tc: $(TOOLS_ROOT)/risc-v-toolchain/bin/riscv64-unknown-elf-gcc
@@ -32,6 +32,6 @@ $(TOOLS_ROOT)/risc-v-toolchain/bin/riscv64-unknown-elf-gcc:
 	$(info < ! > Fetching RISC-V Toolchain ...)
 	$(info < ? > Please be patient as this might take a while ...)
 	mkdir -p toolchain
-	cd $(TOOLS_ROOT); git clone $(RISC_V_TC_REPO)
+	cd $(TOOLS_ROOT); git clone $(RISC_V_TC_REPO); chmod +x -R $(@D)/..
 	echo "< / > Done !"
 
