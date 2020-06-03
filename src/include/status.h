@@ -1,6 +1,8 @@
 #pragma once
 #define _STATUS_H_
 
+#include <compiler_macros.h>
+
 typedef enum status
 {
 	error_inval_dev_id	= -7,
