@@ -7,9 +7,9 @@ include mk/mk_helper.mk
 
 T_WHITELIST	+= help list
 
-.PHONY: dependency_targets
+.PHONY: aux_target
 
-default: dependency_targets
+default: aux_target
 	make $(PROJECT) cyancore -j$(N_HOSTS)
 
 cyancore: version elf
