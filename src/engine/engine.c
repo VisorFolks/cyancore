@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <stdio.h>
+#include <compiler_macros.h>
 
 volatile uint32_t FWVersion __attribute__((section(".version"))) = VERSION;
 
@@ -23,4 +23,16 @@ void engine()
 		project_loop();
 
 	exit(EXIT_FAILURE);
+}
+
+_WEAK void project_setup()
+{
+	asm volatile("nop");
+	return;
+}
+
+_WEAK void project_loop()
+{
+	asm volatile("nop");
+	return;
 }
