@@ -1,6 +1,8 @@
 #pragma once
 #define _MACHINE_CALL_H_
 
+#include <stdint.h>
+
 typedef struct mret
 {
 	uintptr_t p;

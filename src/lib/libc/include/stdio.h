@@ -2,6 +2,7 @@
 #define _STDIO_H_
 
 #include <stddef.h>
+#include <stdint.h>
 
 #define EOF		-1
 

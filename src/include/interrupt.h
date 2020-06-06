@@ -1,6 +1,8 @@
 #pragma once
 #define _INTERRUPT_H_
 
+#include <stdint.h>
+
 typedef enum int_module
 {
 	arch = 1,

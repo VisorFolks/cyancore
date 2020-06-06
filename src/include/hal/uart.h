@@ -1,6 +1,10 @@
 #pragma once
 #define _UART_H_
 
+#include <stdint.h>
+#include <stdbool.h>
+#include <status.h>
+
 typedef enum direction
 {
 	tx = 1,

@@ -2,7 +2,7 @@
 NAME		= Aurora
 VERSION		= 0x00000100
 
-CFLAGS		+= -DVERSION=$(VERSION)
+$(eval $(call add_define,VERSION))
 
 version:
 	$(info Building Project $(PROJECT))

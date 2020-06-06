@@ -1,6 +1,10 @@
 #pragma once
 #define _SPI_H_
 
+#include <stdint.h>
+#include <stdbool.h>
+#include <status.h>
+
 typedef enum dataframe_format
 {
 	lsb_first = 0,

@@ -1,6 +1,10 @@
 #pragma once
 #define _GPIO_H_
 
+#include <stdint.h>
+#include <stdbool.h>
+#include <status.h>
+
 typedef enum gpio_mode
 {
 	out	= 1,

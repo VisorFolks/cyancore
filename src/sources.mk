@@ -14,7 +14,6 @@ INCLUDE		+= $(SRC)/include/	\
 OPTIMIZATION	?= s
 
 CFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
-		   -DDEBUG=$(DEBUG)			\
 		   -O$(strip $(OPTIMIZATION))		\
 		   $(TARGET_FLAGS) -DARCH_$(BIT)	\
 		   -Wall -Wextra -Werror		\
@@ -23,6 +22,7 @@ CFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 
 ifeq ($(DEBUG),1)
 CFLAGS		+= -g
+$(eval $(call add_define,DEBUG))
 endif
 
 ASFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\

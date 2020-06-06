@@ -1,10 +1,7 @@
-#include <stdbool.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <status.h>
-#include <driver/console.h>
-#include <hal/gpio.h>
 #include <terravisor/bootloader.h>
+#include <hal/gpio.h>
 
 extern char cyancore_logo[];
 

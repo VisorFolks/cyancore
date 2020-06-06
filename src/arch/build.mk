@@ -20,8 +20,8 @@ $(info < ! > CPU - Execution mode is not defined !)
 $(error < x > Build Failed !)
 endif
 
-CFLAGS		+= -DARCHITECTURE=$(ARCH)	\
-		   -DBITWIDTH=$(BIT)		\
-		   -DARCH_VARIANT=$(ARCH_VARIANT)
+$(eval $(call add_define,ARCH))
+$(eval $(call add_define,BIT))
+$(eval $(call add_define,ARCH_VARIANT))
 
 include $(ARCH_DIR)/$(ARCH)/$(BIT)/$(ARCH_VARIANT)/$(EXE_MODE)/build.mk

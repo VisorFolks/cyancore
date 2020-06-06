@@ -1,6 +1,10 @@
 #pragma once
 #define _ADC_H_
 
+#include <stdint.h>
+#include <stdbool.h>
+#include <status.h>
+
 typedef enum adc_trigger
 {
 	free_run = 0,
