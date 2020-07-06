@@ -5,7 +5,7 @@
 include mk/path.mk
 include mk/mk_helper.mk
 
-T_WHITELIST	+= help list
+T_ALLOWLIST	+= help list
 
 .PHONY: aux_target
 
@@ -23,7 +23,7 @@ list:
 	$(info Available projects are :)
 	ls $(SRC)/projects/ -I *.template
 
-ifeq ($(findstring $(MAKECMDGOALS),$(T_WHITELIST)),)
+ifeq ($(findstring $(MAKECMDGOALS),$(T_ALLOWLIST)),)
 ifneq ($(firstword $(MAKECMDGOALS)),clean)
 ifneq ($(firstword $(MAKECMDGOALS)),default)
 ifneq ($(firstword $(MAKECMDGOALS)),cyancore)
