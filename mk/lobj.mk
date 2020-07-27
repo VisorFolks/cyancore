@@ -12,11 +12,11 @@ LIB_OBJS	+= $(C_OBJS) $(S_OBJS)
 
 .SECONDEXPANSION:
 $(C_OBJS): $(OUT)/%.o: %.c | $$(@D)/
-	@echo "Lib: Compiling $(notdir $<) ..."
+	@echo "Lib: Compiling $(@F) ..."
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(S_OBJS): $(OUT)/%.o: %.S | $$(@D)/
-	@echo "Lib: Assembling $(notdir $<) ..."
+	@echo "Lib: Assembling $(@F) ..."
 	$(CC) -E $(CFLAGS) -c $< -o $(@:.o=.pS)
 	$(AS) $(ASFLAGS) $(@:.o=.pS) -o $@
 	rm $(@:.o=.pS)

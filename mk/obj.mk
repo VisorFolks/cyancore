@@ -12,11 +12,11 @@ DEP_OBJS	+= $(C_OBJS) $(S_OBJS)
 
 .SECONDEXPANSION:
 $(C_OBJS): $(OUT)/%.o: %.c | $$(@D)/
-	@echo "Elf: Compiling $(notdir $<) ..."
+	@echo "Elf: Compiling $(@F) ..."
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(S_OBJS): $(OUT)/%.o: %.S | $$(@D)/
-	@echo "Elf: Assembling $(notdir $<) ..."
+	@echo "Elf: Assembling $(@F) ..."
 	$(CC) -E $(CFLAGS) -c $< -o $(@:.o=.pS)
 	$(AS) $(ASFLAGS) $(@:.o=.pS) -o $@
 	rm $(@:.o=.pS)
