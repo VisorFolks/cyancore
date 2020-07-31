@@ -3,7 +3,7 @@
 #include <status.h>
 #include <machine_call.h>
 #include <platform.h>
-#include <dp.h>
+#include <resource.h>
 
 void machine_call(unsigned int code, unsigned int a0 _UNUSED, unsigned int a1 _UNUSED, unsigned int a2 _UNUSED, mret_t *ret)
 {

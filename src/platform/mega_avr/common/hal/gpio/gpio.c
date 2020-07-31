@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <mmio.h>
-#include <dp.h>
+#include <resource.h>
 #include <machine_call.h>
 #include <arch.h>
 #include <device.h>

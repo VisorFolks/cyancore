@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <status.h>
 #include <lock/spinlock.h>
-#include <dp.h>
+#include <resource.h>
 #include <machine_call.h>
 #include <arch.h>
 #include <driver.h>

@@ -4,7 +4,7 @@
 #include <string.h>
 #include <status.h>
 #include <plat_mem.h>
-#include <dp.h>
+#include <resource.h>
 #include <device.h>
 #include <machine_call.h>
 #include <platform.h>

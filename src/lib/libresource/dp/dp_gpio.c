@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <status.h>
-#include <dp.h>
+#include <resource.h>
 
 extern dp_t *dev_prop;
 
