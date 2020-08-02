@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include <status.h>
 
+typedef uint64_t gpio_parallel_t;
+
 typedef enum gpio_mode
 {
 	out	= 1,
@@ -12,11 +14,18 @@ typedef enum gpio_mode
 	pull_up	= 3
 } gpio_mode_t;
 
-status_t gpio_setup();
-status_t gpio_pin_config(uint8_t, uint8_t, gpio_mode_t);
-status_t gpio_pin_set(uint8_t, uint8_t);
-status_t gpio_pin_clear(uint8_t, uint8_t);
-status_t gpio_pin_toggle(uint8_t, uint8_t);
-bool gpio_pin_read(uint8_t, uint8_t);
-status_t gpio_port_write(uint8_t, uint8_t);
-status_t gpio_port_read(uint8_t, uint8_t *);
+typedef struct gpio_port
+{
+	uintptr_t pbaddr;
+	uint8_t port;
+	uint8_t pin;
+} gpio_port_t;
+
+status_t gpio_setup(gpio_port_t *port, uint8_t portID, uint8_t pinID);
+status_t gpio_pin_mode(gpio_port_t *port, gpio_mode_t mode);
+status_t gpio_pin_set(gpio_port_t * port);
+status_t gpio_pin_clear(gpio_port_t *port);
+status_t gpio_pin_toggle(gpio_port_t *port);
+bool gpio_pin_read(gpio_port_t *port);
+status_t gpio_port_write(gpio_port_t *port, gpio_parallel_t value);
+status_t gpio_port_read(gpio_port_t *port, gpio_parallel_t *value);

@@ -28,7 +28,6 @@ void platform_setup()
 	status_t ret = success;
 	ret |= platform_dp_setup();
 	ret |= driver_setup("earlycon");
-	ret |= gpio_setup();
 	if(ret != success)
 		exit(EXIT_FAILURE);
 	return;
