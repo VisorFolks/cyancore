@@ -12,8 +12,7 @@
 
 void platform_early_setup()
 {
-	status_t ret;
-	ret = success;
+	status_t ret = success;
 	ret |= platform_copy_data();
 	ret |= platform_bss_clear();
 	ret |= platform_clk_reset();
