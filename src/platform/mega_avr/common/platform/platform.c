@@ -4,7 +4,6 @@
 #include <status.h>
 #include <hal/gpio.h>
 #include <arch.h>
-#include <driver.h>
 #include <machine_call.h>
 #include <terravisor/platform.h>
 #include <terravisor/workers.h>
@@ -26,7 +25,6 @@ void platform_setup()
 {
 	status_t ret = success;
 	ret |= platform_dp_setup();
-	ret |= driver_setup("earlycon");
 	if(ret != success)
 		exit(EXIT_FAILURE);
 	return;

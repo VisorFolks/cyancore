@@ -1,14 +1,16 @@
 #include <stdio.h>
 #include <status.h>
 #include <terravisor/bootloader.h>
+#include <driver.h>
 #include <hal/gpio.h>
 
 extern char cyancore_logo[];
 gpio_port_t led_13;
 
-void project_setup()
+void setup()
 {
 	bootloader();
+	driver_setup("earlycon");
 	printf("%s", cyancore_logo);
 	gpio_setup(&led_13, 0, 5);
 	gpio_pin_mode(&led_13, out);
@@ -27,7 +29,7 @@ void delay(unsigned long d)
 		asm volatile("nop");
 }
 
-void project_loop()
+void loop()
 {
 	static int i = 0;
 	gpio_pin_toggle(&led_13);

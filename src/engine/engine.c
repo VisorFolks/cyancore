@@ -1,5 +1,4 @@
 #include <engine.h>
-#include <project.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -16,23 +15,23 @@ char cyancore_logo[] =
 ---           ---\n\r\
     | | | | |\n\n\r";
 
+_WEAK void setup()
+{
+	asm volatile("");
+	return;
+}
+
+_WEAK void loop()
+{
+	asm volatile("");
+	return;
+}
+
 void engine()
 {
-	project_setup();
+	setup();
 	while(true)
-		project_loop();
+		loop();
 
 	exit(EXIT_FAILURE);
-}
-
-_WEAK void project_setup()
-{
-	asm volatile("nop");
-	return;
-}
-
-_WEAK void project_loop()
-{
-	asm volatile("nop");
-	return;
 }
