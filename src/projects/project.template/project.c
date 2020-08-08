@@ -1,10 +1,10 @@
-void project_setup()
+void setup()
 {
 	/* < ! > One time setup code goes here */
 	return;
 }
 
-void project_loop()
+void loop()
 {
 	/* < ! > Forever looping code goes here*/
 	return;
