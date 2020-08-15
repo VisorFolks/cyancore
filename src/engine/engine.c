@@ -6,7 +6,7 @@
 
 volatile uint32_t FWVersion __attribute__((section(".version"))) = VERSION;
 
-char cyancore_logo[] =
+char cyancore_insignia[] =
 "\n    | | | | |\n\r\
 ---           ---\n\r\
 ---           ---\n\r\
@@ -15,13 +15,13 @@ char cyancore_logo[] =
 ---           ---\n\r\
     | | | | |\n\n\r";
 
-_WEAK void setup()
+_WEAK void launch()
 {
 	asm volatile("");
 	return;
 }
 
-_WEAK void loop()
+_WEAK void encore()
 {
 	asm volatile("");
 	return;
@@ -29,9 +29,9 @@ _WEAK void loop()
 
 void engine()
 {
-	setup();
+	launch();
 	while(true)
-		loop();
+		encore();
 
 	exit(EXIT_FAILURE);
 }
