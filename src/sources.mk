@@ -39,8 +39,8 @@ DEP_LIBS_ARG	:=
 DEP_LIBS	:=
 DEP_OBJS	:=
 PLAT_INCLUDE	:=
-PROJECT_INCLUDES:=
-LIB_INCLUDES	:=
+PROJECT_INCLUDE	:=
+LIB_INCLUDE	:=
 
 # Below order needs to be strictly maintained
 include $(SRC)/projects/$(PROJECT)/build.mk
