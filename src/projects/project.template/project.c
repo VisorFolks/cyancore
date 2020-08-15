@@ -1,10 +1,10 @@
-void setup()
+void launch()
 {
 	/* < ! > One time setup code goes here */
 	return;
 }
 
-void loop()
+void encore()
 {
 	/* < ! > Forever looping code goes here*/
 	return;

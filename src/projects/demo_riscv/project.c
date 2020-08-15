@@ -1,9 +1,9 @@
-void project_setup()
+void launch()
 {
 	return;
 }
 
-void project_loop()
+void encore()
 {
 	return;
 }
