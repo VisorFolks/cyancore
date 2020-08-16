@@ -7,7 +7,7 @@
 extern char cyancore_insignia[];
 gpio_port_t led_13;
 
-void launch()
+void plug()
 {
 	bootloader();
 	driver_setup("earlycon");
@@ -29,7 +29,7 @@ void delay(unsigned long d)
 		asm volatile("nop");
 }
 
-void encore()
+void play()
 {
 	static int i = 0;
 	gpio_pin_toggle(&led_13);

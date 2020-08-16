@@ -1,11 +1,11 @@
-void launch()
+void plug()
 {
-	/* < ! > One time setup code goes here */
+	/* < ! > Plug in one time setup code */
 	return;
 }
 
-void encore()
+void play()
 {
-	/* < ! > Forever looping code goes here*/
+	/* < ! > Play looping code here*/
 	return;
 }
