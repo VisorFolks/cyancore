@@ -8,7 +8,7 @@ version:
 	$(info Building Project $(PROJECT))
 	$(info ------------------------------------)
 	$(info Platform          : $(PLATFORM))
-	$(info Architecture      : $(ARCH)-$(BIT))
+	$(info Architecture      : $(ARCH)$(BIT)-$(ARCH_VARIANT))
 	$(info Cyancore Version  : $(VERSION))
 	$(info Cyancore Codename : $(NAME))
 	$(info )

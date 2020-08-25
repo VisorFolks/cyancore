@@ -1,13 +1,12 @@
 #include <engine.h>
-#include <project.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <stdio.h>
+#include <compiler_macros.h>
 
 volatile uint32_t FWVersion __attribute__((section(".version"))) = VERSION;
 
-char cyancore_logo[] =
+char cyancore_insignia[] =
 "\n    | | | | |\n\r\
 ---           ---\n\r\
 ---           ---\n\r\
@@ -16,11 +15,22 @@ char cyancore_logo[] =
 ---           ---\n\r\
     | | | | |\n\n\r";
 
+_WEAK void plug()
+{
+	asm volatile("");
+	return;
+}
+
+_WEAK void play()
+{
+	asm volatile("");
+	return;
+}
+
 void engine()
 {
-	project_setup();
-	while(true)
-		project_loop();
-
-	exit(EXIT_FAILURE);
+	plug();
+player:
+	play();
+	goto player;
 }

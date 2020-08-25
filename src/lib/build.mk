@@ -1,5 +1,9 @@
 LIB_DIR		:= $(GET_PATH)
 
-include $(LIB_DIR)/libnmath/build.mk
+#==================================================
+# Mandatory libraries
+include $(LIB_DIR)/libresource/build.mk
 include $(LIB_DIR)/libc/build.mk
-include $(LIB_DIR)/libdp/build.mk
+#==================================================
+
+include $(LIB_DIR)/libnmath/build.mk

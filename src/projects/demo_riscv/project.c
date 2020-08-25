@@ -1,9 +1,9 @@
-void project_setup()
+void plug()
 {
 	return;
 }
 
-void project_loop()
+void play()
 {
 	return;
 }

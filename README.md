@@ -7,7 +7,7 @@
 
 | Atmel      | SiFive       | TI           |
 | ---------- | ------------ | ------------ |
-| ATMega328P | Freedom E310 | TIVA4C123GXL |
+| ATMega328P | Freedom E310 |  TM4C123GXL  |
 | ATMega2560 |
 
 ### Projects

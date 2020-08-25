@@ -1,10 +1,10 @@
 include mk/path.mk
 
-T_WHITELIST	+= get_all_tc get_avr_tc get_arm_tc get_riscv_tc
+T_ALLOWLIST	+= get_all_tc get_avr_tc get_arm_tc get_riscv_tc
 
-AVR_TC_REPO	:= git@192.168.3.101:Toolchains/avr-toolchain.git -b linux_x64_v5.4.0
-RISC_V_TC_REPO	:= git@192.168.3.101:Toolchains/risc-v-toolchain.git -b linux_x64_v8.2.0
-ARM_TC_REPO	:= git@192.168.3.101:Toolchains/arm-toolchain.git -b linux_x64_v7.3.1
+AVR_TC_REPO	:= git@192.168.3.100:Toolchains/avr-toolchain.git -b linux_x64_v5.4.0
+RISC_V_TC_REPO	:= git@192.168.3.100:Toolchains/risc-v-toolchain.git -b linux_x64_v8.2.0
+ARM_TC_REPO	:= git@192.168.3.100:Toolchains/arm-toolchain.git -b linux_x64_v7.3.1
 
 get_all_tc: --tc_clear get_avr_tc get_arm_tc get_riscv_tc
 

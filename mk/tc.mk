@@ -21,6 +21,7 @@ endif
 ifneq ($(ARCH),)
 AS	:= $(TC)-as
 CC	:= $(TC)-gcc
+CCP	:= $(TC)-g++
 LD	:= $(TC)-ld
 OD	:= $(TC)-objdump
 OC	:= $(TC)-objcopy

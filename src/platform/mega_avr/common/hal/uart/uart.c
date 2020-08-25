@@ -90,7 +90,7 @@ bool uart_tx_done(uart_port_t *port)
 bool uart_rx_done(uart_port_t *port)
 {
 	assert(port);
-	return (bool)(MMIO8(port->baddr + UCSRA_OFFSET) >> RXC) * 0x01;
+	return (bool)(MMIO8(port->baddr + UCSRA_OFFSET) >> RXC) & 0x01;
 }
 
 bool uart_frame_error(uart_port_t *port)

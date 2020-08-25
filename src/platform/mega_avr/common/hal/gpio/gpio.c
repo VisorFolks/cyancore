@@ -1,8 +1,9 @@
 #include <status.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <assert.h>
 #include <mmio.h>
-#include <dp.h>
+#include <resource.h>
 #include <machine_call.h>
 #include <arch.h>
 #include <device.h>
@@ -10,30 +11,29 @@
 #include "gpio_private.h"
 
 #if N_PORT
-uintptr_t port_baddr[N_PORT];
-
-status_t gpio_setup()
+status_t gpio_setup(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 {
 	mret_t mres;
 	gpio_module_t *dp;
-	for(uint8_t i = 0; i < N_PORT; i++)
-	{
-		mres = arch_machine_call(FETCH_DP, DEV_GPIO, i, 0);
-		if(mres.status != success)
-			return mres.status;
-		dp = (gpio_module_t *)mres.p;
-		port_baddr[i] = dp->baddr;
-	}
+	assert(port);
+	if(portID >= N_PORT)
+		return error_inval_arg;
+	port->pin = pinID;
+	port->port = portID;
+	mres = arch_machine_call(FETCH_DP, DEV_GPIO, portID, 0);
+	if(mres.status != success)
+		return mres.status;
+	dp = (gpio_module_t *)mres.p;
+	port->pbaddr = dp->baddr;
 	return success;
 }
 
-status_t gpio_pin_config(uint8_t port_id, uint8_t pin, gpio_mode_t mode)
+status_t gpio_pin_mode(gpio_port_t *port, gpio_mode_t mode)
 {
 	uintptr_t pbaddr;
-	if(port_id >= N_PORT)
-		return error_inval_arg;
-
-	pbaddr = port_baddr[port_id];
+	assert(port);
+	uint8_t pin = port->pin;
+	pbaddr = port->pbaddr;
 
 	switch(mode)
 	{
@@ -51,50 +51,46 @@ status_t gpio_pin_config(uint8_t port_id, uint8_t pin, gpio_mode_t mode)
 	return success;
 }
 
-status_t gpio_pin_set(uint8_t port_id, uint8_t pin)
+status_t gpio_pin_set(gpio_port_t *port)
 {
-	if(port_id >= N_PORT)
-		return error_inval_arg;
-	MMIO8(port_baddr[port_id] + PORT_OFFSET) |= (1 << pin);
+	assert(port);
+	MMIO8(port->pbaddr + PORT_OFFSET) |= (1 << port->pin);
 	return success;
 }
 
-status_t gpio_pin_clear(uint8_t port_id, uint8_t pin)
+status_t gpio_pin_clear(gpio_port_t *port)
 {
-	if(port_id >= N_PORT)
-		return error_inval_arg;
-	MMIO8(port_baddr[port_id] + PORT_OFFSET) &= ~(1 << pin);
+	assert(port);
+	MMIO8(port->pbaddr + PORT_OFFSET) &= ~(1 << port->pin);
 	return success;
 }
 
-status_t gpio_pin_toggle(uint8_t port_id, uint8_t pin)
+status_t gpio_pin_toggle(gpio_port_t *port)
 {
-	if(port_id >= N_PORT)
-		return error_inval_arg;
-	MMIO8(port_baddr[port_id] + PORT_OFFSET) ^= (1 << pin);
+	assert(port);
+	MMIO8(port->pbaddr + PORT_OFFSET) ^= (1 << port->pin);
 	return success;
 }
 
-bool gpio_pin_read(uint8_t port_id, uint8_t pin)
+bool gpio_pin_read(gpio_port_t *port)
 {
-	if(port_id >= N_PORT)
-		return false;
-	return (MMIO8(port_baddr[port_id] + PIN_OFFSET) & (1 << pin)) ? true : false;
+	assert(port);
+	return (MMIO8(port->pbaddr + PIN_OFFSET) & (1 << port->pin)) ? true : false;
 }
 
-status_t gpio_port_write(uint8_t port_id, uint8_t val)
+status_t gpio_port_write(gpio_port_t *port, gpio_parallel_t val)
 {
-	if(port_id >= N_PORT)
-		return error_inval_arg;
-	MMIO8(port_baddr[port_id] + PORT_OFFSET) = val;
+	assert(port);
+	// MegaAVR has 8-bit i/o modules, value to write should be 8-bit wide
+	MMIO8(port->pbaddr + PORT_OFFSET) = (uint8_t)(val & 0xff);
 	return success;
 }
 
-status_t gpio_port_read(uint8_t port_id, uint8_t *val)
+status_t gpio_port_read(gpio_port_t *port, gpio_parallel_t *val)
 {
-	if(port_id >= N_PORT)
-		return error_inval_arg;
-	*val = MMIO8(port_baddr[port_id] + PIN_OFFSET);
+	assert(port);
+	// MegaAVR has 8-bit i/o modules, value returned is 8-bit wide
+	*val = (gpio_parallel_t)MMIO8(port->pbaddr + PIN_OFFSET);
 	return success;
 }
 #endif

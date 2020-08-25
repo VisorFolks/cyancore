@@ -1,16 +1,20 @@
 #include <stdio.h>
 #include <status.h>
 #include <terravisor/bootloader.h>
+#include <driver.h>
 #include <hal/gpio.h>
 
-extern char cyancore_logo[];
+extern char cyancore_insignia[];
+gpio_port_t led_13;
 
-void project_setup()
+void plug()
 {
 	bootloader();
-	printf("%s", cyancore_logo);
-	gpio_pin_config(0, 5, out);
-	gpio_pin_clear(0, 5);
+	driver_setup("earlycon");
+	printf("%s", cyancore_insignia);
+	gpio_setup(&led_13, 0, 5);
+	gpio_pin_mode(&led_13, out);
+	gpio_pin_clear(&led_13);
 	printf("Demo Program!\n");
 	printf("< ! > Running Blinky ... [");
 	return;
@@ -25,10 +29,10 @@ void delay(unsigned long d)
 		asm volatile("nop");
 }
 
-void project_loop()
+void play()
 {
 	static int i = 0;
-	gpio_pin_toggle(0, 5);
+	gpio_pin_toggle(&led_13);
 	printf("%c]", progress[i++]);
 	i = i > 3 ? 0 : i;
 	delay(500000);

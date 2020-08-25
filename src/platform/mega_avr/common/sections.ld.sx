@@ -16,27 +16,24 @@ MEMORY
 
 SECTIONS
 {
-	.vectors :
+	.text :
 	{
 		. = ALIGN(ALIGN_BOUND);
-		KEEP(*(.vectors))
 		*(.archvectors)
 		KEEP(*(.archvectors))
 		*(.platvectors)
 		KEEP(*(.platvectors))
-	} > vma_imem AT > lma_mem
-
-	.text :
-	{
 		. = ALIGN(ALIGN_BOUND);
 		*(.text)
 		*(.text.*)
 		KEEP(*(.text))
 	} > vma_imem AT > lma_mem
 
+	PROVIDE(_data_start = LOADADDR(.data));
 	.data :
 	{
 		. = ALIGN(ALIGN_BOUND);
+		PROVIDE(__local_data_start = .);
 		*(.version)
 		KEEP(*(.version))
 		*(.rodata)
@@ -49,11 +46,12 @@ SECTIONS
 		*(.driver)
 		KEEP(*(.driver))
 		PROVIDE(_driver_table_end = .);
+		PROVIDE(__local_data_end = .);
+		PROVIDE(_data_size = __local_data_end - __local_data_start);
+		. = ALIGN(ALIGN_BOUND);
+		*(.stack)
+		KEEP(*(.stack))
 	} > vma_dmem AT > lma_mem
-
-	_data_start = LOADADDR(.data);
-	_data_size = SIZEOF(.data);
-	_data_end = _data_start + _data_size;
 
 	.bss :
 	{
@@ -72,6 +70,4 @@ SECTIONS
 	} > vma_dmem
 
 	PROVIDE(_bss_size = SIZEOF(.bss));
-
-	_stack_start = _bss_end + STACK_SIZE;
 }

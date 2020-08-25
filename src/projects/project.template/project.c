@@ -1,11 +1,11 @@
-void project_setup()
+void plug()
 {
-	/* < ! > One time setup code goes here */
+	/* < ! > Plug in one time setup code */
 	return;
 }
 
-void project_loop()
+void play()
 {
-	/* < ! > Forever looping code goes here*/
+	/* < ! > Play looping code here*/
 	return;
 }

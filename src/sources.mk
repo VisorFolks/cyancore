@@ -5,10 +5,8 @@
 DEBUG		?= 1
 TARGET_FLAGS	?=
 
-INCLUDE		+= $(SRC)/include/	\
-		   $(TI)		\
-		   $(LIB_INCLUDE)	\
-		   $(PLAT_INCLUDE)	\
+INCLUDE		+= $(SRC)/include/ $(TI)		\
+		   $(LIB_INCLUDE) $(PLAT_INCLUDE)	\
 		   $(PROJECT_INCLUDES)
 
 OPTIMIZATION	?= s
@@ -31,19 +29,18 @@ ASFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 
 LD_SCRIPT	:= $(OUT)/sections.ld
 
-LD_FLAGS	+= --error-unresolved-symbols	\
-		   --warn-common		\
-		   --fatal-warnings		\
-		   -nostdlib --gc-sections	\
-		   -b $(OUTPUT_FORMAT)
+LD_FLAGS	+= --error-unresolved-symbols		\
+		   --warn-common --fatal-warnings	\
+		   --check-sections -nostdlib		\
+		   --gc-sections -b $(OUTPUT_FORMAT)
 
 DEP_LIB_PATH	:=
 DEP_LIBS_ARG	:=
 DEP_LIBS	:=
 DEP_OBJS	:=
 PLAT_INCLUDE	:=
-PROJECT_INCLUDES:=
-LIB_INCLUDES	:=
+PROJECT_INCLUDE	:=
+LIB_INCLUDE	:=
 
 # Below order needs to be strictly maintained
 include $(SRC)/projects/$(PROJECT)/build.mk
