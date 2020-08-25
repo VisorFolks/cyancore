@@ -2,20 +2,17 @@ pipeline {
 	agent any
 
 	stages {
-		stage('build') {
-			environment {
-				TC='/usr/bin/avr'
-				TOOLS_ROOT='/var/lib/jenkins/Arc/toolchain'
+		stage('tc check') {
+			steps {
+				sh 'make get_avr_tc'
 			}
+		}
+		stage('build') {
 			steps {
 				sh 'make demo_avr clean default'
 			}
 		}
 		stage('clean') {
-			environment {
-				TC='/usr/bin/avr'
-				TOOLS_ROOT='/var/lib/jenkins/Arc/toolchain'
-			}
 			steps {
 				sh 'make demo_avr clean'
 			}
