@@ -1,9 +1,9 @@
-void launch()
+void plug()
 {
 	return;
 }
 
-void encore()
+void play()
 {
 	return;
 }

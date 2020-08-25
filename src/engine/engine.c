@@ -15,13 +15,13 @@ char cyancore_insignia[] =
 ---           ---\n\r\
     | | | | |\n\n\r";
 
-_WEAK void launch()
+_WEAK void plug()
 {
 	asm volatile("");
 	return;
 }
 
-_WEAK void encore()
+_WEAK void play()
 {
 	asm volatile("");
 	return;
@@ -29,9 +29,8 @@ _WEAK void encore()
 
 void engine()
 {
-	launch();
-	while(true)
-		encore();
-
-	exit(EXIT_FAILURE);
+	plug();
+player:
+	play();
+	goto player;
 }
