@@ -1,7 +1,7 @@
 include mk/path.mk
 
 T_ALLOWLIST	+= get_all_tc get_avr_tc get_arm_tc get_riscv_tc
-/risc-v-toolchain.git
+
 AVR_TC_REPO	:= git@github.com:akashkollipara/avr-toolchain.git -b linux_x64_v5.4.0
 RISC_V_TC_REPO	:= git@github.com:akashkollipara/risc-v-toolchain.git -b linux_x64_v8.2.0
 ARM_TC_REPO	:= git@github.com:akashkollipara/arm-toolchain.git -b linux_x64_v7.3.1
