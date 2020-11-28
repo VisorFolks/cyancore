@@ -1,4 +1,4 @@
 .PHONY: help
 
 help:
-	less docs/usage_help.txt
+	less mk/usage_help.txt
