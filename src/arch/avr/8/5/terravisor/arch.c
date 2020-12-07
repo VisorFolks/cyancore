@@ -12,11 +12,6 @@
 #include <mmio.h>
 #include <arch.h>
 
-unsigned int arch_core_id()
-{
-	return 0;
-}
-
 void arch_early_setup()
 {
 	arch_di();
@@ -33,30 +28,13 @@ void arch_setup()
 
 void arch_wfi()
 {
-	// For interruptable sleep
-	// Enable Idle mode
+	/*
+	 * For interruptable sleep
+	 * Enable Idle mode
+	 */
 	MMIO8(SMCR) = 0x01;
 	arch_ei();
 	asm volatile("sleep");
-	return;
-}
-
-void arch_di()
-{
-	asm volatile("cli");
-	return;
-}
-
-void arch_ei()
-{
-	asm volatile("sei");
-	return;
-}
-
-void arch_watchdog_reset()
-{
-	asm volatile("wdr");
-	return;
 }
 
 void (*mcall)(unsigned int, unsigned int, unsigned int, unsigned int, mret_t *);
