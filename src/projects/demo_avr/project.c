@@ -12,7 +12,7 @@ void plug()
 	bootloader();
 	driver_setup("earlycon");
 	printf("%s", cyancore_insignia);
-	gpio_setup(&led_13, 0, 5);
+	gpio_pin_alloc(&led_13, 0, 5);
 	gpio_pin_mode(&led_13, out);
 	gpio_pin_clear(&led_13);
 	printf("Demo Program!\n");

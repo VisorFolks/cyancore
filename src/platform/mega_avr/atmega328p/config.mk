@@ -9,6 +9,8 @@
 N_CORES		:= 1
 $(eval $(call add_define,N_CORES))
 
+$(eval $(call add_define,BIT))
+
 BOOT_CORE_ID:= 0
 $(eval $(call add_define,BOOT_CORE_ID))
 
