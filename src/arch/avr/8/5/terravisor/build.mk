@@ -1,6 +1,6 @@
 AVR_ARCH_DIR	:= $(GET_PATH)
 
-INCLUDE		+= $(AVR_ARCH_DIR)/include/
+$(eval $(call add_include,$(AVR_ARCH_DIR)/include/))
 
 DIR		:= $(AVR_ARCH_DIR)
 include mk/obj.mk
