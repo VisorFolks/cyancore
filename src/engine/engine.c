@@ -6,7 +6,7 @@
 
 volatile uint32_t FWVersion __attribute__((section(".version"))) = VERSION;
 
-char cyancore_insignia[] =
+char cyancore_ascii_insignia[] =
 "\n    | | | | |\n\r\
 ---           ---\n\r\
 ---           ---\n\r\

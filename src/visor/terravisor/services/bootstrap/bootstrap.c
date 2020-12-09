@@ -2,10 +2,10 @@
 #include <status.h>
 #include <arch.h>
 #include <terravisor/platform.h>
-#include <terravisor/bootloader.h>
+#include <terravisor/bootstrap.h>
 
 
-status_t bootloader()
+status_t bootstrap()
 {
 	arch_early_setup();
 	arch_setup();
