@@ -24,7 +24,7 @@ status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 
 	assert(port);
 
-	if(portID >= N_PORT && pinID >= BIT)
+	if(portID >= N_PORT || pinID >= BIT)
 		return error_inval_arg;
 
 	lock_acquire(&gpio_lock);
