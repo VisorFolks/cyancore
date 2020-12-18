@@ -12,10 +12,6 @@
 #include "gpio_private.h"
 
 #if N_PORT
-
-lock_t gpio_lock;
-uint8_t port_status[N_PORT];
-
 status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 {
 	mret_t mres;
