@@ -61,7 +61,7 @@ status_t wdt_setup(wdt_port_t *port, wdt_mode_t mode, uint8_t pr)
 		return error_inval_arg;
 	if(port->wdt_handler != NULL)
 		link_interrupt(arch, port->wdt_irq, port->wdt_handler);
-	return wdt_config_prescalar(pr);
+	return (wdt_config_mode(mode) | wdt_config_prescalar(pr));
 }
 
 status_t wdt_dis(wdt_port_t *port)
