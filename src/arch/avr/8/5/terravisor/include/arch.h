@@ -29,6 +29,8 @@ void arch_setup();
  * arch_wfi - Wait for interrupt, with sleep mode
  */
 void arch_wfi();
+void arch_di_save_state();
+void arch_ei_restore_state();
 
 /**
  * arch_panic_handler - Executes when arch error occurs
@@ -81,4 +83,34 @@ static inline void arch_di()
 static inline void arch_wdt_reset()
 {
 	asm volatile("wdr");
+}
+
+static inline void arch_nop()
+{
+	asm volatile("nop");
+}
+
+static inline void arch_sync()
+{
+	arch_nop();
+}
+
+static inline void arch_msb()
+{
+	arch_nop();
+}
+
+static inline void arch_isb()
+{
+	arch_nop();
+}
+
+static inline void arch_dsb()
+{
+	arch_nop();
+}
+
+static inline void arch_wfe()
+{
+	arch_nop();
 }
