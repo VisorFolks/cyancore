@@ -1,6 +1,5 @@
 #pragma once
 
-#define WDTCSR_OFFSET	0x00
 #define WDIF		7
 #define WDIE		6
 #define WDP3		5
