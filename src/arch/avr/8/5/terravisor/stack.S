@@ -1,9 +1,9 @@
 #include <plat_mem.h>
+#include <asm.inc>
 
 .global stack_end
 .global stack_start
-.type stack_end, "object"
-.section .stack
+object stack
 stack_end:
 	.space STACK_SIZE, 0
 stack_start:
