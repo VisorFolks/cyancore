@@ -1,9 +1,7 @@
+#include <asm.inc>
 #include <plat_arch.h>
 
-.global spinlock_acquire
-.section .text.spinlock_acquire
-.type spinlock_acquire, "function"
-spinlock_acquire:
+function spinlock_acquire
 	movw	r30, r24
 	push	r0
 	in	r0, SREG
@@ -29,10 +27,7 @@ spinlock_acquire:
 	pop	r0
 	ret
 
-.global spinlock_release
-.section .text.spinlock_release
-.type spinlock_release, "function"
-spinlock_release:
+function spinlock_release
 	movw	r30, r24
 	push	r0
 	in	r0, SREG

@@ -6,6 +6,7 @@ DEBUG		?= 1
 TARGET_FLAGS	?=
 
 INCLUDE		+= $(SRC)/include/ $(TI)		\
+		   $(SRC)/include/compiler/$(COMPILER)/	\
 		   $(LIB_INCLUDE) $(PLAT_INCLUDE)	\
 		   $(PROJECT_INCLUDES)
 

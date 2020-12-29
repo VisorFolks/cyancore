@@ -1,5 +1,4 @@
+#include <asm.inc>
 
-.section .archvectors, "ax", %progbits
-ArchVectors:
-.org 0x00
+vectors archvectors
 	jmp	init
