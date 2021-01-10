@@ -2,7 +2,7 @@
 
 Home directory for avr5 terravisor sources.
 
-For terravisor documentation please read [Terravisor README](../../../../visor/terravisor/README.md)
+For terravisor documentation please read [Terravisor README](../../../../../visor/terravisor/README.md)
 
 #### Highlights
 * Bootstrap routine is written in C
