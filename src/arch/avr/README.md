@@ -1,7 +1,7 @@
 # AVR Core
 
 #### Supported AVR Cores
-* 8
+* 8bit
 
 #### Unsupported AVR Cores
-* 32
+* 32bit
