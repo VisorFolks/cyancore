@@ -5,6 +5,8 @@
  */
 
 #include <asm.inc>
-
+/**
+ * archvectors - AVR architecture defined interrupt vectors section
+ */
 vectors archvectors
 	jmp	init
