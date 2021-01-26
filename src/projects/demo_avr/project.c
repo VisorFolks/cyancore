@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <status.h>
 #include <insignia.h>
+#include <terravisor/platform.h>
 #include <terravisor/bootstrap.h>
 #include <driver.h>
 #include <hal/gpio.h>
@@ -11,6 +12,7 @@ void plug()
 {
 	bootstrap();
 	driver_setup("earlycon");
+	printf("Reset Status: %d\n", platform_get_reset_syndrome());
 	cyancore_insignia();
 	gpio_pin_alloc(&led_13, 0, 5);
 	gpio_pin_mode(&led_13, out);
