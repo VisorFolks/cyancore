@@ -15,7 +15,7 @@
 /**
  * arch_early_setup - This function is called in the early stages of boot
  * 
- * This function is responsible to clean reset cpu status registers.
+ * This function is responsible to clean reset cpu status/control registers.
  * 
  */
 void arch_early_setup()
