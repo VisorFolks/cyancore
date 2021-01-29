@@ -1,3 +1,11 @@
+#
+# File Name		: build.mk
+# Descrption		: Build script for arch directory.
+#			  Here various checkes are performed based on which
+#			  correct target-arch directory is picked up.
+# Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+#
+
 ARCH_DIR	:= $(GET_PATH)
 
 ifeq ($(ARCH),)

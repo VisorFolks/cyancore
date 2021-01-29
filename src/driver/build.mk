@@ -1,3 +1,9 @@
+#
+# File Name		: build.mk
+# Description		: This file accumalates the build scripts from 
+#			  all the driver directories
+# Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+
 DRIVER_PATH	:= $(GET_PATH)
 
 #==========< Essentials Drivers >==========#

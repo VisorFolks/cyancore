@@ -1,6 +1,22 @@
+/*
+ * File Name		: asm.S
+ * Description		: This file consists of all the function written in asm
+ *			  like ISR, context management, zero_reg and panic handler
+ * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ */
+
 #include <asm.inc>
 #include <plat_arch.h>
 
+/**
+ * zero_reg - Needs to be called after reset of CPU
+ *
+ * This function is reponsible to reset all the register to 0 to
+ * remove junk value that gets stored on reset due to undefined
+ * state of registers.
+ * As per the abi spec of AVR5-8, r1 is always supposed to be 0.
+ * Hence, r1 is reset to 0 and other are moved with r1.
+ */
 function zero_reg
 	eor	r1, r1
 	mov	r0, r1
@@ -36,10 +52,19 @@ function zero_reg
 	mov	r31, r1
 	ret
 
+/**
+ * arch_panic_handler - Panic which get invoked on arch failure
+ *
+ * This function is reponsible to halt the CPU and look here for
+ * indefinitely to prevent faulty execution.
+ */
 function arch_panic_handler
 	call	arch_wfi
 	rjmp	arch_panic_handler
 
+/**
+ * CONTEXT_SAVE - A macro that define the context save operation
+ */
 .macro CONTEXT_SAVE
 	push	r1
 	push	r0
@@ -76,6 +101,9 @@ function arch_panic_handler
 	push	r31
 .endm
 
+/**
+ * CONTEXT_RESTORE - A macro that defines the context restore operation
+ */
 .macro CONTEXT_RESTORE
 	pop	r31
 	pop	r30
@@ -112,13 +140,28 @@ function arch_panic_handler
 	pop	r1
 .endm
 
+/**
+ * INT - a macro that defines function int_(id) with few other operations
+ *
+ * @id - ID of the interrupt vector
+ */
 .macro INT id
+/**
+ * int_(id) - Interrupt router function
+ * A function that sets interrupt ID and jumps to ISR.
+ */
 function int_\id
 	push	r24
 	ldi	r24, \id
 	rjmp	isr
 .endm
 
+/**
+ * isr - interrupt service routine function
+ * This function is called from interrupt router.
+ * It is responsible to do context management before and after
+ * calling the interrupt handler function.
+ */
 function isr
 	CONTEXT_SAVE
 	call	interrupt_handler
@@ -126,7 +169,13 @@ function isr
 	pop	r24
 	reti
 
-/*==========< Interrupt functions >==========*/
+/**
+ * Interrupt Router Declaration Table
+ * 1-60 Interrupt routers are define as of now. If possible more can
+ * be added. But during compile time only necessary interrupt router
+ * functions will be retained and others are cleaned up.
+ */
+/*==========< Interrupt router functions >==========*/
 INT 1
 INT 2
 INT 3

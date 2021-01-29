@@ -7,6 +7,7 @@
 
 status_t bootstrap()
 {
+	reset_t resetSyndrome;
 	arch_early_setup();
 	arch_setup();
 
@@ -14,6 +15,8 @@ status_t bootstrap()
 	{
 		platform_early_setup();
 		platform_setup();
+		resetSyndrome = platform_get_reset_syndrome();
+		platform_reset_handler(resetSyndrome);
 	}
 
 	platform_cpu_setup();
