@@ -1,18 +1,11 @@
-#
-# File Name		: sources.mk
-# Description		: This build script accumalates build scripts from
-#			  all the other directories. Also this scripts defines
-#			  and initialises most of the build environment variables.
-# Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
-#
-# !NOTE!		: IT IS RECOMMENDED NOT TO MODIFY THIS FILE FOR BEST RESULTS
-#
+#*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
+#----------< Sources Makefile >----------#
+#*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
 
 DEBUG		?= 1
 TARGET_FLAGS	?=
 
 INCLUDE		+= $(SRC)/include/ $(TI)		\
-		   $(SRC)/include/compiler/$(COMPILER)/	\
 		   $(LIB_INCLUDE) $(PLAT_INCLUDE)	\
 		   $(PROJECT_INCLUDES)
 

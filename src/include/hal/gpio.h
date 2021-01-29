@@ -21,16 +21,11 @@ typedef struct gpio_port
 	uint8_t pin;
 } gpio_port_t;
 
-status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID);
+status_t gpio_setup(gpio_port_t *port, uint8_t portID, uint8_t pinID);
 status_t gpio_pin_mode(gpio_port_t *port, gpio_mode_t mode);
-status_t gpio_pin_free(gpio_port_t *port);
 status_t gpio_pin_set(gpio_port_t * port);
 status_t gpio_pin_clear(gpio_port_t *port);
 status_t gpio_pin_toggle(gpio_port_t *port);
 bool gpio_pin_read(gpio_port_t *port);
-
-status_t gpio_port_alloc(gpio_port_t *port, uint8_t portID);
-status_t gpio_port_mode(gpio_port_t *port, gpio_mode_t mode);
-status_t gpio_port_free(gpio_port_t *port);
 status_t gpio_port_write(gpio_port_t *port, gpio_parallel_t value);
 status_t gpio_port_read(gpio_port_t *port, gpio_parallel_t *value);

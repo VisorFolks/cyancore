@@ -5,13 +5,16 @@
 ### Supported Platforms
 
 
-| Atmel      | SiFive      | STMicro     | TI          |
-| ---------- | ----------- | ----------- | ----------- |
-| ATMega328P | Coming soon | Coming soon | Coming soon |
+| Atmel      | SiFive       | TI           |
+| ---------- | ------------ | ------------ |
+| ATMega328P | Freedom E310 |  TM4C123GXL  |
+| ATMega2560 |
 
 ### Projects
 
 * Demo AVR
+* Demo ARM
+* Demo RISC-V
 
 ### Help
 run
