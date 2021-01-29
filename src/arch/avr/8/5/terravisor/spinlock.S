@@ -1,28 +1,78 @@
+/*
+ * File Name		: spinlock.S
+ * Description		: This file consists of sources of spinlock in asm
+ * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ */
+
+#include <asm.inc>
 #include <plat_arch.h>
 
-.global spinlock_acquire
-.section .text.spinlock_acquire
-.type spinlock_acquire, "function"
-spinlock_acquire:
+/**
+ * spinlock_acquire - Acquires spinlock
+ *
+ * This is a blocking busy-loop spinlock acquire function. When the
+ * lock is not acquired, this function disables global interrupt and
+ * acquires lock restores the SREG. Here global interrupt is not enable
+ * directly, because there are possibilities when global interrupt is
+ * disabled intentionally. The atomicity of reads and writes are ensured
+ * by disabling interrupt and restoring SREG.
+ * When the lock is already acquired by the same key, this function
+ * first disables global interrupt, performs lock acquire check and
+ * restores SREG and busy loops till the lock is released by previously
+ * acquired program.
+ *
+ * The reason why we deal with interrupt in this spinlock is, AVR CPU
+ * has mono core architecture, to run in multithreading mode, CPU needs
+ * to perform interrupt based context switching. If the same resource
+ * is invoked by more than 1 thread then it is ideal to have lock to
+ * secure the resource. But if the interrupt is blocked till the process
+ * is completed many interrupts will be ignored thereby hindering
+ * performance and loss of response from the system.
+ *
+ * @key - Accepts address of key variable
+ */
+function spinlock_acquire
 	movw	r30, r24
+	push	r0
+	in	r0, SREG
 1:
-	ld	r18, Z
-	ldd	r19, Z+1
+	cli
+	ld	r18, Z+
+	ld	r19, Z
 	cpi	r18, 0x01
 	cpc	r19, r1
-	breq	1b
+	brne	1f
+	out	SREG, r0
+	eor	r1, r1
+	eor	r1, r1
+	eor	r1, r1
+	rjmp	1b
+1:
 	ldi	r18, 0x01
 	mov	r19, r1
 	movw	r30, r24
-	std	Z+1, r19
-	st	Z, r18
+	st	Z+, r18
+	st	Z, r19
+	out	SREG, r0
+	pop	r0
 	ret
 
-.global spinlock_release
-.section .text.spinlock_release
-.type spinlock_release, "function"
-spinlock_release:
+/**
+ * spinlock_release - Releases spinlock
+ *
+ * This function clears the key set by spinlock_acquire thereby
+ * releasing the lock. This operation needs to be put in the interrupt
+ * guide so that the writes are of atomic in natures.
+ *
+ * @key - Accepts address of key variable
+ */
+function spinlock_release
 	movw	r30, r24
-	std	Z+1, r1
+	push	r0
+	in	r0, SREG
+	cli
+	st	Z+, r1
 	st	Z, r1
+	out	SREG, r0
+	pop	r0
 	ret

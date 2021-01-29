@@ -1,6 +1,6 @@
-.section .platvectors, "ax", %progbits
-PlatVectors:
-.org 0x00
+#include <asm.inc>
+
+vectors platvectors
 	jmp	int_1
 	jmp	int_2
 	jmp	int_3

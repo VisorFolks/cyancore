@@ -1,18 +1,20 @@
 #include <stdio.h>
 #include <status.h>
-#include <terravisor/bootloader.h>
+#include <insignia.h>
+#include <terravisor/platform.h>
+#include <terravisor/bootstrap.h>
 #include <driver.h>
 #include <hal/gpio.h>
 
-extern char cyancore_insignia[];
 gpio_port_t led_13;
 
 void plug()
 {
-	bootloader();
+	bootstrap();
 	driver_setup("earlycon");
-	printf("%s", cyancore_insignia);
-	gpio_setup(&led_13, 0, 5);
+	printf("Reset Status: %d\n", platform_get_reset_syndrome());
+	cyancore_insignia();
+	gpio_pin_alloc(&led_13, 0, 5);
 	gpio_pin_mode(&led_13, out);
 	gpio_pin_clear(&led_13);
 	printf("Demo Program!\n");
