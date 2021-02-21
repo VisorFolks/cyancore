@@ -3,6 +3,7 @@ out/
 toolchain/
 backup/
 bkp/
+mk/tc_get.mk
 *.elf
 *.bin
 *.d
