@@ -1,3 +1,14 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
+ * File Name		: scanf.c
+ * Description		: This file contains sources of libc-scanf
+ *			  inspired from gnu-libc
+ * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
