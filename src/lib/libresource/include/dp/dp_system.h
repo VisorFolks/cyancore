@@ -1,3 +1,14 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
+ * File Name		: dp_system.h
+ * Description		: This file contains prototypes of device
+ *			  properties - system
+ * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
 #pragma once
 
 typedef enum int_trigger
