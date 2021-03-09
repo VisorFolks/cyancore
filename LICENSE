@@ -1,0 +1,139 @@
+CYANCORE LICENSE
+
+Version 1, September 2019
+
+Copyright (C) 2019, Cyancore core-team.
+
+Everyone is permitted to copy and distribute verbatim copies of this license
+document, but changing it is not allowed.
+
+--------------------------------------------------------------------------------
+
+Preamble
+
+Cyancore license is intended to protect the efforts and intellectual property
+of Cyancore team and its Users from any claims that are not in terms of this
+license agreement. This license will be updated from time to time. No one
+other than Cyancore core-team has rights to make any changes to this license.
+
+Using or implementing the Software by any User will automatically tantamount to
+unconditionally agreeing to the terms of this license.
+
+This being a freeware, provided at no cost to the Users, any changes, additions to
+this codebase will be provided by the Users back to Cyancore codebase so that the
+benefits of such changes or additions can be extended to the Cyancore community
+thereof.
+
+--------------------------------------------------------------------------------
+
+Terms And Conditions
+
+0.  Definitions:
+    i.    Software: This defines source codes, binaries, documentation, algorithms,
+    designs, architectures, methodologies, principles, technical content such as 
+    concepts, terminology, ontology, etc., in part or in whole or packaged with other
+    binaries in whole or as a subset or derived binaries.
+
+    ii.   Core-Team: This defines the group of founding members and Code base
+    administrators.
+
+    iii.  Members: This defines the entities that create or manufacture technology
+    platforms, software tools, semiconductor components and those who are provided
+    membership by the Core-Team.
+
+    iv.   Contributors: This defines any entity or Individual who suggests, makes,
+    changes and/or adds to the Software and such changes and/or additions are included
+    in the codebase for further benefit to the community.
+
+    v.    Team: This defines the Cyancore Core-Team members, it's Members and
+    it's Contributors.
+
+    vi.   Individual: This defines any person who uses Software for personal
+    purpose without any commercial gain.
+
+    vii.  Organisation: This defines any entity that creates, develops, manufactures,
+    markets, sells, distributes technology products using this Software for commercial
+    purposes or otherwise.
+
+    viii. User: This defines any Individual and/or Organisation who use this Software.
+
+1.  Copy, Use and Distributions:
+    i.    Any individual or organisation is permitted to copy, use, distribute
+    Software for commercial use or otherwise at their own risk and responsibility
+    with no liability to the Team.
+
+    ii.   All distributions of Software by Users shall be without any claim of Copyright 
+    on such distributions at their own risk and responsibilities without any liability
+    to the Team. Such distributions of Software must include conspicuously and explicitly
+    this license in whole without any changes.
+
+    iii.  All Software distributions that have user interface in audio, visual or
+    print form must explicitly announce the banner of Cyancore.
+
+2.  Modifications, Changes, Upgrade and Add:
+    i.    Individuals may modify, change or upgrade the Software at their own risk
+    and responsibility.
+
+    ii.   Organisations may modify, change, upgrade or add new capability at their
+    risk and responsibility. However, Organisations, excluding government run organisations,
+    making such modification, changes and/or additions to the Software must unconditionally
+    submit the Software together with its modification, changes and/or additions including
+    documentation to the Team and seek permissions for extending such changes to their
+    products sold commercially or otherwise. The submitted modifications, changes and/or
+    additions and documentation once reviewed and approved by the Team shall be included into
+    codebase of the Software so that the community thereof will enjoy the benefits of such
+    modification, changes and/or additions at NO COST.
+
+3.  Patents, Intellectual Property and Copyrights:
+    No Individual or No Organisation may claim Intellectual Property rights for the
+    changes made to the Software by them. All the Software together with its changes,
+    additions submitted will be covered under this license for further use and
+    distribution.
+
+4.  Commercials:
+    The Software will be available to Individuals and Organisations at NO COST.
+    However, they are REQUESTED to make generous donations to Cyancore to enable continuous
+    improvement of the Software and technological advancements.
+
+7.  No Warranty, No Liability and Indemnity:
+    Because the Software is licensed free of cost, by accepting this license the
+    Individuals and the Organisations are deemed to accept that there is NO WARRANTY
+    of any kind for the Software.
+
+    Individuals and Organisations will own any LIABILITY arising out of the use,
+    distributions of the Software, it's changes, additions if any, commercial or
+    otherwise.
+
+    Individuals and Organisations unconditionally INDEMNIFY Cyancore Team and it's
+    stakeholders from ANY DAMAMGES, LAW SUITS, LIABILITIES AND ANY RESPONSIBILITY 
+    arising out of the use and/or distribution of the Software together with it's
+    changes, it's modification, it's upgrade and/or it's additions commercially or
+    otherwise.
+
+8.  Copyrights:
+    All copyrights of the Software together with submitted modifications, changes,
+    upgrades and/or additions, are unconditionally held by Cyancore Team.
+
+End of Terms and Conditions
+
+--------------------------------------------------------------------------------
+
+How to apply these terms to new additions
+
+Software contributors must use the below provided file header template in their work.
+
+<header start>
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) <yyyy>, Cyancore Team
+ *
+ * File Name		: <File Name>
+ * Description		: <1 or 2 line description of the source file>
+ * Primary Author	: <Name> [<E-Mail>]
+ * Organisation		: <Organisation Name>
+ */
+<header end>
+
+Through technical documentation, any technical artifcats like test cases and
+test results to be submitted along with the changes and additions to the Software
+for the review and approval of the Core-Team.
