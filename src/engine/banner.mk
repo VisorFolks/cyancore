@@ -1,3 +1,13 @@
+#
+# CYANCORE LICENSE
+# Copyrights (C) 2019, Cyancore Team
+#
+# File Name		: banner.mk
+# Description		: This script prints banner while starting build
+# Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+# Organisation		: Cyancore Core-Team
+#
+
 .PHONY:	version
 NAME		= Aurora
 VERSION		= 0x00000100

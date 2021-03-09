@@ -1,3 +1,14 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
+ * File Name		: engine.c
+ * Description		: This file contains sources of cyancore engine
+ *			  It also defines cyancore insignia
+ * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
 #include <engine.h>
 #include <stdbool.h>
 #include <stdlib.h>
