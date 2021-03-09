@@ -1,8 +1,12 @@
 /*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
  * File Name		: asm.S
  * Description		: This file consists of all the function written in asm
  *			  like ISR, context management, zero_reg and panic handler
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
  */
 
 #include <asm.inc>

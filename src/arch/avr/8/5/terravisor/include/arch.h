@@ -1,8 +1,12 @@
 /*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
  * File Name		: arch.h
  * Description		: This file prototypes arch related functions and
  *			  defines inline-able arch functions.
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
  */
 
 #pragma once

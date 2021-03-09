@@ -1,8 +1,12 @@
 /*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
  * File Name		: arch.c
  * Description		: This file consists of architecture specific function that
  *			  cannot be inlined. Hence, present in c file.
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
  */
 
 #include <stdint.h>

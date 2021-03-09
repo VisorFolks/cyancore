@@ -1,7 +1,11 @@
 /*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
  * File Name		: stack.S
  * Description		: This file defines the stack space for the AVR core
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
  */
 
 #include <plat_mem.h>

@@ -1,7 +1,11 @@
 /*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
  * File Name		: spinlock.S
  * Description		: This file consists of sources of spinlock in asm
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
  */
 
 #include <asm.inc>

@@ -1,9 +1,13 @@
 #
+# CYANCORE LICENSE
+# Copyrights (C) 2019, Cyancore Team
+#
 # File Name		: build.mk
 # Descrption		: Build script for arch directory.
 #			  Here various checkes are performed based on which
 #			  correct target-arch directory is picked up.
 # Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+# Organisation		: Cyancore Core-Team
 #
 
 ARCH_DIR	:= $(GET_PATH)

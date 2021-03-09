@@ -1,9 +1,13 @@
 /*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
  * File Name		: init.c
  * Description		: This file consists of entry point of the framework.
  *			  After the reset of system, program in this file gets
  *			  executed.
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
  */
 
 #include <stdint.h>
