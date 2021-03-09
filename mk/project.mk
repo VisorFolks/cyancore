@@ -1,3 +1,14 @@
+#
+# CYANCORE LICENSE
+# Copyrights (C) 2019, Cyancore Team
+#
+# File Name		: project.mk
+# Description		: This scipt helps the build system in searching
+#			  project name from command arguments
+# Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+# Organisation		: Cyancore Core-Team
+#
+
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*#
 #------------< Project Search >-------------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*#

@@ -1,3 +1,14 @@
+#
+# CYANCORE LICENSE
+# Copyrights (C) 2019, Cyancore Team
+#
+# File Name		: elf.mk
+# Description		: This file accumulates all the object file
+#			  and generates binaries
+# Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+# Organisation		: Cyancore Core-Team
+#
+
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
 #------------< ELF Builder >-------------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#

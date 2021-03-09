@@ -1,3 +1,13 @@
+#
+# CYANCORE LICENSE
+# Copyrights (C) 2019, Cyancore Team
+#
+# File Name		: mk_helper.mk
+# Description		: This file defines make helper utilities
+# Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+# Organisation		: Cyancore Core-Team
+#
+
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
 #-----------< Helpers >------------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#

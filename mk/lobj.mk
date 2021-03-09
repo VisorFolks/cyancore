@@ -1,3 +1,14 @@
+#
+# CYANCORE LICENSE
+# Copyrights (C) 2019, Cyancore Team
+#
+# File Name		: lobj.mk
+# Description		: This file build sources to generate objects
+#			  used to build library
+# Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+# Organisation		: Cyancore Core-Team
+#
+
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*#
 #--------< Library Object Builder >---------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*#

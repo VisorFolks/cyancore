@@ -1,7 +1,19 @@
+#
+# CYANCORE LICENSE
+# Copyrights (C) 2019, Cyancore Team
+#
+# File Name		: tc_get.mk
+# Description		: This file helps developer get toolchains
+# Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+# Organisation		: Cyancore Core-Team
+#
+
 include mk/path.mk
 
 T_ALLOWLIST	+= get_all_tc get_avr_tc get_arm_tc get_riscv_tc
 
+# GIT REPO RECOMMENDED
+# Provide git repo path for toolchains for better experience
 AVR_TC_REPO	:=
 RISC_V_TC_REPO	:=
 ARM_TC_REPO	:=

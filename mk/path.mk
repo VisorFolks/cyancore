@@ -1,3 +1,14 @@
+#
+# CYANCORE LICENSE
+# Copyrights (C) 2019, Cyancore Team
+#
+# File Name		: path.mk
+# Description		: This file defines standard variables used
+#			  in cyacnore build system
+# Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+# Organisation		: Cyancore Core-Team
+#
+
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
 #------------< Paths >-------------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#

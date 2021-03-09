@@ -1,3 +1,13 @@
+#
+# CYANCORE LICENSE
+# Copyrights (C) 2019, Cyancore Team
+#
+# File Name		: tc.mk
+# Description		: This file defines toolchain specific variables
+# Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+# Organisation		: Cyancore Core-Team
+#
+
 include mk/path.mk
 
 ifeq ($(findstring arm-v7,$(ARCH)),arm)
