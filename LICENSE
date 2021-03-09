@@ -26,7 +26,7 @@ thereof.
 
 --------------------------------------------------------------------------------
 
-TERMS AND CONDITIONS
+Terms And Conditions
 
 0.  Definitions:
     i.    Software: This defines source codes, binaries, documentation, algorithms,
@@ -128,8 +128,8 @@ Software contributors must use the below provided file header template in their 
  * Copyrights (C) <yyyy>, Cyancore Team
  *
  * File Name		: <File Name>
- * Description		: <1 or 2 liner description of the source file>
- * Primary Author	: <Name> [<EMail>]
+ * Description		: <1 or 2 line description of the source file>
+ * Primary Author	: <Name> [<E-Mail>]
  * Organisation		: <Organisation Name>
  */
 <header end>
