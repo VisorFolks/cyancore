@@ -1,9 +1,13 @@
 #
+# CYANCORE LICENSE
+# Copyrights (C) 2019, Cyancore Team
+#
 # File Name		: sources.mk
 # Description		: This build script accumalates build scripts from
 #			  all the other directories. Also this scripts defines
 #			  and initialises most of the build environment variables.
 # Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+# Organisation		: Cyancore Core-Team
 #
 # !NOTE!		: IT IS RECOMMENDED NOT TO MODIFY THIS FILE FOR BEST RESULTS
 #

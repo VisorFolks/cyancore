@@ -1,3 +1,14 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
+ * File Name		: sections.ld.sx
+ * Description		: This file contains memory layout for the
+ *			  cyancore framework
+ * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
 #include <plat_mem.h>
 
 #ifndef L_MEM_START

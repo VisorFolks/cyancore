@@ -1,3 +1,14 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
+ * File Name		: platform_mcall.c
+ * Description		: This file contains platform mcall registration
+ *			  api
+ * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
 #include <stddef.h>
 #include <stdint.h>
 #include <status.h>

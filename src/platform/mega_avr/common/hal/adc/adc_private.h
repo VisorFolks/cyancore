@@ -1,3 +1,13 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
+ * File Name		: adc_private.h
+ * Description		: This file contains macros used by adc HAL
+ * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
 #pragma once
 #define _ADC_PRIVATE_H_
 

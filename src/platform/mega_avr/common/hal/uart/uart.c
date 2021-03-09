@@ -1,3 +1,14 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
+ * File Name		: uart.c
+ * Description		: This file contains sources for mega-avr
+ *			  HAL uart apis
+ * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <assert.h>

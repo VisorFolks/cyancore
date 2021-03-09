@@ -1,3 +1,13 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
+ * File Name		: plat_mem.h
+ * Description		: This file contains memory config of atmega328p
+ * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
 #pragma once
 
 #define V_IMEM_START	0x00000000

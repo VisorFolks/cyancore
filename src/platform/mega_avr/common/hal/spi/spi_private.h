@@ -1,3 +1,13 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
+ * File Name		: spi_private.h
+ * Description		: This file contains macors used by spi HAL
+ * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
 #pragma once
 #define _SPI_PRIVATE_H_
 

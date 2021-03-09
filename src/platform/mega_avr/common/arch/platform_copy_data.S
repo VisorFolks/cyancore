@@ -1,3 +1,13 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
+ * File Name		: platform_copy data.S
+ * Description		: This file contains platform data flash routine
+ * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
 #include <asm.inc>
 #include <plat_mem.h>
 

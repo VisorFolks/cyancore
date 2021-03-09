@@ -1,3 +1,15 @@
+#
+# CYANCORE LICENSE
+# Copyrights (C) 2019, Cyancore Team
+#
+# File Name		: build.mk
+# Description		: This file accumulates the build scripts from 
+#			  all other directories that have atmega328p
+#			  board support sources
+# Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+# Organisation		: Cyancore Core-Team
+#
+
 ATMEGA328P_DIR	:= $(GET_PATH)
 
 ARCH		:= avr

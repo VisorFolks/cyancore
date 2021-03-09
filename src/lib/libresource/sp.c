@@ -8,6 +8,8 @@
  * Organisation		: Cyancore Core-Team
  */
 
+#include <status.h>
+
 // sp_t *sw_prop;
 
 status_t sp_init()
