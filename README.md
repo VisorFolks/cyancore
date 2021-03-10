@@ -1,5 +1,5 @@
 # ![Cyancore](./icons/cyancore_50x50.png)  Cyancore Framework
-###### *A unified platform for embedded system projects ...*
+###### *A unified software platform for embedded system projects ...*
 ---
 
 ### Supported Platforms
@@ -18,3 +18,17 @@ run
 ```
 make help
 ```
+
+For details about the framework, follow the README.md in each folder.
+
+### Requirements
+
+Host system requirements:
+* Linux Machine
+* make utility installed
+
+
+Toolchaine Requirements:
+* Please push your toolchains to your git repo
+* Update the links in mk/tc_get.mk file
+* run ```make help``` for more details
