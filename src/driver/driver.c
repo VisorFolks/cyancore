@@ -18,12 +18,18 @@ extern device_t _driver_table_start, _driver_table_end;
 
 status_t driver_setup_all()
 {
-	status_t ret = error_inval_arg;
-	device_t *ptr = &_driver_table_start;
-	while(ptr <= &_driver_table_end)
+	status_t ret = success;
+	device_t *ptr;
+	unsigned int order;
+	for(order = 0; order < 256; order++)
 	{
-		ret = ptr->driver_setup();
-		ptr++;
+		ptr = &_driver_table_start;
+		while(ptr <= &_driver_table_end)
+		{
+			if(order == ptr->sorder)
+				ret |= ptr->driver_setup();
+			ptr++;
+		}
 	}
 	return ret;
 }
@@ -31,11 +37,17 @@ status_t driver_setup_all()
 status_t driver_exit_all()
 {
 	status_t ret = error_inval_arg;
-	device_t *ptr = &_driver_table_start;
-	while(ptr <= &_driver_table_end)
+	device_t *ptr;
+	unsigned int order;
+	for(order = 255; order <= 0; order--)
 	{
-		ret = ptr->driver_exit();
-		ptr++;
+		ptr = &_driver_table_end;
+		while(ptr <= &_driver_table_end)
+		{
+			if(order == ptr->eorder)
+				ret = ptr->driver_exit();
+			ptr++;
+		}
 	}
 	return ret;
 }
@@ -74,14 +86,12 @@ status_t driver_exit(const char *name)
 	return ret;
 }
 
-status_t driver_register(device_t *dev)
+status_t driver_register(device_t *dev _UNUSED)
 {
-	dev->driver_setup();
-	return success;
+	return error;
 }
 
-status_t driver_deregister(device_t *dev)
+status_t driver_deregister(device_t *dev _UNUSED)
 {
-	dev->driver_setup = NULL;
-	return success;
+	return error;
 }

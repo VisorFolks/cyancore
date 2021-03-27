@@ -110,9 +110,9 @@ status_t console_serial_driver_exit()
 }
 
 #if EARLYCON_SERIAL==1
-INCLUDE_DRIVER(earlycon, console_serial_driver_setup, console_serial_driver_exit);
+INCLUDE_DRIVER(earlycon, console_serial_driver_setup, console_serial_driver_exit, 0, 0);
 #endif
 
 #if CONSOLE_SERIAL==1
-INCLUDE_DRIVER(console, console_serial_driver_setup, console_serial_driver_exit);
+INCLUDE_DRIVER(console, console_serial_driver_setup, console_serial_driver_exit, 0, 0);
 #endif
