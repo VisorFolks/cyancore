@@ -1,13 +1,12 @@
 {
     "configurations": [
         {
+            "name": "Cyancore VSCode extenstion",
             "includePath": [
-                "src/include",
-                "src/arch/avr/8/5/terravisor/include",
-                "${workspaceFolder}/src/include/visor"
+                "${workspaceFolder}/**"
             ],
-            "intelliSenseMode": "linux-gcc-x64",
-            "compilerPath": "/usr/bin/gcc",
+            "intelliSenseMode": "${default}",
+            "compilerPath": "",
             "cStandard": "gnu17",
             "cppStandard": "gnu++14"
         }
