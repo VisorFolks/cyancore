@@ -1,0 +1,60 @@
+{
+    "editor.tabSize": 8,
+    "[c]": {
+        "editor.tabSize": 8
+    },
+    "[cpp]": {
+        "editor.tabSize": 8
+    },
+    "[json]": {
+        "editor.tabSize": 8
+    },
+    "[makefile]": {
+        "editor.tabSize": 8
+    },
+    "[python]": {
+        "editor.tabSize": 8
+    },
+    "editor.selectionHighlight": true,
+    "editor.semanticHighlighting.enabled": true,
+    "editor.trimAutoWhitespace": true,
+    "editor.autoClosingQuotes": "always",
+    "editor.autoClosingBrackets": "always",
+    "editor.wordBasedSuggestions": true,
+    "editor.insertSpaces": false,
+    "editor.autoIndent": "advanced",
+    "editor.detectIndentation": true,
+    "editor.codeLens": true,
+    "editor.columnSelection": false,
+    "editor.colorDecorators": true,
+    "editor.cursorBlinking": "blink",
+    "editor.lightbulb.enabled": true,
+    "editor.lineNumbers": "on",
+    "editor.suggest.showFunctions": true,
+    "diffEditor.codeLens": true,
+    "diffEditor.wordWrap": "on",
+    "editor.suggest.showStatusBar": true,
+    "files.associations": {
+        "*.{c,c.dev.c.temp,c.tmp,c.old,h,h.dev,h.old,h.temp,h.tmp)": "C",
+        "*.{cpp,cpp.dev,cpp.temp,cpp.tmp,cpp.old}": "C++",
+        "*.{S,,S.old,S.dev.S.temp,S.tmp,s.old,s.temp,s.tmp,s.dev,asm,asm.old,asm.dev.asm.temp,asm.tmp,inc,inc.old,inc.temp,inc.tmp": "Assembly",
+        "*.{ld,ld.old,ld.temp,ld.tmp,ld.sx,ld.sx.old,.ld.sx.temp,ld.sx.tmp}": "Linker"
+    },
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 5000,
+    "files.defaultLanguage": "C",
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
+    "files.trimFinalNewlines": true,
+    "files.simpleDialog.enable": true,
+    "workbench.activityBar.iconClickBehavior": "focus",
+    "workbench.editor.closeOnFileDelete": true,
+    "workbench.editor.decorations.badges": true,
+    "workbench.editor.enablePreviewFromCodeNavigation": true,
+    "workbench.editor.enablePreviewFromQuickOpen": true,
+    "workbench.editor.highlightModifiedTabs": true,
+    "workbench.settings.openDefaultKeybindings": true,
+    "C_Cpp.autocompleteAddParentheses": true,
+    "git.alwaysSignOff": true,
+    "files.autoGuessEncoding": true
+}
