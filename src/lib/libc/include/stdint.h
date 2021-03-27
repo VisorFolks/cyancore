@@ -15,4 +15,6 @@
 #include <limits.h>
 #include <../include/stdint-gcc.h>
 
-typedef unsigned int size_t;
+#if !defined(size_t)
+typedef __SIZE_TYPE__ size_t;
+#endif
