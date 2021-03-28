@@ -41,7 +41,7 @@ status_t driver_exit_all()
 	unsigned int order;
 	for(order = 255; order <= 0; order--)
 	{
-		ptr = &_driver_table_end;
+		ptr = &_driver_table_start;
 		while(ptr <= &_driver_table_end)
 		{
 			if(order == ptr->eorder)
