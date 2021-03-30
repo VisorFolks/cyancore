@@ -55,5 +55,7 @@
     "workbench.settings.openDefaultKeybindings": true,
     "C_Cpp.autocompleteAddParentheses": true,
     "git.alwaysSignOff": true,
-    "files.autoGuessEncoding": true
+    "files.autoGuessEncoding": true,
+    "telemetry.enableCrashReporter": false,
+    "telemetry.enableTelemetry": false
 }
