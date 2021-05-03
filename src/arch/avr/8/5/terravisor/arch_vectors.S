@@ -13,4 +13,4 @@
  * archvectors - AVR architecture defined interrupt vectors section
  */
 vectors archvectors
-	jmp	init
+	jmp	entry
