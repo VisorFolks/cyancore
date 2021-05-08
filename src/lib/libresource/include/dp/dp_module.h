@@ -11,6 +11,8 @@
 
 #pragma once
 
+#include <stdint.h>
+
 typedef struct module
 {
 	uint8_t id;

@@ -43,7 +43,7 @@ status_t console_release_device()
 
 status_t console_putc(const char c)
 {
-	if(console_attached)
+	if(console_attached && con->write != NULL)
 		return con->write(c);
 	return error_inval_func;
 }
@@ -63,14 +63,14 @@ status_t console_puts(const char *s)
 
 status_t console_getc(char *c)
 {
-	if(console_attached)
+	if(console_attached && con->read != NULL)
 		return con->read(c);
 	return error_inval_func;
 }
 
 status_t console_flush()
 {
-	if(console_attached)
+	if(console_attached && con->flush != NULL)
 		return con->flush();
 	return error_inval_func;
 }

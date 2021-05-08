@@ -62,7 +62,7 @@ static inline unsigned int arch_core_id()
 /**
  * arch_ei - arch enable global interrupts
  */
-inline void arch_ei()
+static inline void arch_ei()
 {
 	asm volatile("sei");
 }
