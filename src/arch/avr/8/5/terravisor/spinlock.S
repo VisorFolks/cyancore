@@ -36,8 +36,12 @@
  * @key - Accepts address of key variable
  */
 function spinlock_acquire
-	movw	r30, r24
+	push	r31
+	push	r30
+	push	r19
+	push	r18
 	push	r0
+	movw	r30, r24
 	in	r0, SREG
 1:
 	cli
@@ -59,6 +63,10 @@ function spinlock_acquire
 	st	Z, r19
 	out	SREG, r0
 	pop	r0
+	pop	r18
+	pop	r19
+	pop	r30
+	pop	r31
 	ret
 
 /**
@@ -71,12 +79,16 @@ function spinlock_acquire
  * @key - Accepts address of key variable
  */
 function spinlock_release
-	movw	r30, r24
+	push	r31
+	push	r30
 	push	r0
+	movw	r30, r24
 	in	r0, SREG
 	cli
 	st	Z+, r1
 	st	Z, r1
 	out	SREG, r0
 	pop	r0
+	pop	r30
+	pop	r31
 	ret
