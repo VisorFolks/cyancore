@@ -11,6 +11,8 @@
 
 DRIVER_PATH	:= $(GET_PATH)
 
+LD_SUPLEMENT	+= $(DRIVER_PATH)/driver.ld.sx
+
 #==========< Essentials Drivers >==========#
 include $(DRIVER_PATH)/interrupt/build.mk
 

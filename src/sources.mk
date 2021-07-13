@@ -38,8 +38,6 @@ ASFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 		   $(TARGET_FLAGS)			\
 		   --fatal-warnings
 
-LD_SCRIPT	:= $(OUT)/sections.ld
-
 LD_FLAGS	+= --error-unresolved-symbols		\
 		   --warn-common --fatal-warnings	\
 		   --check-sections -nostdlib		\

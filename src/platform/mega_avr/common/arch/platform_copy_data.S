@@ -12,9 +12,9 @@
 #include <plat_mem.h>
 
 function platform_copy_data
-	ldi	r17, hi8((V_DMEM_START + _data_size))
-	ldi	r26, lo8(V_DMEM_START)
-	ldi	r27, hi8(V_DMEM_START)
+	ldi	r17, hi8(_data_vend)
+	ldi	r26, lo8(_data_vstart)
+	ldi	r27, hi8(_data_vstart)
 	ldi	r30, lo8(_data_start)
 	ldi	r31, hi8(_data_start)
 	rjmp	1f
@@ -22,7 +22,7 @@ function platform_copy_data
 	lpm	r0, Z+
 	st	X+, r0
 1:
-	cpi	r26, lo8((V_DMEM_START + _data_size))
+	cpi	r26, lo8(_data_vend)
 	cpc	r27, r17
 	brne	2b
 	ldi	r24, 0
