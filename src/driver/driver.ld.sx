@@ -2,9 +2,9 @@
  * CYANCORE LICENSE
  * Copyrights (C) 2019, Cyancore Team
  *
- * File Name		: sections.ld.sx
+ * File Name		: driver.ld.sx
  * Description		: This file contains memory layout for the
- *			  cyancore framework
+ *			  cyancore driver framework
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
