@@ -11,7 +11,7 @@
 
 MEGA_AVR_COMMON_DIR	:= $(GET_PATH)
 
-LD_TEMPLATE		:= $(MEGA_AVR_COMMON_DIR)/sections.ld.sx
+LD_SCRIPT		:= $(MEGA_AVR_COMMON_DIR)/sections.ld.sx
 
 PLAT_INCLUDE		+= $(MEGA_AVR_COMMON_DIR)/include
 

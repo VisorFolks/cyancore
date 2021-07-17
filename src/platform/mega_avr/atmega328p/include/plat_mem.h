@@ -10,6 +10,9 @@
 
 #pragma once
 
+#define FLASH_SIZE	32K
+#define RAM_SIZE	2K
+
 #define V_IMEM_START	0x00000000
 #define V_DMEM_START	0x00800100
 
