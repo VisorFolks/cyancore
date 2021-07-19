@@ -17,13 +17,13 @@ include mk/obj.mk
 
 ELF		:= $(addprefix $(OUT)/,$(PROJECT).elf)
 LD_SCRIPT	:= $(addprefix $(OUT)/,$(LD_SCRIPT:.ld.sx=.ld))
-LD_SUPLEMENT	:= $(addprefix $(OUT)/,$(LD_SUPLEMENT:.ld.sx=.ld))
+LD_SUPPLEMENT	:= $(addprefix $(OUT)/,$(LD_SUPPLEMENT:.ld.sx=.ld))
 
 elf: $(ELF)
 
-$(ELF): $(DEP_LIBS) $(DEP_OBJS) $(LD_SCRIPT) $(LD_SUPLEMENT)
+$(ELF): $(DEP_LIBS) $(DEP_OBJS) $(LD_SCRIPT) $(LD_SUPPLEMENT)
 	@echo "Elf: Generating $(@F) ..."
-	$(LD) -dT $(LD_SCRIPT) $(addprefix -T , $(LD_SUPLEMENT)) $(LD_FLAGS) -Map=$(@:.elf=.map) -o $@ $(filter %.o, $^) $(DEP_LIB_PATH) $(DEP_LIBS_ARG) -L $(TL) -lgcc
+	$(LD) -dT $(LD_SCRIPT) $(addprefix -T , $(LD_SUPPLEMENT)) $(LD_FLAGS) -Map=$(@:.elf=.map) -o $@ $(filter %.o, $^) $(DEP_LIB_PATH) $(DEP_LIBS_ARG) -L $(TL) -lgcc
 	$(OD) -Dx -h $@ > $(@:.elf=.lst)
 	$(OC) -O binary $@ $(@:.elf=.bin)
 	$(OC) -O ihex $@ $(@:.elf=.hex)

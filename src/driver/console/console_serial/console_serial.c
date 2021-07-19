@@ -31,7 +31,7 @@ status_t console_serial_setup()
 {
 	mret_t mres;
 	module_t *dp;
-	mres = arch_machine_call(FETCH_DP, DEV_CONSOLE, 0, 0);
+	mres = arch_machine_call(fetch_dp, DEV_CONSOLE, 0, 0);
 	if(mres.status != success)
 		return mres.status;
 	dp = (module_t *)mres.p;

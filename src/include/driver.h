@@ -11,6 +11,8 @@
 #pragma once
 #define _DRIVER_H_
 
+#include <status.h>
+
 typedef struct device
 {
 	char name[15];
@@ -22,7 +24,7 @@ typedef struct device
 } device_t;
 
 #define INCLUDE_DRIVER(_name, _driver_setup, _driver_exit, _sorder, _eorder)		\
-	const device_t _name __attribute__((section(".driver"))) =	\
+	const device_t _name _SECTION(".driver") =			\
 	{								\
 		.name		= #_name,				\
 		.driver_setup	= _driver_setup,			\

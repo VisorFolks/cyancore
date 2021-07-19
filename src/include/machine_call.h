@@ -12,6 +12,7 @@
 #define _MACHINE_CALL_H_
 
 #include <stdint.h>
+#include <status.h>
 
 typedef struct mret
 {
@@ -22,5 +23,20 @@ typedef struct mret
 
 // Machine call IDs
 
-#define FETCH_DP		0x0001
-#define SET_SLEEP_MODE		0x0002
+typedef enum mcall_id
+{	fetch_dp		= 0x0001,
+	set_sleep_mode		= 0x0002
+} mcall_id_t;
+
+typedef struct mcall
+{
+	mcall_id_t id;
+	mret_t (*callback)(unsigned int a0, unsigned int a1, unsigned int a2);
+} mcall_t;
+
+#define INCLUDE_MCALL(_name, _id , _callback)		\
+	const mcall_t _name _SECTION(".mcall") =	\
+	{						\
+		.id		= _id,			\
+		.callback	= _callback		\
+	}
