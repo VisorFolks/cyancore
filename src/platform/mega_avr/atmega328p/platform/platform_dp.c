@@ -64,7 +64,7 @@ status_t platform_dp_setup()
 	return ret;
 }
 
-mret_t platform_fetch_dp(unsigned int dev, unsigned int a0 _UNUSED)
+mret_t platform_fetch_dp(unsigned int dev, unsigned int a0 _UNUSED, unsigned int a1 _UNUSED)
 {
 	mret_t ret;
 	switch(dev)
@@ -97,3 +97,5 @@ mret_t platform_fetch_dp(unsigned int dev, unsigned int a0 _UNUSED)
 
 	return ret;
 }
+
+INCLUDE_MCALL(atmega328p_fetch_dp, fetch_dp, platform_fetch_dp);
