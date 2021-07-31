@@ -29,7 +29,7 @@
  * from here the framework boots.
  */
 function entry
-	sei
+	cli
 	ldi	r18, lo8(stack_start)
 	ldi	r30, SPL
 	st	Z, r18
