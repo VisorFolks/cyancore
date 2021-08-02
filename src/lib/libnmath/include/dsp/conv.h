@@ -10,6 +10,4 @@
 
 #pragma once
 
-#define conv(x, y, z)	__conv(x, sizeof(x)/sizeof(x[0]), y, sizeof(y)/sizeof(y[0]), z, sizeof(z)/sizeof(z[0]))
-
-status_t __conv(float *a, int size_a, float *b, int size_b, float *c, int size_c);
+status_t conv(float *a, int size_a, float *b, int size_b, float *c, int size_c);
