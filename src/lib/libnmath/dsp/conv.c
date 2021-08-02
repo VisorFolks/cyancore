@@ -24,6 +24,7 @@
  * @size_a - Size of input matrix a
  * @size_b - Size of input matrix b
  * @size_c - size of output matrict c
+ * #return - Returns function execution status
  */
 status_t conv(float *a, int size_a, float *b, int size_b, float *c, int size_c)
 {
