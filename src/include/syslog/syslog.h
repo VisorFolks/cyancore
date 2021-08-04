@@ -16,12 +16,18 @@
 
 #include <driver.h>
 
-#define SYSLOG_FORMAT		"%15s : [ %s ] : %s\r\n"	///> "Agent" : [ LOG_LEVEL ] : "Output String"
+#ifdef SYSLOG_SHOW_FILENAME_LINENO
+	#define SYSLOG_FMT_DEF		"%15s : [ %s ] : %s : %s: %s\r\n"	///> "Agent" : [ LOG_LEVEL ] : File_Name : Line_Number : "Output String"
+#else
+	#define SYSLOG_FMT_DEF		"%15s : [ %s ] : %s\r\n"		///> "Agent" : [ LOG_LEVEL ] : "Output String"
+#endif
 #define SYSLOG_DEBUG		"DEB"
 #define SYSLOG_INFO 		"INF"
 #define SYSLOG_WARN 		"WAR"
 #define SYSLOG_ERR 		"ERR"
 #define SYSLOG_CRITICAL		"CRI"
+
+#define SYSLOG_DEFAULT_AGENT	"CYANCORE"
 
 #define SYSLOG_ATTACHED		0x1425
 
@@ -101,6 +107,8 @@ status_t syslog_get_level(syslog_level_t * sys_log_level);
  *	5. syslog_level_critical (maximum)
  *
  * @in		agent - Pointer to the agent string (limit: 15 char)
+ * @in		fname - Pointer to file_name string. Default: NULL. Usage: pass __FILE__ macro to automatically fetch file location.
+ * @in		line  - Pointer to line number string. Default: NULL. Usage: pass __LINE__ macro to automatically fetch current line number.
  * @in		output_str - string that is to be part of the information
  * @in		log_level - Level of the output log (Ref: Logging levels available)
  *
@@ -109,7 +117,7 @@ status_t syslog_get_level(syslog_level_t * sys_log_level);
  * 		error_inval_arg		for argument errors
  * 		error_init_not_done	if the initialisation is not done
  */
-status_t syslog_log(const char * agent, const char * output_str, syslog_level_t log_level);
+status_t syslog_log(const char * agent, const char * fname, const char * line, const char * output_str, syslog_level_t log_level);
 
 /**
  * syslog_release - Release syslog module

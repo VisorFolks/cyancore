@@ -24,7 +24,7 @@ status_t syslog_setup(syslog_level_t sys_log_level)
 	if (ret == success || ret == error_init_done)
 	{
 		g_syslog.attach     = SYSLOG_ATTACHED;
-		g_syslog.syslog_fmt = SYSLOG_FORMAT;
+		g_syslog.syslog_fmt = SYSLOG_FMT_DEF;
 	}
 
 	return ret;
@@ -46,10 +46,12 @@ status_t syslog_get_level(syslog_level_t *sys_log_level)
 	return success;
 }
 
-status_t syslog_log(const char *agent, const char *output_str, syslog_level_t log_level)
+status_t syslog_log(const char * agent, const char * fname, const char * line, const char * output_str, syslog_level_t log_level)
 {
 	RET_ERR(g_syslog.attach == SYSLOG_ATTACHED, error_init_not_done);
 	RET_ERR((sys_log_level < syslog_level_max) && (sys_log_level >= syslog_level_verbose), error_inval_arg);
+	RET_ERR(agent != NULL, error_inval_arg);
+	RET_ERR(output_str != NULL, error_inval_arg);
 
 	if (log_level >= g_syslog.sys_log_level)
 	{
@@ -74,8 +76,14 @@ status_t syslog_log(const char *agent, const char *output_str, syslog_level_t lo
 			default:
 				return error_inval_arg;
 		}
-
-		printf(g_syslog.syslog_fmt, agent, output_str, log_level_str);
+#ifdef SYSLOG_SHOW_FILENAME_LINENO
+		printf(g_syslog.syslog_fmt, agent, log_level_str, fname, line, output_str);
+#else
+		printf(g_syslog.syslog_fmt, agent, log_level_str, output_str);
+		// Suppress Unused warning
+		(void) (fname);
+		(void) (line);
+#endif
 	}
 }
 

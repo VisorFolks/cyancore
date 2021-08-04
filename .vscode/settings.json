@@ -37,7 +37,8 @@
     "files.associations": {
         "*.{c,c.dev.c.temp,c.tmp,c.old,h,h.dev,h.old,h.temp,h.tmp)": "C",
         "*.{cpp,cpp.dev,cpp.temp,cpp.tmp,cpp.old}": "C++",
-        "*.{S,S.old,S.dev.S.temp,S.tmp,s.old,s.temp,s.tmp,s.dev,asm,asm.old,asm.dev.asm.temp,asm.tmp,inc,inc.old,inc.temp,inc.tmp,ld,ld.old,ld.temp,ld.tmp,ld.sx,ld.sx.old,ld.sx.temp,ld.sx.tmp,lst}": "coffeescript"
+        "*.{S,S.old,S.dev.S.temp,S.tmp,s.old,s.temp,s.tmp,s.dev,asm,asm.old,asm.dev.asm.temp,asm.tmp,inc,inc.old,inc.temp,inc.tmp,ld,ld.old,ld.temp,ld.tmp,ld.sx,ld.sx.old,ld.sx.temp,ld.sx.tmp,lst}": "coffeescript",
+        "syslog.h": "c"
     },
     "files.autoSave": "afterDelay",
     "files.autoSaveDelay": 5000,
