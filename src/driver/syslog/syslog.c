@@ -16,7 +16,7 @@ const char console_name = "earlycon"
 status_t syslog_setup(syslog_level_t sys_log_level)
 {
 	RET_ERR(g_syslog.attach != SYSLOG_ATTACHED, error_init_done);
-	RET_ERR((sys_log_level < syslog_level_max) && (sys_log_level > syslog_level_verbose), error_inval_arg);
+	RET_ERR((sys_log_level < syslog_level_max) && (sys_log_level >= syslog_level_verbose), error_inval_arg);
 
 	status_t ret = success;
 
@@ -33,7 +33,7 @@ status_t syslog_setup(syslog_level_t sys_log_level)
 status_t syslog_set_level(syslog_level_t sys_log_level)
 {
 	RET_ERR(g_syslog.attach == SYSLOG_ATTACHED, error_init_not_done);
-	RET_ERR((sys_log_level < syslog_level_max) && (sys_log_level > syslog_level_verbose), error_inval_arg);
+	RET_ERR((sys_log_level < syslog_level_max) && (sys_log_level >= syslog_level_verbose), error_inval_arg);
 
 	g_syslog.sys_log_level = sys_log_level;
 	return success;
@@ -49,7 +49,7 @@ status_t syslog_get_level(syslog_level_t *sys_log_level)
 status_t syslog_log(const char *agent, const char *output_str, syslog_level_t log_level)
 {
 	RET_ERR(g_syslog.attach == SYSLOG_ATTACHED, error_init_not_done);
-	RET_ERR((sys_log_level < syslog_level_max) && (sys_log_level > syslog_level_verbose), error_inval_arg);
+	RET_ERR((sys_log_level < syslog_level_max) && (sys_log_level >= syslog_level_verbose), error_inval_arg);
 
 	if (log_level >= g_syslog.sys_log_level)
 	{
