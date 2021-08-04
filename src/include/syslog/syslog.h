@@ -67,7 +67,7 @@ typedef struct syslog_interface
 } syslog_interface_t;
 
 
-extern const syslog_interface_t g_syslog;
+extern syslog_interface_t g_syslog;
 
 /**
  * syslog_setup - Initialize the logging system

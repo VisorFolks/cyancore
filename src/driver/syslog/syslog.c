@@ -9,10 +9,11 @@
  */
 
 #include <syslog/syslog.h>
+#include <string.h>
 
 syslog_ctrl_t g_syslog_ctrl;
 
-const syslog_api_t g_syslog_api =
+syslog_api_t g_syslog_api =
 {
 	.setup		= syslog_setup,
 	.release	= syslog_release,
@@ -21,13 +22,13 @@ const syslog_api_t g_syslog_api =
 	.set_level	= syslog_set_level
 };
 
-const syslog_interface_t g_syslog =
+syslog_interface_t g_syslog =
 {
-	.ctrl = g_syslog_ctrl,
-	.api  = g_syslog_api
+	.ctrl = &g_syslog_ctrl,
+	.api  = &g_syslog_api
 };
 
-const char console_name = "earlycon"
+const char console_name[] = "earlycon";
 
 status_t syslog_setup(syslog_level_t sys_log_level)
 {
@@ -65,7 +66,7 @@ status_t syslog_get_level(syslog_level_t *sys_log_level)
 status_t syslog_log(const char * agent, const char * fname, const char * line, const char * output_str, syslog_level_t log_level)
 {
 	RET_ERR(g_syslog_ctrl.attach == SYSLOG_ATTACHED, error_init_not_done);
-	RET_ERR((sys_log_level < syslog_level_max) && (sys_log_level >= syslog_level_verbose), error_inval_arg);
+	RET_ERR((log_level < syslog_level_max) && (log_level >= syslog_level_verbose), error_inval_arg);
 	RET_ERR(agent != NULL, error_inval_arg);
 	RET_ERR(output_str != NULL, error_inval_arg);
 
@@ -101,6 +102,7 @@ status_t syslog_log(const char * agent, const char * fname, const char * line, c
 		(void) (line);
 #endif
 	}
+	return success;
 }
 
 status_t syslog_release(void)
@@ -108,7 +110,7 @@ status_t syslog_release(void)
 	RET_ERR(g_syslog_ctrl.attach == SYSLOG_ATTACHED, error_init_not_done);
 
 	driver_exit(console_name);
-	memset(g_syslog_ctrl, 0x00, sizeof(g_syslog_ctrl));
+	memset(&g_syslog_ctrl, 0x00, sizeof(g_syslog_ctrl));
 
 	return success;
 }
