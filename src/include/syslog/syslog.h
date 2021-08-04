@@ -29,7 +29,7 @@
 
 typedef enum syslog_level
 {
-	syslog_level_min	= 0,
+	syslog_level_verbose	= 0,
 	syslog_level_debug	= 10,
 	syslog_level_info	= 20,
 	syslog_level_warn	= 30,
