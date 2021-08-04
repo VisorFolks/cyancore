@@ -61,7 +61,7 @@ status_t syslog_get_level(syslog_level_t *sys_log_level)
 	return success;
 }
 
-status_t syslog_log(const char * agent, const char * fname, const char * line, const char * output_str, syslog_level_t log_level)
+status_t syslog_log(const char * agent, const char * fname _UNUSED, const char * line _UNUSED, const char * output_str, syslog_level_t log_level)
 {
 	RET_ERR(g_syslog_ctrl.attach == SYSLOG_ATTACHED, error_init_not_done);
 	RET_ERR((log_level < syslog_level_max) && (log_level >= syslog_level_verbose), error_inval_arg);
@@ -95,9 +95,6 @@ status_t syslog_log(const char * agent, const char * fname, const char * line, c
 		printf(g_syslog_ctrl.syslog_fmt, agent, log_level_str, fname, line, output_str);
 #else
 		printf(g_syslog_ctrl.syslog_fmt, agent, log_level_str, output_str);
-		// Suppress Unused warning
-		(void) (fname);
-		(void) (line);
 #endif
 	}
 	return success;
