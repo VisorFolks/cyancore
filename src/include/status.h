@@ -15,7 +15,6 @@
 
 typedef enum status
 {
-	error_assertion		= -8,
 	error_inval_dev_id	= -7,
 	error_inval_code	= -6,
 	error_data		= -5,

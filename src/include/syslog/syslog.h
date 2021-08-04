@@ -11,8 +11,10 @@
 #pragma once
 #define _SYSLOG_H_
 
-#include "stdio.h"
-#include "status.h"
+#include <stdio.h>
+#include <status.h>
+
+#include <driver.h>
 
 #define SYSLOG_FORMAT		"%s : [ %s ] : %s\r\n"	///> "Agent" : [ LOG_LEVEL ] : "Output String"
 #define SYSLOG_DEBUG		"DEB"
@@ -23,36 +25,28 @@
 
 #define SYSLOG_ATTACHED		0x1425
 
-#define ASSERT_LOG(x)\
-{					\
-	if(x)				\
-	{				\
-		;			\
-	}				\
-	else				\
-	{				\
-		return error_assertion;	\
-	}				\
-}
+#define CHECK_ARGS(x)		{ if(x){ (void)0; } else return error_inval_arg;}
 
 typedef enum
 {
-	syslog_level_notset,
-	syslog_level_debug,
-	syslog_level_info,
-	syslog_level_warn,
-	syslog_level_err,
-	syslog_level_critical,
+	syslog_level_min	= 0,
+	syslog_level_debug	= 10,
+	syslog_level_info	= 20,
+	syslog_level_warn	= 30,
+	syslog_level_err	= 40,
+	syslog_level_critical	= 50,
 	syslog_level_max
-} syslog_level_e;
+} syslog_level_t;
 
 typedef struct syslog
 {
 	int attach;
-	syslog_level_e sys_log_level;
+	char * syslog_fmt;
+	syslog_level_t sys_log_level;
 } syslog_t;
 
-status_t syslog_attach(syslog_level_e sys_log_level);
-status_t syslog_change_level(syslog_level_e sys_log_level);
-status_t syslog_log(const char * agent, const char * output_str, syslog_level_e syslog_level);
-status_t syslog_dettach(void);
+status_t syslog_setup(syslog_level_t sys_log_level);
+status_t syslog_set_level(syslog_level_t sys_log_level);
+status_t syslog_get_level(syslog_level_t * sys_log_level);
+status_t syslog_log(const char * agent, const char * output_str, syslog_level_t syslog_level);
+status_t syslog_release(void);
