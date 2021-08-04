@@ -44,12 +44,30 @@ typedef enum syslog_level
 	syslog_level_max
 } syslog_level_t;
 
-typedef struct syslog
+typedef struct syslog_ctrl
 {
 	int attach;
 	char * syslog_fmt;
 	syslog_level_t sys_log_level;
-} syslog_t;
+} syslog_ctrl_t;
+
+typedef struct syslog_api
+{
+	status_t (*setup)(syslog_level_t);
+	status_t (*release)(void);
+	status_t (*log)(const char *, const char *, const char *, const char *, syslog_level_t);
+	status_t (*set_level)(syslog_level_t);
+	status_t (*get_level)(syslog_level_t *);
+} syslog_api_t;
+
+typedef struct syslog_interface
+{
+	syslog_ctrl_t *ctrl;
+	syslog_api_t  *api;
+} syslog_interface_t;
+
+
+extern const syslog_interface_t g_syslog;
 
 /**
  * syslog_setup - Initialize the logging system

@@ -10,12 +10,28 @@
 
 #include <syslog/syslog.h>
 
-syslog_t g_syslog;
+syslog_ctrl_t g_syslog_ctrl;
+
+const syslog_api_t g_syslog_api =
+{
+	.setup		= syslog_setup,
+	.release	= syslog_release,
+	.log		= syslog_log,
+	.get_level	= syslog_get_level,
+	.set_level	= syslog_set_level
+};
+
+const syslog_interface_t g_syslog =
+{
+	.ctrl = g_syslog_ctrl,
+	.api  = g_syslog_api
+};
+
 const char console_name = "earlycon"
 
 status_t syslog_setup(syslog_level_t sys_log_level)
 {
-	RET_ERR(g_syslog.attach != SYSLOG_ATTACHED, error_init_done);
+	RET_ERR(g_syslog_ctrl.attach != SYSLOG_ATTACHED, error_init_done);
 	RET_ERR((sys_log_level < syslog_level_max) && (sys_log_level >= syslog_level_verbose), error_inval_arg);
 
 	status_t ret = success;
@@ -23,8 +39,8 @@ status_t syslog_setup(syslog_level_t sys_log_level)
 	ret = driver_setup(console_name);
 	if (ret == success || ret == error_init_done)
 	{
-		g_syslog.attach     = SYSLOG_ATTACHED;
-		g_syslog.syslog_fmt = SYSLOG_FMT_DEF;
+		g_syslog_ctrl.attach     = SYSLOG_ATTACHED;
+		g_syslog_ctrl.syslog_fmt = SYSLOG_FMT_DEF;
 	}
 
 	return ret;
@@ -32,28 +48,28 @@ status_t syslog_setup(syslog_level_t sys_log_level)
 
 status_t syslog_set_level(syslog_level_t sys_log_level)
 {
-	RET_ERR(g_syslog.attach == SYSLOG_ATTACHED, error_init_not_done);
+	RET_ERR(g_syslog_ctrl.attach == SYSLOG_ATTACHED, error_init_not_done);
 	RET_ERR((sys_log_level < syslog_level_max) && (sys_log_level >= syslog_level_verbose), error_inval_arg);
 
-	g_syslog.sys_log_level = sys_log_level;
+	g_syslog_ctrl.sys_log_level = sys_log_level;
 	return success;
 }
 
 status_t syslog_get_level(syslog_level_t *sys_log_level)
 {
-	RET_ERR(g_syslog.attach == SYSLOG_ATTACHED, error_init_not_done);
-	*sys_log_level = g_syslog.sys_log_level;
+	RET_ERR(g_syslog_ctrl.attach == SYSLOG_ATTACHED, error_init_not_done);
+	*sys_log_level = g_syslog_ctrl.sys_log_level;
 	return success;
 }
 
 status_t syslog_log(const char * agent, const char * fname, const char * line, const char * output_str, syslog_level_t log_level)
 {
-	RET_ERR(g_syslog.attach == SYSLOG_ATTACHED, error_init_not_done);
+	RET_ERR(g_syslog_ctrl.attach == SYSLOG_ATTACHED, error_init_not_done);
 	RET_ERR((sys_log_level < syslog_level_max) && (sys_log_level >= syslog_level_verbose), error_inval_arg);
 	RET_ERR(agent != NULL, error_inval_arg);
 	RET_ERR(output_str != NULL, error_inval_arg);
 
-	if (log_level >= g_syslog.sys_log_level)
+	if (log_level >= g_syslog_ctrl.sys_log_level)
 	{
 		const char * log_level_str;
 		switch (log_level)
@@ -77,9 +93,9 @@ status_t syslog_log(const char * agent, const char * fname, const char * line, c
 				return error_inval_arg;
 		}
 #ifdef SYSLOG_SHOW_FILENAME_LINENO
-		printf(g_syslog.syslog_fmt, agent, log_level_str, fname, line, output_str);
+		printf(g_syslog_ctrl.syslog_fmt, agent, log_level_str, fname, line, output_str);
 #else
-		printf(g_syslog.syslog_fmt, agent, log_level_str, output_str);
+		printf(g_syslog_ctrl.syslog_fmt, agent, log_level_str, output_str);
 		// Suppress Unused warning
 		(void) (fname);
 		(void) (line);
@@ -89,10 +105,10 @@ status_t syslog_log(const char * agent, const char * fname, const char * line, c
 
 status_t syslog_release(void)
 {
-	RET_ERR(g_syslog.attach == SYSLOG_ATTACHED, error_init_not_done);
+	RET_ERR(g_syslog_ctrl.attach == SYSLOG_ATTACHED, error_init_not_done);
 
 	driver_exit(console_name);
-	memset(g_syslog, 0x00, sizeof(g_syslog));
+	memset(g_syslog_ctrl, 0x00, sizeof(g_syslog_ctrl));
 
 	return success;
 }
