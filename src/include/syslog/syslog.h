@@ -16,7 +16,7 @@
 
 #include <driver.h>
 
-#define SYSLOG_FORMAT		"%s : [ %s ] : %s\r\n"	///> "Agent" : [ LOG_LEVEL ] : "Output String"
+#define SYSLOG_FORMAT		"%15s : [ %s ] : %s\r\n"	///> "Agent" : [ LOG_LEVEL ] : "Output String"
 #define SYSLOG_DEBUG		"DEB"
 #define SYSLOG_INFO 		"INF"
 #define SYSLOG_WARN 		"WAR"
