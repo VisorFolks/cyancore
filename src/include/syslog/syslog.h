@@ -15,6 +15,7 @@
 #include <status.h>
 
 #include <driver.h>
+#include <driver/console.h>
 
 #ifdef SYSLOG_SHOW_FILENAME_LINENO
 	#define SYSLOG_FMT_DEF		"%15s : [ %s ] : %s : %s: %s\r\n"	///> "Agent" : [ LOG_LEVEL ] : File_Name : Line_Number : "Output String"

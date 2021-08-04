@@ -28,8 +28,6 @@ syslog_interface_t g_syslog =
 	.api  = &g_syslog_api
 };
 
-const char console_name[] = "earlycon";
-
 status_t syslog_setup(syslog_level_t sys_log_level)
 {
 	RET_ERR(g_syslog_ctrl.attach != SYSLOG_ATTACHED, error_init_done);
@@ -37,7 +35,7 @@ status_t syslog_setup(syslog_level_t sys_log_level)
 
 	status_t ret = success;
 
-	ret = driver_setup(console_name);
+	ret = console_setup();
 	if (ret == success || ret == error_init_done)
 	{
 		g_syslog_ctrl.attach     = SYSLOG_ATTACHED;
@@ -109,7 +107,6 @@ status_t syslog_release(void)
 {
 	RET_ERR(g_syslog_ctrl.attach == SYSLOG_ATTACHED, error_init_not_done);
 
-	driver_exit(console_name);
 	memset(&g_syslog_ctrl, 0x00, sizeof(g_syslog_ctrl));
 
 	return success;
