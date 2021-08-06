@@ -32,11 +32,17 @@
 
 #define SYSLOG_ATTACHED		0x25
 
-#define RET_ERR(x, err)		{ if(x){ (void)0; } else return err;}
+#define DO_NOTHING
+#define RET_ERR(x, err)		{ if(x){ DO_NOTHING } else return err;}
 
+/**
+ * @enum syslog_level_t
+ *
+ * Provides the possible syslog levels
+ */
 typedef enum syslog_level
 {
-	syslog_level_verbose,
+	syslog_level_verbose,	///<
 	syslog_level_debug,
 	syslog_level_info,
 	syslog_level_warn,
@@ -45,6 +51,11 @@ typedef enum syslog_level
 	syslog_level_max
 } syslog_level_t;
 
+/**
+ * @struct syslog_ctrl_t
+ *
+ * Provides the Syslog control structure
+ */
 typedef struct syslog_ctrl
 {
 	uint8_t attach;
@@ -52,6 +63,11 @@ typedef struct syslog_ctrl
 	syslog_level_t sys_log_level;
 } syslog_ctrl_t;
 
+/**
+ * @struct syslog_api_t
+ *
+ * Provides the API interface structure
+ */
 typedef struct syslog_api
 {
 	status_t (*setup)(syslog_level_t);
@@ -61,12 +77,16 @@ typedef struct syslog_api
 	status_t (*get_level)(syslog_level_t *);
 } syslog_api_t;
 
+/**
+ * @struct syslog_interface_t
+ *
+ * Provides the syslog interface pointer
+ */
 typedef struct syslog_interface
 {
 	syslog_ctrl_t *ctrl;
 	syslog_api_t  *api;
 } syslog_interface_t;
-
 
 extern syslog_interface_t g_syslog;
 
