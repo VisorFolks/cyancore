@@ -15,7 +15,7 @@
 /**
  * int_handler - Array of interrupt handler pointers
  *
- * This is the function pointer array which consists of addresses of
+ * \brief This is the function pointer array which consists of addresses of
  * corresponding interrupt handler functions. This is by  default
  * assigned as arch_panic_handler.
  */
@@ -24,11 +24,11 @@ static void (* int_handler[N_IRQ])(void) = {[0 ... N_IRQ-1] = arch_panic_handler
 /**
  * arch_register_interrupt_handler - Registers arch interrupt handlers
  *
- * This function is responsible to register all the architecture level
+ * \brief This function is responsible to register all the architecture level
  * interrupt handling functions.
  *
- * @id - Interrupt ID
- * @*handler - function pointer of the interrupt handling function
+ * @param id: Interrupt ID
+ * @param *handler: function pointer of the interrupt handling function
  */
 void arch_register_interrupt_handler(unsigned int id, void (* handler)(void))
 {
@@ -49,11 +49,11 @@ void arch_register_interrupt_handler(unsigned int id, void (* handler)(void))
 /**
  * interrupt_handler - Executes int ID correspoding interrupt handler
  *
- * This function is called by ISR. It executes function pointed by the
+ * \brief This function is called by ISR. It executes function pointed by the
  * int_handler. It accepts interrupt ID as argument, which indexes the
  * interrupt handling function.
  *
- * @id - Interrupt ID
+ * @param id: Interrupt ID
  */
 void interrupt_handler(unsigned char id)
 {
@@ -79,4 +79,3 @@ void interrupt_handler(unsigned char id)
 	handler();
 	return;
 }
-

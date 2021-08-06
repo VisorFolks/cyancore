@@ -35,12 +35,12 @@ static bool console_attached = false;
  * console_attach_device - This function links hardware driver
  * and device driver.
  *
- * This function links the hardware driver and console device.
+ * \brief This function links the hardware driver and console device.
  * On successful linking, it updates the status flag so that
  * other functions know console is attached.
  *
- * @*pcon - pointer for console hardware driver
- * @return - status of device/hardware driver
+ * @param *pcon: pointer for console hardware driver
+ * @return status: status of device/hardware driver
  */
 status_t console_attach_device(console_t *pcon)
 {
@@ -62,10 +62,10 @@ status_t console_attach_device(console_t *pcon)
  * console_release_device - This function unlinks hardware driver
  * and device driver.
  *
- * This function simply clear hardware driver pointer and updates
+ * \brief This function simply clear hardware driver pointer and updates
  * console status flag
  *
- * @return - always a success.
+ * @return status: always a success.
  */
 status_t console_release_device()
 {
@@ -77,12 +77,12 @@ status_t console_release_device()
 /**
  * console_putc - Send char data to console device
  *
- * This API call writes the char data to "write" method of driver.
+ * \brief This API call writes the char data to "write" method of driver.
  * If the console is not attached, this API returns error which
  * needs to be handled by the caller function.
  *
- * @c - char (8-bits) data as input
- * @return - function execution status
+ * @param c: char (8-bits) data as input
+ * @return status: function execution status
  */
 status_t console_putc(const char c)
 {
@@ -95,11 +95,11 @@ status_t console_putc(const char c)
 /**
  * console_puts - Sends series of char data to console device
  *
- * This API call sends char data console_putc until the stream
- * of data end with a null char ('\0').
+ * \brief This API call sends char data console_putc until the stream
+ * of data end with a null char.
  *
- * @*s - stream of char data
- * @return - function execution status
+ * @param *s: stream of char data
+ * @return status: function execution status
  */
 status_t console_puts(const char *s)
 {
@@ -117,8 +117,8 @@ status_t console_puts(const char *s)
 /**
  * console_getc - Fetch a char (8-bits) data form device driver
  *
- * @*c - pointer to store the read data
- * @return - function execution status
+ * @param *c: pointer to store the read data
+ * @return status: function execution status
  */
 status_t console_getc(char *c)
 {
@@ -130,7 +130,7 @@ status_t console_getc(char *c)
 /**
  * console_flush - Flushes the console
  *
- * @return - function execution status
+ * @return status: function execution status
  */
 status_t console_flush()
 {

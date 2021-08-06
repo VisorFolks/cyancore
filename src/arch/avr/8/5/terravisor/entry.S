@@ -16,14 +16,14 @@
 /**
  * stack_start - Variable pointing to stack start assigned while linking
  *
- * This variable is substituted by the linker with actual value of
+ * \brief This variable is substituted by the linker with actual value of
  * stack start. Please refer linker script for this variable assignment.
  */
 
 /**
  * Entry - Entry point of the framework
  *
- * This is the entry point for the framework. After the reset interrupt
+ * \brief This is the entry point for the framework. After the reset interrupt
  * is triggered, PC should be updated with the address of this function.
  * This function initialises stack pointer and later it jumps to 'init',
  * from here the framework boots.

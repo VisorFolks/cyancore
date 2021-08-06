@@ -18,9 +18,9 @@
 
 /**
  * arch_early_setup - This function is called in the early stages of boot
- * 
- * This function is responsible to clean reset cpu status/control registers.
- * 
+ *
+ * \brief This function is responsible to clean reset cpu status/control registers.
+ *
  */
 void arch_early_setup()
 {
@@ -33,7 +33,8 @@ void arch_early_setup()
 
 /**
  * arch_setup - This function is called after initial setup is done
- * 
+ *
+ * \brief This function is called after initial setup is done.
  */
 void arch_setup()
 {
@@ -43,8 +44,9 @@ void arch_setup()
 /**
  * arch_wfi - wait for interrupt
  *
- * This function is called when the program needs to wait for interrupt.
- * This also ensures in lower power consumption when compared to busy wait.
+ * \brief This function should be called when the program needs to
+ * wait for interrupt. This also ensures in lower power consumption
+ * when compared to busy wait.
  */
 void arch_wfi()
 {
@@ -60,30 +62,30 @@ void arch_wfi()
 /**
  * *mcall - pointer to machine call function
  *
- * This function pointer emulates 'mcall' instruction in risc-v.
+ * \brief This function pointer emulates 'mcall' instruction in risc-v.
  * This method is intentionally created for this framework so
  * as to maintain consistency across all the cpu architectures.
  *
- * @code: machine call code
- * @a0: first argument
- * @a1: second argument
- * @a2: third argument
- * @ret: pointer to return of machine call.
+ * @param code: machine call code
+ * @param a0: first argument
+ * @param a1: second argument
+ * @param a2: third argument
+ * @param ret: pointer to return of machine call.
  */
 void (*mcall)(unsigned int, unsigned int, unsigned int, unsigned int, mret_t *);
 
 /**
  * arch_machine_call - perform machine call
  *
- * This function executes function pointed by mcall. As the
+ * \brief This function executes function pointed by mcall. As the
  * AVR core doesn't support multiple execution levels, this
  * function emulates the machine call to maintain consistency.
  *
- * @code: machine call code
- * @a0: first argument
- * @a1: second argument
- * @a2: third argument
- * @return: returns struct which is result of machine call operation
+ * @param code: machine call code
+ * @param a0: first argument
+ * @param a1: second argument
+ * @param a2: third argument
+ * @return status: returns struct which is result of machine call operation
  */
 mret_t arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsigned int a2)
 {
@@ -91,4 +93,3 @@ mret_t arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, un
 	mcall(code, a0, a1, a2, &ret);
 	return ret;
 }
-
