@@ -15,5 +15,13 @@
 static inline void cyancore_insignia()
 {
 	extern char cyancore_ascii_insignia[];
-	printf("%s", cyancore_ascii_insignia);
+	extern uint32_t FWVersion;
+	printf("%s\nVersion: 0x%x", cyancore_ascii_insignia, FWVersion);
+}
+
+static inline void cyancore_insignia_lite()
+{
+	extern char cyancore_ascii_insignia_lite[];
+	extern uint32_t FWVersion;
+	printf("%s Version: 0x%x", cyancore_ascii_insignia_lite, FWVersion);
 }
