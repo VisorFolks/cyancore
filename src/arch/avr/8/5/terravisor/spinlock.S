@@ -33,7 +33,7 @@
  * is completed many interrupts will be ignored thereby hindering
  * performance and loss of response from the system.
  *
- * @prama key - Accepts address of key variable
+ * @param[in] key - Accepts address of key variable
  */
 function spinlock_acquire
 	push	r31
@@ -76,7 +76,7 @@ function spinlock_acquire
  * releasing the lock. This operation needs to be put in the interrupt
  * guide so that the writes are of atomic in natures.
  *
- * @param key - Accepts address of key variable
+ * @param[in] key - Accepts address of key variable
  */
 function spinlock_release
 	push	r31

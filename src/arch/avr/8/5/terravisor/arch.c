@@ -66,11 +66,11 @@ void arch_wfi()
  * This method is intentionally created for this framework so
  * as to maintain consistency across all the cpu architectures.
  *
- * @param code: machine call code
- * @param a0: first argument
- * @param a1: second argument
- * @param a2: third argument
- * @param ret: pointer to return of machine call.
+ * @param[in] code: machine call code
+ * @param[in] a0: first argument
+ * @param[in] a1: second argument
+ * @param[in] a2: third argument
+ * @param[out] ret: pointer to return of machine call.
  */
 void (*mcall)(unsigned int, unsigned int, unsigned int, unsigned int, mret_t *);
 
@@ -81,10 +81,10 @@ void (*mcall)(unsigned int, unsigned int, unsigned int, unsigned int, mret_t *);
  * AVR core doesn't support multiple execution levels, this
  * function emulates the machine call to maintain consistency.
  *
- * @param code: machine call code
- * @param a0: first argument
- * @param a1: second argument
- * @param a2: third argument
+ * @param[in] code: machine call code
+ * @param[in] a0: first argument
+ * @param[in] a1: second argument
+ * @param[in] a2: third argument
  * @return status: returns struct which is result of machine call operation
  */
 mret_t arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsigned int a2)

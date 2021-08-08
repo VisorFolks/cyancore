@@ -27,8 +27,8 @@ static void (* int_handler[N_IRQ])(void) = {[0 ... N_IRQ-1] = arch_panic_handler
  * @brief This function is responsible to register all the architecture level
  * interrupt handling functions.
  *
- * @param id: Interrupt ID
- * @param *handler: function pointer of the interrupt handling function
+ * @param[in] id: Interrupt ID
+ * @param[in] *handler: function pointer of the interrupt handling function
  */
 void arch_register_interrupt_handler(unsigned int id, void (* handler)(void))
 {
@@ -53,7 +53,7 @@ void arch_register_interrupt_handler(unsigned int id, void (* handler)(void))
  * int_handler. It accepts interrupt ID as argument, which indexes the
  * interrupt handling function.
  *
- * @param id: Interrupt ID
+ * @param[in] id: Interrupt ID
  */
 void interrupt_handler(unsigned char id)
 {

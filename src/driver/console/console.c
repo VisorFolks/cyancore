@@ -39,7 +39,7 @@ static bool console_attached = false;
  * On successful linking, it updates the status flag so that
  * other functions know console is attached.
  *
- * @param *pcon: pointer for console hardware driver
+ * @param[in] *pcon: pointer for console hardware driver
  * @return status: status of device/hardware driver
  */
 status_t console_attach_device(console_t *pcon)
@@ -81,7 +81,7 @@ status_t console_release_device()
  * If the console is not attached, this API returns error which
  * needs to be handled by the caller function.
  *
- * @param c: char (8-bits) data as input
+ * @param[in] c: char (8-bits) data as input
  * @return status: function execution status
  */
 status_t console_putc(const char c)
@@ -98,7 +98,7 @@ status_t console_putc(const char c)
  * @brief This API call sends char data console_putc until the stream
  * of data end with a null char.
  *
- * @param *s: stream of char data
+ * @param[in] *s: stream of char data
  * @return status: function execution status
  */
 status_t console_puts(const char *s)
@@ -117,7 +117,7 @@ status_t console_puts(const char *s)
 /**
  * console_getc - Fetch a char (8-bits) data form device driver
  *
- * @param *c: pointer to store the read data
+ * @param[out] *c: pointer to store the read data
  * @return status: function execution status
  */
 status_t console_getc(char *c)
