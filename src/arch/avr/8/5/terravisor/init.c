@@ -26,7 +26,7 @@ extern void zero_reg(void);
 /**
  * init - Entry point for the framework
  *
- * \brief This function runs to reset the cpu reg bank to architectrually
+ * @brief This function runs to reset the cpu reg bank to architectrually
  * reset state and jump to 'engine'.
  */
 void init()

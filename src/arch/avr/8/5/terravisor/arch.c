@@ -19,7 +19,7 @@
 /**
  * arch_early_setup - This function is called in the early stages of boot
  *
- * \brief This function is responsible to clean reset cpu status/control registers.
+ * @brief This function is responsible to clean reset cpu status/control registers.
  *
  */
 void arch_early_setup()
@@ -34,7 +34,7 @@ void arch_early_setup()
 /**
  * arch_setup - This function is called after initial setup is done
  *
- * \brief This function is called after initial setup is done.
+ * @brief This function is called after initial setup is done.
  */
 void arch_setup()
 {
@@ -44,7 +44,7 @@ void arch_setup()
 /**
  * arch_wfi - wait for interrupt
  *
- * \brief This function should be called when the program needs to
+ * @brief This function should be called when the program needs to
  * wait for interrupt. This also ensures in lower power consumption
  * when compared to busy wait.
  */
@@ -62,7 +62,7 @@ void arch_wfi()
 /**
  * *mcall - pointer to machine call function
  *
- * \brief This function pointer emulates 'mcall' instruction in risc-v.
+ * @brief This function pointer emulates 'mcall' instruction in risc-v.
  * This method is intentionally created for this framework so
  * as to maintain consistency across all the cpu architectures.
  *
@@ -77,7 +77,7 @@ void (*mcall)(unsigned int, unsigned int, unsigned int, unsigned int, mret_t *);
 /**
  * arch_machine_call - perform machine call
  *
- * \brief This function executes function pointed by mcall. As the
+ * @brief This function executes function pointed by mcall. As the
  * AVR core doesn't support multiple execution levels, this
  * function emulates the machine call to maintain consistency.
  *

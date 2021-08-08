@@ -17,7 +17,7 @@
 /**
  * _driver_table_* - Pointer to driver table
  *
- * \brief This address of this variable will be same as start and end
+ * @brief This address of this variable will be same as start and end
  * of the driver allocation table. This gets updated via linker
  * script "driver.ld.sx"
  */
@@ -27,7 +27,7 @@ extern device_t _driver_table_start, _driver_table_end;
  * driver_setup_all - API call to initialize all the drivers
  * available in driver table
  *
- * \brief This function parses all the drivers in the table and runs
+ * @brief This function parses all the drivers in the table and runs
  * setup call of each driver. The driver_setup is called based
  * on the start order or rank. 0 to be started first and 255 at
  * last.
@@ -62,7 +62,7 @@ status_t driver_setup_all()
  * driver_exit_all - API call to release all the drivers
  * available in driver table
  *
- * \brief This function parses all the drivers in the table and runs
+ * @brief This function parses all the drivers in the table and runs
  * exit call of each driver. The driver_exit is called based
  * on the exit order or rank. 255 to be exited first and 0 at
  * last.
@@ -96,7 +96,7 @@ status_t driver_exit_all()
 /**
  * driver_setup - API call to initialize driver using name
  *
- * \brief This function parses all the drivers in table and compares
+ * @brief This function parses all the drivers in table and compares
  * the name of driver to be executed. On successful match, the
  * driver_setup is called.
  *
@@ -128,7 +128,7 @@ status_t driver_setup(const char *name)
 /**
  * driver_exit - API call to release driver using name
  *
- * \brief This function parses all the drivers in table and compares
+ * @brief This function parses all the drivers in table and compares
  * the name of driver to be executed. On successful match, the
  * driver_exit is called.
  *
@@ -154,7 +154,7 @@ status_t driver_exit(const char *name)
 /**
  * driver_register - API call register driver for a device
  *
- * \brief Function not implemented yet. The correct way to call this
+ * @brief Function not implemented yet. The correct way to call this
  * is via the driver_setup, and this function should validate
  * driver compatibility and should like to device using software
  * properties, which is also yet to be implmented.
@@ -167,7 +167,7 @@ status_t driver_register(device_t *dev _UNUSED)
 /**
  * driver_deregister - API call deregister driver for a device
  *
- * \brief Function not implemented yet. The correct way to call this
+ * @brief Function not implemented yet. The correct way to call this
  * is via the driver_exit, and this function should validate
  * driver compatibility and should like to device using software
  * properties, which is also yet to be implmented.

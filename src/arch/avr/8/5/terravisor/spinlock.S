@@ -14,7 +14,7 @@
 /**
  * spinlock_acquire - Acquires spinlock
  *
- * \brief This is a blocking busy-loop spinlock acquire function. When the
+ * @brief This is a blocking busy-loop spinlock acquire function. When the
  * lock is not acquired, this function disables global interrupt and
  * acquires lock restores the SREG. Here global interrupt is not enable
  * directly, because there are possibilities when global interrupt is
@@ -72,7 +72,7 @@ function spinlock_acquire
 /**
  * spinlock_release - Releases spinlock
  *
- * \brief This function clears the key set by spinlock_acquire thereby
+ * @brief This function clears the key set by spinlock_acquire thereby
  * releasing the lock. This operation needs to be put in the interrupt
  * guide so that the writes are of atomic in natures.
  *
