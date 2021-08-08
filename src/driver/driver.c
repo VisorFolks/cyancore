@@ -100,7 +100,7 @@ status_t driver_exit_all()
  * the name of driver to be executed. On successful match, the
  * driver_setup is called.
  *
- * @param[int] *name: Take name of driver (string) as argument
+ * @param[in] *name: Take name of driver (string) as argument
  * @return status: return the execution status of driver_setup
  */
 status_t driver_setup(const char *name)
