@@ -23,7 +23,7 @@ void plug()
 	bootstrap();
 	driver_setup("earlycon");
 	printf("Reset Status: %d\n", platform_get_reset_syndrome());
-	cyancore_insignia();
+	cyancore_insignia_lite();
 	gpio_pin_alloc(&led_13, 0, 5);
 	gpio_pin_mode(&led_13, out);
 	gpio_pin_clear(&led_13);

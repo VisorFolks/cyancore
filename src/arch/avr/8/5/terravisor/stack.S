@@ -14,7 +14,7 @@
 /**
  * stack - Stack object for AVR cores
  *
- * This defines stack space for AVR core. It is ideal to declare a
+ * @brief This defines stack space for AVR core. It is ideal to declare a
  * stack space apriory to avoid shortage of stack after the data in
  * ro-section and heap-section are defined by linker.
  */

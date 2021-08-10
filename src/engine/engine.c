@@ -17,7 +17,7 @@
 
 volatile uint32_t FWVersion __attribute__((section(".version"))) = VERSION;
 
-char cyancore_ascii_insignia[] =
+const char cyancore_ascii_insignia[] =
 "\n\r    | | | | |\n\r\
 ---           ---\n\r\
 ---           ---\n\r\
@@ -25,6 +25,8 @@ char cyancore_ascii_insignia[] =
 --- Cyancore® ---\n\r\
 ---           ---\n\r\
     | | | | |\n\n\r";
+
+const char cyancore_ascii_insignia_lite[] = "Cyancore® < / >";
 
 _WEAK void plug()
 {
