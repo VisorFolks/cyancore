@@ -22,11 +22,20 @@
 #else
 	#define SYSLOG_FMT_DEF		"%15s : [ %s ] : %s\r\n"		///> "Agent" : [ LOG_LEVEL ] : "Output String"
 #endif
-#define SYSLOG_DEBUG		"DEB"
-#define SYSLOG_INFO 		"INF"
-#define SYSLOG_WARN 		"WAR"
-#define SYSLOG_ERR 		"ERR"
-#define SYSLOG_CRITICAL		"CRI"
+#ifndef COLORED_LOG
+	#define SYSLOG_DEBUG		"DEB"
+	#define SYSLOG_INFO 		"INF"
+	#define SYSLOG_WARN 		"WAR"
+	#define SYSLOG_ERR 		"ERR"
+	#define SYSLOG_CRITICAL		"CRI"
+#else
+ERROR(COLORED_LOG not supported yet in cyancore)
+	#define SYSLOG_DEBUG		"DEB"
+	#define SYSLOG_INFO 		"INF"
+	#define SYSLOG_WARN 		"WAR"
+	#define SYSLOG_ERR 		"ERR"
+	#define SYSLOG_CRITICAL		"CRI"
+#endif
 
 #define SYSLOG_DEFAULT_AGENT	"CYANCORE"
 
@@ -42,13 +51,13 @@
  */
 typedef enum syslog_level
 {
-	syslog_level_verbose,	///<
-	syslog_level_debug,
-	syslog_level_info,
-	syslog_level_warn,
-	syslog_level_err,
-	syslog_level_critical,
-	syslog_level_max
+	syslog_level_verbose,	///> Minimum possible syslog level. Enables all above levels.
+	syslog_level_debug,	///> Minimum syslog level set to DEBUG.
+	syslog_level_info,	///> Minimum syslog level set to INFO.
+	syslog_level_warn,	///> Minimum syslog level set to WARNING.
+	syslog_level_err,	///> Minimum syslog level set to ERROR.
+	syslog_level_critical,	///> Maximum possible syslog level set to CRITICAL. Majorly shall be used by kernel.
+	syslog_level_max	///> Unused in any context
 } syslog_level_t;
 
 /**
