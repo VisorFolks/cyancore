@@ -52,17 +52,20 @@ static syslog_api_t syslog_api =
 	.set_level	= syslog_set_level
 };
 
-/**
- * g_syslog - Global syslog interface to be used by the higher levels
- *
- * This variable is used to contain the pointers to syslog APIs and control
- * This variable is globally available for further integrations.
- */
+
 syslog_interface_t g_syslog =
 {
 	.ctrl	= &syslog_ctrl,
 	.api	= &syslog_api
 };
+
+/**
+ * syslog_buffer - Chracter buffer used by syslog system.
+ *
+ * This variable is used internally by the API(s)
+ * This variable is not globally available for user space.
+ */
+static char syslog_buffer [SYSLOG_BUFFER_LEN];
 
 /**
  * @fn 		syslog_setup - Initialize the logging system
@@ -86,6 +89,8 @@ status_t syslog_setup(syslog_level_t sys_log_level)
 	{
 		syslog_ctrl.attach     = SYSLOG_ATTACHED;
 		syslog_ctrl.syslog_fmt = SYSLOG_FMT_DEF;
+		syslog_ctrl.syslog_table_reg_len = SYSLOG_VAR_INIT;
+		memset(&(syslog_ctrl.syslog_cb_table), SYSLOG_VAR_INIT, SYSLOG_MAX_CALLBACKS);
 	}
 
 	return ret;
@@ -167,12 +172,82 @@ status_t syslog_log(const char * agent, const char * fname _UNUSED, const char *
 	}
 	if (log_level >= syslog_ctrl.sys_log_level)
 	{
-		printf(syslog_ctrl.syslog_fmt, agent_str, syslog_loglevel_table[log_level],
+		sprintf(syslog_buffer, syslog_ctrl.syslog_fmt, agent_str, syslog_loglevel_table[log_level],
 #ifdef 	SYSLOG_SHOW_FILENAME_LINENO
 		fname, line,
 #endif
 		output_str);
+		for(syslog_cb_fd_t index = 0; index < syslog_ctrl.syslog_table_reg_len; index++)
+		{
+			if (syslog_ctrl.syslog_cb_table[index] != NULL)
+			{
+				syslog_ctrl.syslog_cb_table[index](syslog_buffer, strlen(syslog_buffer));
+			}
+		}
 	}
+	return success;
+}
+
+/**
+ * @fn 		syslog_reg_cb - Register syslog callback
+ * @brief	This function helps to register the syslog callback
+ *
+ * @param[in]	cb		Pointer to callback function.
+ * @param[out]	fd		File descriptor pointer as received during registration
+ *
+ * @return	status
+ * @exception	error_inval_arg		for argument errors
+ * @exception	error_init_not_done	if the initialisation is not done
+ */
+status_t syslog_reg_cb(syslog_cb_t *cb, syslog_cb_fd_t *fd)
+{
+	RET_ERR(syslog_ctrl.attach == SYSLOG_ATTACHED, error_init_not_done);
+	RET_ERR(syslog_ctrl.syslog_table_reg_len < SYSLOG_MAX_CALLBACKS, error);
+	RET_ERR(cb != NULL, error_inval_arg);
+	RET_ERR(fd != NULL, error_inval_arg);
+
+	*fd = (syslog_cb_fd_t) -1;
+	for(syslog_cb_fd_t index = 0; index < syslog_ctrl.syslog_table_reg_len; index++)
+	{
+		if(syslog_ctrl.syslog_cb_table[index] == NULL)
+		{
+			*fd = index;
+			break;
+		}
+	}
+	if(*fd == (syslog_cb_fd_t) -1)
+	{
+		syslog_ctrl.syslog_cb_table[syslog_ctrl.syslog_table_reg_len] = cb;
+		syslog_ctrl.syslog_table_reg_len ++;
+		*fd = syslog_ctrl.syslog_table_reg_len;
+	}
+	else
+	{
+		syslog_ctrl.syslog_cb_table[*fd] = cb;
+	}
+
+	return success;
+}
+
+/**
+ * @fn 		syslog_dereg_cb - De-register syslog callback
+ * @brief	This function helps to release the syslog callback
+ *
+ * @param[in]	fd		File descriptor pointer as received during registration
+ *
+ * @return	status
+ * @exception	error_inval_arg		for argument errors
+ * @exception	error_init_not_done	if the initialisation is not done
+ */
+status_t syslog_dereg_cb(syslog_cb_fd_t *fd)
+{
+	RET_ERR(syslog_ctrl.attach == SYSLOG_ATTACHED, error_init_not_done);
+	RET_ERR(fd != NULL, error_inval_arg);
+	RET_ERR(*fd < syslog_ctrl.syslog_table_reg_len, error_inval_arg);
+
+	syslog_ctrl.syslog_cb_table[*fd] = NULL;
+	*fd = SYSLOG_VAR_INIT;
+
 	return success;
 }
 
