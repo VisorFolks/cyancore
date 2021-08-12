@@ -98,7 +98,7 @@ typedef struct syslog_ctrl
  */
 typedef struct syslog_api
 {
-	status_t (*setup)(syslog_level_t);
+	status_t (*setup)(syslog_level_t, syslog_cb_t);
 	status_t (*release)(void);
 	status_t (*log)(const char *, const char *, const char *, const char *, syslog_level_t);
 	status_t (*set_level)(syslog_level_t);
@@ -126,10 +126,12 @@ extern syslog_interface_t g_syslog;
 /**
  * Function Prototypes
  */
-status_t syslog_setup(syslog_level_t sys_log_level);
+status_t syslog_setup(syslog_level_t sys_log_level, syslog_cb_t cb);
 status_t syslog_set_level(syslog_level_t sys_log_level);
 status_t syslog_get_level(syslog_level_t *sys_log_level);
 status_t syslog_log(const char *agent, const char *fname, const char *line, const char *output_str, syslog_level_t log_level);
 status_t syslog_reg_cb(syslog_cb_t cb, syslog_cb_fd_t *fd);
 status_t syslog_dereg_cb(syslog_cb_fd_t *fd);
 status_t syslog_release(void);
+
+_WEAK extern void syslog_default_cb(char * str_in, size_t len _UNUSED);

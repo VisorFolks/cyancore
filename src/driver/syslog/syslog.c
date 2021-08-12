@@ -79,12 +79,13 @@ static char syslog_buffer [SYSLOG_BUFFER_LEN];
  * @brief	This function is to setup the system logging module to be used by all the levels of the system
  *
  * @param[in]	sys_log_level	This is the initial logging level of the logging system.
+ * @param[in]	cb		Syslog minimal callback. Default: NULL, selects: syslog_default_cb (weak)
  *
  * @return	status
  * @exception	error_inval_arg		for argument errors
  * @exception	error_init_done		if the initialisation is already done
  */
-status_t syslog_setup(syslog_level_t sys_log_level)
+status_t syslog_setup(syslog_level_t sys_log_level, syslog_cb_t cb)
 {
 	RET_ERR(syslog_ctrl.attach != SYSLOG_ATTACHED, error_init_done);
 	RET_ERR((sys_log_level < syslog_level_max) && (sys_log_level >= syslog_level_verbose), error_inval_arg);
@@ -94,10 +95,14 @@ status_t syslog_setup(syslog_level_t sys_log_level)
 	ret = console_setup();
 	if (ret == success || ret == error_init_done)
 	{
-		syslog_ctrl.attach     = SYSLOG_ATTACHED;
 		syslog_ctrl.syslog_fmt = SYSLOG_FMT_DEF;
 		syslog_ctrl.syslog_table_reg_len = SYSLOG_VAR_INIT;
 		memset(&(syslog_ctrl.syslog_cb_table), SYSLOG_VAR_INIT, SYSLOG_MAX_CALLBACKS);
+		if(cb == NULL)
+		{
+			syslog_ctrl.syslog_cb_table[SYSLOG_VAR_INIT] = syslog_default_cb;
+		}
+		syslog_ctrl.attach     = SYSLOG_ATTACHED;
 	}
 
 	return ret;
@@ -203,7 +208,7 @@ status_t syslog_log(const char * agent, const char * fname _UNUSED, const char *
  * @param[out]	fd		File descriptor pointer as received during registration
  *
  * @return	status
- * @exception	error			if maximum callback registered
+ * @exception	error			if maximum possible callback registered
  * @exception	error_inval_arg		for argument errors
  * @exception	error_init_not_done	if the initialisation is not done
  */
@@ -227,11 +232,14 @@ status_t syslog_reg_cb(syslog_cb_t cb, syslog_cb_fd_t *fd)
 			continue;
 		}
 	}
+	
+	RET_ERR(!(syslog_ctrl.syslog_table_reg_len >= SYSLOG_MAX_CALLBACKS && *fd == (syslog_cb_fd_t) error_inval_arg), error);
+
 	if(*fd == (syslog_cb_fd_t) error_inval_arg)
 	{
 		syslog_ctrl.syslog_cb_table[syslog_ctrl.syslog_table_reg_len] = cb;
-		syslog_ctrl.syslog_table_reg_len ++;
 		*fd = syslog_ctrl.syslog_table_reg_len;
+		syslog_ctrl.syslog_table_reg_len ++;
 	}
 	else
 	{
@@ -279,4 +287,18 @@ status_t syslog_release(void)
 
 	memset(&syslog_ctrl, MEMSET_CLEAR, sizeof(syslog_ctrl));
 	return success;
+}
+
+/**
+ * @fn 		syslog_default_cb - Default syslog callback to print on console
+ * @brief	This function is a re-definable function.
+ *
+ * @param[in]	str_in		Callback input strng
+ * @param[in]	len		Callback input length
+ *
+ * @return	void
+ */
+_WEAK void syslog_default_cb(char * str_in, size_t len _UNUSED)
+{
+	printf(str_in);
 }
