@@ -19,23 +19,23 @@
 #include <syslog/syslog_config.h>
 
 #if SYSLOG_SHOW_FILENAME_LINENO
-	#define SYSLOG_FMT_DEF		"%15s : [ %s ] : %s : %s: %s\r\n"	///> "Agent" : [ LOG_LEVEL ] : File_Name : Line_Number : "Output String"
+#define SYSLOG_FMT_DEF		"%15s : [ %s ] : %s : %s: %s\r\n"	///> "Agent" : [ LOG_LEVEL ] : File_Name : Line_Number : "Output String"
 #else
-	#define SYSLOG_FMT_DEF		"%15s : [ %s ] : %s\r\n"		///> "Agent" : [ LOG_LEVEL ] : "Output String"
+#define SYSLOG_FMT_DEF		"%15s : [ %s ] : %s\r\n"		///> "Agent" : [ LOG_LEVEL ] : "Output String"
 #endif
 
 #if (!SYSLOG_COLORED_LOG)
-	#define SYSLOG_DEBUG		"DEB"
-	#define SYSLOG_INFO 		"INF"
-	#define SYSLOG_WARN 		"WAR"
-	#define SYSLOG_ERR 		"ERR"
-	#define SYSLOG_CRITICAL		"CRI"
+#define SYSLOG_DEBUG		"DEB"
+#define SYSLOG_INFO 		"INF"
+#define SYSLOG_WARN 		"WAR"
+#define SYSLOG_ERR 		"ERR"
+#define SYSLOG_CRITICAL		"CRI"
 #else
-	#define SYSLOG_DEBUG		"DEB"
-	#define SYSLOG_INFO 		"INF"
-	#define SYSLOG_WARN 		"WAR"
-	#define SYSLOG_ERR 		"ERR"
-	#define SYSLOG_CRITICAL		"CRI"
+#define SYSLOG_DEBUG		"DEB"
+#define SYSLOG_INFO 		"INF"
+#define SYSLOG_WARN 		"WAR"
+#define SYSLOG_ERR 		"ERR"
+#define SYSLOG_CRITICAL		"CRI"
 #endif
 
 #define SYSLOG_DEFAULT_AGENT	"CYANCORE"
@@ -63,8 +63,18 @@ typedef enum syslog_level
 	syslog_level_max	///> Unused in any context
 } syslog_level_t;
 
+/**
+ * @typedef syslog_cb_t
+ *
+ * Prototype of syslog callbacks
+ */
 typedef void(*syslog_cb_t)(char *, size_t );
 
+/**
+ * @typedef syslog_cb_fd_t
+ *
+ * Typedef of syslog file descriptor
+ */
 typedef uint8_t syslog_cb_fd_t;
 
 /**
@@ -93,6 +103,8 @@ typedef struct syslog_api
 	status_t (*log)(const char *, const char *, const char *, const char *, syslog_level_t);
 	status_t (*set_level)(syslog_level_t);
 	status_t (*get_level)(syslog_level_t *);
+	status_t (*reg_cb)(syslog_cb_t, syslog_cb_fd_t *);
+	status_t (*dereg_cb)(syslog_cb_fd_t *);
 } syslog_api_t;
 
 /**
@@ -106,8 +118,14 @@ typedef struct syslog_interface
 	syslog_api_t  *api;
 } syslog_interface_t;
 
+/**
+ * Extern Variables
+ */
 extern syslog_interface_t g_syslog;
 
+/**
+ * Function Prototypes
+ */
 status_t syslog_setup(syslog_level_t sys_log_level);
 status_t syslog_set_level(syslog_level_t sys_log_level);
 status_t syslog_get_level(syslog_level_t *sys_log_level);

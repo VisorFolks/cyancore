@@ -10,7 +10,6 @@
 
 #include <syslog/syslog.h>
 #include <string.h>
-#include <stdio.h>
 
 #define MEMSET_CLEAR	0x00
 
@@ -50,10 +49,17 @@ static syslog_api_t syslog_api =
 	.release	= syslog_release,
 	.log		= syslog_log,
 	.get_level	= syslog_get_level,
-	.set_level	= syslog_set_level
+	.set_level	= syslog_set_level,
+	.reg_cb		= syslog_reg_cb,
+	.dereg_cb	= syslog_dereg_cb
 };
 
-
+/**
+ * g_syslog - Global syslog interface to be used by the higher levels
+ *
+ * This variable is used to contain the pointers to syslog APIs and control
+ * This variable is globally available for further integrations.
+ */
 syslog_interface_t g_syslog =
 {
 	.ctrl	= &syslog_ctrl,
@@ -197,6 +203,7 @@ status_t syslog_log(const char * agent, const char * fname _UNUSED, const char *
  * @param[out]	fd		File descriptor pointer as received during registration
  *
  * @return	status
+ * @exception	error			if maximum callback registered
  * @exception	error_inval_arg		for argument errors
  * @exception	error_init_not_done	if the initialisation is not done
  */
@@ -207,7 +214,7 @@ status_t syslog_reg_cb(syslog_cb_t cb, syslog_cb_fd_t *fd)
 	RET_ERR(cb != NULL, error_inval_arg);
 	RET_ERR(fd != NULL, error_inval_arg);
 
-	*fd = (syslog_cb_fd_t) -1;
+	*fd = (syslog_cb_fd_t) error_inval_arg;
 	for(syslog_cb_fd_t index = 0; index < syslog_ctrl.syslog_table_reg_len; index++)
 	{
 		if(syslog_ctrl.syslog_cb_table[index] == NULL)
@@ -215,8 +222,12 @@ status_t syslog_reg_cb(syslog_cb_t cb, syslog_cb_fd_t *fd)
 			*fd = index;
 			break;
 		}
+		else
+		{
+			continue;
+		}
 	}
-	if(*fd == (syslog_cb_fd_t) -1)
+	if(*fd == (syslog_cb_fd_t) error_inval_arg)
 	{
 		syslog_ctrl.syslog_cb_table[syslog_ctrl.syslog_table_reg_len] = cb;
 		syslog_ctrl.syslog_table_reg_len ++;

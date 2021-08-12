@@ -14,11 +14,11 @@
 #endif
 
 #ifndef SYSLOG_MAX_CALLBACKS
-#define SYSLOG_MAX_CALLBACKS		1
+#define SYSLOG_MAX_CALLBACKS		1U
 #endif
 
 #ifndef SYSLOG_BUFFER_LEN
-#define SYSLOG_BUFFER_LEN		256
+#define SYSLOG_BUFFER_LEN		256U
 #endif
 
 #ifndef SYSLOG_COLORED_LOG
