@@ -10,6 +10,7 @@
 
 #include <syslog/syslog.h>
 #include <string.h>
+#include <stdio.h>
 
 #define MEMSET_CLEAR	0x00
 
@@ -172,7 +173,7 @@ status_t syslog_log(const char * agent, const char * fname _UNUSED, const char *
 	}
 	if (log_level >= syslog_ctrl.sys_log_level)
 	{
-		sprintf(syslog_buffer, syslog_ctrl.syslog_fmt, agent_str, syslog_loglevel_table[log_level],
+		snprintf(syslog_buffer, SYSLOG_BUFFER_LEN, syslog_ctrl.syslog_fmt, agent_str, syslog_loglevel_table[log_level],
 #ifdef 	SYSLOG_SHOW_FILENAME_LINENO
 		fname, line,
 #endif
@@ -199,7 +200,7 @@ status_t syslog_log(const char * agent, const char * fname _UNUSED, const char *
  * @exception	error_inval_arg		for argument errors
  * @exception	error_init_not_done	if the initialisation is not done
  */
-status_t syslog_reg_cb(syslog_cb_t *cb, syslog_cb_fd_t *fd)
+status_t syslog_reg_cb(syslog_cb_t cb, syslog_cb_fd_t *fd)
 {
 	RET_ERR(syslog_ctrl.attach == SYSLOG_ATTACHED, error_init_not_done);
 	RET_ERR(syslog_ctrl.syslog_table_reg_len < SYSLOG_MAX_CALLBACKS, error);
