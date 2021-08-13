@@ -170,7 +170,7 @@ status_t syslog_get_level(syslog_level_t *sys_log_level)
  * @exception	error_inval_arg		for argument errors
  * @exception	error_init_not_done	if the initialisation is not done
  */
-status_t syslog_log(const char * agent, const char * fname _UNUSED, const char * line _UNUSED, const char * output_str, syslog_level_t log_level)
+status_t syslog_log(const char * agent, const char * fname _UNUSED, int line _UNUSED, const char * output_str, syslog_level_t log_level)
 {
 	RET_ERR(syslog_ctrl.attach == SYSLOG_ATTACHED, error_init_not_done);
 	RET_ERR((log_level < syslog_level_max) && (log_level >= syslog_level_verbose), error_inval_arg);
@@ -232,7 +232,7 @@ status_t syslog_reg_cb(syslog_cb_t cb, syslog_cb_fd_t *fd)
 			continue;
 		}
 	}
-	
+
 	RET_ERR(!(syslog_ctrl.syslog_table_reg_len >= SYSLOG_MAX_CALLBACKS && *fd == (syslog_cb_fd_t) error_inval_arg), error);
 
 	if(*fd == (syslog_cb_fd_t) error_inval_arg)

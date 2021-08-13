@@ -19,7 +19,7 @@
 #include <syslog/syslog_config.h>
 
 #if SYSLOG_SHOW_FILENAME_LINENO
-#define SYSLOG_FMT_DEF		"%15s : [ %s ] : %s : %s: %s\r\n"	///> "Agent" : [ LOG_LEVEL ] : File_Name : Line_Number : "Output String"
+#define SYSLOG_FMT_DEF		"%15s : [ %s ] : %s : %d: %s\r\n"	///> "Agent" : [ LOG_LEVEL ] : File_Name : Line_Number : "Output String"
 #else
 #define SYSLOG_FMT_DEF		"%15s : [ %s ] : %s\r\n"		///> "Agent" : [ LOG_LEVEL ] : "Output String"
 #endif
@@ -100,7 +100,7 @@ typedef struct syslog_api
 {
 	status_t (*setup)(syslog_level_t, syslog_cb_t);
 	status_t (*release)(void);
-	status_t (*log)(const char *, const char *, const char *, const char *, syslog_level_t);
+	status_t (*log)(const char *, const char *, int, const char *, syslog_level_t);
 	status_t (*set_level)(syslog_level_t);
 	status_t (*get_level)(syslog_level_t *);
 	status_t (*reg_cb)(syslog_cb_t, syslog_cb_fd_t *);
@@ -129,7 +129,7 @@ extern syslog_interface_t g_syslog;
 status_t syslog_setup(syslog_level_t sys_log_level, syslog_cb_t cb);
 status_t syslog_set_level(syslog_level_t sys_log_level);
 status_t syslog_get_level(syslog_level_t *sys_log_level);
-status_t syslog_log(const char *agent, const char *fname, const char *line, const char *output_str, syslog_level_t log_level);
+status_t syslog_log(const char *agent, const char *fname, int line, const char *output_str, syslog_level_t log_level);
 status_t syslog_reg_cb(syslog_cb_t cb, syslog_cb_fd_t *fd);
 status_t syslog_dereg_cb(syslog_cb_fd_t *fd);
 status_t syslog_release(void);
