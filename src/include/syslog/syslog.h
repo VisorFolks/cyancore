@@ -16,30 +16,33 @@
 
 #include <driver.h>
 #include <driver/console.h>
+#include <syslog/syslog_config.h>
 
-#ifdef SYSLOG_SHOW_FILENAME_LINENO
-	#define SYSLOG_FMT_DEF		"%15s : [ %s ] : %s : %s: %s\r\n"	///> "Agent" : [ LOG_LEVEL ] : File_Name : Line_Number : "Output String"
+#if SYSLOG_SHOW_FILENAME_LINENO
+#define SYSLOG_FMT_DEF		"%15s : [ %s ] : %s : %d: %s\r\n"	///> "Agent" : [ LOG_LEVEL ] : File_Name : Line_Number : "Output String"
 #else
-	#define SYSLOG_FMT_DEF		"%15s : [ %s ] : %s\r\n"		///> "Agent" : [ LOG_LEVEL ] : "Output String"
+#define SYSLOG_FMT_DEF		"%15s : [ %s ] : %s\r\n"		///> "Agent" : [ LOG_LEVEL ] : "Output String"
 #endif
-#ifndef COLORED_LOG
-	#define SYSLOG_DEBUG		"DEB"
-	#define SYSLOG_INFO 		"INF"
-	#define SYSLOG_WARN 		"WAR"
-	#define SYSLOG_ERR 		"ERR"
-	#define SYSLOG_CRITICAL		"CRI"
+
+#if (!SYSLOG_COLORED_LOG)
+#define SYSLOG_DEBUG		"DEB"
+#define SYSLOG_INFO 		"INF"
+#define SYSLOG_WARN 		"WAR"
+#define SYSLOG_ERR 		"ERR"
+#define SYSLOG_CRITICAL		"CRI"
 #else
-ERROR(COLORED_LOG not supported yet in cyancore)
-	#define SYSLOG_DEBUG		"DEB"
-	#define SYSLOG_INFO 		"INF"
-	#define SYSLOG_WARN 		"WAR"
-	#define SYSLOG_ERR 		"ERR"
-	#define SYSLOG_CRITICAL		"CRI"
+#define SYSLOG_DEBUG		"DEB"
+#define SYSLOG_INFO 		"INF"
+#define SYSLOG_WARN 		"WAR"
+#define SYSLOG_ERR 		"ERR"
+#define SYSLOG_CRITICAL		"CRI"
 #endif
 
 #define SYSLOG_DEFAULT_AGENT	"CYANCORE"
 
 #define SYSLOG_ATTACHED		0x25
+
+#define SYSLOG_VAR_INIT		0x00
 
 #define DO_NOTHING
 #define RET_ERR(x, err)		{ if(x){ DO_NOTHING } else return err;}
@@ -61,15 +64,31 @@ typedef enum syslog_level
 } syslog_level_t;
 
 /**
+ * @typedef syslog_cb_t
+ *
+ * Prototype of syslog callbacks
+ */
+typedef void(*syslog_cb_t)(char *, size_t );
+
+/**
+ * @typedef syslog_cb_fd_t
+ *
+ * Typedef of syslog file descriptor
+ */
+typedef uint8_t syslog_cb_fd_t;
+
+/**
  * @struct syslog_ctrl_t
  *
  * Provides the Syslog control structure
  */
 typedef struct syslog_ctrl
 {
-	uint8_t attach;
 	char * syslog_fmt;
+	uint8_t attach;
 	syslog_level_t sys_log_level;
+	syslog_cb_fd_t syslog_table_reg_len;
+	syslog_cb_t syslog_cb_table [SYSLOG_MAX_CALLBACKS];
 } syslog_ctrl_t;
 
 /**
@@ -79,11 +98,13 @@ typedef struct syslog_ctrl
  */
 typedef struct syslog_api
 {
-	status_t (*setup)(syslog_level_t);
+	status_t (*setup)(syslog_level_t, syslog_cb_t);
 	status_t (*release)(void);
-	status_t (*log)(const char *, const char *, const char *, const char *, syslog_level_t);
+	status_t (*log)(const char *, const char *, int, const char *, syslog_level_t);
 	status_t (*set_level)(syslog_level_t);
 	status_t (*get_level)(syslog_level_t *);
+	status_t (*reg_cb)(syslog_cb_t, syslog_cb_fd_t *);
+	status_t (*dereg_cb)(syslog_cb_fd_t *);
 } syslog_api_t;
 
 /**
@@ -97,10 +118,20 @@ typedef struct syslog_interface
 	syslog_api_t  *api;
 } syslog_interface_t;
 
+/**
+ * Extern Variables
+ */
 extern syslog_interface_t g_syslog;
 
-status_t syslog_setup(syslog_level_t sys_log_level);
+/**
+ * Function Prototypes
+ */
+status_t syslog_setup(syslog_level_t sys_log_level, syslog_cb_t cb);
 status_t syslog_set_level(syslog_level_t sys_log_level);
-status_t syslog_get_level(syslog_level_t * sys_log_level);
-status_t syslog_log(const char * agent, const char * fname, const char * line, const char * output_str, syslog_level_t log_level);
+status_t syslog_get_level(syslog_level_t *sys_log_level);
+status_t syslog_log(const char *agent, const char *fname, int line, const char *output_str, syslog_level_t log_level);
+status_t syslog_reg_cb(syslog_cb_t cb, syslog_cb_fd_t *fd);
+status_t syslog_dereg_cb(syslog_cb_fd_t *fd);
 status_t syslog_release(void);
+
+_WEAK extern void syslog_default_cb(char * str_in, size_t len _UNUSED);
