@@ -47,7 +47,7 @@ Host system requirements:
 * make utility installed
 
 
-Toolchaine Requirements:
+Toolchain Requirements:
 * Please push your toolchains to your git repo
 * Update the links in mk/tc_get.mk file
 * run ```make help``` for more details
