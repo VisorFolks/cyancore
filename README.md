@@ -2,6 +2,18 @@
 ###### *A unified software platform for embedded system projects ...*
 ---
 
+> **Version (arch:2 | major:4 | minor:2): 0.1.0**
+```
+arch  : 0x00
+major : 0x0001
+minor : 0x00
+```
+
+### Discord Community
+[![Discord](https://discord.com/assets/cb48d2a8d4991281d7a6a95d2f58195e.svg)](https://discord.gg/gxUQr77MT2)
+
+Click the above icon to connect
+
 ### Supported Platforms
 
 
