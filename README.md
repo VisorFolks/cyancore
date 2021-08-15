@@ -16,14 +16,21 @@ Click the above icon to connect
 
 ### Supported Platforms
 
-
 | Atmel      | SiFive      | STMicro     | TI          |
 | ---------- | ----------- | ----------- | ----------- |
 | ATMega328P | Coming soon | Coming soon | Coming soon |
 
 ### Projects
+* demo_avr
+* demo_avr_cpp
+* demo_avr_bit_banding
 
-* Demo AVR
+### Programming Languages
+* asm/assembly
+* C
+* Cpp/C++
+* makefile
+* linker script
 
 ### Help
 run
@@ -36,7 +43,7 @@ For details about the framework, follow the README.md in each folder.
 ### Requirements
 
 Host system requirements:
-* Linux Machine
+* Linux Machine (WSL/Dedicated machine)
 * make utility installed
 
 
