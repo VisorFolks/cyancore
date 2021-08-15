@@ -11,6 +11,8 @@
 
 #pragma once
 
+#include <stdint.h>
+
 typedef struct gpio_module
 {
 	uintptr_t baddr;

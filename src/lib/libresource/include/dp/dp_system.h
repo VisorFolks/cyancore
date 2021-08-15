@@ -11,6 +11,8 @@
 
 #pragma once
 
+#include <stdint.h>
+
 typedef enum int_trigger
 {
 	i_falling_edge,

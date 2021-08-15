@@ -38,7 +38,7 @@ ifeq ($(findstring $(MAKECMDGOALS),$(T_ALLOWLIST)),)
 ifneq ($(firstword $(MAKECMDGOALS)),clean)
 ifneq ($(firstword $(MAKECMDGOALS)),default)
 ifneq ($(firstword $(MAKECMDGOALS)),cyancore)
-PROJECT		:= $(firstword $(MAKECMDGOALS))
+PROJECT		?= $(firstword $(MAKECMDGOALS))
 CMD		:= $(word 2,$(MAKECMDGOALS))
 ifeq ($(CMD),)
 CMD		:= default

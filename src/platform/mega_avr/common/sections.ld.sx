@@ -40,11 +40,21 @@ SECTIONS
 		KEEP(*(.text))
 	} > vma_imem AT > lma_mem
 
-	PROVIDE(_data_start = LOADADDR(.data));
+	.bss :
+	{
+		. = ALIGN(ALIGN_BOUND);
+		*(.bss)
+		*(.bss.*)
+		KEEP(*(.bss))
+		*(.sbss)
+		*(.sbss.*)
+		KEEP(*(.sbss))
+		*(COMMON)
+	} > vma_dmem
+
 	.data :
 	{
 		. = ALIGN(ALIGN_BOUND);
-		PROVIDE(__local_data_start = .);
 		*(.version)
 		KEEP(*(.version))
 		*(.rodata)
@@ -53,32 +63,30 @@ SECTIONS
 		*(.data)
 		*(.data.*)
 		KEEP(*(.data))
-		PROVIDE(_driver_table_start = .);
-		*(.driver)
-		KEEP(*(.driver))
-		PROVIDE(_driver_table_end = .);
-		PROVIDE(__local_data_end = .);
-		PROVIDE(_data_size = __local_data_end - __local_data_start);
+	} > vma_dmem AT > lma_mem
+
+	.driver_table : {} > vma_dmem AT > lma_mem
+	.mcall_table : {} > vma_dmem AT > lma_mem
+
+	.stack :
+	{
 		. = ALIGN(ALIGN_BOUND);
 		*(.stack)
 		KEEP(*(.stack))
 	} > vma_dmem AT > lma_mem
 
-	.bss :
-	{
-		. = ALIGN(ALIGN_BOUND);
-		. = . + ALIGN_BOUND;
-		PROVIDE(_bss_start = .);
-		PROVIDE(_gptr = .);
-		*(.bss)
-		*(.bss.*)
-		KEEP(*(.bss))
-		*(.sbss)
-		*(.sbss.*)
-		KEEP(*(.sbss))
-		*(COMMON)
-		PROVIDE(_bss_end = .);
-	} > vma_dmem
+	PROVIDE(_data_start = LOADADDR(.data));
+	PROVIDE(_data_size = SIZEOF(.data) + SIZEOF(.driver_table) + SIZEOF(.mcall_table));
+	PROVIDE(_data_vstart = ADDR(.data));
+	PROVIDE(_data_vend = _data_vstart + _data_size);
 
+	PROVIDE(_bss_start = ADDR(.bss));
 	PROVIDE(_bss_size = SIZEOF(.bss));
+	PROVIDE(_flash_size = _data_size + SIZEOF(.text));
+	PROVIDE(_ram_size = _bss_size + _data_size + SIZEOF(.stack));
+
+	ASSERT((_flash_size < FLASH_SIZE), "< x > Flash size exceeded ...")
+	ASSERT((_ram_size < RAM_SIZE), "< x > RAM size exceeded ...")
+
+	/DISCARD/ : { *(.comment .trampolines) }
 }

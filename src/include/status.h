@@ -15,6 +15,8 @@
 
 typedef enum status
 {
+	error_init_not_done	= -9,
+	error_init_done		= -8,
 	error_inval_dev_id	= -7,
 	error_inval_code	= -6,
 	error_data		= -5,

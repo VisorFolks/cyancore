@@ -8,6 +8,10 @@
 # Organisation		: Cyancore Core-Team
 #
 
-DIR		:= $(GET_PATH)
+TWORKER_DIR	:= $(GET_PATH)
+
+include $(TWORKER_DIR)/mcall/build.mk
+
+DIR		:= $(TWORKER_DIR)
 
 include mk/obj.mk

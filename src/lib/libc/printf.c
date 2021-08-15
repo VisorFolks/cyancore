@@ -173,12 +173,9 @@ loop:
 int printf(const char *fmt, ...)
 {
 	int ret;
-	static lock_t printf_lock= 0;
-	lock_acquire(&printf_lock);
 	va_list va;
 	va_start(va, fmt);
 	ret = vprintf(fmt, va);
 	va_end(va);
-	lock_release(&printf_lock);
 	return ret;
 }

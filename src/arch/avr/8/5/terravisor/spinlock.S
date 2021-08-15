@@ -14,7 +14,7 @@
 /**
  * spinlock_acquire - Acquires spinlock
  *
- * This is a blocking busy-loop spinlock acquire function. When the
+ * @brief This is a blocking busy-loop spinlock acquire function. When the
  * lock is not acquired, this function disables global interrupt and
  * acquires lock restores the SREG. Here global interrupt is not enable
  * directly, because there are possibilities when global interrupt is
@@ -33,11 +33,15 @@
  * is completed many interrupts will be ignored thereby hindering
  * performance and loss of response from the system.
  *
- * @key - Accepts address of key variable
+ * @param[in] key - Accepts address of key variable
  */
 function spinlock_acquire
-	movw	r30, r24
+	push	r31
+	push	r30
+	push	r19
+	push	r18
 	push	r0
+	movw	r30, r24
 	in	r0, SREG
 1:
 	cli
@@ -59,24 +63,32 @@ function spinlock_acquire
 	st	Z, r19
 	out	SREG, r0
 	pop	r0
+	pop	r18
+	pop	r19
+	pop	r30
+	pop	r31
 	ret
 
 /**
  * spinlock_release - Releases spinlock
  *
- * This function clears the key set by spinlock_acquire thereby
+ * @brief This function clears the key set by spinlock_acquire thereby
  * releasing the lock. This operation needs to be put in the interrupt
  * guide so that the writes are of atomic in natures.
  *
- * @key - Accepts address of key variable
+ * @param[in] key - Accepts address of key variable
  */
 function spinlock_release
-	movw	r30, r24
+	push	r31
+	push	r30
 	push	r0
+	movw	r30, r24
 	in	r0, SREG
 	cli
 	st	Z+, r1
 	st	Z, r1
 	out	SREG, r0
 	pop	r0
+	pop	r30
+	pop	r31
 	ret

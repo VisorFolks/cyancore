@@ -31,7 +31,7 @@ status_t console_serial_setup()
 {
 	mret_t mres;
 	module_t *dp;
-	mres = arch_machine_call(FETCH_DP, DEV_CONSOLE, 0, 0);
+	mres = arch_machine_call(fetch_dp, DEV_CONSOLE, 0, 0);
 	if(mres.status != success)
 		return mres.status;
 	dp = (module_t *)mres.p;
@@ -110,9 +110,9 @@ status_t console_serial_driver_exit()
 }
 
 #if EARLYCON_SERIAL==1
-INCLUDE_DRIVER(earlycon, console_serial_driver_setup, console_serial_driver_exit);
+INCLUDE_DRIVER(earlycon, console_serial_driver_setup, console_serial_driver_exit, 0, 0);
 #endif
 
 #if CONSOLE_SERIAL==1
-INCLUDE_DRIVER(console, console_serial_driver_setup, console_serial_driver_exit);
+INCLUDE_DRIVER(console, console_serial_driver_setup, console_serial_driver_exit, 0, 0);
 #endif

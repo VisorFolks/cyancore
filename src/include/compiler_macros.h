@@ -16,5 +16,13 @@
 #define ERROR(x)	_PRAGMA(GCC error #x)
 #define TODO(x)		INFO(TODO: x)
 
-#define _WEAK		__attribute__((weak))
-#define _UNUSED		__attribute__((unused))
+#define _ATTRIBUTE(x)	__attribute__((x))
+#define _WEAK		_ATTRIBUTE(weak)
+#define _UNUSED		_ATTRIBUTE(unused)
+#define _NOINLINE	_ATTRIBUTE(noinline)
+#define _ALIGN(x)	_ATTRIBUTE(aligned(x))
+#define _SECTION(x)	_ATTRIBUTE(section(x))
+#define _DEPRICATE	_ATTRIBUTE(depricated)
+#define _ALIAS(x)	_ATTRIBUTE(alias(x))
+
+#define EXPORT_C(x)	extern "C" x; x
