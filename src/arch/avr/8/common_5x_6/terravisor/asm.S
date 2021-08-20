@@ -56,15 +56,10 @@ function zero_reg
 	mov	r31, r1
 	ret
 
-/**
- * arch_panic_handler - Panic which get invoked on arch failure
- *
- * @brief This function is reponsible to halt the CPU and look here for
- * indefinitely to prevent faulty execution.
- */
 function arch_panic_handler
-	call	arch_wfi
-	rjmp	arch_panic_handler
+	push	r24
+	ldi	r24, 255
+	rjmp	isr
 
 /**
  * CONTEXT_SAVE - A macro that define the context save operation
@@ -168,6 +163,11 @@ function int_\id
  */
 function isr
 	CONTEXT_SAVE
+	in	r22, IO_SPL
+	in	r23, IO_SPH
+	ldi	r16, 1
+	add	r22, r16
+	adc	r23, r1
 	call	interrupt_handler
 	CONTEXT_RESTORE
 	pop	r24

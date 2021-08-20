@@ -11,5 +11,6 @@
 #include <asm.inc>
 
 function plat_panic_handler
-	call	arch_wfi
-	rjmp	plat_panic_handler
+	push	r24
+	ldi	r24, 254
+	rjmp	isr

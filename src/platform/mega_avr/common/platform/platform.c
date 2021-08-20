@@ -91,3 +91,10 @@ void platform_cpu_setup()
 	return;
 }
 
+void plat_panic_handler_callback()
+{
+	context_frame_t *frame;
+	frame = get_context_frame();
+	printf("SREG = %u", frame->sreg);
+	while(1) arch_wfi();
+}
