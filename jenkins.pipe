@@ -15,6 +15,7 @@ pipeline {
 		stage('clean') {
 			steps {
 				sh 'make demo_avr clean'
+				sh 'rm -rf toolchain'
 			}
 		}
 	}
