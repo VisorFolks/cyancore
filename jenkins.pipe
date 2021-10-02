@@ -4,7 +4,7 @@ pipeline {
 	stages {
 		stage('tc check') {
 			steps {
-				sh 'make get_avr_tc'
+				sh 'make get_avr_tc AVR_TC_REPO=git@github.com:VisorFolks/avr-toolchain.git'
 			}
 		}
 		stage('build') {
