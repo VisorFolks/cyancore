@@ -14,6 +14,7 @@
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
 
 include mk/obj.mk
+include mk/lint.mk
 
 ELF		:= $(addprefix $(OUT)/,$(PROJECT).elf)
 LD_SCRIPT	:= $(addprefix $(OUT)/,$(LD_SCRIPT:.ld.sx=.ld))

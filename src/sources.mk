@@ -43,10 +43,14 @@ LD_FLAGS	+= --error-unresolved-symbols		\
 		   --check-sections -nostdlib		\
 		   --gc-sections -b $(OUTPUT_FORMAT)
 
+LINT_FLAGS	+= $(foreach i,$(INCLUDE),-I$(i))	\
+		   $(filter -D%,$(CFLAGS))
+
 DEP_LIB_PATH	:=
 DEP_LIBS_ARG	:=
 DEP_LIBS	:=
 DEP_OBJS	:=
+DEP_SRCS	:=
 PLAT_INCLUDE	:=
 PROJECT_INCLUDE	:=
 LIB_INCLUDE	:=
