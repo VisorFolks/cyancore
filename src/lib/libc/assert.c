@@ -21,7 +21,7 @@
 extern void plat_panic_handler();
 void __assert_dbg(const char *func, unsigned int line)
 {
-	printf("< x > Assert: %s - %d\n", func, line);
+	printf("< x > Assert: %s - %d\n", func, (int)line);
 #if CONSOLE
 	console_flush();
 #endif
