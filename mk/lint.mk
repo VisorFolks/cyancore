@@ -20,6 +20,7 @@ LINT_FLAGS	+= --error-exitcode=1 -j $(N_HOSTS) -q	\
 		   --suppress=variableScope		\
 		   --suppress=knownConditionTrueFalse	\
 		   --suppress=noConstructor		\
+		   --suppress=unmatchedSuppression	\
 		   --enable=warning,style,performance	\
 		   --enable=portability,information	\
 		   --enable=missingInclude
