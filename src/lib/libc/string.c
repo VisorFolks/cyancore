@@ -82,7 +82,7 @@ void *memmove(void *i, const void *j, size_t size)
 
 void *memchr_rev(const void *i, int r, size_t n)
 {
-	const unsigned char *src = i + n - 1;
+	const unsigned char *src = ((unsigned char *)i + n - 1);
 	while(n--)
 	{
 		if(*src == (unsigned char)r)

@@ -129,7 +129,7 @@ status_t gpio_port_alloc(gpio_port_t *port, uint8_t portID)
 {
 	mret_t mres;
 	gpio_module_t *dp;
-	unsigned char flag;
+	unsigned char flag = 0;
 
 	assert(port);
 
