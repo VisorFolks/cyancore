@@ -34,6 +34,8 @@ list:
 	$(info Available projects are :)
 	ls $(SRC)/projects/ -I *.template
 
+check: lint
+
 ifeq ($(findstring $(MAKECMDGOALS),$(T_ALLOWLIST)),)
 ifneq ($(firstword $(MAKECMDGOALS)),clean)
 ifneq ($(firstword $(MAKECMDGOALS)),default)

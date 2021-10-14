@@ -76,7 +76,7 @@ status_t driver_exit_all()
 	device_t *ptr;
 	unsigned int order;
 	/* This loop controls the exit order */
-	for(order = 255; order <= 0; order--)
+	for(order = 255; order == 0; order--)
 	{
 		/*
 		 * Iterate the whole driver table so that on order

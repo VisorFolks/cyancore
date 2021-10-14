@@ -13,15 +13,16 @@
 #------------< Object Builder >-------------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*#
 
-C_OBJS		:= $(wildcard $(DIR)/*.c)
-CPP_OBJS	:= $(wildcard $(DIR)/*.cpp)
-S_OBJS		:= $(wildcard $(DIR)/*.S)
+C_SRCS		:= $(wildcard $(DIR)/*.c)
+CPP_SRCS	:= $(wildcard $(DIR)/*.cpp)
+S_SRCS		:= $(wildcard $(DIR)/*.S)
 
-C_OBJS		:= $(addprefix $(OUT)/,$(C_OBJS:.c=.o))
-CPP_OBJS	:= $(addprefix $(OUT)/,$(CPP_OBJS:.cpp=.o))
-S_OBJS		:= $(addprefix $(OUT)/,$(S_OBJS:.S=.o))
+C_OBJS		:= $(addprefix $(OUT)/,$(C_SRCS:.c=.o))
+CPP_OBJS	:= $(addprefix $(OUT)/,$(CPP_SRCS:.cpp=.o))
+S_OBJS		:= $(addprefix $(OUT)/,$(S_SRCS:.S=.o))
 
 DEP_OBJS	+= $(C_OBJS) $(CPP_OBJS) $(S_OBJS)
+DEP_SRCS	+= $(C_SRCS) $(CPP_SRCS)
 
 .SECONDEXPANSION:
 $(CPP_OBJS): $(OUT)/%.o: %.cpp | $$(@D)/

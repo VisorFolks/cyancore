@@ -7,14 +7,22 @@ pipeline {
 				sh 'make get_avr_tc AVR_TC_REPO=git@github.com:VisorFolks/avr-toolchain.git'
 			}
 		}
+		stage('check') {
+			steps {
+				sh 'make demo_avr check'
+				sh 'make demo_avr_cpp check'
+			}
+		}
 		stage('build') {
 			steps {
 				sh 'make demo_avr clean default'
+				sh 'make demo_avr_cpp clean default'
 			}
 		}
 		stage('clean') {
 			steps {
 				sh 'make demo_avr clean'
+				sh 'make demo_avr_cpp clean'
 				sh 'rm -rf toolchain'
 			}
 		}
