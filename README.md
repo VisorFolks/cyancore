@@ -3,6 +3,9 @@
 ---
 
 > **Version (arch:2 | major:4 | minor:2): 0.1.0**
+
+![GitHub branch checks state](https://img.shields.io/github/checks-status/VisorFolks/cyancore/stable?label=Build%20Status)
+![Lines of code](https://img.shields.io/tokei/lines/github/visorfolks/cyancore?label=Lines%20of%20code)
 ```
 arch  : 0x00
 major : 0x0001
@@ -16,9 +19,9 @@ Click the above icon to connect
 
 ### Supported Platforms
 
-| Atmel      | SiFive      | STMicro     | TI          |
-| ---------- | ----------- | ----------- | ----------- |
-| ATMega328P | Coming soon | Coming soon | Coming soon |
+| Atmel      | SiFive      | STMicro     | TI          | Raspberry Pi |
+| ---------- | ----------- | ----------- | ----------- | -------------|
+| ATMega328P | Coming soon | Coming soon | Coming soon | Comping soon |
 
 ### Projects
 * demo_avr
@@ -44,7 +47,7 @@ For details about the framework, follow the README.md in each folder.
 
 Host system requirements:
 * Linux Machine (WSL/Dedicated machine)
-* make utility installed
+* make utility and cppcheck installed; run `$ sudo apt install build-essential cppcheck -y`
 
 
 Toolchain Requirements:
