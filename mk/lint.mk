@@ -25,7 +25,7 @@ LINT_FLAGS	+= --error-exitcode=1 -j $(N_HOSTS) -q	\
 		   --enable=portability,information	\
 		   --enable=missingInclude
 
-lint: $(DEP_SRCS)
+--lint: $(DEP_SRCS)
 ifeq ($(LT),)
 $(info < ! > cppcheck is not installed... Please install 'cppcheck' !)
 $(error < x > Checking failed !)
