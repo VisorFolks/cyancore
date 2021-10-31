@@ -28,7 +28,7 @@ status_t membuf_setup()
 status_t membuf_writeb(const char c)
 {
 	static size_t pointer = 0;
-	if(c =='\b' && pointer)
+	if(c == '\b' && pointer)
 	{
 		pointer --;
 		return success;
