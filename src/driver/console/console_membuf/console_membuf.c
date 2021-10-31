@@ -28,6 +28,11 @@ status_t membuf_setup()
 status_t membuf_writeb(const char c)
 {
 	static size_t pointer = 0;
+	if(c =='\b' && pointer)
+	{
+		pointer --;
+		return success;
+	}
 	if(pointer == MEMBUF_SIZE)	// Roll over after buffer is full
 		pointer = 0;
 	membuf[pointer++] = c;
