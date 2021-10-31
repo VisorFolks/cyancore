@@ -34,12 +34,13 @@ list:
 	$(info Available projects are :)
 	ls $(SRC)/projects/ -I *.template
 
-check: lint
+check: --lint
 
 ifeq ($(findstring $(MAKECMDGOALS),$(T_ALLOWLIST)),)
 ifneq ($(firstword $(MAKECMDGOALS)),clean)
 ifneq ($(firstword $(MAKECMDGOALS)),default)
 ifneq ($(firstword $(MAKECMDGOALS)),cyancore)
+ifneq ($(firstword $(MAKECMDGOALS)),check)
 PROJECT		?= $(firstword $(MAKECMDGOALS))
 CMD		:= $(word 2,$(MAKECMDGOALS))
 ifeq ($(CMD),)
@@ -51,6 +52,7 @@ endif
 .PHONY: $(PROJECT)
 $(PROJECT): $(CMD)
 
+endif
 endif
 endif
 endif
