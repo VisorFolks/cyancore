@@ -15,6 +15,7 @@ LD_SUPPLEMENT	+= $(DRIVER_PATH)/driver.ld.sx
 
 #==========< Essentials Drivers >==========#
 include $(DRIVER_PATH)/interrupt/build.mk
+include $(DRIVER_PATH)/watchdog/build.mk
 
 #==========< User Config Drivers >==========#
 ifeq ($(CONSOLE),1)

@@ -48,7 +48,7 @@ status_t driver_setup_all()
 		 * match execute driver_setup
 		 */
 		ptr = &_driver_table_start;
-		while(ptr <= &_driver_table_end)
+		while(ptr < &_driver_table_end)
 		{
 			if(order == ptr->sorder)
 				ret |= driver_register(ptr);
@@ -120,8 +120,6 @@ status_t driver_setup(const char *name)
 		}
 		ptr++;
 	}
-	if(ret == success)
-		printf("< / > Started %s\n", name);
 	return ret;
 }
 
@@ -162,10 +160,12 @@ status_t driver_exit(const char *name)
  */
 status_t driver_register(device_t *dev _UNUSED)
 {
-	status_t ret = success;
+	status_t ret;
 	if(dev->exec)
 		return error_init_done;
-	ret |= dev->driver_setup();
+	ret = dev->driver_setup();
+	dev->exec = 1;
+	(ret == success) ? printf("< / > Started %s\n", dev->name) : 0;
 	return ret;
 }
 
@@ -180,8 +180,8 @@ status_t driver_register(device_t *dev _UNUSED)
  */
 status_t driver_deregister(device_t *dev _UNUSED)
 {
-	status_t ret = success;
-	if(dev->exec)
-		ret |= dev->driver_exit();
-	return ret;
+	if(dev->exec != 1)
+		return error;
+	printf("< / > Stopping %s\n", dev->name);
+	return dev->driver_exit();
 }
