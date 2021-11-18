@@ -9,8 +9,10 @@
  */
 
 #include <stdint.h>
+#include <stdio.h>
 #include <status.h>
 #include <arch.h>
+#include <driver.h>
 #include <terravisor/platform.h>
 #include <terravisor/bootstrap.h>
 
@@ -25,11 +27,13 @@ status_t bootstrap()
 	{
 		platform_early_setup();
 		platform_setup();
-		resetSyndrome = platform_get_reset_syndrome();
-		platform_reset_handler(resetSyndrome);
 	}
 
 	platform_cpu_setup();
+	driver_setup("earlycon");
+	resetSyndrome = platform_get_reset_syndrome();
+	platform_reset_handler(resetSyndrome);
+	driver_exit("earlycon");
 
 	return success;
 }
