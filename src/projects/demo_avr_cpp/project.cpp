@@ -17,6 +17,7 @@ extern "C"
 	#include <terravisor/platform.h>
 	#include <terravisor/bootstrap.h>
 	#include <driver.h>
+	#include <driver/watchdog.h>
 	#include <hal/gpio.h>
 }
 
@@ -29,7 +30,7 @@ class onBoardLed led;
 EXPORT_C(void plug())
 {
 	bootstrap();
-	driver_setup("earlycon");
+	driver_setup_all();
 	printf("Reset Status: %d\n", platform_get_reset_syndrome());
 	cyancore_insignia_lite();
 
@@ -60,5 +61,6 @@ EXPORT_C(void play())
 	i = i > 3 ? 0 : i;
 	delay(500000);
 	printf("\b\b");
+	wdog_hush();
 	return;
 }

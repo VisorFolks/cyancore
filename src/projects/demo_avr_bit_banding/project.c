@@ -14,12 +14,13 @@
 #include <terravisor/platform.h>
 #include <terravisor/bootstrap.h>
 #include <driver.h>
+#include <driver/watchdog.h>
 #include "gpio_bit_banding.h"
 
 void plug()
 {
 	bootstrap();
-	driver_setup("earlycon");
+	driver_setup_all();
 	printf("Reset Status: %d\n", platform_get_reset_syndrome());
 	cyancore_insignia_lite();
 	gpio_init();
@@ -45,5 +46,6 @@ void play()
 	i = i > 3 ? 0 : i;
 	delay(500000);
 	printf("\b\b");
+	wdog_hush();
 	return;
 }
