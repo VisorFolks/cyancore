@@ -1,98 +1,110 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
+ * File Name		: wdt.c
+ * Description		: This file contains wdt HAL driver api
+ * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
 #include <stdint.h>
+#include <stddef.h>
 #include <stdbool.h>
 #include <status.h>
 #include <mmio.h>
 #include <assert.h>
+#include <interrupt.h>
+#include <lock/lock.h>
 #include <plat_arch.h>
 #include <arch.h>
 #include <hal/wdt.h>
 #include "wdt_private.h"
 
-static inline status_t wdt_config_mode(wdt_mode_t mode)
-{
-	uint8_t value;
-	value = MMIO8(WDTCSR);
-	switch(mode)
-	{
-		case wbite:
-			value |= (1 << WDE);
-		case wbark:
-			value |= (1 << WDIE);
-			break;
-		case wnone:
-			value &= (~(1 << WDE)) & (~(1 << WDIE));
-			break;
-		default:
-			return error_inval_arg;
-	}
+lock_t wdt_lock;
 
-	// Start timed sequence [4 clks from next write]
-	MMIO8(WDTCSR) |= (1 << WDCE) | (1 << WDE);
-	MMIO8(WDTCSR) |= value;
-	return success;
+static inline uint8_t get_timeout(size_t timeout)
+{
+	uint8_t temp;
+	temp = (timeout & 0xf);
+	timeout = (temp & ((1 << WDP0) | (1 << WDP1) | (1 << WDP2)));
+	timeout |= ((temp >> 3) << WDP3);
+	return (uint8_t) timeout;
 }
 
-static inline status_t wdt_config_prescaler(uint8_t pr)
+/**
+ * wdt_setup - configures timeout for wdt and enables wbark mode
+ *
+ * @brief This function configues watchdog timeout and enables watchdog
+ * interrupt. Internally this function will link the irq_id and handler
+ * passed via driver instance.
+ *
+ * @param[in] *port: Driver instance for watchdog
+ * @param[in] timeout: Watchdog timeout value
+ *
+ * @return status: return the execution status of wdt_setup
+ */
+status_t wdt_setup(wdt_port_t *port)
 {
-	uint8_t rback;
-	uint8_t wdt_pr = ((pr & (1 << WDT2 | (1 << WDT1) | (1 << WDT0))) | ((pr & (1 << WDT3)) << WDT3));
-	/*
-	 * TODO: Check if WDE bit needs to be set along with wdt_pr
-	 *       to configure prescaler
-	 *       > As of now proceeding without setting WDE with wdt_pr
-	 */
-	// Start timed sequence [4 clks from next write]
-	MMIO8(WDTCSR) |= (1 << WDCE) | (1 << WDE);
-	MMIO8(WDTCSR) |= wdt_pr;	// <-- above todo is for here
-
-	arch_sync();		// relax io bus and let the transaction propagate
-
-	rback = MMIO8(WDTCSR);	// check for readback if the value is successfully written
-	rback &= (1 << WDT2 | 1 << WDT1 | 1 << WDT0) | (1 << WDT3);
-	return (rback == wdt_pr) ? success : error;
-}
-
-status_t wdt_setup(wdt_port_t *port, wdt_mode_t mode, uint8_t pr)
-{
+	status_t ret;
+	uint8_t timeout;
 	assert(port);
-	assert((mode >= 0) && (mode <= wbite));
-	assert(pr <= 9);	// max pr switch value;
-	if(port->wdt_handler == NULL && mode != wnone)
+	assert(port->timeout <= 9);
+
+	if(port->wdt_handler == NULL)
 		return error_inval_arg;
-	if(port->wdt_handler != NULL)
-		link_interrupt(arch, port->wdt_irq, port->wdt_handler);
-	return (wdt_config_mode(mode) | wdt_config_prescalar(pr));
-}
 
-status_t wdt_dis(wdt_port_t *port)
-{
-	assert(port);
+	ret = link_interrupt(arch, port->wdt_irq, port->wdt_handler);
+
+	timeout = get_timeout(port->timeout);
+	timeout |= (1 << WDIE);
+
+	lock_acquire(&wdt_lock);
 	arch_di_save_state();
 	arch_wdt_reset();
-	MMIO8(MCUSR) &= ~(1 << 3);	// Clear WDRF bit
-	// Start timed sequence [4 clks from next write]
-	MMIO8(WDTCSR) |= (1 << WDCE) | (1 << WDE);
-	MMIO8(WDTCSR) = 0x00;
+	write_wdtcsr((uint8_t) timeout);
 	arch_ei_restore_state();
-	return (MMIO8(WDTCSR) == 0) ? success : error;
+	lock_release(&wdt_lock);
+
+	if(MMIO8(WDTCSR) != timeout)
+		ret |= error_init_not_done;
+	return ret;
 }
 
-status_t wdt_int_en(wdt_port_t *port)
+status_t wdt_shutdown(wdt_port_t *port)
 {
 	assert(port);
-	MMIO8(WDTCSR_OFFSET) |= (1 << WDIE);
+	lock_acquire(&wdt_lock);
+	arch_di_save_state();
+	arch_wdt_reset();
+	MMIO8(MCUSR) &= ~(1 << MCUSR_WDRF);
+	write_wdtcsr(0);
+	unlink_interrupt(arch, port->wdt_irq);
+	arch_ei_restore_state();
+	lock_release(&wdt_lock);
 	return success;
 }
 
-status_t wdt_int_dis(wdt_port_t *port)
+void wdt_hush(wdt_port_t *port _UNUSED)
 {
-	assert(port);
-	MMIO8(WDTCSR) &= ~(1 << WDIE);
-	return success;
+	arch_wdt_reset();
 }
 
-bool wdt_exp_status(wdt_port_t *port)
+status_t wdt_sre(wdt_port_t *port)
 {
 	assert(port);
-	return MMIO8(WDTCSR) & (1 << WDIF) ? true : false;
+	uint8_t val = MMIO8(WDTCSR);
+	val |= (1 << WDE);
+
+	lock_acquire(&wdt_lock);
+	arch_di_save_state();
+	arch_wdt_reset();
+	write_wdtcsr(val);
+	arch_ei_restore_state();
+	lock_release(&wdt_lock);
+
+	if(MMIO8(WDTCSR) != val)
+		return error_init_not_done;
+
+	return success;
 }

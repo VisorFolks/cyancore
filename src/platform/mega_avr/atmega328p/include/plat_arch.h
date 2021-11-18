@@ -19,6 +19,7 @@
 #define GPIOR1		0x4a
 #define GPIOR2		0x4b
 #define MCUSR		0x54
+#define MCUSR_WDRF	0x3
 #define MCUCR		0x55
 #define SPMCSR		0x57
 #define SPL		0x5d

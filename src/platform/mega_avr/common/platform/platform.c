@@ -23,22 +23,19 @@ void platform_early_setup()
 
 	/*
 	 * Platform Early Setup is the first platform function that
-	 * is called during bootstrap. Also this is the very function
-	 * where bss is cleared, so it is best that reset syndrome is
-	 * obtained at the start and stored on stack.
+	 * is called during bootstrap.
 	 * Later after bss is cleared, "reset_syndrome" can be updated.
 	 */
-	uint8_t mcusr = MMIO8(MCUSR);
-	MMIO8(MCUSR) = 0x00;
 	ret |= platform_copy_data();
 	ret |= platform_bss_clear();
-	
-	/*
-	 * Update the variable in global memory (bss) section
-	 * 0x1f - mask is for extracting reset syndrome
-	 */
-	reset_syndrome = mcusr & 0x1f;
 	ret |= platform_clk_reset();
+
+	reset_syndrome = MMIO8(MCUSR) & 0x1f;
+	MMIO8(MCUSR) = 0;
+
+	extern void write_wdtcsr(uint8_t);
+	write_wdtcsr(0x00);
+
 	if(ret != success)
 		exit(EXIT_FAILURE);
 	return;

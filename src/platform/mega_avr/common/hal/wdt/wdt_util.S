@@ -2,25 +2,16 @@
  * CYANCORE LICENSE
  * Copyrights (C) 2019, Cyancore Team
  *
- * File Name		: wdt_private.h
- * Description		: This file contains defines and prototypes of
- *                        functions used by watchdog timer HAL driver
+ * File Name		: wdt_util.S
+ * Description		: This file contains wdt HAL driver utilities
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 
-#pragma once
+#include <asm.inc>
+#include <plat_arch.h>
+#include "wdt_private.h"
 
-#define WDIF		7
-#define WDIE		6
-#define WDP3		5
-#define WDCE		4
-#define WDE		3
-#define WDP2		2
-#define WDP1		1
-#define WDP0		0
-
-#ifndef __ASSEMBLER__
 /**
  * write_wdtcsr - Writes to WDTCSR
  *
@@ -38,5 +29,12 @@
  * @param data - Data to be written to the register
  * @return void
  */
-void write_wdtcsr(uint8_t);
-#endif
+function write_wdtcsr
+	ldi	r25, WDTCSR
+	ori	r25, (1 << WDCE) | (1 << WDE)
+	sts	WDTCSR, r25
+	// 4 clks from now
+	sts	WDTCSR, r24
+	nop
+	nop
+	ret
