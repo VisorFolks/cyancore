@@ -13,7 +13,6 @@ extern "C"
 {
 	#include <stdio.h>
 	#include <status.h>
-	#include <insignia.h>
 	#include <terravisor/platform.h>
 	#include <terravisor/bootstrap.h>
 	#include <driver.h>
@@ -31,13 +30,11 @@ EXPORT_C(void plug())
 {
 	bootstrap();
 	driver_setup_all();
-	printf("Reset Status: %d\n", platform_get_reset_syndrome());
-	cyancore_insignia_lite();
 
 	/* call the setup member of led object */
 	led.setup();
 
-	printf("Demo Program!\n");
+	printf("Demo Program! - Cpp\n");
 	printf("< ! > Running Blinky ... [");
 	return;
 }
