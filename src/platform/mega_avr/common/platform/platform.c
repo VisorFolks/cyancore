@@ -33,8 +33,7 @@ void platform_early_setup()
 	reset_syndrome = MMIO8(MCUSR) & 0x1f;
 	MMIO8(MCUSR) = 0;
 
-	extern void write_wdtcsr(uint8_t);
-	write_wdtcsr(0x00);
+	ret |= platform_wdt_reset();
 
 	if(ret != success)
 		exit(EXIT_FAILURE);

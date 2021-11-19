@@ -13,6 +13,7 @@
 #include <status.h>
 #include <arch.h>
 #include <driver.h>
+#include <insignia.h>
 #include <terravisor/platform.h>
 #include <terravisor/bootstrap.h>
 
@@ -31,6 +32,7 @@ status_t bootstrap()
 
 	platform_cpu_setup();
 	driver_setup("earlycon");
+	cyancore_insignia_lite();
 	resetSyndrome = platform_get_reset_syndrome();
 	platform_reset_handler(resetSyndrome);
 	driver_exit("earlycon");

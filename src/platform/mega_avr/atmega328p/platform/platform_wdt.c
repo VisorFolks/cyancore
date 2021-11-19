@@ -20,7 +20,7 @@
 #include <hal/wdt.h>
 #include <driver/watchdog.h>
 
-wdt_port_t plat_wdt;
+static wdt_port_t plat_wdt;
 
 void platform_wdt_handler();
 

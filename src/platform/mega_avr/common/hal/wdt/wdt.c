@@ -21,7 +21,7 @@
 #include <hal/wdt.h>
 #include "wdt_private.h"
 
-lock_t wdt_lock;
+static lock_t wdt_lock;
 
 static inline uint8_t get_timeout(size_t timeout)
 {

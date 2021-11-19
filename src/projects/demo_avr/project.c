@@ -10,7 +10,6 @@
 
 #include <stdio.h>
 #include <status.h>
-#include <insignia.h>
 #include <terravisor/platform.h>
 #include <terravisor/bootstrap.h>
 #include <driver.h>
@@ -23,7 +22,6 @@ void plug()
 {
 	bootstrap();
 	driver_setup_all();
-	cyancore_insignia_lite();
 	gpio_pin_alloc(&led_13, 0, 5);
 	gpio_pin_mode(&led_13, out);
 	gpio_pin_clear(&led_13);
