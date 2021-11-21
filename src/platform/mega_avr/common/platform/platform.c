@@ -39,7 +39,6 @@ void platform_early_setup()
 	 */
 	reset_syndrome = mcusr & 0x1f;
 	ret |= platform_clk_reset();
-	ret |= platform_mcall_update(&machine_call);
 	if(ret != success)
 		exit(EXIT_FAILURE);
 	return;
@@ -57,6 +56,7 @@ void platform_setup()
 void platform_cpu_setup()
 {
 	status_t ret = success;
+	ret |= platform_mcall_update(&machine_call);
 	arch_ei();
 	if(ret != success)
 		exit(EXIT_FAILURE);
