@@ -21,6 +21,7 @@
 #include <driver/watchdog.h>
 
 static wdt_port_t plat_wdt;
+static void (*callback_on_bark)(void);
 
 void platform_wdt_handler();
 
@@ -41,26 +42,40 @@ status_t platform_wdt_setup()
 	plat_wdt.wdt_irq = dp->interrupt_id[0];
 	plat_wdt.wdt_handler = &platform_wdt_handler;
 
-	wdt_setup(&plat_wdt);
-	wdt_sre(&plat_wdt);
-	return success;
+	return wdt_setup(&plat_wdt);
 }
 
+status_t platform_wdt_guard(size_t timeout, bool bite, void *cb_bark)
+{
+	status_t ret;
+	plat_wdt.timeout = timeout;
+	callback_on_bark = cb_bark;
+	ret = wdt_set_timeout(&plat_wdt);
+	ret |= bite ? wdt_sre(&plat_wdt) : wdt_srd(&plat_wdt);
+	return ret;
+}
 
 status_t platform_wdt_hush()
 {
+	status_t ret;
 	wdt_hush(&plat_wdt);
-	return success;
+	plat_wdt.timeout = 0;
+	ret = wdt_set_timeout(&plat_wdt);
+	ret |= wdt_srd(&plat_wdt);
+	return ret;
 }
 
 void platform_wdt_handler()
 {
 	printf("\n< ! > Watchdog Bark on core: [%d]\n", (int)arch_core_id());
+	if(callback_on_bark)
+		callback_on_bark();
 }
 
 wdog_t plat_wdt_driver =
 {
 	.setup = &platform_wdt_setup,
+	.guard = &platform_wdt_guard,
 	.hush = &platform_wdt_hush
 };
 

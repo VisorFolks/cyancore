@@ -1,3 +1,13 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
+ * File Name		: wdt.h
+ * Description		: This file consists of WDT-HAL prototypes
+ * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
 #pragma once
 #define _WDT_H_
 
@@ -18,5 +28,7 @@ typedef struct wdt_port
 
 status_t wdt_setup(wdt_port_t *);
 status_t wdt_shutdown(wdt_port_t *);
+status_t wdt_set_timeout(wdt_port_t *);
 void wdt_hush(wdt_port_t *);
 status_t wdt_sre(wdt_port_t *);
+status_t wdt_srd(wdt_port_t *);

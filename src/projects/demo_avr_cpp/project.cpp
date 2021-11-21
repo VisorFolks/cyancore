@@ -52,6 +52,8 @@ EXPORT_C(void play())
 {
 	static int i = 0;
 
+	wdog_guard(5, true, NULL);
+
 	/* call the toggle member of led object */
 	led.toggle();
 	printf("%c]", progress[i++]);

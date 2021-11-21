@@ -47,26 +47,21 @@ static inline uint8_t get_timeout(size_t timeout)
 status_t wdt_setup(wdt_port_t *port)
 {
 	status_t ret;
-	uint8_t timeout;
 	assert(port);
-	assert(port->timeout <= 9);
 
 	if(port->wdt_handler == NULL)
 		return error_inval_arg;
 
 	ret = link_interrupt(arch, port->wdt_irq, port->wdt_handler);
 
-	timeout = get_timeout(port->timeout);
-	timeout |= (1 << WDIE);
-
 	lock_acquire(&wdt_lock);
 	arch_di_save_state();
 	arch_wdt_reset();
-	write_wdtcsr((uint8_t) timeout);
+	write_wdtcsr(0);
 	arch_ei_restore_state();
 	lock_release(&wdt_lock);
 
-	if(MMIO8(WDTCSR) != timeout)
+	if(MMIO8(WDTCSR) != 0)
 		ret |= error_init_not_done;
 	return ret;
 }
@@ -85,6 +80,29 @@ status_t wdt_shutdown(wdt_port_t *port)
 	return success;
 }
 
+status_t wdt_set_timeout(wdt_port_t *port)
+{
+	status_t ret = success;
+	uint8_t timeout;
+	assert(port);
+	assert(port->timeout <= 9);
+
+	timeout = get_timeout(port->timeout);
+	if(timeout)
+		timeout |= (1 << WDIE);
+
+	lock_acquire(&wdt_lock);
+	arch_di_save_state();
+	arch_wdt_reset();
+	write_wdtcsr((uint8_t) timeout);
+	arch_ei_restore_state();
+	lock_release(&wdt_lock);
+
+	if(MMIO8(WDTCSR) != timeout)
+		ret |= error_init_not_done;
+	return ret;
+}
+
 void wdt_hush(wdt_port_t *port _UNUSED)
 {
 	arch_wdt_reset();
@@ -95,6 +113,25 @@ status_t wdt_sre(wdt_port_t *port)
 	assert(port);
 	uint8_t val = MMIO8(WDTCSR);
 	val |= (1 << WDE);
+
+	lock_acquire(&wdt_lock);
+	arch_di_save_state();
+	arch_wdt_reset();
+	write_wdtcsr(val);
+	arch_ei_restore_state();
+	lock_release(&wdt_lock);
+
+	if(MMIO8(WDTCSR) != val)
+		return error_init_not_done;
+
+	return success;
+}
+
+status_t wdt_srd(wdt_port_t *port)
+{
+	assert(port);
+	uint8_t val = MMIO8(WDTCSR);
+	val &= ~(1 << WDE);
 
 	lock_acquire(&wdt_lock);
 	arch_di_save_state();

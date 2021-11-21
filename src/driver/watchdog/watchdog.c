@@ -1,9 +1,8 @@
-
 /*
  * CYANCORE LICENSE
  * Copyrights (C) 2019, Cyancore Team
  *
- * File Name		: console.c
+ * File Name		: watchdog.c
  * Description		: This file contains sources of watchdog engine
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
  * Organisation		: Cyancore Core-Team
@@ -43,6 +42,17 @@ status_t wdog_release_device()
 	port[cpu_id] = NULL;
 	wdog_attached[cpu_id] = false;
 	return success;
+}
+
+status_t wdog_guard(size_t timeout, bool bite, void *cb_bark)
+{
+	size_t cpu_id = arch_core_id();
+	if(wdog_attached[cpu_id] && port[cpu_id]->guard != NULL)
+	{
+		port[cpu_id]->guard(timeout, bite, cb_bark);
+		return success;
+	}
+	return error_inval_func;
 }
 
 status_t wdog_hush()

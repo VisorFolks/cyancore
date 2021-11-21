@@ -38,6 +38,7 @@ void delay(unsigned long d)
 void play()
 {
 	static int i = 0;
+	wdog_guard(5, true, NULL);
 	gpio_toggle();
 	printf("%c]", progress[i++]);
 	i = i > 3 ? 0 : i;
