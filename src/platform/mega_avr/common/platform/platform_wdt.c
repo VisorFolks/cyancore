@@ -16,6 +16,14 @@
 #include <platform.h>
 #include <../hal/wdt/wdt_private.h>
 
+/**
+ * platform_wdt_reset - reset wdt counter at platform setup
+ *
+ * @brief This function should be invoked during the platform
+ * boot or setup. This resets the WDT config register.
+ *
+ * @return status: return the execution status of platform_wdt_reset
+ */
 status_t platform_wdt_reset()
 {
 	uint8_t val;

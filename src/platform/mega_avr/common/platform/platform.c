@@ -27,15 +27,21 @@
  */
 uint8_t reset_syndrome;
 
+/**
+ * platform_early_setup - Executes pre-setup functions
+ *
+ * @brief This function performs calls to certain function that
+ * are necessary to be called to make the plaform ready for setup.
+ * Function like bss clear, data copy, clock reset, etc are called
+ * in this function. As reset_syndrome is bss variable, it must be
+ * updated only after the bss is cleared. Ideally it should be
+ * updated at last. < ! > This function should be made to run on 
+ * boot core only!
+ */
 void platform_early_setup()
 {
 	status_t ret = success;
 
-	/*
-	 * Platform Early Setup is the first platform function that
-	 * is called during bootstrap.
-	 * Later after bss is cleared, "reset_syndrome" can be updated.
-	 */
 	ret |= platform_copy_data();
 	ret |= platform_bss_clear();
 	ret |= platform_clk_reset();
@@ -50,6 +56,13 @@ void platform_early_setup()
 	return;
 }
 
+/**
+ * platform_setup - Executes function to make platform read to init
+ *
+ * @brief This function performs calls to function which make the
+ * framework ready to execute. In this case (MegaAVR), it is dp_setup.
+ * < ! > This function should be made to run on boot core only!
+ */
 void platform_setup()
 {
 	status_t ret = success;
@@ -59,6 +72,12 @@ void platform_setup()
 	return;
 }
 
+/**
+ * platform_cpu_setup - Perform platform setup calls on all cpus
+ *
+ * @brief This function perform calls to functions that must be executed
+ * on all corea to make the cpu ready for the platform drivers.
+ */
 void platform_cpu_setup()
 {
 	status_t ret = success;
