@@ -21,8 +21,20 @@
 #include <hal/wdt.h>
 #include "wdt_private.h"
 
+/**
+ * wdt_lock - Lock used by wdt HAL driver.
+ */
 static lock_t wdt_lock;
 
+/**
+ * get_timeout
+ *
+ * @brief This function returns the timeout value formatted
+ * as per the register's bitfields.
+ *
+ * @param[in] timeout: WDog timeout, [0-9] are valid values
+ * @return timeout: formatted value
+ */
 static inline uint8_t get_timeout(size_t timeout)
 {
 	uint8_t temp;
@@ -35,9 +47,8 @@ static inline uint8_t get_timeout(size_t timeout)
 /**
  * wdt_setup - configures timeout for wdt and enables wbark mode
  *
- * @brief This function configues watchdog timeout and enables watchdog
- * interrupt. Internally this function will link the irq_id and handler
- * passed via driver instance.
+ * @brief This function configues watchdog interrupt handler for bark
+ * irq followed by resetting of wddt device.
  *
  * @param[in] *port: Driver instance for watchdog
  * @param[in] timeout: Watchdog timeout value
@@ -66,6 +77,15 @@ status_t wdt_setup(wdt_port_t *port)
 	return ret;
 }
 
+/**
+ * wdt_shutdown - disables watchdog
+ *
+ * @brief This function unlinks bark IRQ and resets wdt
+ *
+ * @param[in] *port: Driver instance for watchdog
+ *
+ * @return status: returns the execution status of wdt_shutdown
+ */
 status_t wdt_shutdown(wdt_port_t *port)
 {
 	assert(port);
@@ -77,9 +97,22 @@ status_t wdt_shutdown(wdt_port_t *port)
 	unlink_interrupt(arch, port->wdt_irq);
 	arch_ei_restore_state();
 	lock_release(&wdt_lock);
+
+	if(MMIO8(WDTCSR) != 0)
+		return error;
 	return success;
 }
 
+/**
+ * wdt_set_timeout - writes timeout to config register
+ *
+ * @brief This function configures timeout for wdt and enables
+ * interrupt.
+ *
+ * @param[in] *port: Driver instance for watchdog
+ *
+ * @return status: returns the execution status of wdt_set_timeout
+ */
 status_t wdt_set_timeout(wdt_port_t *port)
 {
 	status_t ret = success;
@@ -103,11 +136,30 @@ status_t wdt_set_timeout(wdt_port_t *port)
 	return ret;
 }
 
+/**
+ * wdt_hush - reset watchdog counter
+ *
+ * @brief This function resets the watchdog timer counter
+ * register by performing arch call, which internally executes
+ * an instruction "wdr".
+ *
+ * @param[in] *port: (Unused) In this cases, it is not used
+ */
 void wdt_hush(wdt_port_t *port _UNUSED)
 {
+	assert(port);
 	arch_wdt_reset();
 }
 
+/**
+ * wdt_sre - watchdog system reset enable
+ *
+ * @brief This function enables system reset after watchdog bark event.
+ *
+ * @param[in] *port: Driver instance for watchdog
+ *
+ * @return status: return the execution status of wdt_sre
+ */
 status_t wdt_sre(wdt_port_t *port)
 {
 	assert(port);
@@ -127,6 +179,15 @@ status_t wdt_sre(wdt_port_t *port)
 	return success;
 }
 
+/**
+ * wdt_srd - watchdog system reset disable
+ *
+ * @brief This function disables system reset after watchdog bark event.
+ *
+ * @param[in] *port: Driver instance for watchdog
+ *
+ * @return status: return the execution status of wdt_srd
+ */
 status_t wdt_srd(wdt_port_t *port)
 {
 	assert(port);

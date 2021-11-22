@@ -30,6 +30,12 @@
  * @return void
  */
 function write_wdtcsr
+	/*
+	 * In this function we are hardcoding the address as the
+	 * MegaAVR uses same address in all mcus.
+	 * We can chose to make it dynamic, at the cost of number
+	 * of instructions. To make it dynamic, use r20-23 as args.
+	 */
 	ldi	r25, WDTCSR
 	ori	r25, (1 << WDCE) | (1 << WDE)
 	sts	WDTCSR, r25
