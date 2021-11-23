@@ -106,7 +106,7 @@ status_t platform_wdt_hush()
  */
 void platform_wdt_handler()
 {
-	printf("\n< ! > Watchdog Bark on core: [%d]\n", (int)arch_core_id());
+	printf("\n< ! > Watchdog Bark on core: [%d]\n", (int)arch_core_index());
 	if(callback_on_bark)
 		callback_on_bark();
 }

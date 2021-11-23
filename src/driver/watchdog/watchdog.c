@@ -39,16 +39,16 @@ static bool wdog_attached[N_CORES] = {[0 ... N_CORES-1] = false};
 status_t wdog_attach_device(wdog_t *pwdog)
 {
 	status_t ret;
-	size_t cpu_id = arch_core_id();
+	size_t cpu_index = arch_core_index();
 
 	/* Link the driver structs */
-	port[cpu_id] = pwdog;
+	port[cpu_index] = pwdog;
 
 	/* Check if the link is valid */
-	if(port[cpu_id] != NULL)
+	if(port[cpu_index] != NULL)
 	{
-		ret = port[cpu_id]->setup();
-		wdog_attached[cpu_id] = (ret == success) ? true : false;
+		ret = port[cpu_index]->setup();
+		wdog_attached[cpu_index] = (ret == success) ? true : false;
 	}
 	else
 		ret = error_inval_arg;
@@ -64,9 +64,9 @@ status_t wdog_attach_device(wdog_t *pwdog)
  */
 status_t wdog_release_device()
 {
-	size_t cpu_id = arch_core_id();
-	port[cpu_id] = NULL;
-	wdog_attached[cpu_id] = false;
+	size_t cpu_index = arch_core_index();
+	port[cpu_index] = NULL;
+	wdog_attached[cpu_index] = false;
 	return success;
 }
 
@@ -85,9 +85,9 @@ status_t wdog_release_device()
  */
 status_t wdog_guard(size_t timeout, bool bite, void *cb_bark)
 {
-	size_t cpu_id = arch_core_id();
-	if(wdog_attached[cpu_id] && port[cpu_id]->guard != NULL)
-		return port[cpu_id]->guard(timeout, bite, cb_bark);
+	size_t cpu_index = arch_core_index();
+	if(wdog_attached[cpu_index] && port[cpu_index]->guard != NULL)
+		return port[cpu_index]->guard(timeout, bite, cb_bark);
 	return error_inval_func;
 }
 
@@ -102,10 +102,10 @@ status_t wdog_guard(size_t timeout, bool bite, void *cb_bark)
  */
 status_t wdog_hush()
 {
-	size_t cpu_id = arch_core_id();
-	if(wdog_attached[cpu_id] && port[cpu_id]->hush != NULL)
+	size_t cpu_index = arch_core_index();
+	if(wdog_attached[cpu_index] && port[cpu_index]->hush != NULL)
 	{
-		port[cpu_id]->hush();
+		port[cpu_index]->hush();
 		return success;
 	}
 	return error_inval_func;
@@ -121,6 +121,6 @@ extern void plat_panic_handler();
  */
 void wdog_reset_handler()
 {
-	printf("\n< x > Watchdog Bite on Core: [%d]\n", (int)arch_core_id());
+	printf("\n< x > Watchdog Bite on Core: [%d]\n", (int)arch_core_index());
 	plat_panic_handler();
 }
