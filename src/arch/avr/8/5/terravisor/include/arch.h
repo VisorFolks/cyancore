@@ -29,6 +29,8 @@ void arch_setup();
  * arch_wfi - Wait for interrupt, with sleep mode
  */
 void arch_wfi();
+void arch_di_save_state();
+void arch_ei_restore_state();
 
 /**
  * arch_panic_handler - Executes when arch error occurs
@@ -51,9 +53,9 @@ mret_t arch_machine_call(unsigned  int, unsigned int, unsigned  int, unsigned  i
 void arch_register_interrupt_handler(unsigned int, void (*)(void));
 
 /**
- * arch_core_id - Returns code id (0, in case of AVR)
+ * arch_core_index - Returns code index (0, in case of AVR)
  */
-static inline unsigned int arch_core_id()
+static inline unsigned int arch_core_index()
 {
 	/* AVR only support uni core architecture */
 	return 0;
@@ -81,4 +83,34 @@ static inline void arch_di()
 static inline void arch_wdt_reset()
 {
 	asm volatile("wdr");
+}
+
+static inline void arch_nop()
+{
+	asm volatile("nop");
+}
+
+static inline void arch_sync()
+{
+	arch_nop();
+}
+
+static inline void arch_msb()
+{
+	arch_nop();
+}
+
+static inline void arch_isb()
+{
+	arch_nop();
+}
+
+static inline void arch_dsb()
+{
+	arch_nop();
+}
+
+static inline void arch_wfe()
+{
+	arch_nop();
 }

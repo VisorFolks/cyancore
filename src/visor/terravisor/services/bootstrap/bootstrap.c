@@ -9,8 +9,11 @@
  */
 
 #include <stdint.h>
+#include <stdio.h>
 #include <status.h>
 #include <arch.h>
+#include <driver.h>
+#include <insignia.h>
 #include <terravisor/platform.h>
 #include <terravisor/bootstrap.h>
 
@@ -21,15 +24,18 @@ status_t bootstrap()
 	arch_early_setup();
 	arch_setup();
 
-	if(arch_core_id() == BOOT_CORE_ID)
+	if(arch_core_index() == BOOT_CORE_ID)
 	{
 		platform_early_setup();
 		platform_setup();
-		resetSyndrome = platform_get_reset_syndrome();
-		platform_reset_handler(resetSyndrome);
 	}
 
 	platform_cpu_setup();
+	driver_setup("earlycon");
+	cyancore_insignia_lite();
+	resetSyndrome = platform_get_reset_syndrome();
+	platform_reset_handler(resetSyndrome);
+	driver_exit("earlycon");
 
 	return success;
 }

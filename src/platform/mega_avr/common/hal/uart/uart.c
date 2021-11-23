@@ -68,9 +68,7 @@ status_t uart_setup(uart_port_t *port, direction_t d, parity_t p)
 	// Configure frame
 	// Defaults to
 	// Async UART, 1 stop bit, Rising edge clk
-	MMIO8(port->baddr + UCSRC_OFFSET) = 0;
-	MMIO8(port->baddr + UCSRC_OFFSET) |= (p << UPM0);	// Set Parity
-	MMIO8(port->baddr + UCSRC_OFFSET) |= (3 << UCSZ0);	// 8bit frame
+	MMIO8(port->baddr + UCSRC_OFFSET) = (p << UPM0) | (3 << UCSZ0); // Set Parity & 8 bit frame
 	return ret;
 }
 

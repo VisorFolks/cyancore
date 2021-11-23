@@ -10,10 +10,10 @@
 
 #include <stdio.h>
 #include <status.h>
-#include <insignia.h>
 #include <terravisor/platform.h>
 #include <terravisor/bootstrap.h>
 #include <driver.h>
+#include <driver/watchdog.h>
 #include <hal/gpio.h>
 
 gpio_port_t led_13;
@@ -21,9 +21,7 @@ gpio_port_t led_13;
 void plug()
 {
 	bootstrap();
-	driver_setup("earlycon");
-	printf("Reset Status: %d\n", platform_get_reset_syndrome());
-	cyancore_insignia_lite();
+	driver_setup_all();
 	gpio_pin_alloc(&led_13, 0, 5);
 	gpio_pin_mode(&led_13, out);
 	gpio_pin_clear(&led_13);
@@ -44,10 +42,12 @@ void delay(unsigned long d)
 void play()
 {
 	static int i = 0;
+	wdog_guard(5, false, NULL);
 	gpio_pin_toggle(&led_13);
 	printf("%c]", progress[i++]);
 	i = i > 3 ? 0 : i;
 	delay(500000);
 	printf("\b\b");
+	wdog_hush();
 	return;
 }
