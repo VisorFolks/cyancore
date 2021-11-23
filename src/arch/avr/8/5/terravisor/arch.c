@@ -41,6 +41,19 @@ void arch_setup()
 	return;
 }
 
+uint8_t sreg_i_backup;
+
+void arch_di_save_state()
+{
+	sreg_i_backup = MMIO8(SREG) & (1 << 7);
+	arch_di();
+}
+
+void arch_ei_restore_state()
+{
+	MMIO8(SREG) |= sreg_i_backup;
+}
+
 /**
  * arch_wfi - wait for interrupt
  *

@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include <status.h>
 #include <platform.h>
+#include <driver/watchdog.h>
 #include <terravisor/platform.h>
 
 extern uint8_t reset_syndrome;
@@ -57,12 +58,6 @@ reset_t platform_get_reset_syndrome()
 
 TODO(This Function needs to be replaced with brownout detection driver api)
 _WEAK void brownout_reset_handler()
-{
-	plat_panic_handler();
-}
-
-TODO(This Function needs to be replaced with watchdog driver api)
-_WEAK void wdog_reset_handler()
 {
 	plat_panic_handler();
 }

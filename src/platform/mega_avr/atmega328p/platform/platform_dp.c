@@ -59,6 +59,14 @@ status_t platform_dp_setup()
 	device_prop.port[2].stride = 3;
 #endif
 
+#if WDT0
+	device_prop.wdt0.baddr=0x60;
+	device_prop.wdt0.stride=0x1;
+	device_prop.wdt0.interrupt_id[0] = 0x6;
+	device_prop.wdt0.interrupt_trigger[0] = i_level;
+	device_prop.wdt0.clk = 0x7;
+#endif
+
 	ret = dp_init(&device_prop);
 
 	return ret;
@@ -85,6 +93,13 @@ mret_t platform_fetch_dp(unsigned int dev, unsigned int a0 _UNUSED, unsigned int
 		case DEV_GPIO:
 			ret.p = (uintptr_t)dp_get_port_info(a0);
 			ret.size = sizeof(gpio_module_t);
+			ret.status = success;
+			break;
+#endif
+#if WDT0==1
+		case DEV_WDT:
+			ret.p = (uintptr_t) dp_get_wdt0_info();
+			ret.size = sizeof(module_t);
 			ret.status = success;
 			break;
 #endif
