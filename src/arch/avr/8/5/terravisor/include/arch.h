@@ -53,9 +53,9 @@ mret_t arch_machine_call(unsigned  int, unsigned int, unsigned  int, unsigned  i
 void arch_register_interrupt_handler(unsigned int, void (*)(void));
 
 /**
- * arch_core_id - Returns code id (0, in case of AVR)
+ * arch_core_index - Returns code index (0, in case of AVR)
  */
-static inline unsigned int arch_core_id()
+static inline unsigned int arch_core_index()
 {
 	/* AVR only support uni core architecture */
 	return 0;

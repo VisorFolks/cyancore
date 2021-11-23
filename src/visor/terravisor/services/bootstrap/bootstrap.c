@@ -24,7 +24,7 @@ status_t bootstrap()
 	arch_early_setup();
 	arch_setup();
 
-	if(arch_core_id() == BOOT_CORE_ID)
+	if(arch_core_index() == BOOT_CORE_ID)
 	{
 		platform_early_setup();
 		platform_setup();
