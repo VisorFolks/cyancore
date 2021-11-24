@@ -14,7 +14,7 @@ T_ALLOWLIST	+= get_all_tc get_avr_tc get_arm_tc get_riscv_tc
 
 # GIT REPO RECOMMENDED
 # Provide git repo path for toolchains for better experience
-AVR_TC_REPO	?=
+AVR_TC_REPO	?= https://github.com/arduino/toolchain-avr.git
 RISC_V_TC_REPO	?=
 ARM_TC_REPO	?=
 
