@@ -75,7 +75,7 @@ static inline status_t _adc_config_trigger(adc_port_t *port, adc_trig_t trigger)
 	status_t ret = success;
 	uint8_t trig_value = (uint8_t) trigger;
 	ret |= (trig_value > 7) ? error_inval_arg : success;
-	MMIO8(port->baddr + ADCSRB_OFFSET) |= ((trig_value & 0x07) << ADPS);
+	MMIO8(port->baddr + ADCSRB_OFFSET) |= ((trig_value & 0x07) << ADTS);
 	MMIO8(port->baddr + ADCSRA_OFFSET) |= (1 << ADATE);
 	return ret;
 }
@@ -145,7 +145,7 @@ bool adc_busy(adc_port_t *port)
 	if(MMIO8(port->baddr + ADCSRA_OFFSET) & (1 << ADIE))
 		ret = (MMIO8(port->baddr + ADCSRA_OFFSET) & (1 << ADSC)) ? true : false;
 	else
-		ret = (MMIO8(port->baddr + ADCSRA_OFFSET) & (1 << ADIF)) ? true : false;
+		ret = (MMIO8(port->baddr + ADCSRA_OFFSET) & (1 << ADIF)) ? false : true;
 	return ret;
 }
 
