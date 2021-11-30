@@ -25,6 +25,7 @@ status_t spi_master_setup(spi_port_t *port, dataframe_format_t df_format, clk_po
 {
 	status_t ret = success;
 	uint8_t spcr_value = 0;
+	gpio_port_t spi_mosi, spi_miso, spi_sck, spi_ss;
 	assert(port);
 	platform_clk_en(port->clk_id);
 	spcr_value |= (1 << SPE) | (1 << MSTR);
@@ -49,8 +50,16 @@ status_t spi_master_setup(spi_port_t *port, dataframe_format_t df_format, clk_po
 	spcr_value |= df_format ? (1 << DODR) : 0;
 	spcr_value |= cpol ? (1 << CPOL) : 0;
 	spcr_value |= cpha ? (1 << CPHA) : 0;
-	gpio_pin_config(port->com_port, port->com_pins[0], out);	// MOSI - as output
-	gpio_pin_config(port->com_port, port->com_pins[2], out);	// SCK - as output
+
+	ret |= gpio_pin_alloc(&spi_mosi, port->com_port, port->com_pins[0]);
+	ret |= gpio_pin_alloc(&spi_miso, port->com_port, port->com_pins[1]);
+	ret |= gpio_pin_alloc(&spi_sck, port->com_port, port->com_pins[2]);
+	ret |= gpio_pin_alloc(&spi_ss, port->com_port, port->com_pins[3]);
+
+	ret |= gpio_pin_mode(&spi_mosi, out);
+	ret |= gpio_pin_mode(&spi_miso, in);
+	ret |= gpio_pin_mode(&spi_sck, out);
+	ret |= gpio_pin_mode(&spi_ss, out);
 	MMIO8(port->baddr | SPCR_OFFSET) = spcr_value;
 	return ret;
 }
@@ -59,6 +68,7 @@ status_t spi_slave_setup(spi_port_t *port, dataframe_format_t df_format, clk_pol
 {
 	status_t ret = success;
 	uint8_t spcr_value = 0;
+	gpio_port_t spi_mosi, spi_miso, spi_sck, spi_ss;
 	assert(port);
 	platform_clk_en(port->clk_id);
 	spcr_value |= (1 << SPE);
@@ -83,7 +93,16 @@ status_t spi_slave_setup(spi_port_t *port, dataframe_format_t df_format, clk_pol
 	spcr_value |= df_format ? (1 << DODR) : 0;
 	spcr_value |= cpol ? (1 << CPOL) : 0;
 	spcr_value |= cpha ? (1 << CPHA) : 0;
-	gpio_pin_config(port->com_port, port->com_pins[1], out);	// MISO - as output
+
+	ret |= gpio_pin_alloc(&spi_mosi, port->com_port, port->com_pins[0]);
+	ret |= gpio_pin_alloc(&spi_miso, port->com_port, port->com_pins[1]);
+	ret |= gpio_pin_alloc(&spi_sck, port->com_port, port->com_pins[2]);
+	ret |= gpio_pin_alloc(&spi_ss, port->com_port, port->com_pins[3]);
+
+	ret |= gpio_pin_mode(&spi_mosi, in);
+	ret |= gpio_pin_mode(&spi_miso, out);
+	ret |= gpio_pin_mode(&spi_sck, in);
+	ret |= gpio_pin_mode(&spi_ss, in);
 	MMIO8(port->baddr | SPCR_OFFSET) = spcr_value;
 	return ret;
 }
