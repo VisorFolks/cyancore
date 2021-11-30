@@ -2,9 +2,9 @@
  * CYANCORE LICENSE
  * Copyrights (C) 2019, Cyancore Team
  *
- * File Name		: platform_dp.c
+ * File Name		: platform_resource.c
  * Description		: This file contains sources for platform
- *			  device properties apis
+ *			  resource apis
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
