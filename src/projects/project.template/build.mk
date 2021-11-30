@@ -13,6 +13,8 @@ PROJECT_DIR	:= $(GET_PATH)
 
 OPTIMIZATION	:=
 
+EXE_MODE	:=
+
 include $(PROJECT_DIR)/config.mk
 
 # You can add another folder with necessary files to build the project

@@ -52,14 +52,14 @@ EXPORT_C(void play())
 {
 	static int i = 0;
 
-	wdog_guard(5, true, NULL);
+	wdog_guard(3, true, NULL);
 
 	/* call the toggle member of led object */
 	led.toggle();
 	printf("%c]", progress[i++]);
 	i = i > 3 ? 0 : i;
+	wdog_hush();
 	delay(500000);
 	printf("\b\b");
-	wdog_hush();
 	return;
 }
