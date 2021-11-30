@@ -62,9 +62,9 @@ module_t wdt0 =
 
 dp_t device_prop =
 {
-	.core[0] = &core0,
 	.datawidth = 8,
 	.base_clock = FCLK,
+	.core[0] = &core0,
 	.memory = &mem,
 
 #if GPIO == 1
