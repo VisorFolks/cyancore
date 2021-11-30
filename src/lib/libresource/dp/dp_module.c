@@ -14,40 +14,32 @@
 
 extern dp_t *dev_prop;
 
-#define DP_CREATE_MODULE_FUNCTION(mod)		\
-	module_t *dp_get_##mod##_info()		\
-	{					\
-		return &dev_prop->mod;	\
+#define DP_CREATE_MODULE_FUNCTION(mod)			\
+	module_t *dp_get_##mod##_info(uint8_t id)	\
+	{						\
+		return dev_prop->mod[id];		\
 	}
 
-#if UART0
-DP_CREATE_MODULE_FUNCTION(uart0)
+#if UART == 1
+DP_CREATE_MODULE_FUNCTION(uart)
 #endif
 
-#if ADC0
-DP_CREATE_MODULE_FUNCTION(adc0)
+#if ADC == 1
+DP_CREATE_MODULE_FUNCTION(adc)
 #endif
 
-#if TIMER0
-DP_CREATE_MODULE_FUNCTION(timer0)
+#if TIMER == 1
+DP_CREATE_MODULE_FUNCTION(timer)
 #endif
 
-#if TIMER1
-DP_CREATE_MODULE_FUNCTION(timer1)
+#if SPI == 1
+DP_CREATE_MODULE_FUNCTION(spi)
 #endif
 
-#if TIMER2
-DP_CREATE_MODULE_FUNCTION(timer2)
+#if I2C == 1
+DP_CREATE_MODULE_FUNCTION(i2c)
 #endif
 
-#if SPI0
-DP_CREATE_MODULE_FUNCTION(spi0)
-#endif
-
-#if I2C0
-DP_CREATE_MODULE_FUNCTION(i2c0)
-#endif
-
-#if WDT0
-DP_CREATE_MODULE_FUNCTION(wdt0)
+#if WDT == 1
+DP_CREATE_MODULE_FUNCTION(wdt)
 #endif

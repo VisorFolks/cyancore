@@ -25,36 +25,28 @@ typedef struct module
 } module_t;
 
 #define DP_PROTOTYPE_MODULE_FUNCTION(mod)	\
-	module_t *dp_get_##mod##_info();
+	module_t *dp_get_##mod##_info(uint8_t);
 
-#if UART0
-DP_PROTOTYPE_MODULE_FUNCTION(uart0)
+#if UART == 1
+DP_PROTOTYPE_MODULE_FUNCTION(uart)
 #endif
 
-#if ADC0
-DP_PROTOTYPE_MODULE_FUNCTION(adc0)
+#if ADC == 1
+DP_PROTOTYPE_MODULE_FUNCTION(adc)
 #endif
 
-#if TIMER0
-DP_PROTOTYPE_MODULE_FUNCTION(timer0)
+#if TIMER == 1
+DP_PROTOTYPE_MODULE_FUNCTION(timer)
 #endif
 
-#if TIMER1
-DP_PROTOTYPE_MODULE_FUNCTION(timer1)
+#if SPI == 1
+DP_PROTOTYPE_MODULE_FUNCTION(spi)
 #endif
 
-#if TIMER2
-DP_PROTOTYPE_MODULE_FUNCTION(timer2)
+#if I2C == 1
+DP_PROTOTYPE_MODULE_FUNCTION(i2c)
 #endif
 
-#if SPI0
-DP_PROTOTYPE_MODULE_FUNCTION(spi0)
-#endif
-
-#if I2C0
-DP_PROTOTYPE_MODULE_FUNCTION(i2c0)
-#endif
-
-#if WDT0
-DP_PROTOTYPE_MODULE_FUNCTION(wdt0)
+#if WDT == 1
+DP_PROTOTYPE_MODULE_FUNCTION(wdt)
 #endif
