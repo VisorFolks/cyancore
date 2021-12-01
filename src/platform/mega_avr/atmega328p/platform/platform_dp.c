@@ -4,113 +4,91 @@
  *
  * File Name		: platform_dp.c
  * Description		: This file contains sources for platform
- *			  device properties apis
+ *			  device properties
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 
-#include <stdint.h>
-#include <stddef.h>
-#include <stdbool.h>
-#include <string.h>
 #include <status.h>
-#include <plat_mem.h>
 #include <resource.h>
-#include <device.h>
-#include <machine_call.h>
-#include <platform.h>
+#include <plat_mem.h>
 
 #ifndef FCLK
 #define FCLK 0
 WARN(< ! > FCLK is not defined!)
 #endif
 
-dp_t device_prop;
-
-status_t platform_dp_setup()
+cpu_t core0 =
 {
-	status_t ret;
-	memcpy(device_prop.core[0].name, "avr5", 4);
-	device_prop.core[0].id = 0x0000;
-	device_prop.datawidth = 8;
-	device_prop.base_clock = FCLK;
+	.name = "avr5",
+	.id = 0x0000
+};
 
-	device_prop.memory.start = 0x00;
-	device_prop.memory.size = DMEM_LENGTH;
-
-#if UART0
-	device_prop.uart0.id = 0x00;
-	device_prop.uart0.baddr = 0xc0;
-	device_prop.uart0.clk_id = 0x01;
-	device_prop.uart0.stride = 0x06;
-	device_prop.uart0.clk = 19200;
-	device_prop.uart0.interrupt_id[0] = 18;
-	device_prop.uart0.interrupt_id[1] = 20;
-	device_prop.uart0.interrupt_trigger[0] = i_level;
-	device_prop.uart0.interrupt_trigger[1] = i_level;
-#endif
-
-#if GPIO
-	device_prop.port[0].baddr = 0x23;
-	device_prop.port[0].stride = 3;
-	device_prop.port[1].baddr = 0x26;
-	device_prop.port[1].stride = 3;
-	device_prop.port[2].baddr = 0x29;
-	device_prop.port[2].stride = 3;
-#endif
-
-#if WDT0
-	device_prop.wdt0.baddr=0x60;
-	device_prop.wdt0.stride=0x1;
-	device_prop.wdt0.interrupt_id[0] = 0x6;
-	device_prop.wdt0.interrupt_trigger[0] = i_level;
-	device_prop.wdt0.clk = 0x7;
-#endif
-
-	ret = dp_init(&device_prop);
-
-	return ret;
-}
-
-mret_t platform_fetch_dp(unsigned int dev, unsigned int a0 _UNUSED, unsigned int a1 _UNUSED)
+memory_t mem =
 {
-	mret_t ret;
-	switch(dev)
-	{
-		case DEV_CLOCK:
-			ret.p = (uintptr_t)dp_get_base_clock();
-			ret.size = sizeof(unsigned long);
-			ret.status = success;
-			break;
-#if UART0==1
-		case DEV_CONSOLE:
-			ret.p = (uintptr_t)dp_get_uart0_info();
-			ret.size = sizeof(module_t);
-			ret.status = success;
-			break;
-#endif
-#if GPIO==1
-		case DEV_GPIO:
-			ret.p = (uintptr_t)dp_get_port_info(a0);
-			ret.size = sizeof(gpio_module_t);
-			ret.status = success;
-			break;
-#endif
-#if WDT0==1
-		case DEV_WDT:
-			ret.p = (uintptr_t) dp_get_wdt0_info();
-			ret.size = sizeof(module_t);
-			ret.status = success;
-			break;
-#endif
-		default:
-			ret.p = (uintptr_t)NULL;
-			ret.size = 0x00;
-			ret.status = error_inval_dev_id;
-			break;
-	}
+	.start = 0,
+	.size = DMEM_LENGTH
+};
 
-	return ret;
-}
+module_t uart0 =
+{
+	.id = 0x00,
+	.baddr = 0xc0,
+	.clk_id = 0x01,
+	.stride = 0x06,
+	.clk = 19200,
+	.interrupt_id[0] = 18,
+	.interrupt_id[1] = 20,
+	.interrupt_trigger[0] = i_level,
+	.interrupt_trigger[1] = i_level
+};
 
-INCLUDE_MCALL(atmega328p_fetch_dp, fetch_dp, platform_fetch_dp);
+gpio_module_t port0 =
+{
+	.baddr = 0x23,
+	.stride = 3
+};
+
+gpio_module_t port1 =
+{
+	.baddr = 0x26,
+	.stride = 3
+};
+
+gpio_module_t port2 =
+{
+	.baddr = 0x29,
+	.stride = 3
+};
+
+module_t wdt0 =
+{
+	.id = 0,
+	.baddr=0x60,
+	.stride=0x1,
+	.interrupt_id[0] = 0x6,
+	.interrupt_trigger[0] = i_level,
+	.clk = 0x7
+};
+
+dp_t device_prop =
+{
+	.datawidth = 8,
+	.base_clock = FCLK,
+	.core[0] = &core0,
+	.memory = &mem,
+
+#if GPIO == 1
+	.port[0] = &port0,
+	.port[1] = &port1,
+	.port[2] = &port2,
+#endif
+
+#if UART == 1
+	.uart[0] = &uart0,
+#endif
+
+#if WDT == 1
+	.wdt[0] = &wdt0,
+#endif
+};

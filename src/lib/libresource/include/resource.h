@@ -17,36 +17,30 @@
 
 typedef struct device_properties
 {
-	cpu_t core[N_CORES];
+	cpu_t *core[N_CORES];
 	uint8_t datawidth;
 	unsigned long base_clock;
-	memory_t memory;
-#if GPIO
-	gpio_module_t port[N_PORT];
+	memory_t *memory;
+#if GPIO == 1
+	gpio_module_t *port[N_PORT];
 #endif
-#if UART0
-	module_t uart0;
+#if UART == 1
+	module_t *uart[N_UART];
 #endif
-#if ADC0
-	module_t adc0;
+#if ADC == 1
+	module_t *adc[N_ADC];
 #endif
-#if TIMER0
-	module_t timer0;
+#if TIMER == 1
+	module_t *timer[N_TIMER];
 #endif
-#if TIMER1
-	module_t timer1;
+#if SPI == 1
+	module_t *spi[N_SPI];
 #endif
-#if TIMER2
-	module_t timer2;
+#if I2C == 1
+	module_t *i2c[N_I2C];
 #endif
-#if SPI0
-	module_t spi0;
-#endif
-#if I2C0
-	module_t i2c0;
-#endif
-#if WDT0
-	module_t wdt0;
+#if WDT == 1
+	module_t *wdt[N_WDT];
 #endif
 } dp_t;
 
