@@ -9,10 +9,20 @@
  */
 
 #include <status.h>
+#include <sp.h>
 
-// sp_t *sw_prop;
+sp_t *sw_prop;
 
-status_t sp_init()
+status_t sp_init(sp_t *plat_sw_prop)
 {
-	return success;
+	status_t ret;
+
+	if(plat_sw_prop)
+	{
+		sw_prop = plat_sw_prop;
+		ret = success;
+	}
+	else
+		ret = error_inval_arg;
+	return ret;
 }
