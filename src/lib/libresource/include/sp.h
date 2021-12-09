@@ -1,5 +1,6 @@
 #pragma once
 
+#include <status.h>
 #include <sp/sp_visor.h>
 
 /*
@@ -41,3 +42,5 @@ typedef struct sp
 	swdev_t **swdev;
 	size_t n_swdev;
 } sp_t;
+
+status_t sp_init(sp_t *);

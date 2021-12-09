@@ -12,7 +12,6 @@
 #include <status.h>
 #include <stdio.h>
 #include <platform.h>
-#include <device.h>
 #include <driver.h>
 #include <resource.h>
 #include <machine_call.h>
@@ -45,7 +44,7 @@ status_t platform_wdt_setup()
 {
 	mret_t mres;
 	module_t *dp;
-	mres = arch_machine_call(fetch_dp, DEV_WDT, 0, 0);
+	mres = arch_machine_call(fetch_dp, wdt, 0, 0);
 
 	if(mres.status != success)
 		return mres.status;

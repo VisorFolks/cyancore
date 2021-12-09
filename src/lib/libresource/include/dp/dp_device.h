@@ -13,8 +13,9 @@
 
 typedef enum
 {
-	uart = 0x100,
-	pll = 0x200,
-	i2c = 0x300,
+	clock = 0x100,
+	uart = 0x200,
+	gpio = 0x300,
+	wdt = 0x400,
 } hw_devid_t;
 

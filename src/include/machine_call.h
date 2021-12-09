@@ -14,19 +14,22 @@
 #include <stdint.h>
 #include <status.h>
 
+// Machine call IDs
+typedef enum mcall_id
+{
+	fetch_sp		= 0x0001,
+	fetch_dp		= 0x0002,
+	set_sleep_mode		= 0x0003,
+} mcall_id_t;
+
+
+
 typedef struct mret
 {
 	uintptr_t p;
 	size_t size;
 	status_t status;
 } mret_t;
-
-// Machine call IDs
-
-typedef enum mcall_id
-{	fetch_dp		= 0x0001,
-	set_sleep_mode		= 0x0002
-} mcall_id_t;
 
 typedef struct mcall
 {

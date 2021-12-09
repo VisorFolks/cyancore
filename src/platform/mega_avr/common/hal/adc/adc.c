@@ -17,7 +17,6 @@
 #include <platform.h>
 #include <interrupt.h>
 #include <hal/adc.h>
-#include <device.h>
 #include <arch.h>
 #include "adc_private.h"
 
