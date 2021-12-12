@@ -27,14 +27,22 @@ DEP_SRCS	+= $(C_SRCS) $(CPP_SRCS)
 .SECONDEXPANSION:
 $(CPP_OBJS): $(OUT)/%.o: %.cpp | $$(@D)/
 	@echo "Elf: Compiling $(@F:.o=.cpp) ..."
+ifeq ($(PP),1)
+	$(CCP) $(CFLAGS) -E -p $< -o $(@:.o=.pre.cpp)
+endif
 	$(CCP) $(CFLAGS) -c $< -o $@
 
 $(C_OBJS): $(OUT)/%.o: %.c | $$(@D)/
 	@echo "Elf: Compiling $(@F:.o=.c) ..."
+ifeq ($(PP),1)
+	$(CC) $(CFLAGS) -E -p $< -o $(@:.o=.pre.c)
+endif
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(S_OBJS): $(OUT)/%.o: %.S | $$(@D)/
 	@echo "Elf: Assembling $(@F:.o=.S) ..."
-	$(CC) -E $(CFLAGS) -c $< -o $(@:.o=.pS)
-	$(AS) $(ASFLAGS) $(@:.o=.pS) -o $@
-	rm $(@:.o=.pS)
+	$(CC) -E $(CFLAGS) -c $< -o $(@:.o=.pre.S)
+	$(AS) $(ASFLAGS) $(@:.o=.pre.S) -o $@
+ifneq ($(PP),1)
+	rm $(@:.o=.pre.S)
+endif

@@ -18,11 +18,9 @@
 #include <machine_call.h>
 #include <arch.h>
 #include <lock/lock.h>
-#include <device.h>
 #include <hal/gpio.h>
 #include "gpio_private.h"
 
-#if N_PORT
 status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 {
 	mret_t mres;
@@ -30,9 +28,6 @@ status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 	unsigned char flag;
 
 	assert(port);
-
-	if(portID >= N_PORT || pinID >= BIT)
-		return error_inval_arg;
 
 	lock_acquire(&gpio_lock);
 	flag = 0;
@@ -47,7 +42,7 @@ status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 
 	port->pin = pinID;
 	port->port = portID;
-	mres = arch_machine_call(fetch_dp, DEV_GPIO, portID, 0);
+	mres = arch_machine_call(fetch_dp, gpio, portID, 0);
 	if(mres.status != success)
 		return mres.status;
 	dp = (gpio_module_t *)mres.p;
@@ -93,9 +88,6 @@ status_t gpio_pin_free(gpio_port_t *port)
 status_t gpio_pin_set(gpio_port_t *port)
 {
 	assert(port);
-	if(port->pin >= BIT)
-		return error_inval_arg;
-
 	MMIO8(port->pbaddr + PORT_OFFSET) |= (1 << port->pin);
 	return success;
 }
@@ -103,8 +95,6 @@ status_t gpio_pin_set(gpio_port_t *port)
 status_t gpio_pin_clear(gpio_port_t *port)
 {
 	assert(port);
-	if(port->pin >= BIT)
-		return error_inval_arg;
 	MMIO8(port->pbaddr + PORT_OFFSET) &= ~(1 << port->pin);
 	return success;
 }
@@ -112,8 +102,6 @@ status_t gpio_pin_clear(gpio_port_t *port)
 status_t gpio_pin_toggle(gpio_port_t *port)
 {
 	assert(port);
-	if(port->pin >= BIT)
-		return error_inval_arg;
 	MMIO8(port->pbaddr + PORT_OFFSET) ^= (1 << port->pin);
 	return success;
 }
@@ -121,7 +109,6 @@ status_t gpio_pin_toggle(gpio_port_t *port)
 bool gpio_pin_read(gpio_port_t *port)
 {
 	assert(port);
-	assert(port->pin <= BIT);
 	return (MMIO8(port->pbaddr + PIN_OFFSET) & (1 << port->pin)) ? true : false;
 }
 
@@ -132,9 +119,6 @@ status_t gpio_port_alloc(gpio_port_t *port, uint8_t portID)
 	unsigned char flag = 0;
 
 	assert(port);
-
-	if(portID >= N_PORT)
-		return error_inval_arg;
 
 	lock_acquire(&gpio_lock);
 	if(port_status[portID])
@@ -148,7 +132,7 @@ status_t gpio_port_alloc(gpio_port_t *port, uint8_t portID)
 
 	port->pin = (uint8_t)((uint16_t)(1 << BIT) - 1);
 	port->port = portID;
-	mres = arch_machine_call(fetch_dp, DEV_GPIO, portID, 0);
+	mres = arch_machine_call(fetch_dp, gpio, portID, 0);
 	if(mres.status != success)
 		return mres.status;
 	dp = (gpio_module_t *)mres.p;
@@ -206,4 +190,3 @@ status_t gpio_port_read(gpio_port_t *port, gpio_parallel_t *val)
 	*val = (gpio_parallel_t)MMIO8(port->pbaddr + PIN_OFFSET);
 	return success;
 }
-#endif

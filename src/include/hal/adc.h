@@ -14,6 +14,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <status.h>
+#include <resource.h>
 
 typedef enum adc_trigger
 {
@@ -36,7 +37,7 @@ typedef enum adc_ref
 
 typedef struct adc_port
 {
-	uint8_t port_id;
+	hw_devid_t port_id;
 	unsigned int clk_id;
 	unsigned int fdiv;
 	uintptr_t baddr;

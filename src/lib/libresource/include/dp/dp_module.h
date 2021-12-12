@@ -15,7 +15,7 @@
 
 typedef struct module
 {
-	uint8_t id;
+	hw_devid_t id;
 	uintptr_t baddr;
 	uintptr_t stride;
 	unsigned long clk;
@@ -24,29 +24,4 @@ typedef struct module
 	int_trigger_t interrupt_trigger[MAX_INTERRUPTS_PER_DEVICE];
 } module_t;
 
-#define DP_PROTOTYPE_MODULE_FUNCTION(mod)	\
-	module_t *dp_get_##mod##_info(uint8_t);
-
-#if UART == 1
-DP_PROTOTYPE_MODULE_FUNCTION(uart)
-#endif
-
-#if ADC == 1
-DP_PROTOTYPE_MODULE_FUNCTION(adc)
-#endif
-
-#if TIMER == 1
-DP_PROTOTYPE_MODULE_FUNCTION(timer)
-#endif
-
-#if SPI == 1
-DP_PROTOTYPE_MODULE_FUNCTION(spi)
-#endif
-
-#if I2C == 1
-DP_PROTOTYPE_MODULE_FUNCTION(i2c)
-#endif
-
-#if WDT == 1
-DP_PROTOTYPE_MODULE_FUNCTION(wdt)
-#endif
+module_t *dp_get_module_info(hw_devid_t dev);

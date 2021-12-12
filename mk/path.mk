@@ -20,7 +20,7 @@ SRC		:= $(CC_ROOT)/src
 OUT_PATH	?= $(CC_ROOT)/out
 OUT		?= $(OUT_PATH)/$(PROJECT)
 
-GET_PATH	= $(patsubst %/,%,./$(dir $(lastword $(MAKEFILE_LIST))))
+GET_PATH	= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
 $(OUT)/%/:
 	mkdir -p $@

@@ -19,11 +19,6 @@ cpu_t *dp_get_cpu_info(uint8_t id)
 	return dev_prop->core[id];
 }
 
-uint8_t *dp_get_datawidth()
-{
-	return &dev_prop->datawidth;
-}
-
 unsigned long *dp_get_base_clock()
 {
 	return &dev_prop->base_clock;

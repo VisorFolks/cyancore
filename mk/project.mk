@@ -45,8 +45,6 @@ PROJECT		?= $(firstword $(MAKECMDGOALS))
 CMD		:= $(word 2,$(MAKECMDGOALS))
 ifeq ($(CMD),)
 CMD		:= default
-else
-CMD		:=
 endif
 
 .PHONY: $(PROJECT)
@@ -66,4 +64,17 @@ $(info < x > Invalid project name...)
 $(info < ! > Run `make list` to get list of projects)
 $(error < x > Build Failed!)
 endif
+endif
+
+ifeq ($(findstring $(MAKECMDGOALS),$(T_ALLOWLIST)),)
+include $(SRC)/sources.mk
+include mk/tc.mk
+endif
+
+ifeq ($(findstring $(CMD),$(T_ALLOWLIST) default clean cyancore),)
+$(CMD): $(filter %/$(CMD),$(DEP_LIBS) $(DEP_OBJS))
+	if [ "$<" = "" ]; then			\
+		echo "No such target: $@";	\
+		exit 2;				\
+	fi
 endif
