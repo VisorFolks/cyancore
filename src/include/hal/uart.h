@@ -14,6 +14,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <status.h>
+#include <resource.h>
 
 typedef enum direction
 {
@@ -31,7 +32,7 @@ typedef enum parity
 
 typedef struct uart_port
 {
-	uint8_t port_id;
+	hw_devid_t port_id;
 	unsigned int clk_id;
 	unsigned long baud;
 	uintptr_t baddr;

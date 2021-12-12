@@ -9,37 +9,20 @@
  */
 
 #include <stdint.h>
+#include <stddef.h>
 #include <status.h>
 #include <resource.h>
 
 extern dp_t *dev_prop;
 
-#define DP_CREATE_MODULE_FUNCTION(mod)			\
-	module_t *dp_get_##mod##_info(uint8_t id)	\
-	{						\
-		return dev_prop->mod[id];		\
+module_t *dp_get_module_info(hw_devid_t dev)
+{
+	unsigned int i, n_mods;
+	n_mods = dev_prop->n_mods;
+	for(i = 0; i < n_mods; i++)
+	{
+		if(dev_prop->modules[i]->id == dev)
+			return dev_prop->modules[i];
 	}
-
-#if UART == 1
-DP_CREATE_MODULE_FUNCTION(uart)
-#endif
-
-#if ADC == 1
-DP_CREATE_MODULE_FUNCTION(adc)
-#endif
-
-#if TIMER == 1
-DP_CREATE_MODULE_FUNCTION(timer)
-#endif
-
-#if SPI == 1
-DP_CREATE_MODULE_FUNCTION(spi)
-#endif
-
-#if I2C == 1
-DP_CREATE_MODULE_FUNCTION(i2c)
-#endif
-
-#if WDT == 1
-DP_CREATE_MODULE_FUNCTION(wdt)
-#endif
+	return NULL;
+}

@@ -32,7 +32,7 @@ memory_t mem =
 
 module_t uart0 =
 {
-	.id = 0x00,
+	.id = uart | 0,
 	.baddr = 0xc0,
 	.clk_id = 0x01,
 	.stride = 0x06,
@@ -45,25 +45,28 @@ module_t uart0 =
 
 gpio_module_t port0 =
 {
+	.id = gpio | 0,
 	.baddr = 0x23,
 	.stride = 3
 };
 
 gpio_module_t port1 =
 {
+	.id = gpio | 1,
 	.baddr = 0x26,
 	.stride = 3
 };
 
 gpio_module_t port2 =
 {
+	.id = gpio | 2,
 	.baddr = 0x29,
 	.stride = 3
 };
 
 module_t wdt0 =
 {
-	.id = 0,
+	.id = wdt | 0,
 	.baddr=0x60,
 	.stride=0x1,
 	.interrupt_id[0] = 0x6,
@@ -71,24 +74,25 @@ module_t wdt0 =
 	.clk = 0x7
 };
 
+gpio_module_t *port_list[] =
+{
+	&port0, &port1, &port2,
+};
+
+module_t *mod_list[] =
+{
+	&uart0, &wdt0,
+};
+
 dp_t device_prop =
 {
-	.datawidth = 8,
 	.base_clock = FCLK,
 	.core[0] = &core0,
 	.memory = &mem,
 
-#if GPIO == 1
-	.port[0] = &port0,
-	.port[1] = &port1,
-	.port[2] = &port2,
-#endif
+	.ports = port_list,
+	.n_ports = sizeof(port_list)/sizeof(gpio_module_t *),
 
-#if UART == 1
-	.uart[0] = &uart0,
-#endif
-
-#if WDT == 1
-	.wdt[0] = &wdt0,
-#endif
+	.modules = mod_list,
+	.n_mods = sizeof(mod_list)/sizeof(module_t *)
 };

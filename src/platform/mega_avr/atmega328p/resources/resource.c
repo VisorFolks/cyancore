@@ -47,34 +47,17 @@ mret_t platform_fetch_dp(unsigned int dev, unsigned int a0 _UNUSED, unsigned int
 			ret.size = sizeof(unsigned long);
 			ret.status = success;
 			break;
-#if UART == 1
-		case uart:
-			ret.p = (uintptr_t)dp_get_uart_info(a0);
-			ret.size = sizeof(module_t);
-			ret.status = success;
-			break;
-#endif
-#if GPIO == 1
 		case gpio:
-			ret.p = (uintptr_t)dp_get_port_info(a0);
+			ret.p = (uintptr_t)dp_get_port_info(dev | a0);
 			ret.size = sizeof(gpio_module_t);
 			ret.status = success;
 			break;
-#endif
-#if WDT == 1
-		case wdt:
-			ret.p = (uintptr_t) dp_get_wdt_info(a0);
+		default:
+			ret.p = (uintptr_t) dp_get_module_info(dev);
 			ret.size = sizeof(module_t);
 			ret.status = success;
 			break;
-#endif
-		default:
-			ret.p = (uintptr_t)NULL;
-			ret.size = 0x00;
-			ret.status = error_inval_dev_id;
-			break;
 	}
-
 	return ret;
 }
 

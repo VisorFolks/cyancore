@@ -14,6 +14,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <status.h>
+#include <resource.h>
 
 typedef enum dataframe_format
 {
