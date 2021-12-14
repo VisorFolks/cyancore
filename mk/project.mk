@@ -21,7 +21,7 @@ T_ALLOWLIST	+= help list
 .PHONY: aux_target
 
 default: aux_target
-	make $(PROJECT) cyancore -j$(N_HOSTS)
+	make $(PROJECT) cyancore -j$(N_JOBS)
 
 cyancore: version elf
 	$(info < / > Done !)
