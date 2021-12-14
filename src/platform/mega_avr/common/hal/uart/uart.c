@@ -56,7 +56,7 @@ status_t uart_setup(uart_port_t *port, direction_t d, parity_t p)
 			break;
 		default:
 			en = 0;
-			ret = error_inval_arg;
+			ret = error_func_inval_arg;
 	}
 	MMIO8(port->baddr + UCSRB_OFFSET) |= en;
 
@@ -123,7 +123,7 @@ status_t uart_rx(uart_port_t *port, char *data)
 {
 	assert(port);
 	if(uart_frame_error(port))
-		return error_data;
+		return error_driver_data;
 	*data = MMIO8(port->baddr + UDR_OFFSET);
 	return success;
 }

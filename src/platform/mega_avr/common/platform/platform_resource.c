@@ -54,7 +54,7 @@ _WEAK mret_t platform_fetch_sp(unsigned int a0 _UNUSED, unsigned int a1 _UNUSED,
 	mret_t ret;
 	ret.p = (uintptr_t) NULL;
 	ret.size = 0;
-	ret.status = error_inval_dev_id;
+	ret.status = error_device_id_inval;
 	return ret;
 }
 
@@ -78,6 +78,6 @@ _WEAK mret_t plaform_fetch_dp(unsigned int dev _UNUSED, unsigned int a0 _UNUSED,
 	mret_t ret;
 	ret.p = (uintptr_t)NULL;
 	ret.size = 0x00;
-	ret.status = error;
+	ret.status = error_device_id_inval;
 	return ret;
 }

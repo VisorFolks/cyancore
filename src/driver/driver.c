@@ -72,7 +72,7 @@ status_t driver_setup_all()
  */
 status_t driver_exit_all()
 {
-	status_t ret = error_inval_arg;
+	status_t ret = error_func_inval_arg;
 	device_t *ptr;
 	unsigned int order;
 	/* This loop controls the exit order */
@@ -105,7 +105,7 @@ status_t driver_exit_all()
  */
 status_t driver_setup(const char *name)
 {
-	status_t ret = error_inval_func;
+	status_t ret = error_func_inval;
 	device_t *ptr = &_driver_table_start;
 	/*
 	 * Iterate over the driver table and compare the names.
@@ -135,7 +135,7 @@ status_t driver_setup(const char *name)
  */
 status_t driver_exit(const char *name)
 {
-	status_t ret = error_inval_func;
+	status_t ret = error_func_inval;
 	device_t *ptr = &_driver_table_start;
 	while(ptr < &_driver_table_end)
 	{
@@ -162,7 +162,7 @@ status_t driver_register(device_t *dev _UNUSED)
 {
 	status_t ret;
 	if(dev->exec)
-		return error_init_done;
+		return error_driver_init_done;
 	ret = dev->driver_setup();
 	dev->exec = 1;
 	(ret == success) ? printf("< / > Started %s\n", dev->name) : 0;
@@ -181,7 +181,7 @@ status_t driver_register(device_t *dev _UNUSED)
 status_t driver_deregister(device_t *dev _UNUSED)
 {
 	if(dev->exec != 1)
-		return error;
+		return error_driver;
 	printf("< / > Stopping %s\n", dev->name);
 	return dev->driver_exit();
 }

@@ -44,7 +44,7 @@ status_t spi_master_setup(spi_port_t *port, dataframe_format_t df_format, clk_po
 			spcr_value |= (fdiv128 << SPR0);
 			break;
 		default:
-			ret = error_inval_arg;
+			ret = error_func_inval_arg;
 			break;
 	}
 	spcr_value |= df_format ? (1 << DODR) : 0;
@@ -87,7 +87,7 @@ status_t spi_slave_setup(spi_port_t *port, dataframe_format_t df_format, clk_pol
 			spcr_value |= (fdiv128 << SPR0);
 			break;
 		default:
-			ret = error_inval_arg;
+			ret = error_func_inval_arg;
 			break;
 	}
 	spcr_value |= df_format ? (1 << DODR) : 0;

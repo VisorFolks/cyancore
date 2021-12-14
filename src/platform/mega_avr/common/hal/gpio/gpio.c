@@ -38,7 +38,7 @@ status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 	lock_release(&gpio_lock);
 
 	if(flag)
-		return error_busy;
+		return error_driver_busy;
 
 	port->pin = pinID;
 	port->port = portID;
@@ -68,7 +68,7 @@ status_t gpio_pin_mode(gpio_port_t *port, gpio_mode_t mode)
 			MMIO8(pbaddr + DDR_OFFSET) &= ~(1 << pin);
 			break;
 		default:
-			return error_inval_arg;
+			return error_func_inval_arg;
 	}
 	return success;
 }
@@ -128,7 +128,7 @@ status_t gpio_port_alloc(gpio_port_t *port, uint8_t portID)
 	lock_release(&gpio_lock);
 
 	if(flag)
-		return error_busy;
+		return error_driver_busy;
 
 	port->pin = (uint8_t)((uint16_t)(1 << BIT) - 1);
 	port->port = portID;
@@ -158,7 +158,7 @@ status_t gpio_port_mode(gpio_port_t *port, gpio_mode_t mode)
 			MMIO8(pbaddr + DDR_OFFSET) &= ~(value);
 			break;
 		default:
-			return error_inval_arg;
+			return error_func_inval_arg;
 	}
 	return success;
 }

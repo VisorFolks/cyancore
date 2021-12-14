@@ -43,6 +43,6 @@ status_t sp_init(sp_t *plat_sw_prop)
 	}
 	else
 		/* If arg is NULL return error */
-		ret = error_inval_arg;
+		ret = error_func_inval_arg;
 	return ret;
 }

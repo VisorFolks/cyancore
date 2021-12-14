@@ -54,7 +54,7 @@ status_t console_attach_device(console_t *pcon)
 		console_attached = (ret == success) ? true : false;
 	}
 	else
-		ret = error_inval_arg;
+		ret = error_device_inval;
 	return ret;
 }
 
@@ -89,7 +89,7 @@ status_t console_putc(const char c)
 	/* Check if the console is attached and write methos is valid */
 	if(console_attached && con->write != NULL)
 		return con->write(c);
-	return error_inval_func;
+	return error_func_inval;
 }
 
 /**
@@ -107,7 +107,7 @@ status_t console_puts(const char *s)
 	while(*s != '\0')
 	{
 		ret = console_putc(*s);
-		if(ret == error_inval_func)
+		if(ret == error_func_inval)
 			return ret;
 		s++;
 	}
@@ -124,7 +124,7 @@ status_t console_getc(char *c)
 {
 	if(console_attached && con->read != NULL)
 		return con->read(c);
-	return error_inval_func;
+	return error_func_inval;
 }
 
 /**
@@ -136,5 +136,5 @@ status_t console_flush()
 {
 	if(console_attached && con->flush != NULL)
 		return con->flush();
-	return error_inval_func;
+	return error_func_inval;
 }

@@ -37,7 +37,7 @@ status_t conv(float *a, int size_a, float *b, int size_b, float *c, int size_c)
 	 * fails
 	 */
 	if(size_c < (size_a + size_b - 1))
-		return error_inval_arg;
+		return error_math_inval_arg;
 
 	for(int ci = 0; ci < size_c; ci++)
 	{
