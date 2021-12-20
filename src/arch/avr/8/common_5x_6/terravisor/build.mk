@@ -8,9 +8,9 @@
 # Organisation		: Cyancore Core-Team
 #
 
-AVR_ARCH_DIR	:= $(GET_PATH)
+AVR_COM_DIR	:= $(GET_PATH)
 
-include $(AVR_ARCH_DIR)/../../common_5x_6/terravisor/build.mk
+$(eval $(call add_include,$(AVR_COM_DIR)/include/))
 
-DIR		:= $(AVR_ARCH_DIR)
+DIR		:= $(AVR_COM_DIR)
 include mk/obj.mk

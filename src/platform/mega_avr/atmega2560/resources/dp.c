@@ -115,7 +115,7 @@ gpio_module_t port9 =
 
 gpio_module_t port10 =
 {
-	.id = gpio | 109,
+	.id = gpio | 10,
 	.baddr = 0x109,
 	.stride = 3
 };

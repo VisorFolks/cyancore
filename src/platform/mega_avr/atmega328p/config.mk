@@ -28,9 +28,6 @@ $(eval $(call add_define,BOOT_CORE_ID))
 FCLK		?= 16000000
 $(eval $(call add_define,FCLK))
 
-N_INT		:= 26
-$(eval $(call add_define,N_INT))
-
 N_IRQ		:= 25
 $(eval $(call add_define,N_IRQ))
 

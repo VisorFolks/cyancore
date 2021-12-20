@@ -10,7 +10,7 @@
 
 AVR_ARCH_DIR	:= $(GET_PATH)
 
-$(eval $(call add_include,$(AVR_ARCH_DIR)/include/))
+include $(AVR_ARCH_DIR)/../../common_5x_6/terravisor/build.mk
 
 DIR		:= $(AVR_ARCH_DIR)
 include mk/obj.mk
