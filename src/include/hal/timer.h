@@ -13,33 +13,21 @@
 
 #include <stdint.h>
 #include <status.h>
-#include <timer_mode.h>
 
-/*
- * This data type will be declared in
- * platform/<family>/common/include/timer_mode.h
- * This will let user choose platform specific hal
- * driver and it's corresponding modes.
- */
-typedef enum timer_mode timer_mode_t;
 
-typedef enum timer_ps
-{
-	div1 = 1,
-	div2, div4, div8,
-	div16, div32, div64,
-	div128, div256, div512,
-	div1024, div2048, div4096,
-	ext_src_rise, ext_src_fall
-} timer_ps_t;
 
 typedef struct timer_port
 {
-	uint8_t port_id;
+	hw_devid_t port_id;
 	unsigned int clk_id;
 	uintptr_t baddr;
 	uintptr_t stride;
+	size_t value;
 	size_t tmr_irq;
 	void (*tmr_handler)(void);
 } timer_port_t;
 
+status_t timer_setup(timer_port_t *port, unsigned int mode, unsigned int ps);
+status_t timer_shutdown(timer_port_t *port);
+status_t timer_read(timer_port_t *port, size_t *value);
+status_t timer_pwm_set(timer_port_t *port, bool invert, size_t value);

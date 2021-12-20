@@ -17,62 +17,97 @@
 #include <mmio.h>
 #include <interrupt.h>
 #include <platform.h>
-#include <device.h>
+#include <resource.h>
 #include <machine_call.h>
 #include <arch.h>
+#include <hal/timer.h>
 #include "timer8.h"
 #include "timer16.h"
-#include "pwm8.h"
-#include "pwm16.h.h"
 
-lock_t timer_hal_lock;
-/* Assuming max of 32 timers can be present on board */
-uint32_t timer_used = 0x00;
-
-/*internal function*/
-status_t timer_alloc(size_t id)
+status_t timer_setup(timer_port_t *port, unsigned int mode, unsigned int ps)
 {
-	status_t ret = success;
-	lock_acquire(&timer_hal_lock);
-	if(timer_used & (1 << id))
-		ret = error_busy;
+	status_t ret;
+	unsigned id;
+	assert(port);
+	id = port->port_id & 0xf0;
+	ret = platform_clk_en(port->clk_id);
+	if(id == 0 || id == 0x20)
+	{
+		if(port->tmr_handler)
+		{
+			timer8_set(port, port->value);
+			ret |= link_interrupt(arch, port->tmr_irq, port->tmr_handler);
+			timer8_irq_en(port);
+		}
+		timer8_config_mode(port, mode);
+		timer8_config_ps(port, ps);
+	}
 	else
-		timer_used |= (1 << id);
-	lock_release(&timer_hal_lock);
+	{
+		if(port->tmr_handler)
+		{
+			timer16_set(port, port->value);
+			ret |= link_interrupt(arch, port->tmr_irq, port->tmr_handler);
+			timer16_irq_en(port);
+		}
+		timer16_config_mode(port, mode);
+		timer16_config_ps(port, ps);
+	}
 	return ret;
-}
-
-/*internal function*/
-status_t timer_release(size_t id)
-{
-	status_t ret = success;
-	lock_acquire(&timer_hal_lock);
-	timer_used &= ~(1 << id);
-	lock_release(&timer_hal_lock);
-	return ret;
-}
-
-
-status_t timer_setup(timer_port_t *port, timer_mode_t mode, timer_ps_t ps)
-{
 }
 
 status_t timer_shutdown(timer_port_t *port)
 {
+	status_t ret = success;
+	unsigned id;
+	assert(port);
+	id = port->port_id & 0xf0;
+	if(id == 0 || id == 0x20)
+	{
+		timer8_config_mode(port, 0);
+		timer8_config_ps(port, 0);
+		timer8_irq_dis(port);
+	}
+	else
+	{
+		timer16_config_mode(port, 0);
+		timer16_config_ps(port, 0);
+		timer16_irq_dis(port);
+	}
+	ret |= unlink_interrupt(arch, port->tmr_irq);
+	ret |= platform_clk_dis(port->clk_id);
+	return ret;
 }
 
 status_t timer_read(timer_port_t *port, size_t *value)
 {
+	unsigned id;
+	assert(port);
+	id = port->port_id & 0xf0;
+	if(id == 0 || id == 0x20)
+		*value = timer8_read(port);
+	else
+		*value = timer16_read(port);
+	return success;
 }
 
-status_t timer_pwm_set(timer_port_t *port, size_t value)
+
+status_t timer_pwm_set(timer_port_t *port, bool invert, size_t value)
 {
+	status_t ret = success;
+	unsigned id;
+	assert(port);
+	id = port->port_id & 0xf0;
+	if(id == 0 || id == 0x20)
+	{
+		timer8_config_op_mode(port, 1, invert);
+		timer8_set(port, (uint8_t)value);
+	}
+	else
+	{
+		timer16_config_op_mode(port, 1, invert);
+		timer16_set(port, value);
+	}
+	return ret;
 }
 
-status_t timer_int_en(timer_port_t *port)
-{
-}
-
-status_t timer_int_dis(timer_port_t *port)
-{
-}

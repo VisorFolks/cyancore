@@ -19,5 +19,6 @@ typedef enum
 	uart		= 0x400,
 	gpio		= 0x500,
 	wdt		= 0x600,
+	timer		= 0x700,
 } hw_devid_t;
 
