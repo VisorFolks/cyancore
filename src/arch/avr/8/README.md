@@ -4,5 +4,6 @@ Home directory for AVR-8 CPU
 
 #### Supported Variants
 * AVR5
+* AVR6
 
 Refer avr-libc manual for architectural changes...
