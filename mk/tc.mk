@@ -25,11 +25,12 @@ endif
 ifeq ($(findstring avr,$(ARCH)),avr)
 TC	?= $(TOOLS_ROOT)/avr-toolchain/bin/avr
 TI	:= $(TOOLS_ROOT)/avr-toolchain/lib/gcc/avr/5.4.0/include-fixed
-TL	:= $(TOOLS_ROOT)/avr-toolchain/lib/gcc/avr/5.4.0/
+TL	:= $(TOOLS_ROOT)/avr-toolchain/lib/gcc/avr/5.4.0/$(ARCH)$(ARCH_VARIANT)/
 endif
 
 ifneq ($(ARCH),)
 AS	:= $(TC)-as
+AR	:= $(TC)-ar
 CC	:= $(TC)-gcc
 CCP	:= $(TC)-g++
 LD	:= $(TC)-ld
