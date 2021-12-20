@@ -14,8 +14,8 @@ ATMEGA328P_DIR	:= $(GET_PATH)
 
 ARCH		:= avr
 BIT		:= 8
-ARCH_VARIANT	:= 5
-TARGET_FLAGS	+= -mmcu=atmega328p
+ARCH_VARIANT	:= 6
+TARGET_FLAGS	+= -mmcu=atmega2560
 PLAT_INCLUDE	+= $(ATMEGA328P_DIR)/include
 OUTPUT_FORMAT	:= elf32-avr
 
