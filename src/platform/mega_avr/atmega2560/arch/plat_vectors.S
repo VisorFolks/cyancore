@@ -4,7 +4,7 @@
  *
  * File Name		: plat_vectors.S
  * Description		: This file contains platform vector of atmega328p
- * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Primary Author	: Rahul Goyal [rhgoyal01@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 

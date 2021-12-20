@@ -3,10 +3,10 @@
 # Copyrights (C) 2019, Cyancore Team
 #
 # File Name		: build.mk
-# Description		: This file accumulates the build scripts from 
+# Description		: This file accumulates the build scripts from
 #			  all other directories that have atmega328p
 #			  board support sources
-# Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+# Primary Author	: Rahul Goyal [rhgoyal01@gmail.com]
 # Organisation		: Cyancore Core-Team
 #
 

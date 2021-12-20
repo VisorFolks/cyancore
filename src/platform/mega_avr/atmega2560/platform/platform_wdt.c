@@ -5,7 +5,7 @@
  * File Name		: platform_wdt.c
  * Description		: This file contains sources for platform
  *			  wdt apis
- * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Primary Author	: Rahul Goyal [rhgoyal01@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 
@@ -122,7 +122,7 @@ wdog_t plat_wdt_driver =
 
 /**
  * plat_wdt_driver_setup
- * 
+ *
  * @brief This function is called to initialise wdt driver during boot
  */
 status_t plat_wdt_driver_setup()

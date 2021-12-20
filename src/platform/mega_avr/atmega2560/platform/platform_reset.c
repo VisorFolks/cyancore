@@ -5,7 +5,7 @@
  * File Name		: platform_reset.c
  * Description		: This file contains sources for platform
  *			  reset apis
- * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Primary Author	: Rahul Goyal [rhgoyal01@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 
@@ -77,4 +77,3 @@ void platform_reset_handler(reset_t rsyn)
 			plat_panic_handler();
 	}
 }
-

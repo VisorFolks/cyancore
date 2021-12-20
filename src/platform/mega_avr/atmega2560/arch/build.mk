@@ -3,8 +3,8 @@
 # Copyrights (C) 2019, Cyancore Team
 #
 # File Name		: build.mk
-# Description		: This file builds sources of platform-arch 
-# Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+# Description		: This file builds sources of platform-arch
+# Primary Author	: Rahul Goyal [rhgoyal01@gmail.com]
 # Organisation		: Cyancore Core-Team
 #
 

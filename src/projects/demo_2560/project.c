@@ -4,7 +4,7 @@
  *
  * File Name		: project.c
  * Description		: This file consists of project srouces
- * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Primary Author	: Rahul Goyal [rhgoyal01@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 
@@ -22,7 +22,7 @@ void plug()
 {
 	bootstrap();
 	driver_setup_all();
-	gpio_pin_alloc(&led_13, 1, 5);
+	gpio_pin_alloc(&led_13, 1, 7);
 	gpio_pin_mode(&led_13, out);
 	gpio_pin_clear(&led_13);
 	printf("Demo Program!\n");

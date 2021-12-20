@@ -5,7 +5,7 @@
  * File Name		: platform_dp.c
  * Description		: This file contains sources for platform
  *			  device properties
- * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Primary Author	: Rahul Goyal [rhgoyal01@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 
