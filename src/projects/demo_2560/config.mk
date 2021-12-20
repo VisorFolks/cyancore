@@ -11,7 +11,5 @@
 COMPILER	:= gcc
 FAMILY		:= mega_avr
 PLATFORM	:= atmega2560
-GPIO		:= 1
-CONSOLE		:= 1
 EARLYCON_SERIAL	:= 1
 CONSOLE_SERIAL	:= 1
