@@ -61,7 +61,7 @@ status_t wdt_setup(wdt_port_t *port)
 	assert(port);
 
 	if(port->wdt_handler == NULL)
-		return error_inval_arg;
+		return error_func_inval_arg;
 
 	ret = link_interrupt(arch, port->wdt_irq, port->wdt_handler);
 
@@ -73,7 +73,7 @@ status_t wdt_setup(wdt_port_t *port)
 	lock_release(&wdt_lock);
 
 	if(MMIO8(WDTCSR) != 0)
-		ret |= error_init_not_done;
+		ret |= error_driver_init_failed;
 	return ret;
 }
 
@@ -99,7 +99,7 @@ status_t wdt_shutdown(wdt_port_t *port)
 	lock_release(&wdt_lock);
 
 	if(MMIO8(WDTCSR) != 0)
-		return error;
+		return error_driver_data;
 	return success;
 }
 
@@ -132,7 +132,7 @@ status_t wdt_set_timeout(wdt_port_t *port)
 	lock_release(&wdt_lock);
 
 	if(MMIO8(WDTCSR) != timeout)
-		ret |= error_init_not_done;
+		ret |= error_driver_init_failed;
 	return ret;
 }
 
@@ -174,7 +174,7 @@ status_t wdt_sre(wdt_port_t *port)
 	lock_release(&wdt_lock);
 
 	if(MMIO8(WDTCSR) != val)
-		return error_init_not_done;
+		return error_driver_init_failed;
 
 	return success;
 }
@@ -202,7 +202,7 @@ status_t wdt_srd(wdt_port_t *port)
 	lock_release(&wdt_lock);
 
 	if(MMIO8(WDTCSR) != val)
-		return error_init_not_done;
+		return error_driver_init_failed;
 
 	return success;
 }

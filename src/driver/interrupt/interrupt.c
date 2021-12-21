@@ -39,7 +39,7 @@ status_t link_interrupt(int_module_t target, unsigned int id, void (*handler)(vo
 			break;
 #endif
 		default:
-			ret = error_inval_arg;
+			ret = error_system_irq_link_fail;
 			break;
 	}
 	return ret;
@@ -66,7 +66,7 @@ status_t unlink_interrupt(int_module_t target, unsigned int id)
 			break;
 #endif
 		default:
-			ret = error_inval_arg;
+			ret = error_system_irq_unlink_fail;
 			break;
 	}
 	return ret;

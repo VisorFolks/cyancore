@@ -44,6 +44,6 @@ status_t dp_init(dp_t *plat_dev_prop)
 	}
 	else
 		/* If arg is NULL return error */
-		ret = error_inval_arg;
+		ret = error_func_inval_arg;
 	return ret;
 }

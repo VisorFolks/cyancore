@@ -53,7 +53,7 @@ mret_t platform_fetch_dp(unsigned int dev, unsigned int a0 _UNUSED, unsigned int
 			ret.status = success;
 			break;
 		default:
-			ret.p = (uintptr_t) dp_get_module_info(dev);
+			ret.p = (uintptr_t) dp_get_module_info(dev | a0);
 			ret.size = sizeof(module_t);
 			ret.status = success;
 			break;

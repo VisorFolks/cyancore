@@ -35,8 +35,8 @@ typedef struct cpu
 {
 	char name[10];
 	uint16_t id;
-	cpu_sleep_t *states;
-	size_t n_sleeps;
+	cpu_sleep_t **states;
+	size_t n_sleep_states;
 
 } cpu_t;
 

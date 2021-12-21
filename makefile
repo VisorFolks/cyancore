@@ -13,7 +13,7 @@
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*#
 
 SHELL		:= /bin/bash
-N_HOSTS		:= $(shell grep -c ^processor /proc/cpuinfo)
+N_JOBS		?= $(shell grep -c ^processor /proc/cpuinfo)
 HOST_ARCH	:= $(shell lscpu | grep -Po '(?<='Architecture:'        )[^"]*')
 V		?= 0
 PP		?= 0

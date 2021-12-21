@@ -74,6 +74,36 @@ module_t wdt0 =
 	.clk = 0x7
 };
 
+module_t timer0 =
+{
+	.id = timer | 0x00,
+	.baddr = 0x44,
+	.stride = 5,
+	.interrupt_id[0] = 14,
+	.interrupt_id[1] = 15,
+	.clk_id = 5,
+};
+
+module_t timer1 =
+{
+	.id = timer | 0x10,
+	.baddr = 0x80,
+	.stride = 12,
+	.interrupt_id[0] = 11,
+	.interrupt_id[1] = 12,
+	.clk_id = 3,
+};
+
+module_t timer2 =
+{
+	.id = timer | 0x20,
+	.baddr = 0xb0,
+	.stride = 5,
+	.interrupt_id[0] = 7,
+	.interrupt_id[1] = 8,
+	.clk_id = 6,
+};
+
 gpio_module_t *port_list[] =
 {
 	&port0, &port1, &port2,
@@ -81,7 +111,7 @@ gpio_module_t *port_list[] =
 
 module_t *mod_list[] =
 {
-	&uart0, &wdt0,
+	&uart0, &wdt0, &timer0, &timer1, &timer2,
 };
 
 dp_t device_prop =

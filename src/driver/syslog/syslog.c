@@ -82,18 +82,18 @@ static char syslog_buffer [SYSLOG_BUFFER_LEN];
  * @param[in]	cb		Syslog minimal callback. Default: NULL, selects: syslog_default_cb (weak)
  *
  * @return	status
- * @exception	error_inval_arg		for argument errors
- * @exception	error_init_done		if the initialisation is already done
+ * @exception	error_func_inval_arg		for argument errors
+ * @exception	error_driver_init_done		if the initialisation is already done
  */
 status_t syslog_setup(syslog_level_t sys_log_level, syslog_cb_t cb)
 {
-	RET_ERR(syslog_ctrl.attach != SYSLOG_ATTACHED, error_init_done);
-	RET_ERR((sys_log_level < syslog_level_max) && (sys_log_level >= syslog_level_verbose), error_inval_arg);
+	RET_ERR(syslog_ctrl.attach != SYSLOG_ATTACHED, error_driver_init_done);
+	RET_ERR((sys_log_level < syslog_level_max) && (sys_log_level >= syslog_level_verbose), error_func_inval_arg);
 
 	status_t ret = success;
 
 	ret = console_setup();
-	if (ret == success || ret == error_init_done)
+	if (ret == success || ret == error_driver_init_done)
 	{
 		syslog_ctrl.syslog_fmt = SYSLOG_FMT_DEF;
 		syslog_ctrl.syslog_table_reg_len = SYSLOG_VAR_INIT;
@@ -121,13 +121,13 @@ status_t syslog_setup(syslog_level_t sys_log_level, syslog_cb_t cb)
  * @param[in]	sys_log_level	This is the new logging level of the logging system.
  *
  * @return	status_t
- * @exception	error_inval_arg		for argument errors
- * @exception	error_init_not_done	if the initialisation is not done
+ * @exception	error_func_inval_arg		for argument errors
+ * @exception	error_driver_init_failed	if the initialisation is not done
  */
 status_t syslog_set_level(syslog_level_t sys_log_level)
 {
-	RET_ERR(syslog_ctrl.attach == SYSLOG_ATTACHED, error_init_not_done);
-	RET_ERR((sys_log_level < syslog_level_max) && (sys_log_level >= syslog_level_verbose), error_inval_arg);
+	RET_ERR(syslog_ctrl.attach == SYSLOG_ATTACHED, error_driver_init_failed);
+	RET_ERR((sys_log_level < syslog_level_max) && (sys_log_level >= syslog_level_verbose), error_func_inval_arg);
 
 	syslog_ctrl.sys_log_level = sys_log_level;
 	return success;
@@ -140,12 +140,12 @@ status_t syslog_set_level(syslog_level_t sys_log_level)
  * @param[out] 	sys_log_level	This is the current logging level of the logging system.
  *
  * @return	status
- * 		error_inval_arg		for argument errors
- * 		error_init_not_done	if the initialisation is not done
+ * 		error_func_inval_arg		for argument errors
+ * 		error_driver_init_failed	if the initialisation is not done
  */
 status_t syslog_get_level(syslog_level_t *sys_log_level)
 {
-	RET_ERR(syslog_ctrl.attach == SYSLOG_ATTACHED, error_init_not_done);
+	RET_ERR(syslog_ctrl.attach == SYSLOG_ATTACHED, error_driver_init_failed);
 	*sys_log_level = syslog_ctrl.sys_log_level;
 	return success;
 }
@@ -167,14 +167,14 @@ status_t syslog_get_level(syslog_level_t *sys_log_level)
  * @param[in]	log_level	Level of the output log (Ref: Logging levels available)
  *
  * @return	status
- * @exception	error_inval_arg		for argument errors
- * @exception	error_init_not_done	if the initialisation is not done
+ * @exception	error_func_inval_arg		for argument errors
+ * @exception	error_driver_init_failed	if the initialisation is not done
  */
 status_t syslog_log(const char * agent, const char * fname _UNUSED, int line _UNUSED, const char * output_str, syslog_level_t log_level)
 {
-	RET_ERR(syslog_ctrl.attach == SYSLOG_ATTACHED, error_init_not_done);
-	RET_ERR((log_level < syslog_level_max) && (log_level >= syslog_level_verbose), error_inval_arg);
-	RET_ERR(output_str != NULL, error_inval_arg);
+	RET_ERR(syslog_ctrl.attach == SYSLOG_ATTACHED, error_driver_init_failed);
+	RET_ERR((log_level < syslog_level_max) && (log_level >= syslog_level_verbose), error_func_inval_arg);
+	RET_ERR(output_str != NULL, error_func_inval_arg);
 
 	char * agent_str = (char *)agent;
 
@@ -208,18 +208,18 @@ status_t syslog_log(const char * agent, const char * fname _UNUSED, int line _UN
  * @param[out]	fd		File descriptor pointer as received during registration
  *
  * @return	status
- * @exception	error			if maximum possible callback registered
- * @exception	error_inval_arg		for argument errors
- * @exception	error_init_not_done	if the initialisation is not done
+ * @exception	error_generic			if maximum possible callback registered
+ * @exception	error_func_inval_arg		for argument errors
+ * @exception	error_driver_init_failed	if the initialisation is not done
  */
 status_t syslog_reg_cb(syslog_cb_t cb, syslog_cb_fd_t *fd)
 {
-	RET_ERR(syslog_ctrl.attach == SYSLOG_ATTACHED, error_init_not_done);
-	RET_ERR(syslog_ctrl.syslog_table_reg_len < SYSLOG_MAX_CALLBACKS, error);
-	RET_ERR(cb != NULL, error_inval_arg);
-	RET_ERR(fd != NULL, error_inval_arg);
+	RET_ERR(syslog_ctrl.attach == SYSLOG_ATTACHED, error_driver_init_failed);
+	RET_ERR(syslog_ctrl.syslog_table_reg_len < SYSLOG_MAX_CALLBACKS, error_generic);
+	RET_ERR(cb != NULL, error_func_inval_arg);
+	RET_ERR(fd != NULL, error_func_inval_arg);
 
-	*fd = (syslog_cb_fd_t) error_inval_arg;
+	*fd = (syslog_cb_fd_t) error_func_inval_arg;
 	for(syslog_cb_fd_t index = 0; index < syslog_ctrl.syslog_table_reg_len; index++)
 	{
 		if(syslog_ctrl.syslog_cb_table[index] == NULL)
@@ -233,9 +233,9 @@ status_t syslog_reg_cb(syslog_cb_t cb, syslog_cb_fd_t *fd)
 		}
 	}
 
-	RET_ERR(!(syslog_ctrl.syslog_table_reg_len >= SYSLOG_MAX_CALLBACKS && *fd == (syslog_cb_fd_t) error_inval_arg), error);
+	RET_ERR(!(syslog_ctrl.syslog_table_reg_len >= SYSLOG_MAX_CALLBACKS && *fd == (syslog_cb_fd_t) error_func_inval_arg), error_generic);
 
-	if(*fd == (syslog_cb_fd_t) error_inval_arg)
+	if(*fd == (syslog_cb_fd_t) error_func_inval_arg)
 	{
 		syslog_ctrl.syslog_cb_table[syslog_ctrl.syslog_table_reg_len] = cb;
 		*fd = syslog_ctrl.syslog_table_reg_len;
@@ -256,14 +256,14 @@ status_t syslog_reg_cb(syslog_cb_t cb, syslog_cb_fd_t *fd)
  * @param[in]	fd		File descriptor pointer as received during registration
  *
  * @return	status
- * @exception	error_inval_arg		for argument errors
- * @exception	error_init_not_done	if the initialisation is not done
+ * @exception	error_func_inval_arg		for argument errors
+ * @exception	error_driver_init_failed	if the initialisation is not done
  */
 status_t syslog_dereg_cb(syslog_cb_fd_t *fd)
 {
-	RET_ERR(syslog_ctrl.attach == SYSLOG_ATTACHED, error_init_not_done);
-	RET_ERR(fd != NULL, error_inval_arg);
-	RET_ERR(*fd < syslog_ctrl.syslog_table_reg_len, error_inval_arg);
+	RET_ERR(syslog_ctrl.attach == SYSLOG_ATTACHED, error_driver_init_failed);
+	RET_ERR(fd != NULL, error_func_inval_arg);
+	RET_ERR(*fd < syslog_ctrl.syslog_table_reg_len, error_func_inval_arg);
 
 	syslog_ctrl.syslog_cb_table[*fd] = NULL;
 	*fd = SYSLOG_VAR_INIT;
@@ -278,12 +278,12 @@ status_t syslog_dereg_cb(syslog_cb_fd_t *fd)
  * @param[in/out]	void
  *
  * @return	status
- * @exception	error_inval_arg		for argument errors
- * @exception	error_init_not_done	if the initialisation is not done
+ * @exception	error_func_inval_arg		for argument errors
+ * @exception	error_driver_init_failed	if the initialisation is not done
  */
 status_t syslog_release(void)
 {
-	RET_ERR(syslog_ctrl.attach == SYSLOG_ATTACHED, error_init_not_done);
+	RET_ERR(syslog_ctrl.attach == SYSLOG_ATTACHED, error_driver_init_failed);
 
 	memset(&syslog_ctrl, MEMSET_CLEAR, sizeof(syslog_ctrl));
 	return success;

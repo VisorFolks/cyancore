@@ -25,7 +25,7 @@ status_t platform_clk_reset()
 status_t platform_clk_en(unsigned int id)
 {
 	if(id >= 16)
-		return error_data;
+		return error_func_inval_arg;
 	if(id < 8)
 		MMIO8(PRR0) &= ~(1 << id);
 	else
@@ -36,7 +36,7 @@ status_t platform_clk_en(unsigned int id)
 status_t platform_clk_dis(unsigned int id)
 {
 	if(id >= 16)
-		return error_data;
+		return error_func_inval_arg;
 	if(id < 8)
 		MMIO8(PRR0) |= (1 << id);
 	else

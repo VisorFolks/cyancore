@@ -31,5 +31,5 @@ status_t platform_wdt_reset()
 	val = MMIO8(WDTCSR);
 	if(val == 0)
 		return success;
-	return error;
+	return error_driver_data;
 }

@@ -13,8 +13,14 @@
 #include <status.h>
 #include <resource.h>
 
+/* Refer dp.c file for info */
 extern dp_t *dev_prop;
 
+/**
+ * *dp_get_module_info - get the module info
+ *
+ * @brief This function 
+ */
 module_t *dp_get_module_info(hw_devid_t dev)
 {
 	unsigned int i, n_mods;

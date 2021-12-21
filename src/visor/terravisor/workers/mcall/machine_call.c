@@ -29,7 +29,7 @@ void machine_call(mcall_id_t id, unsigned int a0, unsigned int a1, unsigned int 
 	 */
 	ret->p = (uintptr_t) NULL;
 	ret->size = 0;
-	ret->status = error_inval_code;
+	ret->status = error_mcall_code_inval;
 
 	/* Assign the pointer to start of table */
 	ptr = &_mcall_table_start;
