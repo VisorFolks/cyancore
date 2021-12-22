@@ -6,7 +6,7 @@
  * Description		: This file contains arch specific defines and
  *			  prototypes
  * Primary Author	: Rahul Goyal [rhgoyal01@gmail.com]
- * Organisation		: Cyancore Core-Team
+ * Organisation		: Cyancore Contributor
  */
 
 #pragma once

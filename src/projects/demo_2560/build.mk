@@ -6,7 +6,7 @@
 # Description		: This file build project sources and specifies
 #			  project properties
 # Primary Author	: Rahul Goyal [rhgoyal01@gmail.com]
-# Organisation		: Cyancore Core-Team
+# Organisation		: Cyancore Contributor
 #
 
 PROJECT_DIR	:= $(GET_PATH)

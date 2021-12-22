@@ -5,7 +5,7 @@
 # File Name		: build.mk
 # Description		: This file builds sources of platform-arch
 # Primary Author	: Rahul Goyal [rhgoyal01@gmail.com]
-# Organisation		: Cyancore Core-Team
+# Organisation		: Cyancore Contributor
 #
 
 DIR		:= $(GET_PATH)
