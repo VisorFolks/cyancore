@@ -52,8 +52,8 @@ mret_t platform_fetch_sp(unsigned int a0, unsigned int a1 _UNUSED, unsigned int 
 {
 	mret_t ret;
 	ret.p = (uintptr_t) sp_terravisor_dev_info(a0);
-	ret.size = sizeof(hw_devid_t);
-	ret.status = success;
+	ret.size = (ret.p) ? sizeof(hw_devid_t) : 0;
+	ret.status = (ret.p) ? success : error_device_id_inval;
 	return ret;
 }
 
@@ -79,20 +79,18 @@ mret_t platform_fetch_dp(unsigned int a0, unsigned int a1 _UNUSED, unsigned int 
 	{
 		case clock:
 			ret.p = (uintptr_t)dp_get_base_clock();
-			ret.size = sizeof(unsigned long);
-			ret.status = success;
+			ret.size = (ret.p) ? sizeof(unsigned long) : 0;
 			break;
 		case gpio:
 			ret.p = (uintptr_t)dp_get_port_info(a0 | a1);
-			ret.size = sizeof(gpio_module_t);
-			ret.status = success;
+			ret.size = (ret.p) ? sizeof(gpio_module_t) : 0;
 			break;
 		default:
 			ret.p = (uintptr_t) dp_get_module_info(a0 | a1);
-			ret.size = sizeof(module_t);
-			ret.status = success;
+			ret.size = (ret.p) ? sizeof(module_t) : 0;
 			break;
 	}
+	ret.status = (ret.p) ? success : error_device_id_inval;
 	return ret;
 }
 
