@@ -6,7 +6,7 @@
  * Description		: This file contains sources for platform
  *			  clock apis
  * Primary Author	: Rahul Goyal [rhgoyal01@gmail.com]
- * Organisation		: Cyancore Core-Team
+ * Organisation		: Cyancore Contributor
  */
 
 #include <stdint.h>

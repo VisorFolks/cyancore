@@ -5,7 +5,7 @@
 # File Name		: config.mk
 # Description		: This file consists of project config
 # Primary Author	: Rahul Goyal [rhgoyal01@gmail.com]
-# Organisation		: Cyancore Core-Team
+# Organisation		: Cyancore Contributor
 #
 
 COMPILER	:= gcc
