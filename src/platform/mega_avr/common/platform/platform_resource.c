@@ -2,36 +2,37 @@
  * CYANCORE LICENSE
  * Copyrights (C) 2019, Cyancore Team
  *
- * File Name		: platform_dp.c
+ * File Name		: platform_resource.c
  * Description		: This file contains sources for platform
- *			  device properties dummy apis. This is necessary
- *			  to avoid comilation failure when device
- *			  properties arent setup. Original file can be
- *			  found at <Platform>/platform/platform_dp.c
+ *			  resource apis
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 
-#include <stddef.h>
 #include <stdint.h>
+#include <stddef.h>
 #include <status.h>
+#include <resource.h>
 #include <machine_call.h>
 #include <platform.h>
 
 /**
- * platform_dp_setup - Updates platform DP
+ * platform_resources_setup - Updates platform DP and SP
  *
  * @brief This function is responsible to update platform DP
  * and make it accessible to the system. This function needs
- * to be called during platform setup. In this file this
- * function is weak and will be replaced with file mentioned
- * in the file description.
+ * to be called during platform setup. 
  *
  * @return status: return the function execution status
  */
-_WEAK status_t platform_resources_setup()
+status_t platform_resources_setup()
 {
-	return success;
+	status_t ret;
+	extern dp_t device_prop;
+	extern sp_t software_prop;
+	ret = dp_init(&device_prop);
+	ret |= sp_init(&software_prop);
+	return ret;
 }
 
 /**
@@ -39,9 +40,7 @@ _WEAK status_t platform_resources_setup()
  *
  * @brief This function is a machine call hander for fetch_sp
  * access code. It is responsible to respond with hardware ID
- * to corresponding software properties. In this file this
- * function is weak and will be replaced with file mentioned
- * in the file description.
+ * to corresponding software properties. 
  *
  * @param[in] a0: arg0
  * @param[in] a1: arg1
@@ -49,35 +48,52 @@ _WEAK status_t platform_resources_setup()
  *
  * @return status: return the function execution status
  */
-_WEAK mret_t platform_fetch_sp(unsigned int a0 _UNUSED, unsigned int a1 _UNUSED, unsigned int a2 _UNUSED)
+mret_t platform_fetch_sp(unsigned int a0, unsigned int a1 _UNUSED, unsigned int a2 _UNUSED)
 {
 	mret_t ret;
-	ret.p = (uintptr_t) NULL;
-	ret.size = 0;
-	ret.status = error_device_id_inval;
+	ret.p = (uintptr_t) sp_terravisor_dev_info(a0);
+	ret.size = sizeof(hw_devid_t);
+	ret.status = success;
 	return ret;
 }
+
+INCLUDE_MCALL(atmega328p_fetch_sp, fetch_sp, platform_fetch_sp);
 
 /**
  * platform_fetch_dp - mcall handler for fetch_dp
  *
  * @brief This function is a machine call hander for fetch_dp
  * access code. It is responsible to respond with pointer to
- * corresponding device properties. In this file this
- * function is weak and will be replaced with file mentioned
- * in the file description.
+ * corresponding device properties. 
  *
- * @param[in] dev: device ID
  * @param[in] a0: arg0
  * @param[in] a1: arg1
+ * @param[in] a2: arg2
  *
  * @return status: return the function execution status
  */
-_WEAK mret_t plaform_fetch_dp(unsigned int dev _UNUSED, unsigned int a0 _UNUSED, unsigned int a1 _UNUSED)
+mret_t platform_fetch_dp(unsigned int a0, unsigned int a1 _UNUSED, unsigned int a2 _UNUSED)
 {
 	mret_t ret;
-	ret.p = (uintptr_t)NULL;
-	ret.size = 0x00;
-	ret.status = error_device_id_inval;
+	switch(a0)
+	{
+		case clock:
+			ret.p = (uintptr_t)dp_get_base_clock();
+			ret.size = sizeof(unsigned long);
+			ret.status = success;
+			break;
+		case gpio:
+			ret.p = (uintptr_t)dp_get_port_info(a0 | a1);
+			ret.size = sizeof(gpio_module_t);
+			ret.status = success;
+			break;
+		default:
+			ret.p = (uintptr_t) dp_get_module_info(a0 | a1);
+			ret.size = sizeof(module_t);
+			ret.status = success;
+			break;
+	}
 	return ret;
 }
+
+INCLUDE_MCALL(atmega328p_fetch_dp, fetch_dp, platform_fetch_dp);
