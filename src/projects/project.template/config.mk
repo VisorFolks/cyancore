@@ -9,6 +9,7 @@
 #
 
 COMPILER	:=
+TC_VER		:=
 FAMILY		:=
 PLATFORM	:=
 EARLYCON_MEMBUF	:=
