@@ -22,6 +22,7 @@ Click the above icon to connect
 | Atmel      | SiFive      | STMicro     | TI          | Raspberry Pi |
 | ---------- | ----------- | ----------- | ----------- | -------------|
 | ATMega328P | Coming soon | Coming soon | Coming soon | Coming soon  |
+| ATMega2560 |             |             |             |              |
 
 ### Projects
 * demo_avr

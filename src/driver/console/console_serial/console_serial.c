@@ -17,7 +17,6 @@
 #include <machine_call.h>
 #include <arch.h>
 #include <driver.h>
-#include <device.h>
 #include <interrupt.h>
 #include <hal/uart.h>
 #include <driver/console.h>
@@ -31,7 +30,12 @@ status_t console_serial_setup()
 {
 	mret_t mres;
 	module_t *dp;
-	mres = arch_machine_call(fetch_dp, DEV_CONSOLE, 0, 0);
+	hw_devid_t devid;
+	mres = arch_machine_call(fetch_sp, console_uart, 0, 0);
+	if(mres.status != success)
+		return mres.status;
+	devid = (hw_devid_t) mres.p;
+	mres = arch_machine_call(fetch_dp, (devid & (0xff00)), (devid & (0x00ff)), 0);
 	if(mres.status != success)
 		return mres.status;
 	dp = (module_t *)mres.p;

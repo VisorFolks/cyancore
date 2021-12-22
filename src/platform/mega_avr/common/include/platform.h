@@ -21,7 +21,7 @@ mret_t platform_set_sleep_mode(const uint8_t);
 void plat_panic_handler();
 status_t platform_copy_data();
 status_t platform_bss_clear();
-status_t platform_dp_setup();
+status_t platform_resources_setup();
 status_t platform_clk_reset();
 status_t platform_clk_en(unsigned int);
 status_t platform_clk_dis(unsigned int);

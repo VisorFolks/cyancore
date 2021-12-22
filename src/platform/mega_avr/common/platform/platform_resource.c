@@ -29,9 +29,33 @@
  *
  * @return status: return the function execution status
  */
-_WEAK status_t platform_dp_setup()
+_WEAK status_t platform_resources_setup()
 {
 	return success;
+}
+
+/**
+ * platform_fetch_sp - mcall handler for fetch_sp
+ *
+ * @brief This function is a machine call hander for fetch_sp
+ * access code. It is responsible to respond with hardware ID
+ * to corresponding software properties. In this file this
+ * function is weak and will be replaced with file mentioned
+ * in the file description.
+ *
+ * @param[in] a0: arg0
+ * @param[in] a1: arg1
+ * @param[in] a2: arg2
+ *
+ * @return status: return the function execution status
+ */
+_WEAK mret_t platform_fetch_sp(unsigned int a0 _UNUSED, unsigned int a1 _UNUSED, unsigned int a2 _UNUSED)
+{
+	mret_t ret;
+	ret.p = (uintptr_t) NULL;
+	ret.size = 0;
+	ret.status = error_device_id_inval;
+	return ret;
 }
 
 /**
@@ -54,6 +78,6 @@ _WEAK mret_t plaform_fetch_dp(unsigned int dev _UNUSED, unsigned int a0 _UNUSED,
 	mret_t ret;
 	ret.p = (uintptr_t)NULL;
 	ret.size = 0x00;
-	ret.status = error;
+	ret.status = error_device_id_inval;
 	return ret;
 }

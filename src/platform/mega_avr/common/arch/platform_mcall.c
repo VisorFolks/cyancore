@@ -23,5 +23,5 @@ status_t platform_mcall_update(void *handler)
 		mcall = handler;
 		return success;
 	}
-	return error_inval_arg;
+	return error_func_inval_arg;
 }

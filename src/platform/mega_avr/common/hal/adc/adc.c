@@ -17,7 +17,6 @@
 #include <platform.h>
 #include <interrupt.h>
 #include <hal/adc.h>
-#include <device.h>
 #include <arch.h>
 #include "adc_private.h"
 
@@ -59,7 +58,7 @@ static inline status_t _adc_set_prescaler(adc_port_t *port)
 			pscale_value = fdiv128;
 			break;
 		default:
-			ret = error_inval_arg;
+			ret = error_func_inval_arg;
 	}
 	MMIO8(port->baddr + ADCSRA_OFFSET) |= (pscale_value & 0x7);
 	return ret;
@@ -74,8 +73,8 @@ static inline status_t _adc_config_trigger(adc_port_t *port, adc_trig_t trigger)
 {
 	status_t ret = success;
 	uint8_t trig_value = (uint8_t) trigger;
-	ret |= (trig_value > 7) ? error_inval_arg : success;
-	MMIO8(port->baddr + ADCSRB_OFFSET) |= ((trig_value & 0x07) << ADPS);
+	ret |= (trig_value > 7) ? error_func_inval_arg : success;
+	MMIO8(port->baddr + ADCSRB_OFFSET) |= ((trig_value & 0x07) << ADTS);
 	MMIO8(port->baddr + ADCSRA_OFFSET) |= (1 << ADATE);
 	return ret;
 }
@@ -86,7 +85,7 @@ static inline status_t _adc_config_resolution(adc_port_t *port, uint8_t resoluti
 	if(resolution == 8)
 		MMIO8(port->baddr + ADMUX_OFFSET) = (1 << ADLAR);
 	else if(resolution != 10)
-		ret = error_inval_arg;
+		ret = error_func_inval_arg;
 	return ret;
 }
 
@@ -106,7 +105,7 @@ static inline status_t _adc_config_vref(adc_port_t *port, adc_ref_t vref)
 			value = 3;
 			break;
 		default:
-			ret = error_inval_arg;
+			ret = error_func_inval_arg;
 	}
 	if(ret == success)
 		MMIO8(port->baddr + ADMUX_OFFSET) |= (value << REFS);
@@ -145,7 +144,7 @@ bool adc_busy(adc_port_t *port)
 	if(MMIO8(port->baddr + ADCSRA_OFFSET) & (1 << ADIE))
 		ret = (MMIO8(port->baddr + ADCSRA_OFFSET) & (1 << ADSC)) ? true : false;
 	else
-		ret = (MMIO8(port->baddr + ADCSRA_OFFSET) & (1 << ADIF)) ? true : false;
+		ret = (MMIO8(port->baddr + ADCSRA_OFFSET) & (1 << ADIF)) ? false : true;
 	return ret;
 }
 
@@ -168,7 +167,7 @@ status_t adc_config_pin(adc_port_t *port, uint8_t pin, adc_trig_t trigger, uint8
 	status_t ret = success;
 	assert(port);
 	if(pin > N_ADC_PINS)
-		return error_inval_arg;
+		return error_func_inval_arg;
 	ret |= _adc_config_vref(port, vref);
 	ret |= _adc_config_resolution(port, resolution);
 	ret |= _adc_config_trigger(port, trigger);

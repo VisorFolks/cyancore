@@ -17,6 +17,7 @@ LIB_INCLUDE	+= $(DP_PATH)/include/
 DEP_LIBS_ARG	+= -lresource
 
 include $(DP_PATH)/dp/build.mk
+include $(DP_PATH)/sp/build.mk
 
 DIR		:= $(DP_PATH)
 include mk/lib.mk

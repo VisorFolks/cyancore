@@ -14,10 +14,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <status.h>
+#include <resource.h>
 
 typedef struct wdt_port
 {
-	uint8_t port_id;
+	hw_devid_t port_id;
 	unsigned int clk_id;
 	uintptr_t baddr;
 	uintptr_t stride;

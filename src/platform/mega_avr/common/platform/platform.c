@@ -66,7 +66,7 @@ void platform_early_setup()
 void platform_setup()
 {
 	status_t ret = success;
-	ret |= platform_dp_setup();
+	ret |= platform_resources_setup();
 	if(ret != success)
 		exit(EXIT_FAILURE);
 	return;

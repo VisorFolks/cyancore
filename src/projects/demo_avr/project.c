@@ -42,12 +42,12 @@ void delay(unsigned long d)
 void play()
 {
 	static int i = 0;
-	wdog_guard(5, false, NULL);
+	wdog_guard(3, true, NULL);
 	gpio_pin_toggle(&led_13);
 	printf("%c]", progress[i++]);
 	i = i > 3 ? 0 : i;
+	wdog_hush();
 	delay(500000);
 	printf("\b\b");
-	wdog_hush();
 	return;
 }

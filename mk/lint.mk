@@ -15,7 +15,7 @@
 
 LT		:= $(shell which cppcheck)
 
-LINT_FLAGS	+= --error-exitcode=1 -j $(N_HOSTS) -q	\
+LINT_FLAGS	+= --error-exitcode=1 -j $(N_JOBS) -q	\
 		   --suppress=comparePointers		\
 		   --suppress=variableScope		\
 		   --suppress=knownConditionTrueFalse	\

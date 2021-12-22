@@ -51,7 +51,7 @@ status_t wdog_attach_device(wdog_t *pwdog)
 		wdog_attached[cpu_index] = (ret == success) ? true : false;
 	}
 	else
-		ret = error_inval_arg;
+		ret = error_device_inval;
 	return ret;
 }
 
@@ -88,7 +88,7 @@ status_t wdog_guard(size_t timeout, bool bite, void *cb_bark)
 	size_t cpu_index = arch_core_index();
 	if(wdog_attached[cpu_index] && port[cpu_index]->guard != NULL)
 		return port[cpu_index]->guard(timeout, bite, cb_bark);
-	return error_inval_func;
+	return error_func_inval;
 }
 
 /**
@@ -108,7 +108,7 @@ status_t wdog_hush()
 		port[cpu_index]->hush();
 		return success;
 	}
-	return error_inval_func;
+	return error_func_inval;
 }
 
 extern void plat_panic_handler();
