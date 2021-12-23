@@ -14,6 +14,7 @@
 
 #include <limits.h>
 #include <../include/stdint-gcc.h>
+#include <../include/stddef.h>
 
 #if !defined(size_t)
 typedef __SIZE_TYPE__ size_t;

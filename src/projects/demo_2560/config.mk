@@ -9,6 +9,7 @@
 #
 
 COMPILER	:= gcc
+TC_VER		:= 5.4.0
 FAMILY		:= mega_avr
 PLATFORM	:= atmega2560
 EARLYCON_SERIAL	:= 1
