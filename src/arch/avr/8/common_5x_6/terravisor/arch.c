@@ -98,11 +98,10 @@ void (*mcall)(unsigned int, unsigned int, unsigned int, unsigned int, mret_t *);
  * @param[in] a0: first argument
  * @param[in] a1: second argument
  * @param[in] a2: third argument
- * @return status: returns struct which is result of machine call operation
+ * @param[in] *ret: return value
  */
-mret_t arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsigned int a2)
+void arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsigned int a2, mret_t *ret)
 {
-	mret_t ret;
-	mcall(code, a0, a1, a2, &ret);
-	return ret;
+	mcall(code, a0, a1, a2, ret);
+	return;
 }

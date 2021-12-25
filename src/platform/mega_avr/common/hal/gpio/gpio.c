@@ -42,7 +42,7 @@ status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 
 	port->pin = pinID;
 	port->port = portID;
-	mres = arch_machine_call(fetch_dp, gpio, portID, 0);
+	arch_machine_call(fetch_dp, gpio, portID, 0, &mres);
 	if(mres.status != success)
 		return mres.status;
 	dp = (gpio_module_t *)mres.p;
@@ -132,7 +132,7 @@ status_t gpio_port_alloc(gpio_port_t *port, uint8_t portID)
 
 	port->pin = (uint8_t)((uint16_t)(1 << BIT) - 1);
 	port->port = portID;
-	mres = arch_machine_call(fetch_dp, gpio, portID, 0);
+	arch_machine_call(fetch_dp, gpio, portID, 0, &mres);
 	if(mres.status != success)
 		return mres.status;
 	dp = (gpio_module_t *)mres.p;
