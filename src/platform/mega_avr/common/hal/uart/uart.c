@@ -29,7 +29,8 @@ status_t uart_setup(uart_port_t *port, direction_t d, parity_t p)
 	assert(port);
 	MMIO8(port->baddr + UCSRA_OFFSET) = 0x00;
 	platform_clk_en(port->clk_id);
-	mret_t mres = arch_machine_call(fetch_dp, clock, 0, 0);
+	mret_t mres;
+	arch_machine_call(fetch_dp, clock, 0, 0, &mres);
 	if(mres.status != success)
 		return mres.status;
 	unsigned long *clk = (unsigned long *)mres.p;

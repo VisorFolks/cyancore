@@ -43,7 +43,7 @@ void arch_panic_handler();
  *
  * Refer arch.c for more details.
  */
-mret_t arch_machine_call(unsigned  int, unsigned int, unsigned  int, unsigned  int);
+void arch_machine_call(unsigned  int, unsigned int, unsigned  int, unsigned  int, mret_t *);
 #endif
 
 /**

@@ -45,7 +45,7 @@ status_t platform_wdt_setup()
 {
 	mret_t mres;
 	module_t *dp;
-	mres = arch_machine_call(fetch_dp, wdt, 0, 0);
+	arch_machine_call(fetch_dp, wdt, 0, 0, &mres);
 
 	if(mres.status != success)
 		return mres.status;
