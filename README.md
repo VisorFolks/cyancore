@@ -21,25 +21,25 @@ Click the above icon to connect
 
 | Atmel      | SiFive      | STMicro     | TI          | Raspberry Pi |
 | ---------- | ----------- | ----------- | ----------- | -------------|
-| ATMega328P | Coming soon | Coming soon | Coming soon | Coming soon  |
+| ATMega328P | FE310-G002  | Coming soon | Coming soon | Coming soon  |
 | ATMega2560 |             |             |             |              |
 
 ### Projects
-* demo_avr
-* demo_avr_cpp
-* demo_avr_bit_banding
+run
+```
+$ make list
+```
 
 ### Programming Languages
 * asm/assembly
-* C
-* Cpp/C++
+* C/C++
 * makefile
 * linker script
 
 ### Help
 run
 ```
-make help
+$ make help
 ```
 
 For details about the framework, follow the README.md in each folder.
@@ -54,4 +54,4 @@ Host system requirements:
 Toolchain Requirements:
 * Please push your toolchains to your git repo
 * Update the links in mk/tc_get.mk file
-* run ```make help``` for more details
+* run ```$ make help``` for more details
