@@ -26,6 +26,8 @@ MEMORY
 	lma_mem			: ORIGIN = L_MEM_START, LENGTH = L_MEM_LENGTH
 }
 
+ENTRY(entry)
+
 SECTIONS
 {
 	.text :
@@ -38,6 +40,7 @@ SECTIONS
 
 	.rodata :
 	{
+		. = ALIGN(8);
 		*(.version)
 		KEEP(*(.version))
 		*(.rodata)

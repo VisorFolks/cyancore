@@ -9,6 +9,7 @@
  */
 
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <arch.h>
 #include <engine.h>
@@ -22,7 +23,7 @@
 void init()
 {
 	arch_di();
-	arch_ei();
+	asm volatile("la	tp, _tls_start");
 	/* Boot framework */
 	engine();
 

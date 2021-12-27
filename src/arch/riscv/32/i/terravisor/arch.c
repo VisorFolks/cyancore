@@ -22,6 +22,7 @@
 void arch_early_setup()
 {
 	arch_di();
+	riscv_update_vector();
 	return;
 }
 
