@@ -8,7 +8,6 @@
  * Organisation		: Cyancore Core-Team
  */
 
-
 void plug()
 {
 }
