@@ -12,6 +12,7 @@
 #pragma once
 #define _ARCH_H_
 #include <machine_call.h>
+#include <riscv.h>
 
 /**
  * arch_early_setup - This needs to be called in early stages of boot
@@ -60,8 +61,8 @@ static inline unsigned int arch_core_index()
  */
 static inline void arch_ei()
 {
-	asm volatile("csrsi	mstatus, 3");
-	asm volatile("csrsi	mstatus, 7");
+	unsigned int bits = (1 << 3) | (1 << 7);
+	asm volatile("csrs	mstatus, %0" : : "r" (bits));
 }
 
 /**
@@ -69,7 +70,8 @@ static inline void arch_ei()
  */
 static inline void arch_di()
 {
-	asm volatile("csrw	mstatus, zero");
+	unsigned int bits = (1 << 3) | (1 << 7);
+	asm volatile("csrc	mstatus, %0" : : "r" (bits));
 }
 
 static inline void arch_nop()

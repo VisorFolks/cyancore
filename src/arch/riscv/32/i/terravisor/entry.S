@@ -63,11 +63,10 @@ stack_setup:
 	j	1b
 1:
 	mv	sp, a0
-	la	tp, _tls_start
 	mv	a0, zero
 	mv	a1, zero
 	mv	t0, zero
 	mv	t1, zero
 
 jump_to_init:
-	call init
+	j	init
