@@ -9,10 +9,10 @@
  * Organisation		: Cyancore Core-Team
  */
 
- #include <asm.inc>
+#include <asm.inc>
 
 .macro PROLOGUE
-	addi	sp, sp, -96	// - size(context_frame) * 4
+	addi	sp, sp, -96	/* - size(context_frame) * 4 */
 	sw	t6, 68(sp)
 	sw	t5, 64(sp)
 	sw	t4, 60(sp)
@@ -56,11 +56,11 @@
 	lw	t4, 60(sp)
 	lw	t5, 64(sp)
 	lw	t6, 68(sp)
-	addi	sp, sp, 96	// size(context_frame) * 4
+	addi	sp, sp, 96	/* size(context_frame) * 4 */
 .endm
 
 function exception_handler_base
-.p2align 2
+.p2align 2			/* Needs 4Byte Alignment, refer mtvec reg */
 	PROLOGUE
 	csrr	a0, mcause
 	mv	a1, sp
@@ -72,4 +72,5 @@ function riscv_update_vector
 	la	a0, exception_handler_base
 	csrw	mtvec, a0
 	mv	a0, zero
+	fence.i
 	ret

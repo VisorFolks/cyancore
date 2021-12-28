@@ -69,3 +69,15 @@ void arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsi
 	asm volatile("mv	%0, a2" : "=r" (ret->status));
 	return;
 }
+
+_WEAK void arch_panic_handler(context_frame_t *frame _UNUSED)
+{
+	while(1)
+		arch_wfi();
+}
+
+_WEAK void arch_unhandled_irq()
+{
+	while(1)
+		arch_wfi();
+}
