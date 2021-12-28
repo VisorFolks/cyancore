@@ -28,7 +28,10 @@ $(eval $(call add_define,BOOT_CORE_ID))
 FCLK		?= 16000000
 $(eval $(call add_define,FCLK))
 
-N_IRQ		:= 25
+N_EXCEP		:= 12
+$(eval $(call add_define,N_EXCEP))
+
+N_IRQ		:= 12
 $(eval $(call add_define,N_IRQ))
 
 MAX_INTERRUPTS_PER_DEVICE	:= 2
