@@ -14,7 +14,7 @@ FE310G002_DIR	:= $(GET_PATH)
 
 ARCH		:= riscv
 BIT		:= 32
-ARCH_VARIANT	:= i
+ARCH_VARIANT	:= imac
 TARGET_FLAGS	+= -march=rv32imac -mabi=ilp32
 PLAT_INCLUDE	+= $(FE310G002_DIR)/include
 OUTPUT_FORMAT	:= elf32-littleriscv
