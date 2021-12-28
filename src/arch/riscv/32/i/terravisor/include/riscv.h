@@ -13,6 +13,8 @@
 #define _RISC_V_
 #include <stdint.h>
 
+#define fence(predecessor, successor)	asm volatile("fence " #predecessor ", " #successor ::: "memory")
+
 typedef struct context_frame
 {
 	uint32_t mepc, mstatus, ra, t0,
