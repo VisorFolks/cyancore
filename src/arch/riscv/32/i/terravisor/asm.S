@@ -63,6 +63,7 @@ function exception_handler_base
 .p2align 2			/* Needs 4Byte Alignment, refer mtvec reg */
 	PROLOGUE
 	csrr	a0, mcause
+	lw	a0, 72(sp)
 	mv	a1, sp
 	call	exception_handler
 	EPILOGUE

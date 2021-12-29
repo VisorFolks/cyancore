@@ -20,7 +20,7 @@ typedef struct context_frame
 	uint32_t mepc, mstatus, ra, t0,
 		 t1, t2, a0, a1, a2, a3,
 		 a4, a5, a6, a7, t3, t4,
-		 t5, t6, pad[6];
+		 t5, t6, mcause, pad[5];
 		 /* Padding is necessary for alignment */
 } context_frame_t;
 
