@@ -47,9 +47,8 @@ void arch_ei_restore_state()
 /**
  * arch_machine_call - perform machine call
  *
- * @brief This function executes function pointed by mcall. As the
- * AVR core doesn't support multiple execution levels, this
- * function emulates the machine call to maintain consistency.
+ * @brief This function performs environment call
+ * in m mode
  *
  * @param[in] code: machine call code
  * @param[in] a0: first argument

@@ -8,10 +8,7 @@
 # Organisation		: Cyancore Core-Team
 #
 
-RV32IMAC_T_ARCH_DIR	:= $(GET_PATH)
+RV32IA_ARCH_DIR	:= $(GET_PATH)
 
-include $(RV32IMAC_T_ARCH_DIR)/../../i/terravisor/build.mk
-include $(RV32IMAC_T_ARCH_DIR)/../../a/build.mk
-
-DIR		:= $(RV32IMAC_T_ARCH_DIR)
+DIR		:= $(RV32IA_ARCH_DIR)
 include mk/obj.mk
