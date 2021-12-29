@@ -53,11 +53,10 @@ void arch_register_interrupt_handler(unsigned int, void (*)(void));
 void local_register_interrupt_handler(unsigned int, void (*)(void));
 
 /**
- * arch_core_index - Returns code index (0, in case of AVR)
+ * arch_core_index - Returns code index
  */
 static inline unsigned int arch_core_index()
 {
-	/* AVR only support uni core architecture */
 	unsigned int id;
 	asm volatile("csrr	%0, mhartid" : "=r" (id));
 	return id;
