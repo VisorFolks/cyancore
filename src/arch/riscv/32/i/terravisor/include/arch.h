@@ -30,7 +30,7 @@ void arch_ei_restore_state();
 /**
  * arch_panic_handler - Executes when arch error occurs
  */
-void arch_panic_handler(context_frame_t *);
+void arch_panic_handler();
 void arch_unhandled_irq();
 
 /**
@@ -42,15 +42,15 @@ void arch_machine_call(unsigned  int, unsigned int, unsigned  int, unsigned  int
 
 /**
  * arch_register_interrupt_handler - Registers interrtup handler
- * for arch specific interrupt vectors
+ * for arch specific exception vectors
  */
 void arch_register_interrupt_handler(unsigned int, void (*)(void));
 
 /**
- * arch_register_exception_handler - Registers exception handler
- * for arch specific exception vectors
+ * local_register_interrupt_handler - Registers interrupt handler
+ * for cpu specific interrupt vectors
  */
-void arch_register_exception_handler(unsigned int, void (*)(context_frame_t *));
+void local_register_interrupt_handler(unsigned int, void (*)(void));
 
 /**
  * arch_core_index - Returns code index (0, in case of AVR)
