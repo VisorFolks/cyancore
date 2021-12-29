@@ -15,10 +15,24 @@
 #include <arch.h>
 #include <mmio.h>
 
-static void (* exhandler[N_CORES][N_EXCEP])(context_frame_t *) = {{[0 ... N_EXCEP-1] = arch_panic_handler}};
+static void (* exhandler[N_CORES][N_EXCEP])(void) = {{[0 ... N_EXCEP-1] = arch_panic_handler}};
 static void (* irqhandler[N_CORES][N_IRQ])(void) = {{[0 ... N_IRQ-1] = arch_unhandled_irq}};
+static context_frame_t *local_frame[N_CORES];
 
-void arch_register_exception_handler(unsigned int id, void (*handler)(context_frame_t *))
+static void set_context_frame(context_frame_t *frame)
+{
+	unsigned int cpuid = arch_core_index();
+	local_frame[cpuid] = frame;
+	fence(w, w);
+}
+
+context_frame_t *get_context_frame(void)
+{
+	unsigned int cpuid = arch_core_index();
+	return local_frame[cpuid];
+}
+
+void arch_register_interrupt_handler(unsigned int id, void (*handler)(void))
 {
 	unsigned int cpuid = arch_core_index();
 	assert(id < N_EXCEP);
@@ -26,7 +40,7 @@ void arch_register_exception_handler(unsigned int id, void (*handler)(context_fr
 	fence(ow, ow);
 }
 
-void arch_register_interrupt_handler(unsigned int id, void (*handler)(void))
+void local_register_interrupt_handler(unsigned int id, void (*handler)(void))
 {
 	unsigned int cpuid = arch_core_index();
 	assert(id < N_IRQ);
@@ -39,10 +53,12 @@ void exception_handler(uint32_t mcause, context_frame_t *frame)
 	unsigned int cause = mcause & ~(1U << 31);
 	unsigned int cpuid = arch_core_index();
 
+	set_context_frame(frame);
+
 	if(mcause & (1U << 31))
 		irqhandler[cpuid][cause]();
 	else
-		exhandler[cpuid][cause](frame);
+		exhandler[cpuid][cause]();
 
 	frame->mepc += (MMIO8(frame->mepc) & 0x3) ? 4 : 2;
 	fence(ow, ow);

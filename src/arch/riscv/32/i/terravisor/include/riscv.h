@@ -25,3 +25,4 @@ typedef struct context_frame
 } context_frame_t;
 
 void riscv_update_vector();
+context_frame_t *get_context_frame();
