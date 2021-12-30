@@ -14,6 +14,7 @@
 #include <status.h>
 
 void plat_panic_handler();
+status_t platform_copy_itim();
 status_t platform_copy_data();
 status_t platform_bss_clear();
 status_t platform_resources_setup();

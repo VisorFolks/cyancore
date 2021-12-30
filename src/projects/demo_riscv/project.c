@@ -8,8 +8,12 @@
  * Organisation		: Cyancore Core-Team
  */
 
+#include <status.h>
+#include <terravisor/bootstrap.h>
+
 void plug()
 {
+	bootstrap();
 }
 
 void play()
