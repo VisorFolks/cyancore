@@ -19,8 +19,8 @@ MEMORY
 {
 	/* VM Addresses */
 	vma_itmem (airwx)	: ORIGIN = V_ITMEM_START, LENGTH = ITMEM_LENGTH
-	vma_imem (arw!xi)	: ORIGIN = V_IMEM_START, LENGTH = IMEM_LENGTH
-	vma_dmem (irx!aw)	: ORIGIN = V_DMEM_START, LENGTH = DMEM_LENGTH
+	vma_imem (irx!aw)	: ORIGIN = V_IMEM_START, LENGTH = IMEM_LENGTH
+	vma_dmem (arw!xi)	: ORIGIN = V_DMEM_START, LENGTH = DMEM_LENGTH
 
 	/* LM Addresses */
 	lma_mem			: ORIGIN = L_MEM_START, LENGTH = L_MEM_LENGTH
@@ -36,34 +36,44 @@ SECTIONS
 		*(.text)
 		*(.text.*)
 		KEEP(*(.text))
+		. = ALIGN(4);
 	} > vma_imem AT > lma_mem
 
 	.rodata :
 	{
-		. = ALIGN(8);
 		*(.version)
 		KEEP(*(.version))
-		*(.rodata)
-		*(.rodata.*)
+		KEEP(*(.rdata))
 		KEEP(*(.rodata))
+		KEEP(*(.rodata.*))
+		*(.srodata)
+		*(.srodata.*)
+		KEEP(*(.srodata))
 	} > vma_imem AT > lma_mem
 
-	.driver_table : {} > vma_imem AT > lma_mem
-	.mcall_table : {} > vma_imem AT > lma_mem
-
-	.data :
+	.itim :
 	{
-		*(.data)
-		*(.data.*)
-		KEEP(*(.data))
-	} > vma_dmem AT > lma_mem
+		. = ALIGN(4);
+		KEEP(*(.itim))
+		KEEP(*(.itim.*))
+	} > vma_itmem AT > lma_mem
 
-	.tdata :
+	.bss :
 	{
-		*(.tdata)
-		*(.tdata.*)
-		KEEP(*(.tdata))
-	} > vma_dmem AT > lma_mem
+		. = ALIGN(1);
+		*(.bss)
+		*(.bss.*)
+		KEEP(*(.bss))
+		*(COMMON)
+	} > vma_dmem
+
+	.static_bss_global :
+	{
+		. = ALIGN(1);
+		*(.sbss)
+		*(.sbss.*)
+		KEEP(*(.sbss))
+	} > vma_dmem
 
 	.static_global_var :
 	{
@@ -71,25 +81,30 @@ SECTIONS
 
 	.static_data_global :
 	{
+		. = ALIGN(1);
 		*(.sdata)
 		*(.sdata.*)
 		KEEP(*(.sdata))
 	} > vma_dmem AT > lma_mem
 
-	.static_bss_global :
+	.data :
 	{
-		*(.sbss)
-		*(.sbss.*)
-		KEEP(*(.sbss))
-	} > vma_dmem
+		. = ALIGN(1);
+		*(.data)
+		*(.data.*)
+		KEEP(*(.data))
+	} > vma_dmem AT > lma_mem
 
-	.bss :
+	.tdata :
 	{
-		*(.bss)
-		*(.bss.*)
-		KEEP(*(.bss))
-		*(COMMON)
-	} > vma_dmem
+		. = ALIGN(1);
+		*(.tdata)
+		*(.tdata.*)
+		KEEP(*(.tdata))
+	} > vma_dmem AT > lma_mem
+
+	.driver_table : ALIGN(4) {} > vma_dmem AT > lma_mem
+	.mcall_table : ALIGN(4) {} > vma_dmem AT > lma_mem
 
 	.stack :
 	{
@@ -97,9 +112,10 @@ SECTIONS
 		KEEP(*(.stack))
 	} > vma_dmem
 
-	PROVIDE(_data_start = LOADADDR(.data));
-	PROVIDE(_data_size = SIZEOF(.data) + SIZEOF(.driver_table) + SIZEOF(.mcall_table));
-	PROVIDE(_data_vstart = ADDR(.data));
+	PROVIDE(_data_start = LOADADDR(.static_data_global));
+	PROVIDE(_data_size = SIZEOF(.data) + SIZEOF(.tdata) + SIZEOF(.static_data_global) +\
+	SIZEOF(.driver_table) + SIZEOF(.mcall_table));
+	PROVIDE(_data_vstart = ADDR(.static_data_global));
 	PROVIDE(_data_vend = _data_vstart + _data_size);
 
 	PROVIDE(_tls_start = ADDR(.tdata));
@@ -107,9 +123,16 @@ SECTIONS
 	PROVIDE(_stack_start = ADDR(.stack) + STACK_SIZE);
 
 	PROVIDE(_bss_start = ADDR(.bss));
-	PROVIDE(_bss_size = SIZEOF(.bss));
-	PROVIDE(_flash_size = _data_size + SIZEOF(.text));
+	PROVIDE(_bss_size = SIZEOF(.bss) + SIZEOF(.static_bss_global));
+
+	PROVIDE(_itim_start = LOADADDR(.itim));
+	PROVIDE(_itim_size = SIZEOF(.itim));
+	PROVIDE(_itim_vstart = ADDR(.itim));
+	PROVIDE(_itim_vsize = _itim_vstart + _itim_size);
+
+	PROVIDE(_flash_size = _data_size + SIZEOF(.text) + _itim_size + SIZEOF(.rodata));
 	PROVIDE(_ram_size = _bss_size + _data_size + SIZEOF(.stack));
+
 
 	ASSERT((_flash_size < FLASH_SIZE), "< x > Flash size exceeded ...")
 	ASSERT((_ram_size < RAM_SIZE), "< x > RAM size exceeded ...")

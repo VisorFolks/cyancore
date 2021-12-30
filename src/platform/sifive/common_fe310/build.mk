@@ -20,4 +20,4 @@ PLAT_INTERRUPT_DEVICE	:= 0
 
 include $(FE310_COMMON_DIR)/arch/build.mk
 #include $(FE310_COMMON_DIR)/hal/build.mk
-#include $(FE310_COMMON_DIR)/platform/build.mk
+include $(FE310_COMMON_DIR)/platform/build.mk
