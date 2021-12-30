@@ -15,7 +15,7 @@
 #include <driver/watchdog.h>
 #include <terravisor/platform.h>
 
-uint8_t reset_syndrome;
+extern unsigned int reset_syndrome;
 
 /**
  * platform_get_reset_syndrome - returns the cause of reset
