@@ -11,11 +11,13 @@
 #include <status.h>
 #include <terravisor/bootstrap.h>
 #include <arch.h>
+#include <driver.h>
 
 void plug()
 {
 	mret_t mres;
 	bootstrap();
+	driver_setup_all();
 	arch_machine_call(0, 100, 200, 300, &mres);
 }
 
