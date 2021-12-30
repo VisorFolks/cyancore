@@ -7,6 +7,8 @@
 #include <terravisor/workers.h>
 #include <platform.h>
 
+unsigned int reset_syndrome;
+
 void platform_early_setup()
 {
 	status_t ret = success;
@@ -14,6 +16,8 @@ void platform_early_setup()
 	ret |= platform_copy_data();
 	ret |= platform_copy_itim();
 	ret |= platform_bss_clear();
+
+	reset_syndrome = 1;
 	
 	if(ret != success)
 		exit(EXIT_FAILURE);
