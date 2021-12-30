@@ -3,7 +3,7 @@
 # Copyrights (C) 2019, Cyancore Team
 #
 # File Name		: build.mk
-# Description		: This file accumulates sources from mega-avr
+# Description		: This file accumulates sources from FE310
 #			  common directory
 # Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
 # Organisation		: Cyancore Core-Team
