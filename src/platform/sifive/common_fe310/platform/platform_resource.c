@@ -57,7 +57,7 @@ mret_t platform_fetch_sp(unsigned int a0, unsigned int a1 _UNUSED, unsigned int 
 	return ret;
 }
 
-INCLUDE_MCALL(atmega328p_fetch_sp, fetch_sp, platform_fetch_sp);
+INCLUDE_MCALL(sifive_fe310_fetch_sp, fetch_sp, platform_fetch_sp);
 
 /**
  * platform_fetch_dp - mcall handler for fetch_dp
@@ -94,4 +94,4 @@ mret_t platform_fetch_dp(unsigned int a0, unsigned int a1 _UNUSED, unsigned int 
 	return ret;
 }
 
-INCLUDE_MCALL(atmega328p_fetch_dp, fetch_dp, platform_fetch_dp);
+INCLUDE_MCALL(sifive_fe310_fetch_dp, fetch_dp, platform_fetch_dp);
