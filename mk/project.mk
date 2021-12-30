@@ -45,11 +45,13 @@ list:
 
 check: --lint
 
+
 ifeq ($(findstring $(MAKECMDGOALS),$(T_ALLOWLIST)),)
 ifneq ($(firstword $(MAKECMDGOALS)),clean)
 ifneq ($(firstword $(MAKECMDGOALS)),default)
 ifneq ($(firstword $(MAKECMDGOALS)),cyancore)
 ifneq ($(firstword $(MAKECMDGOALS)),check)
+ifneq ($(firstword $(MAKECMDGOALS)),copy_to_target)
 PROJECT		?= $(firstword $(MAKECMDGOALS))
 CMD		:= $(word 2,$(MAKECMDGOALS))
 ifeq ($(CMD),)
@@ -59,6 +61,7 @@ endif
 .PHONY: $(PROJECT)
 $(PROJECT): $(CMD)
 
+endif
 endif
 endif
 endif
@@ -80,10 +83,11 @@ include $(SRC)/sources.mk
 include mk/tc.mk
 endif
 
-ifeq ($(findstring $(CMD),$(T_ALLOWLIST) default clean cyancore),)
+ifeq ($(findstring $(CMD),$(T_ALLOWLIST) default clean cyancore copy_to_target),)
 $(CMD): $(filter %/$(CMD),$(DEP_LIBS) $(DEP_OBJS))
 	if [ "$<" = "" ]; then			\
 		echo "No such target: $@";	\
 		exit 2;				\
 	fi
 endif
+include mk/copy_to_remote.mk
