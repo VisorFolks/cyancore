@@ -10,10 +10,13 @@
 
 #include <status.h>
 #include <terravisor/bootstrap.h>
+#include <arch.h>
 
 void plug()
 {
+	mret_t mres;
 	bootstrap();
+	arch_machine_call(0, 100, 200, 300, &mres);
 }
 
 void play()

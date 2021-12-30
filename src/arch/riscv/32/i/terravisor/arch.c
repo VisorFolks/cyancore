@@ -58,6 +58,8 @@ void arch_ei_restore_state()
  */
 void arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsigned int a2, mret_t *ret)
 {
+	if(ret == NULL)
+		return;
 	asm volatile("mv	a0, %0" : : "r" (code));
 	asm volatile("mv	a1, %0" : : "r" (a0));
 	asm volatile("mv	a2, %0" : : "r" (a1));

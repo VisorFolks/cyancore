@@ -102,6 +102,8 @@ void (*mcall)(unsigned int, unsigned int, unsigned int, unsigned int, mret_t *);
  */
 void arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsigned int a2, mret_t *ret)
 {
+	if(ret == NULL)
+		return;
 	mcall(code, a0, a1, a2, ret);
 	return;
 }
