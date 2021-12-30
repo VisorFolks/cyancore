@@ -39,6 +39,8 @@ void platform_cpu_setup()
 {
 	status_t ret = success;
 
+	ret |= platform_mcall_update();
+
 	arch_ei();
 
 	if(ret != success)

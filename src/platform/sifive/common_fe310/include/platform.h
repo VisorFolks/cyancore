@@ -18,7 +18,4 @@ status_t platform_copy_itim();
 status_t platform_copy_data();
 status_t platform_bss_clear();
 status_t platform_resources_setup();
-status_t platform_clk_reset();
-status_t platform_clk_en(unsigned int);
-status_t platform_clk_dis(unsigned int);
-status_t platform_wdt_reset();
+status_t platform_mcall_update();
