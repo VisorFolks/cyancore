@@ -45,13 +45,12 @@ list:
 
 check: --lint
 
+copy_to_remote: --cpremote
+clean_remote: --rmremote
+
 
 ifeq ($(findstring $(MAKECMDGOALS),$(T_ALLOWLIST)),)
-ifneq ($(firstword $(MAKECMDGOALS)),clean)
-ifneq ($(firstword $(MAKECMDGOALS)),default)
-ifneq ($(firstword $(MAKECMDGOALS)),cyancore)
-ifneq ($(firstword $(MAKECMDGOALS)),check)
-ifneq ($(firstword $(MAKECMDGOALS)),copy_to_target)
+ifeq ($(findstring $(firstword $(MAKECMDGOALS)),$(P_TARGETS)),)
 PROJECT		?= $(firstword $(MAKECMDGOALS))
 CMD		:= $(word 2,$(MAKECMDGOALS))
 ifeq ($(CMD),)
@@ -61,10 +60,6 @@ endif
 .PHONY: $(PROJECT)
 $(PROJECT): $(CMD)
 
-endif
-endif
-endif
-endif
 endif
 
 ifeq ($(PROJECT),)
@@ -76,18 +71,18 @@ $(info < x > Invalid project name...)
 $(info < ! > Run `make list` to get list of projects)
 $(error < x > Build Failed!)
 endif
-endif
 
 ifeq ($(findstring $(MAKECMDGOALS),$(T_ALLOWLIST)),)
 include $(SRC)/sources.mk
 include mk/tc.mk
+include mk/copy_to_remote.mk
+endif
 endif
 
-ifeq ($(findstring $(CMD),$(T_ALLOWLIST) default clean cyancore copy_to_target),)
+ifeq ($(findstring $(CMD),$(T_ALLOWLIST) $(P_TARGETS)),)
 $(CMD): $(filter %/$(CMD),$(DEP_LIBS) $(DEP_OBJS))
 	if [ "$<" = "" ]; then			\
 		echo "No such target: $@";	\
 		exit 2;				\
 	fi
 endif
-include mk/copy_to_remote.mk
