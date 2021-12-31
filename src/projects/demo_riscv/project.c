@@ -23,4 +23,5 @@ void plug()
 
 void play()
 {
+	arch_wfi();
 }
