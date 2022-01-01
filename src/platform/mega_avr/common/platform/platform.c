@@ -12,7 +12,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <status.h>
-#include <hal/gpio.h>
 #include <arch.h>
 #include <machine_call.h>
 #include <terravisor/platform.h>

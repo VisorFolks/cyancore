@@ -33,7 +33,9 @@ $(ELF): $(DEP_LIBS) $(DEP_OBJS) $(LD_SCRIPT) $(LD_SUPPLEMENT)
 	@cd $(@D); $(SIZE) $(@F)
 	@echo ""
 
+.SECONDEXPANSION:
 $(OUT)/%.ld: %.ld.sx
+	mkdir -p $(@D)
 	@echo "Elf: Preprocessing $(@F) ..."
 	$(CC) $(CFLAGS) -E -P -o $@ $<
 

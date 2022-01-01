@@ -11,9 +11,8 @@
 
 #pragma once
 #define _ARCH_H_
-
-#include <plat_arch.h>
-#include <mmio.h>
+#include <machine_call.h>
+#include <riscv.h>
 
 /**
  * arch_early_setup - This needs to be called in early stages of boot
@@ -25,10 +24,6 @@ void arch_early_setup();
  */
 void arch_setup();
 
-/**
- * arch_wfi - Wait for interrupt, with sleep mode
- */
-void arch_wfi();
 void arch_di_save_state();
 void arch_ei_restore_state();
 
@@ -36,29 +31,35 @@ void arch_ei_restore_state();
  * arch_panic_handler - Executes when arch error occurs
  */
 void arch_panic_handler();
+void arch_unhandled_irq();
 
-#ifdef _MACHINE_CALL_H_
 /**
  * arch_machine_call - Performs machine call
  *
  * Refer arch.c for more details.
  */
 void arch_machine_call(unsigned  int, unsigned int, unsigned  int, unsigned  int, mret_t *);
-#endif
 
 /**
  * arch_register_interrupt_handler - Registers interrtup handler
- * for arch specific interrupt vectors
+ * for arch specific exception vectors
  */
 void arch_register_interrupt_handler(unsigned int, void (*)(void));
 
 /**
- * arch_core_index - Returns code index (0, in case of AVR)
+ * local_register_interrupt_handler - Registers interrupt handler
+ * for cpu specific interrupt vectors
+ */
+void local_register_interrupt_handler(unsigned int, void (*)(void));
+
+/**
+ * arch_core_index - Returns code index
  */
 static inline unsigned int arch_core_index()
 {
-	/* AVR only support uni core architecture */
-	return 0;
+	unsigned int id;
+	asm volatile("csrr	%0, mhartid" : "=r" (id));
+	return id;
 }
 
 /**
@@ -66,7 +67,8 @@ static inline unsigned int arch_core_index()
  */
 static inline void arch_ei()
 {
-	asm volatile("sei");
+	unsigned int bits = (1 << 3) | (1 << 7);
+	asm volatile("csrs	mstatus, %0" : : "r" (bits));
 }
 
 /**
@@ -74,18 +76,19 @@ static inline void arch_ei()
  */
 static inline void arch_di()
 {
-	asm volatile("cli");
-}
-
-/**
- * arch_wdt_reset - Reset watchdog timer
- */
-static inline void arch_wdt_reset()
-{
-	asm volatile("wdr");
+	unsigned int bits = (1 << 3) | (1 << 7);
+	asm volatile("csrc	mstatus, %0" : : "r" (bits));
 }
 
 static inline void arch_nop()
 {
 	asm volatile("nop");
+}
+
+static inline void arch_wfi()
+{
+	asm volatile("wfi");
+#if ERRATA_CIP578
+	arch_nop();
+#endif
 }
