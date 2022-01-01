@@ -43,4 +43,6 @@ typedef enum status
 	error_network			= -0x0c00,
 	error_user			= -0x0d00,
 	error_io			= -0x0e00,
+	error_os			= -0x0f00,
+	error_os_task_overfow		= -0x0f01,
 } status_t;
