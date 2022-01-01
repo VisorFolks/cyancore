@@ -12,12 +12,14 @@
 #include <terravisor/bootstrap.h>
 #include <arch.h>
 #include <driver.h>
+#include <platform.h>
 
 void plug()
 {
 	mret_t mres;
 	bootstrap();
 	driver_setup_all();
+	platform_print_cpu_info();
 	arch_machine_call(0, 100, 200, 300, &mres);
 }
 

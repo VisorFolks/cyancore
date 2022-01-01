@@ -24,5 +24,33 @@ typedef struct context_frame
 		 /* Padding is necessary for alignment */
 } context_frame_t;
 
+static inline unsigned int arch_core_isa()
+{
+	unsigned int ret;
+	asm volatile("csrr	%0, misa" : "=r"(ret));
+	return ret;
+}
+
+static inline unsigned int arch_core_vendor()
+{
+	unsigned int ret;
+	asm volatile("csrr	%0, mvendorid" : "=r"(ret));
+	return ret;
+}
+
+static inline unsigned int arch_core_archid()
+{
+	unsigned int ret;
+	asm volatile("csrr	%0, marchid" : "=r"(ret));
+	return ret;
+}
+
+static inline unsigned int arch_core_impid()
+{
+	unsigned int ret;
+	asm volatile("csrr	%0, mimpid" : "=r"(ret));
+	return ret;
+}
+
 void riscv_update_vector();
 context_frame_t *get_context_frame();
