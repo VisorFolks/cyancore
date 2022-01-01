@@ -6,16 +6,18 @@ typedef struct cc_shed_tcb cc_shed_tcb_t;
 
 typedef enum
 {
-	CC_SHED_TASK_READY,
-	CC_SHED_TASK_RUNNING,
-	CC_SHED_TASK_PAUSED,
+	cc_shed_task_terminated,
+	cc_shed_task_ready,
+	cc_shed_task_running,
+	cc_shed_task_paused,
 } cc_shed_task_status_t;
 
 struct cc_shed_tcb
 {
-	int8_t 	* i8_name;
-	int8_t    i8_priority;
-	int32_t * i32_sp;
+	char 	  name [CC_OS_TASK_NAME_LEN];
+	size_t    priority;
+	void    * stack_ptr;
+	cc_shed_tcb_t * prev_shed_tcb;
 	cc_shed_tcb_t * next_shed_tcb;
 	cc_shed_task_status_t task_status;
 };
