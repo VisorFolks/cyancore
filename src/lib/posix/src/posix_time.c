@@ -1,3 +1,13 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
+ * File Name		: posix_time.c
+ * Description		: This file consists of posix time related call handles
+ * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
 #include <lib/posix/include/time.h>
 #include <lib/posix/include/unistd.h>
 
