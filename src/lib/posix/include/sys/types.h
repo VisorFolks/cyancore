@@ -1,8 +1,11 @@
-/**
- * @file sys/types.h
- * @brief Data types.
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
  *
- * http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/sys_types.h.html
+ * File Name		: sys/types.h
+ * Description		: Data types. https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/sys_types.h.html
+ * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
+ * Organisation		: Cyancore Core-Team
  */
 
 #ifndef _CC_POSIX_TYPES_H_
