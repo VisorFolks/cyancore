@@ -19,7 +19,7 @@
 extern scall_t _scall_table_start;
 extern scall_t _scall_table_end;
 
-void super_call(scall_id_t id, unsigned int a0, unsigned int a1, unsigned int a2, sret_t *ret)
+void super_call(scall_id_t id, sargs arg, sret_t *ret)
 {
 	/* mcall Table pointer */
 	scall_t *ptr;
@@ -29,7 +29,7 @@ void super_call(scall_id_t id, unsigned int a0, unsigned int a1, unsigned int a2
 	 */
 	ret->p = (uintptr_t) NULL;
 	ret->size = 0;
-	ret->status = error_mcall_code_inval;
+	ret->status = error_scall_code_inval;
 
 	/* Assign the pointer to start of table */
 	ptr = &_scall_table_start;
@@ -43,7 +43,7 @@ void super_call(scall_id_t id, unsigned int a0, unsigned int a1, unsigned int a2
 			/* Execute the callback function and update the "ret" */
 			if (ptr->callback != NULL)
 			{
-				*ret = ptr->callback(a0, a1, a2);
+				*ret = ptr->callback(arg);
 			}
 			/* Stop parsing the table and return */
 			break;
