@@ -39,6 +39,7 @@ typedef enum status
 	error_hcall			= -0x0400,
 /* Syscall related error */
 	error_scall			= -0x0500,
+	error_scall_code_inval		= -0x0501,
 /* Memory related error */
 	error_memory			= -0x0600,
 	error_memory_low		= -0x0601,
