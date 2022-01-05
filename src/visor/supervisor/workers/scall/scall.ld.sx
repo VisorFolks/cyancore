@@ -1,0 +1,22 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
+ * File Name		: scall.ld.sx
+ * Description		: This file contains memory layout for the
+ *			  cyancore scall framework
+ * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
+SECTIONS
+{
+	.scall_table :
+	{
+		PROVIDE(_scall_table_start = .);
+		KEEP(*(.scall))
+		PROVIDE(_scall_table_end = .);
+	}
+}
+
+INSERT BEFORE .stack;

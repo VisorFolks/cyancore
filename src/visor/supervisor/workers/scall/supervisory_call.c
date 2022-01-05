@@ -2,27 +2,27 @@
  * CYANCORE LICENSE
  * Copyrights (C) 2019, Cyancore Team
  *
- * File Name		: machine_call.c
- * Description		: This file contains sources of machine call handler
- * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * File Name		: supervisory_call.c
+ * Description		: This file contains sources of supervisory call handler
+ * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 
 #include <stdint.h>
 #include <stddef.h>
 #include <status.h>
-#include <machine_call.h>
+#include <supervisor_call.h>
 #include <platform.h>
 #include <resource.h>
 
 /* mcall Table start and end  defined in linker script mcall.ld.sx */
-extern mcall_t _mcall_table_start;
-extern mcall_t _mcall_table_end;
+extern scall_t _scall_table_start;
+extern scall_t _scall_table_end;
 
-void machine_call(mcall_id_t id, unsigned int a0, unsigned int a1, unsigned int a2, mret_t *ret)
+void super_call(scall_id_t id, unsigned int a0, unsigned int a1, unsigned int a2, sret_t *ret)
 {
 	/* mcall Table pointer */
-	mcall_t *ptr;
+	scall_t *ptr;
 
 	/* Assign "ret" parameters to default error case,
 	 * on execution of the call, the ret will updated.
@@ -32,10 +32,10 @@ void machine_call(mcall_id_t id, unsigned int a0, unsigned int a1, unsigned int 
 	ret->status = error_mcall_code_inval;
 
 	/* Assign the pointer to start of table */
-	ptr = &_mcall_table_start;
+	ptr = &_scall_table_start;
 
 	/* Run through the table till the end */
-	while(ptr < & _mcall_table_end)
+	while(ptr <= & _scall_table_end)
 	{
 		/* Check if the mcall ID matches */
 		if(ptr->id == id)
