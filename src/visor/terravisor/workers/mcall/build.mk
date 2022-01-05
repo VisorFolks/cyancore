@@ -10,7 +10,7 @@
 
 MCALL_DIR	:= $(GET_PATH)
 
-LD_SUPPLEMENT	+= $(MCALL_DIR)/scall.ld.sx
+LD_SUPPLEMENT	+= $(MCALL_DIR)/mcall.ld.sx
 
 DIR		:= $(MCALL_DIR)
 
