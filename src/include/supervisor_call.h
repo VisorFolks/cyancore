@@ -18,6 +18,7 @@
 typedef enum scall_id
 {
 	scall_id_generic				= 0x0000,
+	scall_id_is_irq,
 /* pthread related */
 	scall_id_pthread_attr_destroy			= 0x1000,
 	scall_id_pthread_attr_getdetachstate,
@@ -51,12 +52,14 @@ typedef enum scall_id
 	scall_id_pthread_mutexattr_settype,
 	scall_id_pthread_self,
 	scall_id_pthread_setschedparam,
+	scall_id_pthread_delay_ticks,
 /* mqueue related */
 	scall_id_mq_close,
+	scall_id_mq_setattr,
 	scall_id_mq_getattr,
 	scall_id_mq_open,
-	scall_id_mq_timedreceive,
-	scall_id_mq_timedsend,
+	scall_id_mq_receive,
+	scall_id_mq_send,
 	scall_id_mq_unlink,
 /* semaphore related */
 	scall_id_sem_init,
@@ -79,12 +82,10 @@ typedef struct sret
 	status_t status;
 } sret_t;
 
-typedef void * sargs;
-
 typedef struct scall
 {
 	scall_id_t id;
-	sret_t (*callback)(sargs args);
+	sret_t (*callback)(unsigned int a0, unsigned int a1, unsigned int a2);
 } scall_t;
 
 #define INCLUDE_SCALL(_name, _id , _callback)		\
