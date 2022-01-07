@@ -34,7 +34,7 @@ int UTILS_AbsoluteTimespecToDeltaTicks( const struct timespec * const pxAbsolute
 	/* Check parameters. */
 	if( ( pxAbsoluteTime == NULL ) || ( pxCurrentTime == NULL ) || ( pxResult == NULL ) )
 	{
-		err_status = EINVAL;
+		err_status = -EINVAL;
 	}
 
 	/* Calculate the difference between the current time and absolute time. */
@@ -45,12 +45,12 @@ int UTILS_AbsoluteTimespecToDeltaTicks( const struct timespec * const pxAbsolute
 		if( err_status == 1 )
 		{
 			/* pxAbsoluteTime was in the past. */
-			err_status = ETIMEDOUT;
+			err_status = -ETIMEDOUT;
 		}
 		else if( err_status == -1 )
 		{
 			/* error */
-			err_status = EINVAL;
+			err_status = -EINVAL;
 		}
 	}
 
@@ -73,11 +73,11 @@ int UTILS_TimespecToTicks( const struct timespec * const pxTimespec,
 	/* Check parameters. */
 	if( ( pxTimespec == NULL ) || ( pxResult == NULL ) )
 	{
-		err_staus = EINVAL;
+		err_staus = -EINVAL;
 	}
 	else if( ( err_staus == 0 ) && ( UTILS_ValidateTimespec( pxTimespec ) == false ) )
 	{
-		err_staus = EINVAL;
+		err_staus = -EINVAL;
 	}
 
 	if( err_staus == 0 )
@@ -97,7 +97,7 @@ int UTILS_TimespecToTicks( const struct timespec * const pxTimespec,
 		/* Check for overflow */
 		if( total_ticks < 0 )
 		{
-			err_staus = EINVAL;
+			err_staus = -EINVAL;
 		}
 		else
 		{
@@ -109,7 +109,7 @@ int UTILS_TimespecToTicks( const struct timespec * const pxTimespec,
 			{
 				if( total_ticks > UINT_MAX )
 				{
-					err_staus = EINVAL;
+					err_staus = -EINVAL;
 				}
 			}
 		}
@@ -321,7 +321,7 @@ int UTILS_TimespecCompare( const struct timespec * const x,
 
 bool UTILS_ValidateTimespec( const struct timespec * const pxTimespec )
 {
-	bool xReturn = false;
+	bool ret = false;
 
 	if( pxTimespec != NULL )
 	{
@@ -329,9 +329,9 @@ bool UTILS_ValidateTimespec( const struct timespec * const pxTimespec )
 		if( ( pxTimespec->tv_nsec >= 0 ) &&
 			( pxTimespec->tv_nsec < NANOSECONDS_PER_SECOND ) )
 		{
-			xReturn = true;
+			ret = true;
 		}
 	}
 
-	return xReturn;
+	return ret;
 }
