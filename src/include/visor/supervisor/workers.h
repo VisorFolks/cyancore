@@ -11,4 +11,6 @@
 
 #pragma once
 
-void super_call(scall_id, unsigned int, unsigned int, unsigned int, sret_t *);
+#include <supervisor_call.h>
+
+void super_call(scall_id_t id, unsigned int a0, unsigned int a1, unsigned int a2, sret_t *ret);

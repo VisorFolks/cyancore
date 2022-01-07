@@ -9,23 +9,32 @@
 #define _CC_POSIX_MQUEUE_H_
 
 /* CC+POSIX includes. */
-#include "lib/posix/include/time.h"
-
-/**
- * @brief Message queue descriptor.
- */
-typedef void * mqd_t;
+#include <lib/posix/include/time.h>
+#include <lib/posix/include/sys/types.h>
 
 /**
  * @brief Message queue attributes.
  */
-struct mq_attr
+typedef struct mq_attr
 {
-    long mq_flags;   /**< Message queue flags. */
-    long mq_maxmsg;  /**< Maximum number of messages. */
-    long mq_msgsize; /**< Maximum message size. */
-    long mq_curmsgs; /**< Number of messages currently queued. */
-};
+	long mq_flags;   /**< Message queue flags. */
+	long mq_maxmsg;  /**< Maximum number of messages. */
+	long mq_msgsize; /**< Maximum message size. */
+	long mq_curmsgs; /**< Number of messages currently queued. */
+}mq_attr_t;
+
+/**
+ * @brief Message queue descriptor.
+ */
+typedef struct mqd_section
+{
+	size_t id;
+	char mq_name[posixconfigMQ_NAME_LEN_MAX];
+	mq_attr_t attr;
+	uintptr_t kernel_buff;
+}mqd_section_t;
+
+typedef void * mqd_t;
 
 /**
  * @brief Close a message queue.
@@ -54,7 +63,7 @@ int mq_close( mqd_t mqdes );
  * DBADF - The mqdes argument is not a valid message queue descriptor.
  */
 int mq_getattr( mqd_t mqdes,
-                struct mq_attr * mqstat );
+		mq_attr_t * mqstat );
 
 /**
  * @brief Open a message queue.
@@ -83,10 +92,10 @@ int mq_getattr( mqd_t mqdes,
  * <br>
  * ENOENT - O_CREAT is not set and the named message queue does not exist.
  */
-mqd_t mq_open( const char * name,
-               int oflag,
-               mode_t mode,
-               struct mq_attr * attr );
+mqd_t mq_open( 	const char * name,
+		int oflag,
+		mode_t mode,
+		mq_attr_t * attr );
 
 /**
  * @brief Receive a message from a message queue.
@@ -111,9 +120,9 @@ mqd_t mq_open( const char * name,
  * EAGAIN - O_NONBLOCK was set in the message description associated with mqdes, and the specified message queue is empty.
  */
 ssize_t mq_receive( mqd_t mqdes,
-                    char * msg_ptr,
-                    size_t msg_len,
-                    unsigned int * msg_prio );
+		    char * msg_ptr,
+		    size_t msg_len,
+		    unsigned int * msg_prio );
 
 /**
  * @brief Send a message to a message queue.
@@ -139,9 +148,9 @@ ssize_t mq_receive( mqd_t mqdes,
  * and the specified message queue is full.
  */
 int mq_send( mqd_t mqdes,
-             const char * msg_ptr,
-             size_t msg_len,
-             unsigned msg_prio );
+	     const char * msg_ptr,
+	     size_t msg_len,
+	     unsigned msg_prio );
 
 /**
  * @brief Receive a message from a message queue with timeout.
@@ -169,10 +178,10 @@ int mq_send( mqd_t mqdes,
  * EAGAIN - O_NONBLOCK was set in the message description associated with mqdes, and the specified message queue is empty.
  */
 ssize_t mq_timedreceive( mqd_t mqdes,
-                         char * msg_ptr,
-                         size_t msg_len,
-                         unsigned * msg_prio,
-                         const struct timespec * abstime );
+			 char * msg_ptr,
+			 size_t msg_len,
+			 unsigned * msg_prio,
+			 const struct timespec * abstime );
 
 /**
  * @brief Send a message to a message queue with timeout.
@@ -201,10 +210,10 @@ ssize_t mq_timedreceive( mqd_t mqdes,
  * and the specified message queue is full.
  */
 int mq_timedsend( mqd_t mqdes,
-                  const char * msg_ptr,
-                  size_t msg_len,
-                  unsigned msg_prio,
-                  const struct timespec * abstime );
+		  const char * msg_ptr,
+		  size_t msg_len,
+		  unsigned msg_prio,
+		  const struct timespec * abstime );
 
 /**
  * @brief Remove a message queue.

@@ -19,7 +19,7 @@
 extern scall_t _scall_table_start;
 extern scall_t _scall_table_end;
 
-void super_call(scall_id_t id, sargs arg, sret_t *ret)
+void super_call(scall_id_t id, unsigned int a0, unsigned int a1, unsigned int a2, sret_t *ret)
 {
 	/* mcall Table pointer */
 	scall_t *ptr;
@@ -43,7 +43,7 @@ void super_call(scall_id_t id, sargs arg, sret_t *ret)
 			/* Execute the callback function and update the "ret" */
 			if (ptr->callback != NULL)
 			{
-				*ret = ptr->callback(arg);
+				*ret = ptr->callback(a0, a1, a2);
 			}
 			/* Stop parsing the table and return */
 			break;
