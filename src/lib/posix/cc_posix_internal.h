@@ -1,5 +1,8 @@
 #ifndef _CC_POSIX_INTERNAL_H_
 #define _CC_POSIX_INTERNAL_H_
+
+#include <cc_posix_config.h>
+
 /**
  * @file cc_posix_internal.h
  * @brief Internal structs and initializers for CC+POSIX.

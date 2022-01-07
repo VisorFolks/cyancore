@@ -50,11 +50,11 @@
 /**
  * @brief represents an elapsed time
  */
-    struct timespec
+    typedef struct timespec
     {
         time_t tv_sec; /**< Seconds. */
         long tv_nsec;  /**< Nanoseconds. */
-    };
+    }timespec_t;
 #endif
 
 #if !defined( posixconfigENABLE_ITIMERSPEC ) || ( posixconfigENABLE_ITIMERSPEC == 1 )
@@ -62,11 +62,11 @@
 /**
  * @brief timer
  */
-    struct itimerspec
+    typedef struct itimerspec
     {
-        struct timespec it_interval; /**< Timer period. */
-        struct timespec it_value;    /**< Timer expiration. */
-    };
+        timespec_t it_interval; /**< Timer period. */
+        timespec_t it_value;    /**< Timer expiration. */
+    }itimerspec_t;
 #endif
 
 /**
@@ -105,7 +105,7 @@ int clock_getcpuclockid( pid_t pid,
  * @retval 0 - Upon successful execution
  */
 int clock_getres( clockid_t clock_id,
-                  struct timespec * res );
+                  timespec_t * res );
 
 /**
  * @brief Returns the current value for the specified clock, clock_id.
@@ -118,7 +118,7 @@ int clock_getres( clockid_t clock_id,
  * @retval 0 - Upon successful completion.
  */
 int clock_gettime( clockid_t clock_id,
-                   struct timespec * tp );
+                   timespec_t * tp );
 
 /**
  * @brief High resolution sleep with specifiable clock.
@@ -134,8 +134,8 @@ int clock_gettime( clockid_t clock_id,
  */
 int clock_nanosleep( clockid_t clock_id,
                      int flags,
-                     const struct timespec * rqtp,
-                     struct timespec * rmtp );
+                     const timespec_t * rqtp,
+                     timespec_t * rmtp );
 
 /**
  * @brief Sets the time for the specified clock.
@@ -147,7 +147,7 @@ int clock_nanosleep( clockid_t clock_id,
  * @note This function is currently unsupported, as Kernel does not provide a function to modify the tick count.
  */
 int clock_settime( clockid_t clock_id,
-                   const struct timespec * tp );
+                   const timespec_t * tp );
 
 /**
  * @brief High resolution sleep.
@@ -160,8 +160,8 @@ int clock_settime( clockid_t clock_id,
  * @retval -1 - The rqtp argument is invalid OR the rqtp argument specified a nanosecond value less than zero or greater than or equal to 1000 million.
  *
  */
-int nanosleep( const struct timespec * rqtp,
-               struct timespec * rmtp );
+int nanosleep( const timespec_t * rqtp,
+               timespec_t * rmtp );
 
 /**
  * @brief Create a per-process timer.
@@ -210,7 +210,7 @@ int timer_getoverrun( timer_t timerid );
  * @retval 0 - Upon successful completion.
  */
 int timer_gettime( timer_t timerid,
-                   struct itimerspec * value );
+                   itimerspec_t * value );
 
 /**
  * @brief Set the time until the next expiration of the timer.
@@ -227,7 +227,7 @@ int timer_gettime( timer_t timerid,
  */
 int timer_settime( timer_t timerid,
                    int flags,
-                   const struct itimerspec * value,
-                   struct itimerspec * ovalue );
+                   const itimerspec_t * value,
+                   itimerspec_t * ovalue );
 
 #endif /* ifndef _CC_POSIX_TIME_H_ */

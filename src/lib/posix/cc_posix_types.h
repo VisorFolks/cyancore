@@ -55,4 +55,6 @@
     typedef void                       * PthreadBarrierType_t;
 #endif
 
+typedef unsigned int                TickType_t;
+
 #endif /* _CC_POSIX_INTERNAL_TYPES_H_ */

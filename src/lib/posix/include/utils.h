@@ -13,6 +13,11 @@
 /* CC+POSIX includes. */
 #include <lib/posix/include/time.h>
 
+#define DO_NOTHING
+#define RST_VAL				        (0)
+#define ASSERT_IF_FALSE(con, type)	        RET_ERR_IF_FALSE(con, -EINVAL, type)
+#define RET_ERR_IF_FALSE(con, ret, type)	if(!(con)){return (type) ret;}
+
 /**
  * @brief Calculates the length of pcString, up to xMaxLength.
  *
