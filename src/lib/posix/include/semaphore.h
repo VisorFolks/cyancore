@@ -1,16 +1,20 @@
-/**
- * @file semaphore.h
- * @brief Semaphores.
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
  *
- * http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/semaphore.h.html
+ * File Name		: semaphore.h
+ * Description		: This file consists of posix semaphore related declarations
+ * 			: http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/semaphore.h.html
+ * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
+ * Organisation		: Cyancore Core-Team
  */
 
 #ifndef _CC_POSIX_SEMAPHORE_H_
 #define _CC_POSIX_SEMAPHORE_H_
 
 /* CC+POSIX includes. */
-#include "lib/posix/include/time.h"
-#include "lib/posix/cc_posix_types.h"
+#include <posix/include/time.h>
+#include <posix/cc_posix_types.h>
 
 /**
  * @brief Semaphore type.

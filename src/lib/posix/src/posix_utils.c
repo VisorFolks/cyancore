@@ -8,8 +8,11 @@
  * Organisation		: Cyancore Core-Team
  */
 
-#include <lib/posix/include/utils.h>
-#include <lib/posix/include/time.h>
+#include <inttypes.h>
+#include <supervisor/workers.h>
+#include <posix/include/errno.h>
+#include <posix/include/utils.h>
+#include <posix/include/time.h>
 
 size_t UTILS_strnlen( const char * const pcString, size_t xMaxLength )
 {
@@ -83,7 +86,7 @@ int UTILS_TimespecToTicks( const struct timespec * const pxTimespec,
 	if( err_staus == 0 )
 	{
 		/* Convert timespec.tv_sec to ticks. */
-		total_ticks = ( int64_t ) configTICK_RATE_HZ * ( pxTimespec->tv_sec );
+		total_ticks = ( int64_t ) posixconfigTICK_RATE_HZ * ( pxTimespec->tv_sec );
 
 		/* Convert timespec.tv_nsec to ticks. This value does not have to be checked
 		 * for overflow because a valid timespec has 0 <= tv_nsec < 1000000000 and
@@ -334,4 +337,14 @@ bool UTILS_ValidateTimespec( const struct timespec * const pxTimespec )
 	}
 
 	return ret;
+}
+
+void UTILS_OS_Delay( const TickType_t ticks )
+{
+	sret_t sys_ret;
+
+	super_call(scall_id_pthread_delay_ticks, ticks, RST_VAL, RST_VAL, &sys_ret);
+	RET_ERR_IF_FALSE(sys_ret.status == SUCCESS, EAGAIN, int);
+
+	return SUCCESS;
 }

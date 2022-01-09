@@ -66,8 +66,7 @@ typedef enum scall_id
 	scall_id_sem_destroy,
 	scall_id_sem_getvalue,
 	scall_id_sem_post,
-	scall_id_sem_timedwait,
-	scall_id_sem_trywait,
+	scall_id_sem_wait,
 /* scheduler related */
 	scall_id_sched_get_max_priority,
 	scall_id_sched_get_min_priority,

@@ -3,7 +3,7 @@
 #ifndef _CC_POSIX_INTERNAL_TYPES_H_
 #define _CC_POSIX_INTERNAL_TYPES_H_
 
-#include <lib/posix/cc_posix_internal.h>
+#include <posix/cc_posix_internal.h>
 
 /*
  * sys/types.h defines a POSIX type when posixconfigENABLE_PTHREAD_<TYPE>_T
