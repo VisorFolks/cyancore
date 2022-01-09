@@ -1,8 +1,5 @@
 #pragma once
 
-
-#define posxconfigMAX_DELAY			(size_t)(~0)
-
 /*******************
  * MQUEUE configs
  *******************/

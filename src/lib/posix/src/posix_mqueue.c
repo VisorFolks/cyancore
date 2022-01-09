@@ -10,24 +10,106 @@
 
 #include <string.h>
 #include <supervisor/workers.h>
+#include <lib/posix/include/pthread.h>
 #include <lib/posix/include/mqueue.h>
 #include <lib/posix/include/errno.h>
 #include <lib/posix/include/utils.h>
 #include <lib/posix/include/fcntl.h>
 
 #define DELAY_MIN_TICK			(1U)
+#define s_is_irq()			true
 
 sret_t g_mq_sys_ret;
-size_t g_mq_id_ctr = 0;
+size_t g_mq_id_ctr = RST_VAL;
 
-static int s_find_queue_in_desc_list(char * name, mqd_section_t * p_mqd_section);
-static int s_queue_desc_allocator(size_t index, mqd_section_t ** p_mqd_section);
-static int s_queue_desc_deallocator(mqd_section_t ** p_mqd_section);
-static int s_mqueue_delay(TickType_t ticks);
-static int s_queue_write(mqd_t mqdes, const void * buff, size_t size);
-static int s_queue_read (mqd_t mqdes, const void * buff, size_t size);
-static int s_acquire_resource(void);
-static int s_release_resource(void);
+pthread_mutex_t g_mq_mutex;
+pthread_mutexattr_t g_mq_mutex_attr = NULL;
+
+/*********************
+ * Static Functions
+ ********************/
+
+static int s_find_queue_in_desc_list(char * name, mqd_section_t * p_mqd_section)
+{
+	TODO(name);
+	TODO(p_mqd_section);
+	return SUCCESS;
+}
+
+static int s_queue_desc_allocator(size_t index, mqd_section_t ** p_mqd_section)
+{
+	TODO(index);
+	TODO(p_mqd_section);
+	return SUCCESS;
+}
+
+static int s_queue_desc_deallocator(mqd_section_t ** p_mqd_section)
+{
+	TODO(p_mqd_section);
+	return SUCCESS;
+}
+
+static int s_queue_write(mqd_t mqdes, const void * buff, size_t size)
+{
+	mqd_section_t * p_mqd_section = (mqd_section_t *) mqdes;
+
+	RET_ERR_IF_FALSE((p_mqd_section->attr.mq_flags & O_RDONLY), -ENOTSUP, int);
+
+	memcpy(p_mqd_section->kernel_buff_send, buff, size);
+
+	super_call(scall_id_mq_send, p_mqd_section->kernel_buff_send, size, RST_VAL, &g_mq_sys_ret);
+	RET_ERR_IF_FALSE(g_mq_sys_ret.status == SUCCESS, -EBADF, int);
+
+	return SUCCESS;
+}
+
+static int s_queue_read(mqd_t mqdes, const void * buff, size_t size)
+{
+	mqd_section_t * p_mqd_section = (mqd_section_t *) mqdes;
+
+	RET_ERR_IF_FALSE((p_mqd_section->attr.mq_flags & O_WRONLY), -ENOTSUP, int);
+
+	super_call(scall_id_mq_receive, p_mqd_section->kernel_buff_recv, size, RST_VAL, &g_mq_sys_ret);
+	RET_ERR_IF_FALSE(g_mq_sys_ret.status == SUCCESS, -EBADF, int);
+
+	memcpy(buff, (void *) (g_mq_sys_ret.p), size);
+
+	return SUCCESS;
+}
+
+static int s_mqueue_delay(TickType_t ticks)
+{
+	super_call(scall_id_pthread_delay_ticks, ticks, RST_VAL, RST_VAL, &g_mq_sys_ret);
+	RET_ERR_IF_FALSE(g_mq_sys_ret.status == SUCCESS, EAGAIN, int);
+
+	return SUCCESS;
+}
+
+static int s_mq_lock_init(void)
+{
+	pthread_mutexattr_init(&g_mq_mutex_attr);
+	return pthread_mutex_init(&g_mq_mutex, &g_mq_mutex_attr);
+}
+
+static int s_mq_lock_deinit(void)
+{
+	pthread_mutexattr_destroy(&g_mq_mutex_attr);
+	return pthread_mutex_destroy(&g_mq_mutex);
+}
+
+static int s_mq_acquire_lock(void)
+{
+	return pthread_mutex_lock(&g_mq_mutex);
+}
+
+static int s_mq_release_lock(void)
+{
+	return pthread_mutex_unlock(&g_mq_mutex);
+}
+
+/*********************
+ * POSIX Functions
+ ********************/
 
 mqd_t mq_open( 	const char * name,
 		int oflag,
@@ -47,8 +129,12 @@ mqd_t mq_open( 	const char * name,
 	/* Return ENOENT if oflag is not equal to O_CREAT */
 	RET_ERR_IF_FALSE( oflag & O_CREAT, -ENOENT, mqd_t);
 
+	/* Initialise lock */
+	p_mqd_section = (mqd_section_t *) s_mq_lock_init();
+	RET_ERR_IF_FALSE(p_mqd_section == SUCCESS , p_mqd_section, mqd_t);
+
 	/* Grab resource access else return EBUSY */
-	RET_ERR_IF_FALSE( s_acquire_resource() == SUCCESS, -EBUSY, mqd_t);
+	RET_ERR_IF_FALSE( s_mq_acquire_lock() == SUCCESS, -EBUSY, mqd_t);
 
 	/* Find available slot in descriptor table else return ENOSPC */
 	if(s_queue_desc_allocator(g_mq_id_ctr++, &p_mqd_section ) == SUCCESS)
@@ -67,16 +153,18 @@ mqd_t mq_open( 	const char * name,
 		p_mqd_section->attr.mq_flags = oflag;
 
 		/* Perform super_call */
-		super_call(scall_id_mq_open, p_mqd_section->attr.mq_maxmsg, p_mqd_section->attr.mq_msgsize, 0, &g_mq_sys_ret);
+		super_call(scall_id_mq_open,
+			(p_mqd_section->attr.mq_maxmsg * p_mqd_section->attr.mq_msgsize),
+			&(p_mqd_section->kernel_buff_send),
+			&(p_mqd_section->kernel_buff_recv),
+			&g_mq_sys_ret
+			);
 		if (g_mq_sys_ret.status != SUCCESS)
 		{
 			p_mqd_section = (mqd_section_t *) -ENOTSUP;
 		}
 		else
 		{
-			/* Set Kernel buffer ptr */
-			p_mqd_section->kernel_buff = g_mq_sys_ret.p;
-
 			/* Set queue name as specified */
 			strcpy(&(p_mqd_section->mq_name), name );
 		}
@@ -86,7 +174,7 @@ mqd_t mq_open( 	const char * name,
 		DO_NOTHING;
 	}
 
-	RET_ERR_IF_FALSE( s_release_resource() == SUCCESS, -EBUSY, mqd_t);
+	RET_ERR_IF_FALSE( s_mq_release_lock() == SUCCESS, -EBUSY, mqd_t);
 
 	return (mqd_t) p_mqd_section;
 }
@@ -98,7 +186,7 @@ int mq_close( mqd_t mqdes )
 	ASSERT_IF_FALSE(mqdes != NULL, ssize_t);
 
 	/* Grab resource access else return EBUSY */
-	RET_ERR_IF_FALSE( s_acquire_resource() == SUCCESS, -EBUSY, int);
+	RET_ERR_IF_FALSE( s_mq_acquire_lock() == SUCCESS, -EBUSY, int);
 
 	/* Return ENOENT if element already exist */
 	if (s_find_queue_in_desc_list(NULL, (mqd_section_t *) mqdes) == SUCCESS)
@@ -107,7 +195,7 @@ int mq_close( mqd_t mqdes )
 		memset(&((mqd_section_t *) mqdes)->attr, RST_VAL, sizeof(mq_attr_t));
 
 		/* Perform Super Call */
-		super_call(scall_id_mq_close, ((mqd_section_t *) mqdes)->kernel_buff, 0, 0, &g_mq_sys_ret);
+		super_call(scall_id_mq_close, ((mqd_section_t *) mqdes)->kernel_buff_send, RST_VAL, RST_VAL, &g_mq_sys_ret);
 		if (g_mq_sys_ret.status != SUCCESS)
 		{
 			err = -ENOTSUP;
@@ -123,7 +211,10 @@ int mq_close( mqd_t mqdes )
 		err = -EBADF;
 	}
 
-	RET_ERR_IF_FALSE( s_release_resource() == SUCCESS, -EBUSY, ssize_t);
+	RET_ERR_IF_FALSE( s_mq_release_lock() == SUCCESS, -EBUSY, ssize_t);
+
+	err = s_mq_lock_deinit();
+	RET_ERR_IF_FALSE( err == SUCCESS, err, ssize_t );
 
 	return err;
 }
@@ -162,24 +253,25 @@ ssize_t mq_timedreceive( mqd_t mqdes,
 {
 	ASSERT_IF_FALSE(mqdes != NULL, ssize_t);
 	ASSERT_IF_FALSE(msg_ptr != NULL, ssize_t);
-	ASSERT_IF_FALSE(msg_len > 0, ssize_t);
+	ASSERT_IF_FALSE(msg_len > RST_VAL, ssize_t);
 
 	ssize_t err = SUCCESS;
 	TickType_t abs_ticks;
 
 	if (abstime == NULL)
 	{
-		abs_ticks = s_is_irq() ? RST_VAL : posxconfigMAX_DELAY;
+		abs_ticks = s_is_irq() ? RST_VAL : posixconfigMAX_DELAY;
 	}
 
 	else
 	{
-		ASSERT_IF_FALSE (UTILS_TimespecToTicks(abstime, &abs_ticks) == SUCCESS, ssize_t);
+		ASSERT_IF_FALSE ( UTILS_TimespecToTicks(abstime, &abs_ticks) == SUCCESS, ssize_t );
 	}
 
 	/* Grab resource access else return EBUSY */
-	RET_ERR_IF_FALSE( s_acquire_resource() == SUCCESS, -EBUSY, ssize_t);
+	RET_ERR_IF_FALSE( s_mq_acquire_lock() == SUCCESS, -EBUSY, ssize_t);
 
+	/* Check the availability of the Queue entry */
 	if (s_find_queue_in_desc_list(NULL, (mqd_section_t *) mqdes) == SUCCESS)
 	{
 		do
@@ -198,27 +290,25 @@ ssize_t mq_timedreceive( mqd_t mqdes,
 				}
 				else
 				{
-					s_mqueue_delay(DELAY_MIN_TICK);
-					abs_ticks--;
-
-					if (abs_ticks == 0)
+					if (abs_ticks == RST_VAL)
 					{
 						err = -ETIMEDOUT;
 					}
 					else
 					{
-						DO_NOTHING;
+						s_mqueue_delay(DELAY_MIN_TICK);
+						abs_ticks--;;
 					}
 				}
 			}
-		}while(abs_ticks > 0);
+		}while(abs_ticks > RST_VAL);
 	}
 	else
 	{
 		err = -EBADF;
 	}
 
-	RET_ERR_IF_FALSE( s_release_resource() == SUCCESS, -EBUSY, ssize_t);
+	RET_ERR_IF_FALSE( s_mq_release_lock() == SUCCESS, -EBUSY, ssize_t );
 
 	return err;
 }
@@ -231,85 +321,68 @@ int mq_timedsend( mqd_t mqdes,
 {
 	ASSERT_IF_FALSE(mqdes != NULL, int);
 	ASSERT_IF_FALSE(msg_ptr != NULL, int);
-	ASSERT_IF_FALSE(msg_len > 0, int);
+	ASSERT_IF_FALSE(msg_len > RST_VAL, int);
 
-	TODO(mq_timedsend);
+	ssize_t err = SUCCESS;
+	TickType_t abs_ticks;
 
-	return SUCCESS;
+	if (abstime == NULL)
+	{
+		abs_ticks = s_is_irq() ? RST_VAL : posixconfigMAX_DELAY;
+	}
+
+	else
+	{
+		ASSERT_IF_FALSE (UTILS_TimespecToTicks(abstime, &abs_ticks) == SUCCESS, ssize_t);
+	}
+
+	/* Grab resource access else return EBUSY */
+	RET_ERR_IF_FALSE( s_mq_acquire_lock() == SUCCESS, -EBUSY, ssize_t);
+
+	/* Check the availability of the Queue entry */
+	if (s_find_queue_in_desc_list(NULL, (mqd_section_t *) mqdes) == SUCCESS)
+	{
+		do
+		{
+			/* Try to send to kernel queue buffer */
+			if (s_queue_write(mqdes, msg_ptr, msg_len) == SUCCESS)
+			{
+				break;
+			}
+			else
+			{
+				if (((mqd_section_t *) mqdes)->attr.mq_flags & O_NONBLOCK)
+				{
+					err = -ENOSPC;
+					break;
+				}
+				else
+				{
+					if (abs_ticks == RST_VAL)
+					{
+						err = -ETIMEDOUT;
+					}
+					else
+					{
+						s_mqueue_delay(DELAY_MIN_TICK);
+						abs_ticks--;;
+					}
+				}
+			}
+		}while(abs_ticks > RST_VAL);
+	}
+	else
+	{
+		err = -EBADF;
+	}
+
+	RET_ERR_IF_FALSE( s_mq_release_lock() == SUCCESS, -EBUSY, ssize_t );
+
+	return err;
 }
 
 int mq_unlink( const char * name )
 {
 	TODO(mq_unlink);
 	return SUCCESS;
-}
-
-/************************************************************/
-
-static int s_find_queue_in_desc_list(char * name, mqd_section_t * p_mqd_section)
-{
-	TODO(s_find_queue_in_desc_list);
-	return SUCCESS;
-}
-
-static int s_queue_desc_allocator(size_t index, mqd_section_t ** p_mqd_section)
-{
-	TODO(s_queue_desc_allocator);
-	return SUCCESS;
-}
-
-static int s_queue_desc_deallocator(mqd_section_t ** p_mqd_section)
-{
-	TODO(s_queue_desc_deallocator);
-	return SUCCESS;
-}
-
-static int s_queue_write(mqd_t mqdes, const void * buff, size_t size)
-{
-	mqd_section_t * p_mqd_section = (mqd_section_t *) mqdes;
-
-	RET_ERR_IF_FALSE((p_mqd_section->attr.mq_flags & O_RDONLY), -ENOTSUP, int);
-
-	memcpy(p_mqd_section->kernel_buff, buff, size);
-	return SUCCESS;
-}
-
-static int s_queue_read(mqd_t mqdes, const void * buff, size_t size)
-{
-	mqd_section_t * p_mqd_section = (mqd_section_t *) mqdes;
-
-	RET_ERR_IF_FALSE((p_mqd_section->attr.mq_flags & O_WRONLY), -ENOTSUP, int);
-
-	super_call(scall_id_mq_receive, p_mqd_section->kernel_buff, size, 0, &g_mq_sys_ret);
-	RET_ERR_IF_FALSE(g_mq_sys_ret.status == SUCCESS, -EBADF, int);
-
-	memcpy(buff, (void *) (g_mq_sys_ret.p), size);
-
-	return SUCCESS;
-}
-
-static int s_mqueue_delay(TickType_t ticks)
-{
-	super_call(scall_id_pthread_delay_ticks, ticks, 0, 0, &g_mq_sys_ret);
-	RET_ERR_IF_FALSE(g_mq_sys_ret.status == SUCCESS, EAGAIN, int);
-
-	return SUCCESS;
-}
-
-static int s_acquire_resource(void)
-{
-	TODO(s_acquire_resource);
-	return SUCCESS;
-}
-
-static int s_release_resource(void)
-{
-	TODO(s_release_resource);
-	return SUCCESS;
-}
-
-static bool s_is_irq(void)
-{
-	super_call(scall_id_is_irq, 0, 0, 0, &g_mq_sys_ret);
-	return g_mq_sys_ret.status == SUCCESS;
 }
