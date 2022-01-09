@@ -55,6 +55,11 @@
     typedef void                       * PthreadBarrierType_t;
 #endif
 
-typedef unsigned int                TickType_t;
+#if( posixconfigUSE_16_BIT_TICKS == 1 )
+	typedef uint16_t TickType_t;
+#else
+	typedef size_t TickType_t;
+#endif
+#define posixconfigMAX_DELAY			(TickType_t)(~0)
 
 #endif /* _CC_POSIX_INTERNAL_TYPES_H_ */

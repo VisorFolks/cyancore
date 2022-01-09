@@ -31,7 +31,8 @@ typedef struct mqd_section
 	size_t id;
 	char mq_name[posixconfigMQ_NAME_LEN_MAX];
 	mq_attr_t attr;
-	uintptr_t kernel_buff;
+	uintptr_t kernel_buff_send;
+	uintptr_t kernel_buff_recv;
 }mqd_section_t;
 
 typedef void * mqd_t;
