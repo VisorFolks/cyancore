@@ -1,16 +1,20 @@
-/**
- * @file mqueue.h
- * @brief Message queues.
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
  *
- * http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/mqueue.h.html
+ * File Name		: mqueue.h
+ * Description		: This file consists of posix message queue related declarations
+ * 			: http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/mqueue.h.html
+ * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
+ * Organisation		: Cyancore Core-Team
  */
 
 #ifndef _CC_POSIX_MQUEUE_H_
 #define _CC_POSIX_MQUEUE_H_
 
 /* CC+POSIX includes. */
-#include <lib/posix/include/time.h>
-#include <lib/posix/include/sys/types.h>
+#include <posix/include/time.h>
+#include <posix/include/sys/types.h>
 
 /**
  * @brief Message queue attributes.

@@ -8,9 +8,9 @@
  * Organisation		: Cyancore Core-Team
  */
 
-#include <lib/posix/include/time.h>
-#include <lib/posix/include/unistd.h>
-#include <lib/posix/include/errno.h>
+#include <posix/include/time.h>
+#include <posix/include/unistd.h>
+#include <posix/include/errno.h>
 
 unsigned sleep( unsigned seconds )
 {
