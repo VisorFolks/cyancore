@@ -15,7 +15,7 @@
 #include <stdint.h>
 
 /* Kernel types include */
-#include <lib/posix/cc_posix_types.h>
+#include <posix/cc_posix_types.h>
 
 /**
  * @brief Used for system times in clock ticks or CLOCKS_PER_SEC.

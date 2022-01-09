@@ -10,16 +10,15 @@
 
 #include <string.h>
 #include <supervisor/workers.h>
-#include <lib/posix/include/pthread.h>
-#include <lib/posix/include/mqueue.h>
-#include <lib/posix/include/errno.h>
-#include <lib/posix/include/utils.h>
-#include <lib/posix/include/fcntl.h>
+#include <posix/include/pthread.h>
+#include <posix/include/mqueue.h>
+#include <posix/include/errno.h>
+#include <posix/include/utils.h>
+#include <posix/include/fcntl.h>
 
 #define DELAY_MIN_TICK			(1U)
-#define s_is_irq()			true
+#define IS_ISR()			true
 
-sret_t g_mq_sys_ret;
 size_t g_mq_id_ctr = RST_VAL;
 
 pthread_mutex_t g_mq_mutex;
@@ -52,13 +51,14 @@ static int s_queue_desc_deallocator(mqd_section_t ** p_mqd_section)
 static int s_queue_write(mqd_t mqdes, const void * buff, size_t size)
 {
 	mqd_section_t * p_mqd_section = (mqd_section_t *) mqdes;
+	sret_t mq_sys_ret;
 
 	RET_ERR_IF_FALSE((p_mqd_section->attr.mq_flags & O_RDONLY), -ENOTSUP, int);
 
 	memcpy(p_mqd_section->kernel_buff_send, buff, size);
 
-	super_call(scall_id_mq_send, p_mqd_section->kernel_buff_send, size, RST_VAL, &g_mq_sys_ret);
-	RET_ERR_IF_FALSE(g_mq_sys_ret.status == SUCCESS, -EBADF, int);
+	super_call(scall_id_mq_send, p_mqd_section->kernel_buff_send, size, RST_VAL, &mq_sys_ret);
+	RET_ERR_IF_FALSE(mq_sys_ret.status == SUCCESS, -EBADF, int);
 
 	return SUCCESS;
 }
@@ -66,21 +66,14 @@ static int s_queue_write(mqd_t mqdes, const void * buff, size_t size)
 static int s_queue_read(mqd_t mqdes, const void * buff, size_t size)
 {
 	mqd_section_t * p_mqd_section = (mqd_section_t *) mqdes;
+	sret_t mq_sys_ret;
 
 	RET_ERR_IF_FALSE((p_mqd_section->attr.mq_flags & O_WRONLY), -ENOTSUP, int);
 
-	super_call(scall_id_mq_receive, p_mqd_section->kernel_buff_recv, size, RST_VAL, &g_mq_sys_ret);
-	RET_ERR_IF_FALSE(g_mq_sys_ret.status == SUCCESS, -EBADF, int);
+	super_call(scall_id_mq_receive, p_mqd_section->kernel_buff_recv, size, RST_VAL, &mq_sys_ret);
+	RET_ERR_IF_FALSE(mq_sys_ret.status == SUCCESS, -EBADF, int);
 
-	memcpy(buff, (void *) (g_mq_sys_ret.p), size);
-
-	return SUCCESS;
-}
-
-static int s_mqueue_delay(TickType_t ticks)
-{
-	super_call(scall_id_pthread_delay_ticks, ticks, RST_VAL, RST_VAL, &g_mq_sys_ret);
-	RET_ERR_IF_FALSE(g_mq_sys_ret.status == SUCCESS, EAGAIN, int);
+	memcpy(buff, (void *) (mq_sys_ret.p), size);
 
 	return SUCCESS;
 }
@@ -117,6 +110,7 @@ mqd_t mq_open( 	const char * name,
 		mq_attr_t * attr )
 {
 	mqd_section_t * p_mqd_section = NULL;
+	sret_t mq_sys_ret;
 	size_t index;
 
 	/* Check argument assertions */
@@ -157,9 +151,9 @@ mqd_t mq_open( 	const char * name,
 			(p_mqd_section->attr.mq_maxmsg * p_mqd_section->attr.mq_msgsize),
 			&(p_mqd_section->kernel_buff_send),
 			&(p_mqd_section->kernel_buff_recv),
-			&g_mq_sys_ret
+			&mq_sys_ret
 			);
-		if (g_mq_sys_ret.status != SUCCESS)
+		if (mq_sys_ret.status != SUCCESS)
 		{
 			p_mqd_section = (mqd_section_t *) -ENOTSUP;
 		}
@@ -182,6 +176,7 @@ mqd_t mq_open( 	const char * name,
 int mq_close( mqd_t mqdes )
 {
 	int err = SUCCESS;
+	sret_t mq_sys_ret;
 
 	ASSERT_IF_FALSE(mqdes != NULL, ssize_t);
 
@@ -195,8 +190,8 @@ int mq_close( mqd_t mqdes )
 		memset(&((mqd_section_t *) mqdes)->attr, RST_VAL, sizeof(mq_attr_t));
 
 		/* Perform Super Call */
-		super_call(scall_id_mq_close, ((mqd_section_t *) mqdes)->kernel_buff_send, RST_VAL, RST_VAL, &g_mq_sys_ret);
-		if (g_mq_sys_ret.status != SUCCESS)
+		super_call(scall_id_mq_close, ((mqd_section_t *) mqdes)->kernel_buff_send, RST_VAL, RST_VAL, &mq_sys_ret);
+		if (mq_sys_ret.status != SUCCESS)
 		{
 			err = -ENOTSUP;
 		}
@@ -260,7 +255,7 @@ ssize_t mq_timedreceive( mqd_t mqdes,
 
 	if (abstime == NULL)
 	{
-		abs_ticks = s_is_irq() ? RST_VAL : posixconfigMAX_DELAY;
+		abs_ticks = IS_ISR() ? RST_VAL : posixconfigMAX_DELAY;
 	}
 
 	else
@@ -296,8 +291,8 @@ ssize_t mq_timedreceive( mqd_t mqdes,
 					}
 					else
 					{
-						s_mqueue_delay(DELAY_MIN_TICK);
-						abs_ticks--;;
+						UTILS_OS_Delay((const TickType_t)DELAY_MIN_TICK);
+						abs_ticks--;
 					}
 				}
 			}
@@ -328,7 +323,7 @@ int mq_timedsend( mqd_t mqdes,
 
 	if (abstime == NULL)
 	{
-		abs_ticks = s_is_irq() ? RST_VAL : posixconfigMAX_DELAY;
+		abs_ticks = IS_ISR() ? RST_VAL : posixconfigMAX_DELAY;
 	}
 
 	else
@@ -364,7 +359,7 @@ int mq_timedsend( mqd_t mqdes,
 					}
 					else
 					{
-						s_mqueue_delay(DELAY_MIN_TICK);
+						UTILS_OS_Delay((const TickType_t)DELAY_MIN_TICK);
 						abs_ticks--;;
 					}
 				}

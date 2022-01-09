@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef posixconfigTICK_RATE_HZ
+#define posixconfigTICK_RATE_HZ			(1000)
+#endif
+
 /*******************
  * MQUEUE configs
  *******************/

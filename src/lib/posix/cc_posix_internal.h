@@ -1,6 +1,7 @@
 #ifndef _CC_POSIX_INTERNAL_H_
 #define _CC_POSIX_INTERNAL_H_
 
+#include <stdint.h>
 #include <cc_posix_config.h>
 
 /**

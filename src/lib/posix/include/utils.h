@@ -11,12 +11,14 @@
 #include <stdint.h>
 
 /* CC+POSIX includes. */
-#include <lib/posix/include/time.h>
+#include <posix/include/time.h>
 
+#define DELAY_MIN_TICK			        (1U)
 #define DO_NOTHING
 #define RST_VAL				        (0)
 #define ASSERT_IF_FALSE(con, type)	        RET_ERR_IF_FALSE(con, -EINVAL, type)
 #define RET_ERR_IF_FALSE(con, ret, type)	if(!(con)){return (type) ret;}
+#define IS_ISR()			        true
 
 /**
  * @brief Calculates the length of pcString, up to xMaxLength.
@@ -131,5 +133,13 @@ int UTILS_TimespecCompare( const struct timespec * const x,
  * @return true if the pxTimespec is valid, false otherwise.
  */
 bool UTILS_ValidateTimespec( const struct timespec * const pxTimespec );
+/**
+ * @brief Creates OS delay according to number of ticks provided
+ *
+ * @param[in] ticks Number of OS ticks to delay
+ *
+ * @return None
+ */
+void UTILS_OS_Delay( const TickType_t ticks );
 
 #endif /* ifndef _CC_POSIX_UTILS_ */
