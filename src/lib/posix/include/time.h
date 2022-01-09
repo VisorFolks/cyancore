@@ -9,8 +9,8 @@
 #define _CC_POSIX_TIME_H_
 
 /* CC+POSIX includes. */
-#include <lib/posix/include/sys/types.h>
-#include <lib/posix/include/signal.h>
+#include <posix/include/sys/types.h>
+#include <posix/include/signal.h>
 
 /**
  * @name Unit conversion constants.
@@ -18,7 +18,7 @@
 /**@{ */
 #define MICROSECONDS_PER_SECOND    ( 1000000LL )                                   /**< Microseconds per second. */
 #define NANOSECONDS_PER_SECOND     ( 1000000000LL )                                /**< Nanoseconds per second. */
-#define NANOSECONDS_PER_TICK       ( NANOSECONDS_PER_SECOND / configTICK_RATE_HZ ) /**< Nanoseconds per Kernel tick. */
+#define NANOSECONDS_PER_TICK       ( NANOSECONDS_PER_SECOND / posixconfigTICK_RATE_HZ ) /**< Nanoseconds per Kernel tick. */
 /**@} */
 
 /**
@@ -33,7 +33,7 @@
  * @name A number used to convert the value returned by the clock() function into seconds.
  */
 /**@{ */
-#define CLOCKS_PER_SEC    ( ( clock_t ) configTICK_RATE_HZ )
+#define CLOCKS_PER_SEC    ( ( clock_t ) posixconfigTICK_RATE_HZ )
 /**@} */
 
 /**

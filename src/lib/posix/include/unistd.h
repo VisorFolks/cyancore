@@ -8,7 +8,7 @@
 #ifndef _CC_POSIX_UNISTD_H_
 #define _CC_POSIX_UNISTD_H_
 
-#include "lib/posix/include/sys/types.h"
+#include "posix/include/sys/types.h"
 
 /**
  * @brief Suspend execution for an interval of time.

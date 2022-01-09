@@ -10,8 +10,8 @@
 
 /* CC+POSIX includes. POSIX states that this header shall make symbols
  * defined in sched.h and time.h visible. */
-#include "lib/posix/include/sched.h"
-#include "lib/posix/include/time.h"
+#include "posix/include/sched.h"
+#include "posix/include/time.h"
 
 /**
  * @name pthread detach state.
