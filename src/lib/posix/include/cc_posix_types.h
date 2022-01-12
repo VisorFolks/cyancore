@@ -1,9 +1,16 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
+ * File Name		: cc_posix_types.h
+ * Description		: POSIX typedefs
+ * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
 
+#pragma once
 
-#ifndef _CC_POSIX_INTERNAL_TYPES_H_
-#define _CC_POSIX_INTERNAL_TYPES_H_
-
-#include <posix/cc_posix_internal.h>
+#include <cc_posix_internal.h>
 
 /*
  * sys/types.h defines a POSIX type when posixconfigENABLE_PTHREAD_<TYPE>_T
@@ -61,5 +68,3 @@
 	typedef size_t TickType_t;
 #endif
 #define posixconfigMAX_DELAY			(TickType_t)(~0)
-
-#endif /* _CC_POSIX_INTERNAL_TYPES_H_ */

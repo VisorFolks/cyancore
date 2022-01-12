@@ -1,14 +1,20 @@
-/**
- * @file unistd.h
- * @brief Standard symbolic constants and types
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
  *
- * http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/unistd.h.html
+ * File Name		: unistd.h
+ * Description		: Standard symbolic constants and types
+ * 			: http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/unistd.h.html
+ *
+ * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
+ * Organisation		: Cyancore Core-Team
  */
 
-#ifndef _CC_POSIX_UNISTD_H_
-#define _CC_POSIX_UNISTD_H_
+#pragma once
 
-#include "posix/include/sys/types.h"
+#include "posix/sys/types.h"
+
+#define _CC_POSIX_UNISTD_H_
 
 /**
  * @brief Suspend execution for an interval of time.
@@ -32,5 +38,3 @@ unsigned sleep( unsigned seconds );
  * @retval 0 - Upon successful completion.
  */
 int usleep( useconds_t usec );
-
-#endif /* ifndef _CC_POSIX_UNISTD_H_ */

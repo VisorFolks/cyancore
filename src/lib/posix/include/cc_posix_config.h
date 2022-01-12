@@ -1,3 +1,13 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
+ * File Name		: cc_posix_config.h
+ * Description		: POSIX user config
+ * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
 #pragma once
 
 #ifndef posixconfigTICK_RATE_HZ

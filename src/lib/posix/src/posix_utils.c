@@ -8,11 +8,11 @@
  * Organisation		: Cyancore Core-Team
  */
 
-#include <inttypes.h>
+#include <stdint.h>
 #include <supervisor/workers.h>
-#include <posix/include/errno.h>
-#include <posix/include/utils.h>
-#include <posix/include/time.h>
+#include <posix/errno.h>
+#include <posix/utils.h>
+#include <posix/time.h>
 
 size_t UTILS_strnlen( const char * const pcString, size_t xMaxLength )
 {
@@ -339,12 +339,10 @@ bool UTILS_ValidateTimespec( const struct timespec * const pxTimespec )
 	return ret;
 }
 
-void UTILS_OS_Delay( const TickType_t ticks )
+void os_delay_ticks( const TickType_t ticks )
 {
 	sret_t sys_ret;
 
 	super_call(scall_id_pthread_delay_ticks, ticks, RST_VAL, RST_VAL, &sys_ret);
-	RET_ERR_IF_FALSE(sys_ret.status == SUCCESS, EAGAIN, int);
-
-	return SUCCESS;
+	RET_ERR_IF_FALSE(sys_ret.status == SUCCESS, EAGAIN, void);
 }

@@ -8,13 +8,14 @@
  * Organisation		: Cyancore Core-Team
  */
 
+#include <stdint.h>
 #include <string.h>
 #include <supervisor/workers.h>
-#include <posix/include/pthread.h>
-#include <posix/include/mqueue.h>
-#include <posix/include/errno.h>
-#include <posix/include/utils.h>
-#include <posix/include/fcntl.h>
+#include <posix/pthread.h>
+#include <posix/mqueue.h>
+#include <posix/errno.h>
+#include <posix/utils.h>
+#include <posix/fcntl.h>
 
 #define DELAY_MIN_TICK			(1U)
 #define IS_ISR()			true
@@ -30,34 +31,34 @@ pthread_mutexattr_t g_mq_mutex_attr = NULL;
 
 static int s_find_queue_in_desc_list(char * name, mqd_section_t * p_mqd_section)
 {
-	TODO(name);
-	TODO(p_mqd_section);
+	(void)(name);
+	(void)(p_mqd_section);
 	return SUCCESS;
 }
 
 static int s_queue_desc_allocator(size_t index, mqd_section_t ** p_mqd_section)
 {
-	TODO(index);
-	TODO(p_mqd_section);
+	(void)(index);
+	(void)(p_mqd_section);
 	return SUCCESS;
 }
 
 static int s_queue_desc_deallocator(mqd_section_t ** p_mqd_section)
 {
-	TODO(p_mqd_section);
+	(void)(p_mqd_section);
 	return SUCCESS;
 }
 
-static int s_queue_write(mqd_t mqdes, const void * buff, size_t size)
+static int s_queue_write(mqd_t mqdes, const void * buff, size_t size, unsigned msg_prio)
 {
 	mqd_section_t * p_mqd_section = (mqd_section_t *) mqdes;
 	sret_t mq_sys_ret;
 
 	RET_ERR_IF_FALSE((p_mqd_section->attr.mq_flags & O_RDONLY), -ENOTSUP, int);
 
-	memcpy(p_mqd_section->kernel_buff_send, buff, size);
+	memcpy((void *)p_mqd_section->kernel_buff_send, buff, size);
 
-	super_call(scall_id_mq_send, p_mqd_section->kernel_buff_send, size, RST_VAL, &mq_sys_ret);
+	super_call(scall_id_mq_send, p_mqd_section->kernel_buff_send, size, msg_prio, &mq_sys_ret);
 	RET_ERR_IF_FALSE(mq_sys_ret.status == SUCCESS, -EBADF, int);
 
 	return SUCCESS;
@@ -73,7 +74,7 @@ static int s_queue_read(mqd_t mqdes, const void * buff, size_t size)
 	super_call(scall_id_mq_receive, p_mqd_section->kernel_buff_recv, size, RST_VAL, &mq_sys_ret);
 	RET_ERR_IF_FALSE(mq_sys_ret.status == SUCCESS, -EBADF, int);
 
-	memcpy(buff, (void *) (mq_sys_ret.p), size);
+	memcpy((void *)buff, (void *) (mq_sys_ret.p), size);
 
 	return SUCCESS;
 }
@@ -106,19 +107,19 @@ static int s_mq_release_lock(void)
 
 mqd_t mq_open( 	const char * name,
 		int oflag,
-		mode_t mode,
+		mode_t mode _UNUSED,
 		mq_attr_t * attr )
 {
 	mqd_section_t * p_mqd_section = NULL;
 	sret_t mq_sys_ret;
-	size_t index;
+	size_t name_len = UTILS_strnlen(name, posixconfigMQ_NAME_LEN_MAX);
 
 	/* Check argument assertions */
 	ASSERT_IF_FALSE(name != NULL, mqd_t);
-	ASSERT_IF_FALSE(UTILS_strnlen(name, posixconfigMQ_NAME_LEN_MAX) < posixconfigMQ_NAME_LEN_MAX, mqd_t);
+	ASSERT_IF_FALSE( name_len < posixconfigMQ_NAME_LEN_MAX, mqd_t);
 
 	/* Return ENOENT if element already exist */
-	RET_ERR_IF_FALSE(s_find_queue_in_desc_list(name, NULL) == SUCCESS, -ENOENT, mqd_t);
+	RET_ERR_IF_FALSE(s_find_queue_in_desc_list((char *) name, NULL) == SUCCESS, -ENOENT, mqd_t);
 
 	/* Return ENOENT if oflag is not equal to O_CREAT */
 	RET_ERR_IF_FALSE( oflag & O_CREAT, -ENOENT, mqd_t);
@@ -149,8 +150,8 @@ mqd_t mq_open( 	const char * name,
 		/* Perform super_call */
 		super_call(scall_id_mq_open,
 			(p_mqd_section->attr.mq_maxmsg * p_mqd_section->attr.mq_msgsize),
-			&(p_mqd_section->kernel_buff_send),
-			&(p_mqd_section->kernel_buff_recv),
+			(unsigned int) &(p_mqd_section->kernel_buff_send),
+			(unsigned int) &(p_mqd_section->kernel_buff_recv),
 			&mq_sys_ret
 			);
 		if (mq_sys_ret.status != SUCCESS)
@@ -160,7 +161,7 @@ mqd_t mq_open( 	const char * name,
 		else
 		{
 			/* Set queue name as specified */
-			strcpy(&(p_mqd_section->mq_name), name );
+			memcpy(&(p_mqd_section->mq_name), name, name_len);
 		}
 	}
 	else
@@ -291,7 +292,7 @@ ssize_t mq_timedreceive( mqd_t mqdes,
 					}
 					else
 					{
-						UTILS_OS_Delay((const TickType_t)DELAY_MIN_TICK);
+						os_delay_ticks((const TickType_t)DELAY_MIN_TICK);
 						abs_ticks--;
 					}
 				}
@@ -340,7 +341,7 @@ int mq_timedsend( mqd_t mqdes,
 		do
 		{
 			/* Try to send to kernel queue buffer */
-			if (s_queue_write(mqdes, msg_ptr, msg_len) == SUCCESS)
+			if (s_queue_write(mqdes, msg_ptr, msg_len, msg_prio) == SUCCESS)
 			{
 				break;
 			}
@@ -359,7 +360,7 @@ int mq_timedsend( mqd_t mqdes,
 					}
 					else
 					{
-						UTILS_OS_Delay((const TickType_t)DELAY_MIN_TICK);
+						os_delay_ticks((const TickType_t)DELAY_MIN_TICK);
 						abs_ticks--;;
 					}
 				}
@@ -378,6 +379,6 @@ int mq_timedsend( mqd_t mqdes,
 
 int mq_unlink( const char * name )
 {
-	TODO(mq_unlink);
+	(void)(name);
 	return SUCCESS;
 }

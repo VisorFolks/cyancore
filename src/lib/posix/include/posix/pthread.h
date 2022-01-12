@@ -1,17 +1,23 @@
-/**
- * @file pthread.h
- * @brief Threads.
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
  *
- * http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/pthread.h.html
+ * File Name		: pthread.h
+ * Description		: Threads.
+ * 			        : http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/pthread.h.html
+ *
+ * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
+ * Organisation		: Cyancore Core-Team
  */
 
-#ifndef _CC_POSIX_PTHREAD_H_
+#pragma once
+
 #define _CC_POSIX_PTHREAD_H_
 
 /* CC+POSIX includes. POSIX states that this header shall make symbols
  * defined in sched.h and time.h visible. */
-#include "posix/include/sched.h"
-#include "posix/include/time.h"
+#include "posix/sched.h"
+#include "posix/time.h"
 
 /**
  * @name pthread detach state.
@@ -472,5 +478,3 @@ pthread_t pthread_self( void );
 int pthread_setschedparam( pthread_t thread,
                            int policy,
                            const struct sched_param * param );
-
-#endif /* _CC_POSIX_PTHREAD_H_ */

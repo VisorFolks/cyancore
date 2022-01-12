@@ -8,7 +8,8 @@
  * Organisation		: Cyancore Core-Team
  */
 
-#ifndef _CC_POSIX_ERRNO_H_
+#pragma once
+
 #define _CC_POSIX_ERRNO_H_
 
 #include <status.h>
@@ -67,5 +68,3 @@
 #if ( configUSE_POSIX_ERRNO == 1 )
 #endif
 /**@} */
-
-#endif /* ifndef _CC_POSIX_ERRNO_H_ */
