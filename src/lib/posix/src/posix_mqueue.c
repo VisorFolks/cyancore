@@ -209,8 +209,7 @@ int mq_close( mqd_t mqdes )
 
 	RET_ERR_IF_FALSE( s_mq_release_lock() == SUCCESS, -EBUSY, ssize_t);
 
-	err = s_mq_lock_deinit();
-	RET_ERR_IF_FALSE( err == SUCCESS, err, ssize_t );
+	RET_ERR_IF_FALSE( s_mq_lock_deinit() == SUCCESS, err, ssize_t );
 
 	return err;
 }
