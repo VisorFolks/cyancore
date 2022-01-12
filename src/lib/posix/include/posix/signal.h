@@ -1,15 +1,17 @@
-/**
- * @file signal.h
- * @brief Signals.
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
  *
- * Signals are currently not implemented in CC+POSIX. This header only
- * defines the signal data structures used elsewhere.
+ * File Name		: signal.h
+ * Description		: Signals (Signals are currently not implemented in CC+POSIX)
+ *                  : http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/signal.h.html
  *
- * http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/signal.h.html
+ * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
+ * Organisation		: Cyancore Core-Team
  */
 
+#pragma once
 
-#ifndef _CC_POSIX_SIGNAL_H_
 #define _CC_POSIX_SIGNAL_H_
 
 /**
@@ -41,5 +43,3 @@ struct sigevent
     void ( * sigev_notify_function )( union sigval ); /**< Notification function. */
     pthread_attr_t * sigev_notify_attributes;         /**< Notification attributes. */
 };
-
-#endif /* ifndef _CC_POSIX_SIGNAL_H_ */

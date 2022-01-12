@@ -1,11 +1,17 @@
-/**
- * @file sched.h
- * @brief Execution scheduling.
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
  *
- * http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/sched.h.html
+ * File Name		: sched.h
+ * Description		: Execution scheduling.
+ * 			        : http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/sched.h.html
+ *
+ * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
+ * Organisation		: Cyancore Core-Team
  */
 
-#ifndef _CC_POSIX_SCHED_H_
+#pragma once
+
 #define _CC_POSIX_SCHED_H_
 
 /**
@@ -55,5 +61,3 @@ int sched_get_priority_min( int policy );
  * @retval 0 - Upon successful completion
  */
 int sched_yield( void );
-
-#endif /* ifndef _CC_POSIX_SCHED_H_ */

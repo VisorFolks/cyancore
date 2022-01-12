@@ -8,9 +8,9 @@
  * Organisation		: Cyancore Core-Team
  */
 
-#include <posix/include/time.h>
-#include <posix/include/unistd.h>
-#include <posix/include/errno.h>
+#include <posix/time.h>
+#include <posix/unistd.h>
+#include <posix/errno.h>
 
 unsigned sleep( unsigned seconds )
 {
@@ -19,32 +19,33 @@ unsigned sleep( unsigned seconds )
 
 int usleep( useconds_t usec )
 {
-        TODO(usec);
+        (void) usec;
+        return SUCCESS;
 }
 
 clock_t clock( void )
 {
-
+        return (clock_t) 0;
 }
 
 int clock_getcpuclockid( pid_t pid, clockid_t * clock_id )
 {
-        TODO(pid);
-        TODO(clock_id);
+        (void)(pid);
+        (void)(clock_id);
         return SUCCESS;
 }
 
 int clock_getres( clockid_t clock_id, struct timespec * res )
 {
-        TODO(clock_id);
-        TODO(res);
+        (void)(clock_id);
+        (void)(res);
         return SUCCESS;
 }
 
 int clock_gettime( clockid_t clock_id, struct timespec * tp )
 {
-        TODO(clock_id);
-        TODO(tp);
+        (void)(clock_id);
+        (void)(tp);
         return SUCCESS;
 }
 
@@ -53,26 +54,26 @@ int clock_nanosleep( clockid_t clock_id,
                      const struct timespec * rqtp,
                      struct timespec * rmtp )
 {
-        TODO(clock_id);
-        TODO(flags);
-        TODO(rqtp);
-        TODO(rmtp);
+        (void)(clock_id);
+        (void)(flags);
+        (void)(rqtp);
+        (void)(rmtp);
         return SUCCESS;
 }
 
 int clock_settime( clockid_t clock_id,
                    const struct timespec * tp )
 {
-        TODO(clock_id);
-        TODO(tp);
+        (void)(clock_id);
+        (void)(tp);
         return SUCCESS;
 }
 
 int nanosleep( const struct timespec * rqtp,
                struct timespec * rmtp )
 {
-        TODO(rqtp);
-        TODO(rmtp);
+        (void)(rqtp);
+        (void)(rmtp);
         return SUCCESS;
 }
 
@@ -80,29 +81,29 @@ int timer_create( clockid_t clock_id,
                   struct sigevent * evp,
                   timer_t * timerid )
 {
-        TODO(clock_id);
-        TODO(evp);
-        TODO(timerid);
+        (void)(clock_id);
+        (void)(evp);
+        (void)(timerid);
         return SUCCESS;
 }
 
 int timer_delete( timer_t timerid )
 {
-        TODO(timerid);
+        (void)(timerid);
         return SUCCESS;
 }
 
 int timer_getoverrun( timer_t timerid )
 {
-        TODO(timerid);
+        (void)(timerid);
         return SUCCESS;
 }
 
 int timer_gettime( timer_t timerid,
                    struct itimerspec * value )
 {
-        TODO(timerid);
-        TODO(value);
+        (void)(timerid);
+        (void)(value);
         return SUCCESS;
 }
 
@@ -111,9 +112,9 @@ int timer_settime( timer_t timerid,
                    const struct itimerspec * value,
                    struct itimerspec * ovalue )
 {
-        TODO(timerid);
-        TODO(flags);
-        TODO(value);
-        TODO(ovalue);
+        (void)(timerid);
+        (void)(flags);
+        (void)(value);
+        (void)(ovalue);
         return SUCCESS;
 }
