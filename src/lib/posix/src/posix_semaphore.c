@@ -8,11 +8,12 @@
  * Organisation		: Cyancore Core-Team
  */
 
+#include <stdint.h>
 #include <string.h>
 #include <supervisor/workers.h>
-#include <posix/include/semaphore.h>
-#include <posix/include/errno.h>
-#include <posix/include/utils.h>
+#include <posix/semaphore.h>
+#include <posix/errno.h>
+#include <posix/utils.h>
 
 /*********************
  * Static Functions
@@ -22,7 +23,7 @@ static int s_sem_wait( sem_t * sem )
 	sret_t sem_sys_ret;
 	ASSERT_IF_FALSE(sem == NULL, int);
 
-	super_call(scall_id_sem_wait, *sem, RST_VAL, RST_VAL, &sem_sys_ret);
+	super_call(scall_id_sem_wait, (unsigned int) *sem, RST_VAL, RST_VAL, &sem_sys_ret);
 
 	return sem_sys_ret.status;
 }
@@ -35,7 +36,7 @@ int sem_destroy( sem_t * sem )
 	sret_t sem_sys_ret;
 	ASSERT_IF_FALSE(sem == NULL, int);
 
-	super_call(scall_id_sem_destroy, *sem, RST_VAL, RST_VAL, &sem_sys_ret);
+	super_call(scall_id_sem_destroy, (unsigned int) *sem, RST_VAL, RST_VAL, &sem_sys_ret);
 	RET_ERR_IF_FALSE(sem_sys_ret.status == SUCCESS, sem_sys_ret.status, int);
 
 	*sem = (sem_t) NULL;
@@ -49,10 +50,10 @@ int sem_getvalue( sem_t * sem,
 	sret_t sem_sys_ret;
 	ASSERT_IF_FALSE(sem == NULL, int);
 
-	super_call(scall_id_sem_getvalue, *sem, RST_VAL, RST_VAL, &sem_sys_ret);
+	super_call(scall_id_sem_getvalue, (unsigned int) *sem, RST_VAL, RST_VAL, &sem_sys_ret);
 	RET_ERR_IF_FALSE(sem_sys_ret.status == SUCCESS, sem_sys_ret.status, int);
 
-	*sem = (sem_t) sem_sys_ret.p;
+	*sval = (int) sem_sys_ret.p;
 
 	return SUCCESS;
 }
@@ -77,7 +78,7 @@ int sem_post( sem_t * sem )
 	sret_t sem_sys_ret;
 	ASSERT_IF_FALSE(sem == NULL, int);
 
-	super_call(scall_id_sem_post, *sem, RST_VAL, RST_VAL, &sem_sys_ret);
+	super_call(scall_id_sem_post, (unsigned int) *sem, RST_VAL, RST_VAL, &sem_sys_ret);
 
 	return sem_sys_ret.status;
 }
@@ -114,7 +115,7 @@ int sem_timedwait( sem_t * sem,
 			}
 			else
 			{
-				UTILS_OS_Delay((const TickType_t)DELAY_MIN_TICK);
+				os_delay_ticks((const TickType_t)DELAY_MIN_TICK);
 				abs_ticks--;
 			}
 		}

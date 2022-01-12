@@ -5,16 +5,18 @@
  * File Name		: semaphore.h
  * Description		: This file consists of posix semaphore related declarations
  * 			: http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/semaphore.h.html
+ *
  * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 
-#ifndef _CC_POSIX_SEMAPHORE_H_
+#pragma once
+
 #define _CC_POSIX_SEMAPHORE_H_
 
 /* CC+POSIX includes. */
-#include <posix/include/time.h>
-#include <posix/cc_posix_types.h>
+#include <posix/time.h>
+#include <cc_posix_types.h>
 
 /**
  * @brief Semaphore type.
@@ -118,5 +120,3 @@ int sem_trywait( sem_t * sem );
  * @note Deadlock detection is not implemented.
  */
 int sem_wait( sem_t * sem );
-
-#endif /* ifndef _CC_POSIX_SEMAPHORE_H_ */
