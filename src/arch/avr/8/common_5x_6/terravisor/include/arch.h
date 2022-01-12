@@ -89,3 +89,28 @@ static inline void arch_nop()
 {
 	asm volatile("nop");
 }
+
+static inline void arch_sync()
+{
+	arch_nop();
+}
+
+static inline void arch_msb()
+{
+	arch_nop();
+}
+
+static inline void arch_isb()
+{
+	arch_nop();
+}
+
+static inline void arch_dsb()
+{
+	arch_nop();
+}
+
+static inline void arch_wfe()
+{
+	arch_nop();
+}

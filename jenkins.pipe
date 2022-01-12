@@ -5,21 +5,18 @@ pipeline {
 		stage('tc check') {
 			steps {
 				sh 'make get_avr_tc AVR_TC_REPO=git@github.com:VisorFolks/avr-toolchain.git'
-				sh 'make get_riscv_tc RISC_V_TC_REPO=git@github.com:VisorFolks/risc-v-toolchain.git'
 			}
 		}
 		stage('check') {
 			steps {
 				sh 'make demo_avr check'
 				sh 'make demo_avr_cpp check'
-				sh 'make demo_riscv check'
 			}
 		}
 		stage('build') {
 			steps {
 				sh 'make demo_avr clean default'
 				sh 'make demo_avr_cpp clean default'
-				sh 'make demo_riscv clean default'
 			}
 		}
 		stage('clean') {

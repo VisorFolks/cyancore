@@ -13,6 +13,9 @@
 #include <stdint.h>
 #include <interrupt.h>
 #include <arch.h>
+#if LOCAL_INTERRUPT_DEVICE==1
+#include <hal/local_interrupt.h>
+#endif
 #if PLAT_INTERRUPT_DEVICE==1
 #include <hal/plat_interrupt.h>
 #endif
