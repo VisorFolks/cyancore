@@ -3,19 +3,22 @@
  * Copyrights (C) 2019, Cyancore Team
  *
  * File Name		: sys/types.h
- * Description		: Data types. https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/sys_types.h.html
+ * Description		: Data types.
+ *                  : https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/sys_types.h.html
+ *
  * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 
-#ifndef _CC_POSIX_TYPES_H_
+#pragma once
+
 #define _CC_POSIX_TYPES_H_
 
 /* C standard library includes. */
 #include <stdint.h>
 
 /* Kernel types include */
-#include <posix/cc_posix_types.h>
+#include <cc_posix_types.h>
 
 /**
  * @brief Used for system times in clock ticks or CLOCKS_PER_SEC.
@@ -165,5 +168,3 @@ typedef void                         * pthread_barrierattr_t;
 #if !defined( posixconfigENABLE_OFF_T ) || ( posixconfigENABLE_OFF_T == 1 )
     typedef long int                 off_t;
 #endif
-
-#endif /* ifndef _CC_POSIX_TYPES_H_ */

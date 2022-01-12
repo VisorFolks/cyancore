@@ -1,5 +1,14 @@
-#ifndef _CC_POSIX_INTERNAL_H_
-#define _CC_POSIX_INTERNAL_H_
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
+ * File Name		: cc_posix_internal.h
+ * Description		: Internal typedefs
+ * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
+#pragma once
 
 #include <stdint.h>
 #include <cc_posix_config.h>
@@ -100,5 +109,3 @@
         StaticEventGroup_t xBarrierEventGroup;   /**< Kernel event group that blocks to wait on threads entering barrier. */
     } pthread_barrier_internal_t;
 #endif /* if posixconfigENABLE_PTHREAD_BARRIER_T == 1 */
-
-#endif /* _CC_POSIX_INTERNAL_H_ */

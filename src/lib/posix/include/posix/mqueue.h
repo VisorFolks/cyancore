@@ -5,16 +5,18 @@
  * File Name		: mqueue.h
  * Description		: This file consists of posix message queue related declarations
  * 			: http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/mqueue.h.html
+ *
  * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 
-#ifndef _CC_POSIX_MQUEUE_H_
+#pragma once
+
 #define _CC_POSIX_MQUEUE_H_
 
 /* CC+POSIX includes. */
-#include <posix/include/time.h>
-#include <posix/include/sys/types.h>
+#include <posix/time.h>
+#include <posix/sys/types.h>
 
 /**
  * @brief Message queue attributes.
@@ -235,5 +237,3 @@ int mq_timedsend( mqd_t mqdes,
  * ENOENT - The named message queue does not exist.
  */
 int mq_unlink( const char * name );
-
-#endif /* ifndef _CC_POSIX_MQUEUE_H_ */

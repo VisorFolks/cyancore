@@ -1,11 +1,17 @@
-/**
- * @file fcntl.h
- * @brief File control options.
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
  *
- * http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/fcntl.h.html
+ * File Name		: fcntl.h
+ * Description		: File control options.
+ * 			: http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/fcntl.h.html
+ *
+ * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
+ * Organisation		: Cyancore Core-Team
  */
 
-#ifndef _CC_POSIX_FCNTL_H_
+#pragma once
+
 #define _CC_POSIX_FCNTL_H_
 
 /**
@@ -50,5 +56,3 @@
 #define O_SEARCH    0x4000  /**< Open directory for search only. */
 #define O_WRONLY    0x8000  /**< Open for writing only. */
 /**@} */
-
-#endif /* ifndef _CC_POSIX_FCNTL_H_ */

@@ -1,9 +1,15 @@
-/**
- * @file utils.h
- * @brief Utility functions used by CC+POSIX.
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
+ *
+ * File Name		: utils.h
+ * Description		: Utility functions used by CC_POSIX
+ * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
+ * Organisation		: Cyancore Core-Team
  */
 
-#ifndef _CC_POSIX_UTILS_
+#pragma once
+
 #define _CC_POSIX_UTILS_
 
 /* C standard library includes. */
@@ -11,7 +17,7 @@
 #include <stdint.h>
 
 /* CC+POSIX includes. */
-#include <posix/include/time.h>
+#include <posix/time.h>
 
 #define DELAY_MIN_TICK			        (1U)
 #define DO_NOTHING
@@ -140,6 +146,4 @@ bool UTILS_ValidateTimespec( const struct timespec * const pxTimespec );
  *
  * @return None
  */
-void UTILS_OS_Delay( const TickType_t ticks );
-
-#endif /* ifndef _CC_POSIX_UTILS_ */
+void os_delay_ticks( const TickType_t ticks );

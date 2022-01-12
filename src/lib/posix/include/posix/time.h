@@ -1,16 +1,22 @@
-/**
- * @file time.h
- * @brief Time types.
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2019, Cyancore Team
  *
- * http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/time.h.html
+ * File Name		: time.h
+ * Description		: Time types
+ *                  : http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/time.h.html
+ *
+ * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
+ * Organisation		: Cyancore Core-Team
  */
 
-#ifndef _CC_POSIX_TIME_H_
+#pragma once
+
 #define _CC_POSIX_TIME_H_
 
 /* CC+POSIX includes. */
-#include <posix/include/sys/types.h>
-#include <posix/include/signal.h>
+#include <posix/sys/types.h>
+#include <posix/signal.h>
 
 /**
  * @name Unit conversion constants.
@@ -229,5 +235,3 @@ int timer_settime( timer_t timerid,
                    int flags,
                    const itimerspec_t * value,
                    itimerspec_t * ovalue );
-
-#endif /* ifndef _CC_POSIX_TIME_H_ */
