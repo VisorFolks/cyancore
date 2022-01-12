@@ -19,7 +19,7 @@ size_t UTILS_strnlen( const char * const pcString, size_t xMaxLength )
 	size_t len = 0;
 	if (pcString != NULL)
 	{
-		while((pcString[len] != '\0') && (len < xMaxLength))
+		while((len < xMaxLength) && (pcString[len] != '\0'))
 		{
 			len++;
 		}
@@ -70,8 +70,8 @@ int UTILS_TimespecToTicks( const struct timespec * const pxTimespec,
 			TickType_t * const pxResult )
 {
 	int err_staus = 0;
-	int64_t total_ticks = 0;
-	long nano_secs = 0;
+	int64_t total_ticks;
+	long nano_secs;
 
 	/* Check parameters. */
 	if( ( pxTimespec == NULL ) || ( pxResult == NULL ) )
@@ -127,7 +127,7 @@ int UTILS_TimespecToTicks( const struct timespec * const pxTimespec,
 void UTILS_NanosecondsToTimespec( int64_t llSource,
 				struct timespec * const pxDestination )
 {
-	long lCarrySec = 0;
+	long carry_sec;
 
 	/* Convert to timespec. */
 	pxDestination->tv_sec = ( time_t ) ( llSource / NANOSECONDS_PER_SECOND );
@@ -137,10 +137,10 @@ void UTILS_NanosecondsToTimespec( int64_t llSource,
 	if( pxDestination->tv_nsec < 0L )
 	{
 		/* Compute the number of seconds to carry. */
-		lCarrySec = ( pxDestination->tv_nsec / ( long ) NANOSECONDS_PER_SECOND ) + 1L;
+		carry_sec = ( pxDestination->tv_nsec / ( long ) NANOSECONDS_PER_SECOND ) + 1L;
 
-		pxDestination->tv_sec -= ( time_t ) ( lCarrySec );
-		pxDestination->tv_nsec += lCarrySec * ( long ) NANOSECONDS_PER_SECOND;
+		pxDestination->tv_sec -= ( time_t ) ( carry_sec );
+		pxDestination->tv_nsec += carry_sec * ( long ) NANOSECONDS_PER_SECOND;
 	}
 }
 
@@ -148,7 +148,7 @@ int UTILS_TimespecAdd( 	const struct timespec * const x,
 			const struct timespec * const y,
 			struct timespec * const pxResult )
 {
-	int64_t llPartialSec = 0;
+	int64_t partial_sec;
 	int err_status = 0;
 
 	/* Check parameters. */
@@ -169,9 +169,9 @@ int UTILS_TimespecAdd( 	const struct timespec * const x,
 		}
 		else
 		{
-			llPartialSec = ( pxResult->tv_nsec ) / NANOSECONDS_PER_SECOND;
+			partial_sec = ( pxResult->tv_nsec ) / NANOSECONDS_PER_SECOND;
 			pxResult->tv_nsec = ( pxResult->tv_nsec ) % NANOSECONDS_PER_SECOND;
-			pxResult->tv_sec = x->tv_sec + y->tv_sec + llPartialSec;
+			pxResult->tv_sec = x->tv_sec + y->tv_sec + partial_sec;
 
 			/* check for overflow */
 			if( pxResult->tv_sec < 0 )
@@ -188,7 +188,7 @@ int UTILS_TimespecAddNanoseconds( const struct timespec * const x,
 				int64_t lnano_secs,
 				struct timespec * const pxResult )
 {
-	int64_t llTotalNSec = 0;
+	int64_t total_sec;
 	int err_status = 0;
 
 	/* Check parameters. */
@@ -200,17 +200,17 @@ int UTILS_TimespecAddNanoseconds( const struct timespec * const x,
 	if( err_status == 0 )
 	{
 		/* add nano seconds */
-		llTotalNSec = x->tv_nsec + lnano_secs;
+		total_sec = x->tv_nsec + lnano_secs;
 
 		/* check for nano seconds overflow */
-		if( llTotalNSec < 0 )
+		if( total_sec < 0 )
 		{
 			err_status = 1;
 		}
 		else
 		{
-			pxResult->tv_nsec = llTotalNSec % NANOSECONDS_PER_SECOND;
-			pxResult->tv_sec = x->tv_sec + ( llTotalNSec / NANOSECONDS_PER_SECOND );
+			pxResult->tv_nsec = total_sec % NANOSECONDS_PER_SECOND;
+			pxResult->tv_sec = x->tv_sec + ( total_sec / NANOSECONDS_PER_SECOND );
 
 			/* check for seconds overflow */
 			if( pxResult->tv_sec < 0 )
@@ -227,7 +227,7 @@ int UTILS_TimespecSubtract( const struct timespec * const x,
 			const struct timespec * const y,
 			struct timespec * const pxResult )
 {
-	int iCompareResult = 0;
+	int comp;
 	int err_status = 0;
 
 	/* Check parameters. */
@@ -238,14 +238,14 @@ int UTILS_TimespecSubtract( const struct timespec * const x,
 
 	if( err_status == 0 )
 	{
-		iCompareResult = UTILS_TimespecCompare( x, y );
+		comp = UTILS_TimespecCompare( x, y );
 
 		/* if x < y then result would be negative, return 1 */
-		if( iCompareResult == -1 )
+		if( comp == -1 )
 		{
 			err_status = 1;
 		}
-		else if( iCompareResult == 0 )
+		else if( comp == 0 )
 		{
 			/* if times are the same return zero */
 			pxResult->tv_sec = 0;
