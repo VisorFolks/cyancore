@@ -35,7 +35,7 @@ void machine_call(mcall_id_t id, unsigned int a0, unsigned int a1, unsigned int 
 	ptr = &_mcall_table_start;
 
 	/* Run through the table till the end */
-	while(ptr < & _mcall_table_end)
+	while(ptr <= & _mcall_table_end)
 	{
 		/* Check if the mcall ID matches */
 		if(ptr->id == id)
