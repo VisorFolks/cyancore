@@ -24,7 +24,7 @@ jobs:
         # Repository name
         repository: 'avr-toolchain'
         # PAT with repository scope (https://github.com/settings/tokens)
-        access-token: ${{secret.CI_PAT}}
+        access-token: ${{ secrets.CI_PAT }}
         
     - name: Copy clones
       run: |
