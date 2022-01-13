@@ -33,4 +33,4 @@ jobs:
         chmod +x -R ./toolchain/
         
     - name: Build AVR
-      run: make demo_avr
+      run: sudo make demo_avr
