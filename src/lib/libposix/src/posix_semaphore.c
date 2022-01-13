@@ -20,10 +20,13 @@
  ********************/
 static int s_sem_wait( sem_t * sem )
 {
-	sret_t sem_sys_ret;
-	ASSERT_IF_FALSE(sem == NULL, int);
+	sret_t sem_sys_ret=
+	{
+		.status = SUCCESS
+	};
+	ASSERT_IF_FALSE(sem != NULL, int);
 
-	super_call(scall_id_sem_wait, (unsigned int) *sem, RST_VAL, RST_VAL, &sem_sys_ret);
+	super_call(scall_id_sem_wait, (uintptr_t) *sem, RST_VAL, RST_VAL, &sem_sys_ret);
 
 	return sem_sys_ret.status;
 }
@@ -33,10 +36,13 @@ static int s_sem_wait( sem_t * sem )
  ********************/
 int sem_destroy( sem_t * sem )
 {
-	sret_t sem_sys_ret;
-	ASSERT_IF_FALSE(sem == NULL, int);
+	sret_t sem_sys_ret=
+	{
+		.status = SUCCESS
+	};
+	ASSERT_IF_FALSE(sem != NULL, int);
 
-	super_call(scall_id_sem_destroy, (unsigned int) *sem, RST_VAL, RST_VAL, &sem_sys_ret);
+	super_call(scall_id_sem_destroy, (uintptr_t) *sem, RST_VAL, RST_VAL, &sem_sys_ret);
 	RET_ERR_IF_FALSE(sem_sys_ret.status == SUCCESS, sem_sys_ret.status, int);
 
 	*sem = (sem_t) NULL;
@@ -47,10 +53,13 @@ int sem_destroy( sem_t * sem )
 int sem_getvalue( sem_t * sem,
                   int * sval )
 {
-	sret_t sem_sys_ret;
-	ASSERT_IF_FALSE(sem == NULL, int);
+	sret_t sem_sys_ret=
+	{
+		.status = SUCCESS
+	};
+	ASSERT_IF_FALSE(sem != NULL, int);
 
-	super_call(scall_id_sem_getvalue, (unsigned int) *sem, RST_VAL, RST_VAL, &sem_sys_ret);
+	super_call(scall_id_sem_getvalue, (uintptr_t) *sem, RST_VAL, RST_VAL, &sem_sys_ret);
 	RET_ERR_IF_FALSE(sem_sys_ret.status == SUCCESS, sem_sys_ret.status, int);
 
 	*sval = (int) sem_sys_ret.p;
@@ -62,8 +71,12 @@ int sem_init( sem_t * sem,
               int pshared _UNUSED,
               unsigned value )
 {
-	sret_t sem_sys_ret;
-	ASSERT_IF_FALSE(sem == NULL, int);
+	sret_t sem_sys_ret=
+	{
+		.status = SUCCESS
+	};
+
+	ASSERT_IF_FALSE(sem != NULL, int);
 
 	super_call(scall_id_sem_init, value, RST_VAL, RST_VAL, &sem_sys_ret);
 	RET_ERR_IF_FALSE(sem_sys_ret.status == SUCCESS, sem_sys_ret.status, int);
@@ -75,10 +88,13 @@ int sem_init( sem_t * sem,
 
 int sem_post( sem_t * sem )
 {
-	sret_t sem_sys_ret;
-	ASSERT_IF_FALSE(sem == NULL, int);
+	sret_t sem_sys_ret=
+	{
+		.status = SUCCESS
+	};
+	ASSERT_IF_FALSE(sem != NULL, int);
 
-	super_call(scall_id_sem_post, (unsigned int) *sem, RST_VAL, RST_VAL, &sem_sys_ret);
+	super_call(scall_id_sem_post, (uintptr_t) *sem, RST_VAL, RST_VAL, &sem_sys_ret);
 
 	return sem_sys_ret.status;
 }
@@ -86,7 +102,7 @@ int sem_post( sem_t * sem )
 int sem_timedwait( sem_t * sem,
                    const struct timespec * abstime )
 {
-	ASSERT_IF_FALSE(sem == NULL, int);
+	ASSERT_IF_FALSE(sem != NULL, int);
 
 	int err = SUCCESS;
 	TickType_t abs_ticks;
