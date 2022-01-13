@@ -18,26 +18,38 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    - name: Clone Github Repo Action
-      uses: GuillaumeFalourd/clone-github-repo-action@v1
-      with:
-        owner: 'VisorFolks'
-        repository: 'avr-toolchain'
-        access-token: ${{ secrets.CI_PAT }}
+#    - name: Get Toolchains
+#      run: |
+#        mkdir -p toolchain
+#        cd toolchain/
+    
+#    - name: Clone Github Repo Action
+#      uses: GuillaumeFalourd/clone-github-repo-action@v1
+#      with:
+#        owner: 'VisorFolks'
+#        repository: 'avr-toolchain'
+#        access-token: ${{ secrets.CI_PAT }}
+        
     - name: Install Dependencies
       run: sudo apt install cppcheck -y
+    
+    - name: Configure Git
+      env:
+        TOKEN: ${{ secrets.CI_PAT }}
+      run: git config --global url."https://${TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
       
-    - name: Move Toolchain
-      run: |
-        mkdir -p toolchain
-        sudo mv $(pwd)/avr-toolchain ./toolchain/
-        sudo chmod +x -R ./toolchain/
-        sudo chown -R runner:docker ./toolchain/
+#    - name: Move Toolchain
+#      run: |
+#        mkdir -p toolchain
+#        sudo mv $(pwd)/avr-toolchain ./toolchain/
+#        sudo chmod +x -R ./toolchain/
+#        sudo chown -R runner:docker ./toolchain/
         
+    - name: Get Toolchains
+      run: |
+        make get_avr_tc AVR_TC_REPO=https://github.com/VisorFolks/avr-toolchain.git
     - name: Build AVR
       run: |
-        PAT= ${{ secrets.CI_PAT }}
-        REPO_URL=https://github.com/VisorFolks/risc-v-toolchain.git
-        AUTH=$(echo -n ":$PAT" | openssl base64 | tr -d '\n')
-        make get_riscv_tc RISC_V_TC_REPO="git@github.com:VisorFolks/risc-v-toolchain.git -c http.$REPO_URL.extraheader=\"Authorization: Basic $AUTH\""
         make demo_avr
+        make demo_avr_cpp
+#        make demo_riscv
