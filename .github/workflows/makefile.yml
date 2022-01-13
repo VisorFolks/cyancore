@@ -30,7 +30,8 @@ jobs:
       run: |
         mkdir -p toolchain
         sudo mv $(pwd)/avr-toolchain ./toolchain/
-        chmod +x -R ./toolchain/
+        sudo chmod +x -R ./toolchain/
+        sudo chown -R runner:docker ./toolchain/
         
     - name: Build AVR
       run: sudo make demo_avr
