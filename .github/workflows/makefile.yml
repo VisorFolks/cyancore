@@ -26,12 +26,10 @@ jobs:
     - name: Install Dependencies
       run: sudo apt install cppcheck tree -y
       
-    - name: Move Toolchaine
+    - name: Move Toolchain
       run: |
         mkdir -p toolchain
-        ls -al $(pwd)/avr-toolchain
-        tree -L 2 $(pwd)/avr-toolchain
-        mv $(pwd)/avr-toolchain ./toolchain/
+        sudo mv $(pwd)/avr-toolchain ./toolchain/
         chmod +x -R ./toolchain/
         
     - name: Build AVR
