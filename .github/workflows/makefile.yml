@@ -23,7 +23,9 @@ jobs:
         repository: 'avr-toolchain'
         # PAT with repository scope (https://github.com/settings/tokens)
         access-token: ${{ secrets.CI_PAT }}
-        
+    - name: Install Dependencies
+      run: apt install cppcheck -y
+      
     - name: Copy clones
       run: |
         mkdir toolchain
