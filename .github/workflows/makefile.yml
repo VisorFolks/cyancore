@@ -36,5 +36,8 @@ jobs:
         
     - name: Build AVR
       run: |
-        make get_riscv_tc RISC_V_TC_REPO=git@github.com:VisorFolks/risc-v-toolchain.git
+        PAT= ${{ secrets.CI_PAT }}
+        REPO_URL=https://github.com/VisorFolks/risc-v-toolchain.git
+        AUTH=$(echo -n ":$PAT" | openssl base64 | tr -d '\n')
+        make get_riscv_tc RISC_V_TC_REPO="git@github.com:VisorFolks/risc-v-toolchain.git -c http.$REPO_URL.extraheader=\"Authorization: Basic $AUTH\""
         make demo_avr
