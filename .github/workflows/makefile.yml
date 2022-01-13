@@ -25,7 +25,7 @@ jobs:
         repository: 'avr-toolchain'
         access-token: ${{ secrets.CI_PAT }}
     - name: Install Dependencies
-      run: sudo apt install cppchech -y
+      run: sudo apt install cppcheck -y
       
     - name: Move Toolchain
       run: |
@@ -36,5 +36,5 @@ jobs:
         
     - name: Build AVR
       run:
-        make get_riscv_tc RISC_V_TC_REPO=git@github.com/visorfolks/risc_v_toolchain
+        #make get_riscv_tc RISC_V_TC_REPO=git@github.com/visorfolks/risc_v_toolchain
         make demo_avr
