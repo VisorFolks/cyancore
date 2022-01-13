@@ -107,7 +107,7 @@ loop:
 					break;
 				case 'c':
 					str = va_arg(args, char *);
-					ret += console_putc((int)str);
+					ret += console_putc((int)str[0]);
 					break;
 				case 's':
 					str = va_arg(args, char *);

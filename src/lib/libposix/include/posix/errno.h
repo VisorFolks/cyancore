@@ -14,25 +14,6 @@
 
 #include <status.h>
 
-/* Undefine all errnos to avoid redefinition errors with system errnos. */
-#undef EPERM
-#undef ENOENT
-#undef EBADF
-#undef EAGAIN
-#undef ENOMEM
-#undef EEXIST
-#undef EBUSY
-#undef EINVAL
-#undef ENOSPC
-#undef ERANGE
-#undef ENAMETOOLONG
-#undef EDEADLK
-#undef EOVERFLOW
-#undef ENOSYS
-#undef EMSGSIZE
-#undef ENOTSUP
-#undef ETIMEDOUT
-
 /**
  * @name Definition of POSIX errnos.
  */
