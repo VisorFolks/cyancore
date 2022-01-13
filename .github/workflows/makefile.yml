@@ -1,0 +1,35 @@
+name: Makefile CI
+
+on:
+  push:
+    branches: [ stable ]
+  pull_request:
+    branches: [ stable ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install dependencies
+      run: make
+    - name: Clone Github Repo Action
+      uses: GuillaumeFalourd/clone-github-repo-action@v1
+      with:
+        # Repository Owner
+        owner: 'VisorFolks'
+        # Repository name
+        repository: 'avr-toolchain'
+        # PAT with repository scope (https://github.com/settings/tokens)
+        access-token: ${{secret.CI_PAT}}
+        
+    - name: Copy clones
+      run: |
+        mkdir toolchain
+        ln -s $(pwd)/avr-toolchain ./toolchain/
+        
+    - name: Build AVR
+      run: make demo_avr
