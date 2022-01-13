@@ -1,0 +1,38 @@
+name: Makefile CI
+
+on:
+  push:
+    branches:
+    - stable
+    - development
+  pull_request:
+    branches:
+    - stable
+    - development
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Dependencies
+      run: sudo apt install cppcheck -y
+
+    - name: Configure Git
+      env:
+        TOKEN: ${{ secrets.CI_PAT }}
+      run: git config --global url."https://${TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+
+    - name: Get Toolchains
+      run: |
+        make get_avr_tc AVR_TC_REPO=https://github.com/VisorFolks/avr-toolchain.git
+        make get_riscv_tc RISC_V_TC_REPO=https://github.com/VisorFolks/risc-v-toolchain.git
+
+    - name: Build AVR
+      run: |
+        make demo_avr
+        make demo_avr_cpp
+        make demo_riscv
