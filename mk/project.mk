@@ -17,12 +17,20 @@ include mk/path.mk
 include mk/mk_helper.mk
 
 P_TARGETS	+= default cyancore check version copy_to_remote clean_remote
-T_ALLOWLIST	+= help list clean
+T_ALLOWLIST	+= help list clean all_projects
+PROJECT_LIST	:= $(shell ls $(SRC)/projects/ -I *.template)
 
 .PHONY: aux_target
 
 default: aux_target
 	make $(PROJECT) cyancore -j$(N_JOBS)
+
+all_projects:
+	for project in $(PROJECT_LIST);	\
+	do				\
+		make $$project check;	\
+		make $$project;		\
+	done
 
 cyancore: version elf
 	$(info < / > Done !)
@@ -33,7 +41,7 @@ clean:
 
 list:
 	$(info Available projects are :)
-	ls $(SRC)/projects/ -I *.template
+	echo $(PROJECT_LIST)
 
 check: --lint
 
