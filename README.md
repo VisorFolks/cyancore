@@ -54,7 +54,7 @@ For details about the framework, follow the README.md in each folder.
 
 Host system requirements:
 * Linux Machine (WSL/Dedicated machine)
-* make utility and cppcheck installed; run 
+* make utility and cppcheck installed; run
 ```sh
   $ sudo apt install build-essential cppcheck -y
 ```
