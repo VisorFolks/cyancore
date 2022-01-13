@@ -24,11 +24,13 @@ jobs:
         # PAT with repository scope (https://github.com/settings/tokens)
         access-token: ${{ secrets.CI_PAT }}
     - name: Install Dependencies
-      run: sudo apt install cppcheck -y
+      run: sudo apt install cppcheck tree -y
       
     - name: Move Toolchaine
       run: |
         mkdir -p toolchain
+        ls -al $(pwd)/avr-toolchain
+        tree -L 2 $(pwd)/avr-toolchain
         mv $(pwd)/avr-toolchain ./toolchain/
         chmod +x -R ./toolchain/
         
