@@ -4,8 +4,14 @@
 
 > **Version (arch:2 | major:4 | minor:2): 0.1.0**
 
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=VisorFolks_cyancore)
+
 ![GitHub branch checks state](https://img.shields.io/github/checks-status/VisorFolks/cyancore/stable?label=Build%20Status)
 ![Lines of code](https://img.shields.io/tokei/lines/github/visorfolks/cyancore?label=Lines%20of%20code)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=VisorFolks_cyancore&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=VisorFolks_cyancore)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=VisorFolks_cyancore&metric=bugs)](https://sonarcloud.io/summary/new_code?id=VisorFolks_cyancore)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=VisorFolks_cyancore&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=VisorFolks_cyancore)
+
 ```
 arch  : 0x00
 major : 0x0001
@@ -26,7 +32,7 @@ Click the above icon to connect
 
 ### Projects
 run
-```
+```sh
 $ make list
 ```
 
@@ -38,7 +44,7 @@ $ make list
 
 ### Help
 run
-```
+```sh
 $ make help
 ```
 
@@ -48,7 +54,10 @@ For details about the framework, follow the README.md in each folder.
 
 Host system requirements:
 * Linux Machine (WSL/Dedicated machine)
-* make utility and cppcheck installed; run `$ sudo apt install build-essential cppcheck -y`
+* make utility and cppcheck installed; run 
+```sh
+  $ sudo apt install build-essential cppcheck -y
+```
 
 
 Toolchain Requirements:
