@@ -30,6 +30,7 @@ jobs:
       run: |
         mkdir toolchain
         ln -s $(pwd)/avr-toolchain ./toolchain/
+        chmod +x -R ./toolchain/
         
     - name: Build AVR
       run: make demo_avr
