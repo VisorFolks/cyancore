@@ -35,6 +35,6 @@ jobs:
         sudo chown -R runner:docker ./toolchain/
         
     - name: Build AVR
-      run:
+      run: |
         make get_riscv_tc RISC_V_TC_REPO=git@github.com/visorfolks/risc_v_toolchain
         make demo_avr
