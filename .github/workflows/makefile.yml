@@ -36,5 +36,5 @@ jobs:
         
     - name: Build AVR
       run: |
-        make get_riscv_tc RISC_V_TC_REPO=git@github.com/visorfolks/risc_v_toolchain
+        make get_riscv_tc RISC_V_TC_REPO=git@github.com:VisorFolks/risc-v-toolchain.git
         make demo_avr
