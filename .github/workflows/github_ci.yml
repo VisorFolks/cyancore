@@ -30,7 +30,7 @@ jobs:
           sudp apt install cppcheck -y
           make get_avr_tc AVR_TC_REPO=${AVRTC}
           make get_riscv_tc RISC_V_TC_REPO=${RISCVTC}
-	
+
     - name: Linting
       run: |
           make demo_avr check
