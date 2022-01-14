@@ -28,7 +28,7 @@ jobs:
           AVRTC: https://github.com/VisorFolks/avr-toolchain.git
           RISCVTC: https://github.com/VisorFolks/risc-v-toolchain.git
         run: |
-          sudp apt install cppcheck -y
+          sudo apt install cppcheck -y
           make get_avr_tc AVR_TC_REPO=${AVRTC}
           make get_riscv_tc RISC_V_TC_REPO=${RISCVTC}
 
