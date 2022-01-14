@@ -5,6 +5,7 @@
 > **Version (arch:2 | major:4 | minor:2): 0.1.0**
 
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=VisorFolks_cyancore)
+
 [![GitHub CI](https://github.com/VisorFolks/cyancore/actions/workflows/github_ci.yml/badge.svg)](https://github.com/VisorFolks/cyancore/actions/workflows/github_ci.yml)
 [![Lines of code](https://img.shields.io/tokei/lines/github/visorfolks/cyancore?label=Lines%20of%20code)]()
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=VisorFolks_cyancore&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=VisorFolks_cyancore)
