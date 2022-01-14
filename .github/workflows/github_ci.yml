@@ -43,7 +43,7 @@ jobs:
           make demo_avr
           make demo_avr_cpp
           make demo_riscv
-	
+
       - name: Clean Up
         run: |
           make clean
