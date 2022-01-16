@@ -64,9 +64,9 @@ status_t membuf_driver_exit()
 }
 
 #if EARLYCON_MEMBUF==1
-INCLUDE_DRIVER(earlycon, membuf_driver_setup, membuf_driver_exit, 0, 0);
+INCLUDE_DRIVER(earlycon, membuf_driver_setup, membuf_driver_exit, 0, 0, 0);
 #endif
 
 #if CONSOLE_MEMBUF==1
-INCLUDE_DRIVER(console, membuf_driver_setup, membuf_driver_exit, 0, 0);
+INCLUDE_DRIVER(console, membuf_driver_setup, membuf_driver_exit, 0, 0, 0);
 #endif

@@ -145,7 +145,7 @@ status_t plat_wdt_driver_exit()
 }
 
 /* Add driver to driver table */
-INCLUDE_DRIVER(watchdog, plat_wdt_driver_setup, plat_wdt_driver_exit, 1, 1);
+INCLUDE_DRIVER(watchdog, plat_wdt_driver_setup, plat_wdt_driver_exit, 1, 1, 1);
 
 /**
  * platform_wdt_reset - reset wdt counter at platform setup

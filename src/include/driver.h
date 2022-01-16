@@ -11,19 +11,25 @@
 #pragma once
 #define _DRIVER_H_
 
+#include <stdint.h>
 #include <status.h>
+#include <lock/lock.h>
 
+#pragma pack(1)
 typedef struct device
 {
 	char name[15];
 	status_t (*driver_setup)(void);
 	status_t (*driver_exit)(void);
-	size_t sorder;
-	size_t eorder;
-	size_t exec;
+	uint8_t sorder;
+	uint8_t eorder;
+	uint8_t exec:1;
+	uint8_t percpu:1;
+	lock_t key;
 } device_t;
+#pragma pack()
 
-#define INCLUDE_DRIVER(_name, _driver_setup, _driver_exit, _sorder, _eorder)		\
+#define INCLUDE_DRIVER(_name, _driver_setup, _driver_exit, _pcpu, _sorder, _eorder)		\
 	const device_t _name _SECTION(".driver") =			\
 	{								\
 		.name		= #_name,				\
@@ -31,7 +37,8 @@ typedef struct device
 		.driver_exit	= _driver_exit,				\
 		.sorder		= _sorder,				\
 		.eorder		= _eorder,				\
-		.exec		= 0					\
+		.exec		= 0,					\
+		.percpu		= _pcpu,				\
 	}
 
 status_t driver_setup_all();
