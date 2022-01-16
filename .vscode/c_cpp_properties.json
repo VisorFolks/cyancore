@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "Cyancore VSCode extention",
+            "name": "Cyancore VSCode extension",
             "includePath": [
                 "${workspaceFolder}/**"
             ],
