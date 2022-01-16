@@ -13,12 +13,18 @@
 
 typedef enum
 {
-	cpu		= 0x100,
-	memory		= 0x200,
-	clock		= 0x300,
-	uart		= 0x400,
-	gpio		= 0x500,
-	wdt		= 0x600,
-	timer		= 0x700,
+	cpu		= 0x1000,
+	memory		= 0x2000,
+	clock		= 0x3000,
+	uart		= 0x4000,
+	gpio		= 0x5000,
+	wdt		= 0x6000,
+	timer		= 0x7000,
+	ic		= 0x8000,
+	nvic		= 0x8100,
+	gic		= 0x8200,
+	apic		= 0x8300,
+	clic		= 0x8400,
+	plic		= 0x8500,
 } hw_devid_t;
 
