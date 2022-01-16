@@ -15,16 +15,16 @@
 #include <status.h>
 #include <lock/lock.h>
 
-#pragma pack(1)
+#pragma pack(4)
 typedef struct device
 {
 	char name[15];
 	status_t (*driver_setup)(void);
 	status_t (*driver_exit)(void);
-	uint8_t sorder;
-	uint8_t eorder;
-	uint8_t exec:1;
-	uint8_t percpu:1;
+	uint32_t sorder:8;
+	uint32_t eorder:8;
+	uint32_t exec:1;
+	uint32_t percpu:1;
 	lock_t key;
 } device_t;
 #pragma pack()
