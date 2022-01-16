@@ -89,3 +89,12 @@ static inline void arch_nop()
 {
 	asm volatile("nop");
 }
+
+/*
+ * AVR CPU arch doesn't describe memory ordering
+ * type and avr arch supports only 1 core.
+ * Hence defining isb, dsb and dmb as nop.
+ */
+#define arch_isb()	arch_nop()
+#define arch_dsb()	arch_nop()
+#define arch_dmb()	arch_nop()

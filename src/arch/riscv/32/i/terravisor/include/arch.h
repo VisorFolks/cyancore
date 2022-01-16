@@ -92,3 +92,18 @@ static inline void arch_wfi()
 	arch_nop();
 #endif
 }
+
+static inline void arch_isb()
+{
+	asm volatile("fence.i");
+}
+
+static inline void arch_dsb()
+{
+	asm volatile("fence");
+}
+
+static inline void arch_dmb()
+{
+	fence(rw, rw);
+}

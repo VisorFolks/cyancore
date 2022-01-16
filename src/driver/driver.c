@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <status.h>
+#include <arch.h>
 #include <driver.h>
 
 /**
@@ -177,6 +178,7 @@ status_t driver_register(device_t *dev _UNUSED)
 
 		lock_acquire(&dev->key);
 		dev->exec = 1;
+		arch_dmb();
 		lock_release(&dev->key);
 	}
 
@@ -214,6 +216,7 @@ status_t driver_deregister(device_t *dev _UNUSED)
 
 		lock_acquire(&dev->key);
 		dev->exec = 0;
+		arch_dmb();
 		lock_release(&dev->key);
 	}
 
