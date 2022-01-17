@@ -146,5 +146,5 @@ INCLUDE_DRIVER(earlycon, earlycon_serial_driver_setup, earlycon_serial_driver_ex
 #endif
 
 #if CONSOLE_SERIAL==1
-INCLUDE_DRIVER(console, console_serial_driver_setup, console_serial_driver_exit, 0, 0, 0);
+INCLUDE_DRIVER(console, console_serial_driver_setup, console_serial_driver_exit, 0, 255, 0);
 #endif

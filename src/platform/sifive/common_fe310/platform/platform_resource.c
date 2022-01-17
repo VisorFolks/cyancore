@@ -28,9 +28,9 @@
 status_t platform_resources_setup()
 {
 	status_t ret = success;
-//	extern dp_t device_prop;
+	extern dp_t device_prop;
 //	extern sp_t software_prop;
-//	ret = dp_init(&device_prop);
+	ret = dp_init(&device_prop);
 //	ret |= sp_init(&software_prop);
 	return ret;
 }

@@ -24,7 +24,7 @@ typedef enum
 	nvic		= 0x8100,
 	gic		= 0x8200,
 	apic		= 0x8300,
-	clic		= 0x8400,
+	clint		= 0x8400,
 	plic		= 0x8500,
 } hw_devid_t;
 

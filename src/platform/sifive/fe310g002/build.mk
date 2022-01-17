@@ -22,5 +22,5 @@ OUTPUT_FORMAT	:= elf32-littleriscv
 include $(FE310G002_DIR)/config.mk
 #include $(FE310G002_DIR)/arch/build.mk
 #include $(FE310G002_DIR)/platform/build.mk
-#include $(FE310G002_DIR)/resources/build.mk
+include $(FE310G002_DIR)/resources/build.mk
 include $(FE310G002_DIR)/../common_fe310/build.mk

@@ -45,7 +45,7 @@ SECTIONS
 		KEEP(*(.version))
 		KEEP(*(.rdata))
 		KEEP(*(.rodata))
-		KEEP(*(.rodata.*))
+		*(.rodata.*)
 		*(.srodata)
 		*(.srodata.*)
 		KEEP(*(.srodata))
@@ -55,7 +55,7 @@ SECTIONS
 	{
 		. = ALIGN(4);
 		KEEP(*(.itim))
-		KEEP(*(.itim.*))
+		*(.itim.*)
 	} > vma_itmem AT > lma_mem
 
 	.bss :

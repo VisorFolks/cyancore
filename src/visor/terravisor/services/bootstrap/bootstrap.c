@@ -35,7 +35,6 @@ status_t bootstrap()
 	cyancore_insignia_lite();
 	resetSyndrome = platform_get_reset_syndrome();
 	platform_reset_handler(resetSyndrome);
-	driver_exit("earlycon");
 
 	return success;
 }
