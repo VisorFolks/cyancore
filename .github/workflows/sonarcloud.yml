@@ -71,4 +71,5 @@ jobs:
         --define sonar.organization=cyancore \
         --define sonar.projectKey=VisorFolks_cyancore \
         --define sonar.sources=src \
-        --define sonar.verbose=true
+        --define sonar.verbose=true \
+        --define sonar.cfamily.threads=4
