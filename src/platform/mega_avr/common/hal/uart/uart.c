@@ -85,10 +85,16 @@ status_t uart_shutdown(uart_port_t *port)
 {
 	status_t ret = success;
 	assert(port);
-	ret |= uart_tx_int_dis(port);
-	ret |= uart_rx_int_dis(port);
-	ret |= unlink_interrupt(arch, port->rx_irq);
-	ret |= unlink_interrupt(arch, port->tx_irq);
+	if(port->tx_irq)
+	{
+		ret |= uart_tx_int_dis(port);
+		ret |= unlink_interrupt(arch, port->tx_irq);
+	}
+	if(port->rx_irq)
+	{
+		ret |= uart_rx_int_dis(port);
+		ret |= unlink_interrupt(arch, port->rx_irq);
+	}
 	ret |= platform_clk_dis(port->clk_id);
 	return ret;
 }

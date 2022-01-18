@@ -13,6 +13,20 @@
 #include <status.h>
 #include <stdio.h>
 #include <arch.h>
+#include <terravisor/workers.h>
+#include <interrupt.h>
+
+static void arch_mcall_handler()
+{
+	context_frame_t *frame = get_context_frame();
+	mret_t mres;
+	machine_call(frame->a0, frame->a1, frame->a2, frame->a3, &mres);
+	fence(w, w);
+	frame->a0 = mres.p;
+	frame->a1 = mres.size;
+	frame->a2 = mres.status;
+	return;
+}
 
 /**
  * arch_early_setup - This function is called in the early stages of boot
@@ -34,6 +48,7 @@ void arch_early_setup()
  */
 void arch_setup()
 {
+	link_interrupt(arch, 11, &arch_mcall_handler);
 	return;
 }
 

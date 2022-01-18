@@ -102,6 +102,7 @@ console_t console_serial_driver =
 
 status_t console_serial_driver_setup()
 {
+	driver_exit("earlycon");
 	return console_attach_device(&console_serial_driver);
 }
 

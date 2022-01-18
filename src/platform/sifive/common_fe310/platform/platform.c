@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <status.h>
 #include <arch.h>
+#include <driver.h>
+#include <insignia.h>
 #include <terravisor/platform.h>
 #include <terravisor/workers.h>
 #include <platform.h>
@@ -29,6 +31,8 @@ void platform_setup()
 	status_t ret = success;
 
 	ret |= platform_resources_setup();
+	ret |= driver_setup("earlycon");
+	cyancore_insignia();
 
 	if(ret != success)
 		exit(EXIT_FAILURE);
@@ -38,8 +42,6 @@ void platform_setup()
 void platform_cpu_setup()
 {
 	status_t ret = success;
-
-	ret |= platform_mcall_update();
 
 	if(ret != success)
 		exit(EXIT_FAILURE);

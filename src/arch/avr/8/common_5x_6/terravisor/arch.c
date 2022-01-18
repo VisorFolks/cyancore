@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include <status.h>
 #include <machine_call.h>
+#include <terravisor/workers.h>
 #include <plat_arch.h>
 #include <mmio.h>
 #include <arch.h>
@@ -73,26 +74,10 @@ void arch_wfi()
 }
 
 /**
- * *mcall - pointer to machine call function
- *
- * @brief This function pointer emulates 'mcall' instruction in risc-v.
- * This method is intentionally created for this framework so
- * as to maintain consistency across all the cpu architectures.
- *
- * @param[in] code: machine call code
- * @param[in] a0: first argument
- * @param[in] a1: second argument
- * @param[in] a2: third argument
- * @param[out] ret: pointer to return of machine call.
- */
-void (*mcall)(unsigned int, unsigned int, unsigned int, unsigned int, mret_t *);
-
-/**
  * arch_machine_call - perform machine call
  *
- * @brief This function executes function pointed by mcall. As the
- * AVR core doesn't support multiple execution levels, this
- * function emulates the machine call to maintain consistency.
+ * @brief This function emulates the machine
+ * call to maintain consistency.
  *
  * @param[in] code: machine call code
  * @param[in] a0: first argument
@@ -104,6 +89,6 @@ void arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsi
 {
 	if(ret == NULL)
 		return;
-	mcall(code, a0, a1, a2, ret);
+	machine_call(code, a0, a1, a2, ret);
 	return;
 }

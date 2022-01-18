@@ -16,6 +16,8 @@
 #include <machine_call.h>
 #include <terravisor/platform.h>
 #include <terravisor/workers.h>
+#include <driver.h>
+#include <insignia.h>
 #include <platform.h>
 
 /**
@@ -66,6 +68,9 @@ void platform_setup()
 {
 	status_t ret = success;
 	ret |= platform_resources_setup();
+	ret |= driver_setup("earlycon");
+	cyancore_insignia_lite();
+
 	if(ret != success)
 		exit(EXIT_FAILURE);
 	return;
@@ -80,7 +85,6 @@ void platform_setup()
 void platform_cpu_setup()
 {
 	status_t ret = success;
-	ret |= platform_mcall_update(&machine_call);
 	arch_ei();
 	if(ret != success)
 		exit(EXIT_FAILURE);
