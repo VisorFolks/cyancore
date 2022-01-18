@@ -42,18 +42,26 @@ status_t uart_setup(uart_port_t *port, direction_t d, parity_t p)
 	{
 		case trx:
 			en |= (1 << TXEN);
-			link_interrupt(arch, port->tx_irq, port->tx_handler);
-			uart_tx_int_en(port);
+			if(port->tx_irq)
+			{
+				link_interrupt(arch, port->tx_irq, port->tx_handler);
+				uart_tx_int_en(port);
+			}
 		case rx:
 			en |= (1 << RXEN);
-			uart_rx_int_en(port);
-			link_interrupt(arch, port->rx_irq, port->rx_handler);
-			uart_rx_int_en(port);
+			if(port->rx_irq)
+			{
+				link_interrupt(arch, port->rx_irq, port->rx_handler);
+				uart_rx_int_en(port);
+			}
 			break;
 		case tx:
 			en |= (1 << TXEN);
-			link_interrupt(arch, port->tx_irq, port->tx_handler);
-			uart_tx_int_en(port);
+			if(port->tx_irq)
+			{
+				link_interrupt(arch, port->tx_irq, port->tx_handler);
+				uart_tx_int_en(port);
+			}
 			break;
 		default:
 			en = 0;
@@ -91,10 +99,12 @@ bool uart_buffer_available(uart_port_t *port)
 	return (bool)(MMIO8(port->baddr + UCSRA_OFFSET) >> UDRE) & 0x01;
 }
 
-bool uart_tx_done(uart_port_t *port)
+void uart_tx_wait_till_done(uart_port_t *port)
 {
 	assert(port);
-	return (bool)(MMIO8(port->baddr + UCSRA_OFFSET) >> TXC) & 0x01;
+	while(!(MMIO8(port->baddr + UCSRA_OFFSET) & (1 << TXC)))
+		arch_nop();
+	MMIO8(port->baddr + UCSRA_OFFSET) |= (1 << TXC);
 }
 
 bool uart_rx_done(uart_port_t *port)
@@ -115,7 +125,8 @@ bool uart_frame_error(uart_port_t *port)
 status_t uart_tx(uart_port_t *port, const char data)
 {
 	assert(port);
-	while(!uart_buffer_available(port));
+	while(!uart_buffer_available(port))
+		arch_nop();
 	MMIO8(port->baddr + UDR_OFFSET) = data;
 	return success;
 }

@@ -48,6 +48,8 @@ typedef struct uart_port
 
 status_t uart_setup(uart_port_t *, direction_t, parity_t);
 status_t uart_shutdown(uart_port_t *);
+bool uart_buffer_available(uart_port_t *);
+void uart_tx_wait_till_done(uart_port_t *);
 bool uart_rx_done(uart_port_t *);
 status_t uart_tx(uart_port_t *, const char);
 status_t uart_rx(uart_port_t *, char *);

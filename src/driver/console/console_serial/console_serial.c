@@ -100,50 +100,18 @@ console_t console_serial_driver =
 	.flush = console_serial_flush
 };
 
-console_t earlycon_serial_driver =
-{
-	.setup = console_serial_setup,
-	.write = console_serial_write,
-};
-
-
-static unsigned int earlycon_flag, con_flag;
-
 status_t console_serial_driver_setup()
 {
-	con_flag = 1;
 	return console_attach_device(&console_serial_driver);
-}
-
-status_t earlycon_serial_driver_setup()
-{
-	earlycon_flag = 1;
-	return console_attach_device(&earlycon_serial_driver);
 }
 
 status_t console_serial_driver_exit()
 {
 	status_t ret;
-	con_flag = 0;
 	ret = console_release_device();
-	if(!earlycon_flag)
-		ret |= uart_shutdown(&console_port);
+	ret |= uart_shutdown(&console_port);
 	return ret;
 }
-
-status_t earlycon_serial_driver_exit()
-{
-	status_t ret;
-	earlycon_flag = 0;
-	ret = console_release_device();
-	if(!con_flag)
-		ret |= uart_shutdown(&console_port);
-	return ret;
-}
-
-#if EARLYCON_SERIAL==1
-INCLUDE_DRIVER(earlycon, earlycon_serial_driver_setup, earlycon_serial_driver_exit, 0, 0, 0);
-#endif
 
 #if CONSOLE_SERIAL==1
 INCLUDE_DRIVER(console, console_serial_driver_setup, console_serial_driver_exit, 0, 255, 0);
