@@ -57,3 +57,4 @@ status_t uart_tx_int_en(uart_port_t *);
 status_t uart_tx_int_dis(uart_port_t *);
 status_t uart_rx_int_en(uart_port_t *);
 status_t uart_rx_int_dis(uart_port_t *);
+void uart_update_baud(uart_port_t *);
