@@ -32,10 +32,10 @@ status_t bootstrap()
 	if(arch_core_index() == BOOT_CORE_ID)
 		platform_setup();
 
-
-	platform_cpu_setup();
 	resetSyndrome = platform_get_reset_syndrome();
 	platform_reset_handler(resetSyndrome);
+
+	platform_cpu_setup();
 
 	return success;
 }
