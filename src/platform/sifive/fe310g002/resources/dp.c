@@ -38,9 +38,32 @@ module_t plic0 =
 	.interrupt_id[0] = 11,
 };
 
+module_t clint0 =
+{
+	.id = clint,
+	.baddr = 0x02000000,
+	.stride = 0xc000,
+};
+
+module_t uart0 =
+{
+	.id = uart | 0,
+	.baddr = 0x10013000,
+	.stride = 0x20,
+	.clk = 115200,
+	.interrupt_id[0] = 3,
+};
+
+module_t prci0 =
+{
+	.id = prci,
+	.baddr = 0x10008000,
+	.stride = 0x1000,
+};
+
 module_t *mod_list[] =
 {
-	&plic0,
+	&plic0, &uart0, &prci0, &clint0,
 };
 
 dp_t device_prop =

@@ -71,6 +71,30 @@ static inline void arch_ei()
 	asm volatile("csrs	mstatus, %0" : : "r" (bits));
 }
 
+static inline void arch_ei_mtime()
+{
+	unsigned int bits = (1 << 7);
+	asm volatile("csrs	mie, %0" : : "r" (bits));
+}
+
+static inline void arch_di_mtime()
+{
+	unsigned int bits = (1 << 7);
+	asm volatile("csrc	mie, %0" : : "r" (bits));
+}
+
+static inline void arch_ei_softirq()
+{
+	unsigned int bits = (1 << 3);
+	asm volatile("csrs	mie, %0" : : "r" (bits));
+}
+
+static inline void arch_di_softirq()
+{
+	unsigned int bits = (1 << 3);
+	asm volatile("csrc	mie, %0" : : "r" (bits));
+}
+
 /**
  * arch_di - arch disable global interrupts
  */
@@ -78,6 +102,7 @@ static inline void arch_di()
 {
 	unsigned int bits = (1 << 3) | (1 << 7);
 	asm volatile("csrc	mstatus, %0" : : "r" (bits));
+	asm volatile("csrc	mie, %0" : : "r" (bits));
 }
 
 static inline void arch_nop()
