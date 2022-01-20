@@ -9,10 +9,22 @@
  */
 
 #include <status.h>
+#include <stdio.h>
 #include <terravisor/bootstrap.h>
 #include <arch.h>
 #include <driver.h>
+#include <interrupt.h>
 #include <platform.h>
+#include <mmio.h>
+#include <hal/clint.h>
+#include <hal/gpio.h>
+
+void test()
+{
+	arch_di_mtime();
+}
+
+static gpio_port_t gled, bled, rled;
 
 void plug()
 {
@@ -21,9 +33,27 @@ void plug()
 	driver_setup_all();
 	platform_print_cpu_info();
 	arch_machine_call(0, 100, 200, 300, &mres);
+	link_interrupt(local, 7, test);
+
+	gpio_pin_alloc(&gled, 0, 19);
+	gpio_pin_alloc(&bled, 0, 21);
+	gpio_pin_alloc(&rled, 0, 22);
+	gpio_pin_mode(&gled, out);
+	gpio_pin_mode(&bled, out);
+	gpio_pin_mode(&rled, out);
+	gpio_pin_set(&gled);
+	gpio_pin_set(&bled);
+	gpio_pin_set(&rled);
 }
 
 void play()
 {
+	unsigned long t = clint_read_time();
+	printf("Time: %lu\n", t);
+	clint_config_tcmp(0, (t + 25000));
+	arch_ei_mtime();
+	gpio_pin_toggle(&gled);
+	gpio_pin_toggle(&bled);
+	gpio_pin_toggle(&rled);
 	arch_wfi();
 }
