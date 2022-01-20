@@ -15,5 +15,6 @@
 
 HAL_DIR	:= $(GET_PATH)
 
+include $(HAL_DIR)/gpio/build.mk
 include $(HAL_DIR)/uart/build.mk
 include $(HAL_DIR)/clint/build.mk

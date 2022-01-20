@@ -61,6 +61,18 @@ module_t prci0 =
 	.stride = 0x1000,
 };
 
+gpio_module_t port0 =
+{
+	.id = gpio | 0,
+	.baddr = 0x10012000,
+	.stride = 0x4c,
+};
+
+gpio_module_t *port_list[] =
+{
+	&port0,
+};
+
 module_t *mod_list[] =
 {
 	&plic0, &uart0, &prci0, &clint0,
@@ -71,6 +83,9 @@ dp_t device_prop =
 	.base_clock = FCLK,
 	.core[0] = &core0,
 	.memory = &mem,
+
+	.ports = port_list,
+	.n_ports = sizeof(port_list)/sizeof(gpio_module_t *),
 
 	.modules = mod_list,
 	.n_mods = sizeof(mod_list)/sizeof(module_t *)
