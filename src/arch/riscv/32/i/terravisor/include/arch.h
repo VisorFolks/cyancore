@@ -115,6 +115,7 @@ static inline void arch_wfi()
 	asm volatile("wfi");
 #if ERRATA_CIP578
 	arch_nop();
+	arch_nop();
 #endif
 }
 
