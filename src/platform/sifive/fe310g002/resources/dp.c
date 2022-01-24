@@ -68,6 +68,13 @@ gpio_module_t port0 =
 	.stride = 0x4c,
 };
 
+module_t aon0 =
+{
+	.id = aon | 0,
+	.baddr = 0x10000000,
+	.stride = 0x1000,
+};
+
 gpio_module_t *port_list[] =
 {
 	&port0,
@@ -75,7 +82,7 @@ gpio_module_t *port_list[] =
 
 module_t *mod_list[] =
 {
-	&plic0, &uart0, &prci0, &clint0,
+	&plic0, &uart0, &prci0, &clint0, &aon0,
 };
 
 dp_t device_prop =

@@ -9,8 +9,6 @@
 #include <terravisor/workers.h>
 #include <platform.h>
 
-unsigned int reset_syndrome;
-
 void platform_early_setup()
 {
 	status_t ret = success;
@@ -18,9 +16,8 @@ void platform_early_setup()
 	ret |= platform_copy_data();
 	ret |= platform_copy_itim();
 	ret |= platform_bss_clear();
+	ret |= platform_resources_setup();
 
-	reset_syndrome = 1;
-	
 	if(ret != success)
 		exit(EXIT_FAILURE);
 	return;
@@ -30,7 +27,6 @@ void platform_setup()
 {
 	status_t ret = success;
 
-	ret |= platform_resources_setup();
 	ret |= driver_setup("earlycon");
 	cyancore_insignia();
 

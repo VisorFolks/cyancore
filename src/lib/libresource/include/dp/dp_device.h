@@ -27,5 +27,6 @@ typedef enum
 	clint		= 0x8400,
 	plic		= 0x8500,
 	prci		= 0x9000,
+	aon		= 0xa000,
 } hw_devid_t;
 
