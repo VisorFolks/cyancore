@@ -19,9 +19,14 @@
 #include <hal/clint.h>
 #include <hal/gpio.h>
 
-void test()
+static unsigned long t;
+
+static void test()
 {
 	arch_di_mtime();
+	t = clint_read_time();
+	clint_config_tcmp(0, (t + 12500));
+	arch_ei_mtime();
 }
 
 static gpio_port_t gled, bled, rled;
@@ -44,14 +49,15 @@ void plug()
 	gpio_pin_set(&gled);
 	gpio_pin_set(&bled);
 	gpio_pin_set(&rled);
+
+	t = clint_read_time();
+	clint_config_tcmp(0, (t + 12500));
+	arch_ei_mtime();
 }
 
 void play()
 {
-	unsigned long t = clint_read_time();
 	printf("Time: %lu\n", t);
-	clint_config_tcmp(0, (t + 25000));
-	arch_ei_mtime();
 	gpio_pin_toggle(&gled);
 	gpio_pin_toggle(&bled);
 	gpio_pin_toggle(&rled);
