@@ -13,8 +13,8 @@
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=VisorFolks_cyancore&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=VisorFolks_cyancore)
 
 ```
-arch  : 0x00
-major : 0x0001
+arch  : 0x01
+major : 0x0002
 minor : 0x00
 ```
 

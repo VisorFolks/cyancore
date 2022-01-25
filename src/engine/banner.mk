@@ -9,8 +9,8 @@
 #
 
 .PHONY:	version
-NAME		= Aurora
-VERSION		= 0x00000100
+NAME		= Helium
+VERSION		= 0x01000200
 
 $(eval $(call add_define,VERSION))
 
