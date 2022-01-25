@@ -2,7 +2,7 @@
 ###### *A unified software platform for embedded system projects ...*
 ---
 
-> **Version (arch:2 | major:4 | minor:2): 0.1.0**
+> **Version (arch:2 | major:4 | minor:2): 1.2.0**
 
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=VisorFolks_cyancore)
 
