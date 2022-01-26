@@ -2,8 +2,9 @@
  * CYANCORE LICENSE
  * Copyrights (C) 2019, Cyancore Team
  *
- * File Name		: console_membuf.c
- * Description		: This file contains sources of memory buffer console
+ * File Name		: earlycon_membuf.c
+ * Description		: This file contains sources of memory buffer
+ *			  early console
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
@@ -47,10 +48,10 @@ status_t membuf_flush()
 
 console_t membuf_driver =
 {
-	.setup	= membuf_setup,
-	.write	= membuf_writeb,
-	.error	= membuf_writeb,
-	.flush	= membuf_flush
+	.setup	= &membuf_setup,
+	.write	= &membuf_writeb,
+	.error	= &membuf_writeb,
+	.flush	= &membuf_flush
 };
 
 status_t membuf_driver_setup()
@@ -64,9 +65,5 @@ status_t membuf_driver_exit()
 }
 
 #if EARLYCON_MEMBUF==1
-INCLUDE_DRIVER(earlycon, membuf_driver_setup, membuf_driver_exit, 0, 0);
-#endif
-
-#if CONSOLE_MEMBUF==1
-INCLUDE_DRIVER(console, membuf_driver_setup, membuf_driver_exit, 0, 0);
+INCLUDE_DRIVER(earlycon, membuf_driver_setup, membuf_driver_exit, 0, 0, 0);
 #endif

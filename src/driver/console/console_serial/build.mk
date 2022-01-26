@@ -10,6 +10,9 @@
 
 DIR		:= $(GET_PATH)
 
+EARLYCON_SERIAL	?= 0
+CONSOLE_SERIAL	?= 0
+
 $(eval $(call add_define,EARLYCON_SERIAL))
 $(eval $(call add_define,CONSOLE_SERIAL))
 

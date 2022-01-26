@@ -46,12 +46,15 @@ typedef struct uart_port
 
 //spinlock_t uart_spinlock;
 
-status_t uart_setup(uart_port_t *, direction_t, parity_t);
-status_t uart_shutdown(uart_port_t *);
-bool uart_rx_done(uart_port_t *);
-status_t uart_tx(uart_port_t *, const char);
-status_t uart_rx(uart_port_t *, char *);
-status_t uart_tx_int_en(uart_port_t *);
-status_t uart_tx_int_dis(uart_port_t *);
-status_t uart_rx_int_en(uart_port_t *);
-status_t uart_rx_int_dis(uart_port_t *);
+status_t uart_setup(const uart_port_t *, direction_t, parity_t);
+status_t uart_shutdown(const uart_port_t *);
+bool uart_buffer_available(const uart_port_t *);
+void uart_tx_wait_till_done(const uart_port_t *);
+bool uart_rx_done(const uart_port_t *);
+status_t uart_tx(const uart_port_t *, const char);
+status_t uart_rx(const uart_port_t *, char *);
+status_t uart_tx_int_en(const uart_port_t *);
+status_t uart_tx_int_dis(const uart_port_t *);
+status_t uart_rx_int_en(const uart_port_t *);
+status_t uart_rx_int_dis(const uart_port_t *);
+void uart_update_baud(const uart_port_t *);

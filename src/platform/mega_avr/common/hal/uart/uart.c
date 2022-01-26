@@ -23,7 +23,7 @@
 #include <arch.h>
 #include "uart_private.h"
 
-status_t uart_setup(uart_port_t *port, direction_t d, parity_t p)
+status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p)
 {
 	status_t ret = success;
 	assert(port);
@@ -42,18 +42,26 @@ status_t uart_setup(uart_port_t *port, direction_t d, parity_t p)
 	{
 		case trx:
 			en |= (1 << TXEN);
-			link_interrupt(arch, port->tx_irq, port->tx_handler);
-			uart_tx_int_en(port);
+			if(port->tx_irq)
+			{
+				link_interrupt(arch, port->tx_irq, port->tx_handler);
+				uart_tx_int_en(port);
+			}
 		case rx:
 			en |= (1 << RXEN);
-			uart_rx_int_en(port);
-			link_interrupt(arch, port->rx_irq, port->rx_handler);
-			uart_rx_int_en(port);
+			if(port->rx_irq)
+			{
+				link_interrupt(arch, port->rx_irq, port->rx_handler);
+				uart_rx_int_en(port);
+			}
 			break;
 		case tx:
 			en |= (1 << TXEN);
-			link_interrupt(arch, port->tx_irq, port->tx_handler);
-			uart_tx_int_en(port);
+			if(port->tx_irq)
+			{
+				link_interrupt(arch, port->tx_irq, port->tx_handler);
+				uart_tx_int_en(port);
+			}
 			break;
 		default:
 			en = 0;
@@ -73,37 +81,45 @@ status_t uart_setup(uart_port_t *port, direction_t d, parity_t p)
 	return ret;
 }
 
-status_t uart_shutdown(uart_port_t *port)
+status_t uart_shutdown(const uart_port_t *port)
 {
 	status_t ret = success;
 	assert(port);
-	ret |= uart_tx_int_dis(port);
-	ret |= uart_rx_int_dis(port);
-	ret |= unlink_interrupt(arch, port->rx_irq);
-	ret |= unlink_interrupt(arch, port->tx_irq);
+	if(port->tx_irq)
+	{
+		ret |= uart_tx_int_dis(port);
+		ret |= unlink_interrupt(arch, port->tx_irq);
+	}
+	if(port->rx_irq)
+	{
+		ret |= uart_rx_int_dis(port);
+		ret |= unlink_interrupt(arch, port->rx_irq);
+	}
 	ret |= platform_clk_dis(port->clk_id);
 	return ret;
 }
 
-bool uart_buffer_available(uart_port_t *port)
+bool uart_buffer_available(const uart_port_t *port)
 {
 	assert(port);
 	return (bool)(MMIO8(port->baddr + UCSRA_OFFSET) >> UDRE) & 0x01;
 }
 
-bool uart_tx_done(uart_port_t *port)
+void uart_tx_wait_till_done(const uart_port_t *port)
 {
 	assert(port);
-	return (bool)(MMIO8(port->baddr + UCSRA_OFFSET) >> TXC) & 0x01;
+	while(!(MMIO8(port->baddr + UCSRA_OFFSET) & (1 << TXC)))
+		arch_nop();
+	MMIO8(port->baddr + UCSRA_OFFSET) |= (1 << TXC);
 }
 
-bool uart_rx_done(uart_port_t *port)
+bool uart_rx_done(const uart_port_t *port)
 {
 	assert(port);
 	return (bool)(MMIO8(port->baddr + UCSRA_OFFSET) >> RXC) & 0x01;
 }
 
-bool uart_frame_error(uart_port_t *port)
+bool uart_frame_error(const uart_port_t *port)
 {
 	bool ret = false;
 	assert(port);
@@ -112,15 +128,16 @@ bool uart_frame_error(uart_port_t *port)
 	return ret;
 }
 
-status_t uart_tx(uart_port_t *port, const char data)
+status_t uart_tx(const uart_port_t *port, const char data)
 {
 	assert(port);
-	while(!uart_buffer_available(port));
+	while(!uart_buffer_available(port))
+		arch_nop();
 	MMIO8(port->baddr + UDR_OFFSET) = data;
 	return success;
 }
 
-status_t uart_rx(uart_port_t *port, char *data)
+status_t uart_rx(const uart_port_t *port, char *data)
 {
 	assert(port);
 	if(uart_frame_error(port))
@@ -129,28 +146,28 @@ status_t uart_rx(uart_port_t *port, char *data)
 	return success;
 }
 
-status_t uart_tx_int_en(uart_port_t *port)
+status_t uart_tx_int_en(const uart_port_t *port)
 {
 	assert(port);
 	MMIO8(port->baddr + UCSRB_OFFSET) |= (1 << TXCIE);
 	return success;
 }
 
-status_t uart_tx_int_dis(uart_port_t *port)
+status_t uart_tx_int_dis(const uart_port_t *port)
 {
 	assert(port);
 	MMIO8(port->baddr + UCSRB_OFFSET) &= ~(1 << TXCIE);
 	return success;
 }
 
-status_t uart_rx_int_en(uart_port_t *port)
+status_t uart_rx_int_en(const uart_port_t *port)
 {
 	assert(port);
 	MMIO8(port->baddr + UCSRB_OFFSET) |= (1 << RXCIE);
 	return success;
 }
 
-status_t uart_rx_int_dis(uart_port_t *port)
+status_t uart_rx_int_dis(const uart_port_t *port)
 {
 	assert(port);
 	MMIO8(port->baddr + UCSRB_OFFSET) &= ~(1 << RXCIE);

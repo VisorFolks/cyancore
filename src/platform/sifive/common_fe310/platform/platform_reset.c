@@ -11,11 +11,14 @@
 
 #include <stdint.h>
 #include <status.h>
-#include <platform.h>
+#include <assert.h>
+#include <reset.h>
+#include <resource.h>
+#include <arch.h>
+#include <aon.h>
 #include <driver/watchdog.h>
+#include <platform.h>
 #include <terravisor/platform.h>
-
-extern unsigned int reset_syndrome;
 
 /**
  * platform_get_reset_syndrome - returns the cause of reset
@@ -27,8 +30,28 @@ extern unsigned int reset_syndrome;
  */
 reset_t platform_get_reset_syndrome()
 {
-	if(reset_syndrome & 1)		/* Power on Reset */
+	mret_t mres;
+	const module_t *dp;
+	uint32_t pmucause_val;
+	aon_port_t aonport;
+
+	arch_machine_call(fetch_dp, aon, 0, 0, &mres);
+	assert(mres.status == success);
+
+	dp = (module_t *)mres.p;
+	aonport.baddr = dp->baddr;
+
+	aon_pmucause(&aonport, &pmucause_val);
+
+	if(!(pmucause_val & 0x1))			/* Check PMU cause for reset */
+		return not_reset;
+
+	if(pmucause_val & (1 << 8))		/* Power on Reset */
 		return power_on_reset;
+	else if(pmucause_val & (1 << 9))	/* External Reset */
+		return external_reset;
+	else if(pmucause_val & (1 << 10))	/* Watchdog Reset */
+		return wdog_reset;
 	else
 		return inval_reset;
 }
@@ -48,6 +71,10 @@ void platform_reset_handler(reset_t rsyn)
 {
 	if(rsyn == power_on_reset)
 		return;
+	else if(rsyn == external_reset)
+		return;
+	else if(rsyn == wdog_reset)
+		wdog_reset_handler();
 	else
 		plat_panic_handler();
 }

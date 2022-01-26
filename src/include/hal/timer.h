@@ -27,7 +27,7 @@ typedef struct timer_port
 	void (*tmr_handler)(void);
 } timer_port_t;
 
-status_t timer_setup(timer_port_t *port, unsigned int mode, unsigned int ps);
-status_t timer_shutdown(timer_port_t *port);
-status_t timer_read(timer_port_t *port, size_t *value);
-status_t timer_pwm_set(timer_port_t *port, bool invert, size_t value);
+status_t timer_setup(const timer_port_t *port, unsigned int mode, unsigned int ps);
+status_t timer_shutdown(const timer_port_t *port);
+status_t timer_read(const timer_port_t *port, size_t *value);
+status_t timer_pwm_set(const timer_port_t *port, bool invert, size_t value);

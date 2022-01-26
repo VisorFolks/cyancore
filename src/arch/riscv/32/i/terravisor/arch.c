@@ -13,6 +13,20 @@
 #include <status.h>
 #include <stdio.h>
 #include <arch.h>
+#include <terravisor/workers.h>
+#include <interrupt.h>
+
+static void arch_mcall_handler()
+{
+	context_frame_t *frame = get_context_frame();
+	mret_t mres;
+	machine_call(frame->a0, frame->a1, frame->a2, frame->a3, &mres);
+	fence(w, w);
+	frame->a0 = mres.p;
+	frame->a1 = mres.size;
+	frame->a2 = mres.status;
+	return;
+}
 
 /**
  * arch_early_setup - This function is called in the early stages of boot
@@ -34,6 +48,7 @@ void arch_early_setup()
  */
 void arch_setup()
 {
+	link_interrupt(arch, 11, &arch_mcall_handler);
 	return;
 }
 
@@ -61,20 +76,20 @@ void arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsi
 {
 	if(ret == NULL)
 		return;
-	asm volatile("mv	a0, %0" : : "r" (code));
-	asm volatile("mv	a1, %0" : : "r" (a0));
-	asm volatile("mv	a2, %0" : : "r" (a1));
-	asm volatile("mv	a3, %0" : : "r" (a2));
+	asm volatile("mv a0, %0" : : "r" (code));
+	asm volatile("mv a1, %0" : : "r" (a0));
+	asm volatile("mv a2, %0" : : "r" (a1));
+	asm volatile("mv a3, %0" : : "r" (a2));
 	asm volatile("ecall");
-	asm volatile("mv	%0, a0" : "=r" (ret->p));
-	asm volatile("mv	%0, a1" : "=r" (ret->size));
-	asm volatile("mv	%0, a2" : "=r" (ret->status));
+	asm volatile("mv %0, a0" : "=r" (ret->p));
+	asm volatile("mv %0, a1" : "=r" (ret->size));
+	asm volatile("mv %0, a2" : "=r" (ret->status));
 	return;
 }
 
 _WEAK void arch_panic_handler()
 {
-	context_frame_t *frame = get_context_frame();
+	const context_frame_t *frame = get_context_frame();
 	printf("< x > Arch Panic!\n");
 	printf("Info:\nCause\t: 0x%x\t Address\t: 0x%x\n", frame->mcause, frame->mepc);
 	while(1)
@@ -83,7 +98,7 @@ _WEAK void arch_panic_handler()
 
 _WEAK void arch_unhandled_irq()
 {
-	context_frame_t *frame = get_context_frame();
+	const context_frame_t *frame = get_context_frame();
 	printf("< x > Arch Unhandled IRQ!\n");
 	printf("Info:\nIRQ ID\t: 0x%x\n", frame->mcause & ~(1U << 31));
 	while(1)

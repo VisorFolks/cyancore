@@ -24,5 +24,5 @@
 #define _SECTION(x)	_ATTRIBUTE(section(x))
 #define _DEPRICATE	_ATTRIBUTE(depricated)
 #define _ALIAS(x)	_ATTRIBUTE(alias(x))
-
+#define _FALLTHROUGH	_ATTRIBUTE(fallthrough)
 #define EXPORT_C(x)	extern "C" x; x
