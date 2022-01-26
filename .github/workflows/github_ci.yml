@@ -37,7 +37,7 @@ jobs:
           make get_avr_tc AVR_TC_REPO=${AVRTC}
           make get_riscv_tc RISC_V_TC_REPO=${RISCVTC}
 
-      - name: Init CodqQL
+      - name: Init CodeQL
         uses: github/codeql-action/init@v1
         with:
           languages: ${{ matrix.language }}
