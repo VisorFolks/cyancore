@@ -76,14 +76,14 @@ void arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsi
 {
 	if(ret == NULL)
 		return;
-	asm volatile("mv	a0, %0" : : "r" (code));
-	asm volatile("mv	a1, %0" : : "r" (a0));
-	asm volatile("mv	a2, %0" : : "r" (a1));
-	asm volatile("mv	a3, %0" : : "r" (a2));
+	asm volatile("mv a0, %0" : : "r" (code));
+	asm volatile("mv a1, %0" : : "r" (a0));
+	asm volatile("mv a2, %0" : : "r" (a1));
+	asm volatile("mv a3, %0" : : "r" (a2));
 	asm volatile("ecall");
-	asm volatile("mv	%0, a0" : "=r" (ret->p));
-	asm volatile("mv	%0, a1" : "=r" (ret->size));
-	asm volatile("mv	%0, a2" : "=r" (ret->status));
+	asm volatile("mv %0, a0" : "=r" (ret->p));
+	asm volatile("mv %0, a1" : "=r" (ret->size));
+	asm volatile("mv %0, a2" : "=r" (ret->status));
 	return;
 }
 

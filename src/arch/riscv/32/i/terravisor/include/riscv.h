@@ -27,28 +27,28 @@ typedef struct context_frame
 static inline unsigned int arch_core_isa()
 {
 	unsigned int ret;
-	asm volatile("csrr	%0, misa" : "=r"(ret));
+	asm volatile("csrr %0, misa" : "=r"(ret));
 	return ret;
 }
 
 static inline unsigned int arch_core_vendor()
 {
 	unsigned int ret;
-	asm volatile("csrr	%0, mvendorid" : "=r"(ret));
+	asm volatile("csrr %0, mvendorid" : "=r"(ret));
 	return ret;
 }
 
 static inline unsigned int arch_core_archid()
 {
 	unsigned int ret;
-	asm volatile("csrr	%0, marchid" : "=r"(ret));
+	asm volatile("csrr %0, marchid" : "=r"(ret));
 	return ret;
 }
 
 static inline unsigned int arch_core_impid()
 {
 	unsigned int ret;
-	asm volatile("csrr	%0, mimpid" : "=r"(ret));
+	asm volatile("csrr %0, mimpid" : "=r"(ret));
 	return ret;
 }
 

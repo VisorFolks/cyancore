@@ -58,7 +58,7 @@ void local_register_interrupt_handler(unsigned int, void (*)(void));
 static inline unsigned int arch_core_index()
 {
 	unsigned int id;
-	asm volatile("csrr	%0, mhartid" : "=r" (id));
+	asm volatile("csrr %0, mhartid" : "=r" (id));
 	return id;
 }
 
@@ -68,31 +68,31 @@ static inline unsigned int arch_core_index()
 static inline void arch_ei()
 {
 	unsigned int bits = (1 << 3) | (1 << 7);
-	asm volatile("csrs	mstatus, %0" : : "r" (bits));
+	asm volatile("csrs mstatus, %0" : : "r" (bits));
 }
 
 static inline void arch_ei_mtime()
 {
 	unsigned int bits = (1 << 7);
-	asm volatile("csrs	mie, %0" : : "r" (bits));
+	asm volatile("csrs mie, %0" : : "r" (bits));
 }
 
 static inline void arch_di_mtime()
 {
 	unsigned int bits = (1 << 7);
-	asm volatile("csrc	mie, %0" : : "r" (bits));
+	asm volatile("csrc mie, %0" : : "r" (bits));
 }
 
 static inline void arch_ei_softirq()
 {
 	unsigned int bits = (1 << 3);
-	asm volatile("csrs	mie, %0" : : "r" (bits));
+	asm volatile("csrs mie, %0" : : "r" (bits));
 }
 
 static inline void arch_di_softirq()
 {
 	unsigned int bits = (1 << 3);
-	asm volatile("csrc	mie, %0" : : "r" (bits));
+	asm volatile("csrc mie, %0" : : "r" (bits));
 }
 
 /**
@@ -101,8 +101,8 @@ static inline void arch_di_softirq()
 static inline void arch_di()
 {
 	unsigned int bits = (1 << 3) | (1 << 7);
-	asm volatile("csrc	mstatus, %0" : : "r" (bits));
-	asm volatile("csrc	mie, %0" : : "r" (bits));
+	asm volatile("csrc mstatus, %0" : : "r" (bits));
+	asm volatile("csrc mie, %0" : : "r" (bits));
 }
 
 static inline void arch_nop()
