@@ -2,18 +2,24 @@ name: GitHub CI
 
 on:
   push:
-    branches:
-      - stable
-      - development
+    branches: [ stable, development ]
 
   pull_request:
-    branches:
-      - stable
-      - development
+    branches: [ stable, development ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+      statuses: write
+    
+    strategy:
+      fail-fast: true
+      matrix:
+        language: ["c", "cpp"]
 
     steps:
       - uses: actions/checkout@v2
@@ -32,6 +38,12 @@ jobs:
           make get_avr_tc AVR_TC_REPO=${AVRTC}
           make get_riscv_tc RISC_V_TC_REPO=${RISCVTC}
 
+      - name: Init CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: ${{ matrix.language }}
+          debug: true
+
       - name: Linting
         run: |
           make demo_avr check
@@ -43,6 +55,9 @@ jobs:
           make demo_avr
           make demo_avr_cpp
           make demo_riscv
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
 
       - name: Clean Up
         run: |
