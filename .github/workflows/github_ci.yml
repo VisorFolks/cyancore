@@ -37,25 +37,25 @@ jobs:
           make get_avr_tc AVR_TC_REPO=${AVRTC}
           make get_riscv_tc RISC_V_TC_REPO=${RISCVTC}
 
+      - name: Init CodqQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: ${{ matrix.language }}
+
       - name: Linting
         run: |
           make demo_avr check
           make demo_avr_cpp check
           make demo_riscv check
 
-      - name: Init CodqQL
-        uses: github/codeql-action/init@v1
-        with:
-          languages: ${{ matrix.language }}
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v1
-
       - name: Build
         run: |
           make demo_avr
           make demo_avr_cpp
           make demo_riscv
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
 
       - name: Clean Up
         run: |
