@@ -43,10 +43,13 @@ jobs:
           make demo_avr_cpp check
           make demo_riscv check
 
-      - name: Analyse
+      - name: Init CodqQL
         uses: github/codeql-action/init@v1
         with:
           languages: ${{ matrix.language }}
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
 
       - name: Build
         run: |
