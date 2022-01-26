@@ -27,5 +27,5 @@ typedef struct plic_port
 	size_t irq;
 } plic_port_t;
 
-void (* plic_irq_handler[N_PLAT_IRQS])(void) = {[0 ... N_PLAT_IRQS-1] = plat_panic_handler};
+void (* plic_irq_handler[N_PLAT_IRQS])(void) = {[0 ... N_PLAT_IRQS-1] = &plat_panic_handler};
 void plic_irqhandler();

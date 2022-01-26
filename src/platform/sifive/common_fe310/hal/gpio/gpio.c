@@ -22,7 +22,7 @@
 status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 {
 	mret_t mres;
-	gpio_module_t *dp;
+	const gpio_module_t *dp;
 	unsigned char flag;
 
 	assert(port);
@@ -48,7 +48,7 @@ status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 	return success;
 }
 
-status_t gpio_pin_mode(gpio_port_t *port, gpio_mode_t mode)
+status_t gpio_pin_mode(const gpio_port_t *port, gpio_mode_t mode)
 {
 	uintptr_t baddr;
 	uint8_t pin;
@@ -91,28 +91,28 @@ status_t gpio_pin_free(gpio_port_t *port)
 	return success;
 }
 
-status_t gpio_pin_set(gpio_port_t *port)
+status_t gpio_pin_set(const gpio_port_t *port)
 {
 	assert(port);
 	MMIO32(port->pbaddr + OUTPUTVAL_OFFSET) |= (1 << port->pin);
 	return success;
 }
 
-status_t gpio_pin_clear(gpio_port_t *port)
+status_t gpio_pin_clear(const gpio_port_t *port)
 {
 	assert(port);
 	MMIO32(port->pbaddr + OUTPUTVAL_OFFSET) &= ~(1 << port->pin);
 	return success;
 }
 
-status_t gpio_pin_toggle(gpio_port_t *port)
+status_t gpio_pin_toggle(const gpio_port_t *port)
 {
 	assert(port);
 	MMIO32(port->pbaddr + OUTPUTVAL_OFFSET) ^= (1 << port->pin);
 	return success;
 }
 
-bool gpio_pin_read(gpio_port_t *port)
+bool gpio_pin_read(const gpio_port_t *port)
 {
 	assert(port);
 	return (MMIO32(port->pbaddr + INPUTVAL_OFFSET) & (1 << port->pin)) ? true : false;

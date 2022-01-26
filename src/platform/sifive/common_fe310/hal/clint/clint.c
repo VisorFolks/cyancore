@@ -30,7 +30,7 @@ static clint_port_t port;
 static status_t clint_setup()
 {
 	mret_t mres;
-	module_t *dp;
+	const module_t *dp;
 
 	arch_machine_call(fetch_dp, clint, 0, 0, &mres);
 

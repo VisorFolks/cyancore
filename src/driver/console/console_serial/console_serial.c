@@ -29,13 +29,13 @@ void console_serial_read_irq_handler(void);
 status_t console_serial_setup()
 {
 	mret_t mres;
-	module_t *dp;
+	const module_t *dp;
 	hw_devid_t devid;
 	arch_machine_call(fetch_sp, console_uart, 0, 0, &mres);
 	if(mres.status != success)
 		return mres.status;
 	devid = (hw_devid_t) mres.p;
-	arch_machine_call(fetch_dp, (devid & (0xff00)), (devid & (0x00ff)), 0, &mres);
+	arch_machine_call(fetch_dp, (devid & 0xff00), (devid & 0x00ff), 0, &mres);
 	if(mres.status != success)
 		return mres.status;
 	dp = (module_t *)mres.p;
@@ -93,11 +93,11 @@ status_t console_serial_flush()
 
 console_t console_serial_driver =
 {
-	.setup = console_serial_setup,
-	.write = console_serial_write,
-	.error = console_serial_write,
-	.read = console_serial_read,
-	.flush = console_serial_flush
+	.setup = &console_serial_setup,
+	.write = &console_serial_write,
+	.error = &console_serial_write,
+	.read = &console_serial_read,
+	.flush = &console_serial_flush
 };
 
 status_t console_serial_driver_setup()

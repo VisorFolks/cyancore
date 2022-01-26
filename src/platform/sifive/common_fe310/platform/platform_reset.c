@@ -31,7 +31,7 @@
 reset_t platform_get_reset_syndrome()
 {
 	mret_t mres;
-	module_t *dp;
+	const module_t *dp;
 	uint32_t pmucause_val;
 	aon_port_t aonport;
 

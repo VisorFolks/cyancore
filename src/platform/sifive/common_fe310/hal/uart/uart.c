@@ -22,7 +22,7 @@
 #include <arch.h>
 #include "uart_private.h"
 
-status_t uart_setup(uart_port_t *port, direction_t d, parity_t p _UNUSED)
+status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
 {
 	status_t ret = success;
 	assert(port);
@@ -69,7 +69,7 @@ status_t uart_setup(uart_port_t *port, direction_t d, parity_t p _UNUSED)
 	return ret;
 }
 
-status_t uart_shutdown(uart_port_t *port)
+status_t uart_shutdown(const uart_port_t *port)
 {
 	status_t ret = success;
 	assert(port);
@@ -89,7 +89,7 @@ status_t uart_shutdown(uart_port_t *port)
 	return ret;
 }
 
-void uart_update_baud(uart_port_t *port)
+void uart_update_baud(const uart_port_t *port)
 {
 	assert(port);
 	TODO(Replace with clock get api!)
@@ -98,20 +98,20 @@ void uart_update_baud(uart_port_t *port)
 	arch_dsb();
 }
 
-bool uart_buffer_available(uart_port_t *port)
+bool uart_buffer_available(const uart_port_t *port)
 {
 	assert(port);
 	return (bool)(MMIO32(port->baddr + TXDATA_OFFSET) >> TX_FULL) ^ 1;
 }
 
-void uart_tx_wait_till_done(uart_port_t *port)
+void uart_tx_wait_till_done(const uart_port_t *port)
 {
 	assert(port);
 	while((MMIO32(port->baddr + TXDATA_OFFSET) & (1U << TX_FULL)))
 		arch_nop();
 }
 
-status_t uart_tx(uart_port_t *port, const char data)
+status_t uart_tx(const uart_port_t *port, const char data)
 {
 	assert(port);
 	while(!uart_buffer_available(port))
@@ -120,35 +120,35 @@ status_t uart_tx(uart_port_t *port, const char data)
 	return success;
 }
 
-status_t uart_rx(uart_port_t *port, char *data)
+status_t uart_rx(const uart_port_t *port, char *data)
 {
 	assert(port);
 	*data = MMIO32(port->baddr + RXDATA_OFFSET) & 0xff;
 	return success;
 }
 
-status_t uart_tx_int_en(uart_port_t *port)
+status_t uart_tx_int_en(const uart_port_t *port)
 {
 	assert(port);
 	MMIO32(port->baddr + UARTIE_OFFSET) |= (1 << TXWM);
 	return success;
 }
 
-status_t uart_tx_int_dis(uart_port_t *port)
+status_t uart_tx_int_dis(const uart_port_t *port)
 {
 	assert(port);
 	MMIO32(port->baddr + UARTIE_OFFSET) &= ~(1 << TXWM);
 	return success;
 }
 
-status_t uart_rx_int_en(uart_port_t *port)
+status_t uart_rx_int_en(const uart_port_t *port)
 {
 	assert(port);
 	MMIO32(port->baddr + UARTIE_OFFSET) |= (1 << RXWM);
 	return success;
 }
 
-status_t uart_rx_int_dis(uart_port_t *port)
+status_t uart_rx_int_dis(const uart_port_t *port)
 {
 	assert(port);
 	MMIO32(port->baddr + UARTIE_OFFSET) &= ~(1 << RXWM);

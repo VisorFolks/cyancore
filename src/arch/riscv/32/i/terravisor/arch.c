@@ -89,7 +89,7 @@ void arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsi
 
 _WEAK void arch_panic_handler()
 {
-	context_frame_t *frame = get_context_frame();
+	const context_frame_t *frame = get_context_frame();
 	printf("< x > Arch Panic!\n");
 	printf("Info:\nCause\t: 0x%x\t Address\t: 0x%x\n", frame->mcause, frame->mepc);
 	while(1)
@@ -98,7 +98,7 @@ _WEAK void arch_panic_handler()
 
 _WEAK void arch_unhandled_irq()
 {
-	context_frame_t *frame = get_context_frame();
+	const context_frame_t *frame = get_context_frame();
 	printf("< x > Arch Unhandled IRQ!\n");
 	printf("Info:\nIRQ ID\t: 0x%x\n", frame->mcause & ~(1U << 31));
 	while(1)

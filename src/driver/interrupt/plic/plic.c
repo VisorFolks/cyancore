@@ -33,7 +33,7 @@ static plic_port_t port;
 static status_t plic_setup()
 {
 	mret_t mres;
-	module_t *dp;
+	const module_t *dp;
 
 	arch_machine_call(fetch_dp, plic, 0, 0, &mres);
 
@@ -143,16 +143,16 @@ void plic_register_irq_handler(uint32_t id, void (* handler)(void))
 
 static ic_t plic_port =
 {
-	.setup			= plic_setup,
-	.get_priority		= plic_get_priority,
-	.set_priority		= plic_set_priority,
-	.get_affinity		= plic_get_threshold,
-	.set_affinity		= plic_set_threshold,
-	.get_irq		= plic_get_interrupt,
-	.en_irq			= plic_int_en,
-	.dis_irq		= plic_int_dis,
-	.pending		= plic_get_pending,
-	.register_handler	= plic_register_irq_handler,
+	.setup			= &plic_setup,
+	.get_priority		= &plic_get_priority,
+	.set_priority		= &plic_set_priority,
+	.get_affinity		= &plic_get_threshold,
+	.set_affinity		= &plic_set_threshold,
+	.get_irq		= &plic_get_interrupt,
+	.en_irq			= &plic_int_en,
+	.dis_irq		= &plic_int_dis,
+	.pending		= &plic_get_pending,
+	.register_handler	= &plic_register_irq_handler,
 };
 
 static status_t plic_driver_setup()
@@ -166,7 +166,7 @@ static status_t plic_driver_setup()
 static status_t plic_driver_setup_pcpu()
 {
 	status_t ret;
-	ret = link_interrupt(local, port.irq, plic_irqhandler);
+	ret = link_interrupt(local, port.irq, &plic_irqhandler);
 	arch_ei();
 	return ret;
 }

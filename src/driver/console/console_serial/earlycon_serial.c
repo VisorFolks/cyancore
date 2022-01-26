@@ -26,13 +26,13 @@ static uart_port_t earlycon_port;
 status_t earlycon_serial_setup()
 {
 	mret_t mres;
-	module_t *dp;
+	const module_t *dp;
 	hw_devid_t devid;
 	arch_machine_call(fetch_sp, console_uart, 0, 0, &mres);
 	if(mres.status != success)
 		return mres.status;
 	devid = (hw_devid_t) mres.p;
-	arch_machine_call(fetch_dp, (devid & (0xff00)), (devid & (0x00ff)), 0, &mres);
+	arch_machine_call(fetch_dp, (devid & 0xff00), (devid & 0x00ff), 0, &mres);
 	if(mres.status != success)
 		return mres.status;
 	dp = (module_t *)mres.p;
@@ -58,9 +58,9 @@ status_t earlycon_serial_write(const char c)
 
 console_t earlycon_serial_driver =
 {
-	.setup = earlycon_serial_setup,
-	.write = earlycon_serial_write,
-	.error = earlycon_serial_write,
+	.setup = &earlycon_serial_setup,
+	.write = &earlycon_serial_write,
+	.error = &earlycon_serial_write,
 };
 
 status_t earlycon_serial_driver_setup()

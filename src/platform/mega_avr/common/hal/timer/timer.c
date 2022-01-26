@@ -24,7 +24,7 @@
 #include "timer8.h"
 #include "timer16.h"
 
-status_t timer_setup(timer_port_t *port, unsigned int mode, unsigned int ps)
+status_t timer_setup(const timer_port_t *port, unsigned int mode, unsigned int ps)
 {
 	status_t ret;
 	unsigned id;
@@ -56,7 +56,7 @@ status_t timer_setup(timer_port_t *port, unsigned int mode, unsigned int ps)
 	return ret;
 }
 
-status_t timer_shutdown(timer_port_t *port)
+status_t timer_shutdown(const timer_port_t *port)
 {
 	status_t ret = success;
 	unsigned id;
@@ -79,7 +79,7 @@ status_t timer_shutdown(timer_port_t *port)
 	return ret;
 }
 
-status_t timer_read(timer_port_t *port, size_t *value)
+status_t timer_read(const timer_port_t *port, size_t *value)
 {
 	unsigned id;
 	assert(port);
@@ -92,7 +92,7 @@ status_t timer_read(timer_port_t *port, size_t *value)
 }
 
 
-status_t timer_pwm_set(timer_port_t *port, bool invert, size_t value)
+status_t timer_pwm_set(const timer_port_t *port, bool invert, size_t value)
 {
 	status_t ret = success;
 	unsigned id;
