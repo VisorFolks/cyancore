@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         language: ["c", "cpp"]
 
