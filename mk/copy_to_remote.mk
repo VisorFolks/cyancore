@@ -9,8 +9,16 @@
 # Organisation		: Cyancore Core-Team
 #
 
+R_UNAME		?= $(USER)
+SSH_HOST	?=
+SSH_PORT	?=
+SSH_PATH	?=
+
 --cpremote: $(ELF)
-	@echo "< ! > Please add your commands here..."
+	@echo "< ! > Copying to remote ($(SSH_HOST))..."
+	ssh -p $(SSH_PORT) $(R_UNAME)@$(SSH_HOST) "mkdir -p $(SSH_PATH)/$(PROJECT)"
+	scp -r -P $(SSH_PORT) $(^:.elf=.*) $(R_UNAM)@$(SSH_HOST):$(SSH_PATH)/$(PROJECT)
 
 --rmremote:
-	@echo "< ! > Please add your commands here..."
+	@echo "< ! > Cleaning remote ($(SSH_HOST))..."
+	ssh -p $(SSH_PORT) $(R_UNAME)@$(SSH_HOST) "rm -rf $(SSH_PATH)/$(PROJECT)"
