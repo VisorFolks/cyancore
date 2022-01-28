@@ -12,5 +12,5 @@
 #define _CLINT_H_
 
 status_t clint_send_softirq(size_t);
-status_t clint_config_tcmp(size_t, unsigned long);
-unsigned long clint_read_time();
+status_t clint_config_tcmp(size_t, uint64_t);
+uint64_t clint_read_time();

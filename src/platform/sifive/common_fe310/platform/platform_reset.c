@@ -69,6 +69,8 @@ reset_t platform_get_reset_syndrome()
  */
 void platform_reset_handler(reset_t rsyn)
 {
+	if(rsyn == not_reset)
+		return;
 	if(rsyn == power_on_reset)
 		return;
 	else if(rsyn == external_reset)

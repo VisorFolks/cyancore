@@ -61,7 +61,7 @@ status_t clint_send_softirq(size_t core_id)
 	return success;
 }
 
-status_t clint_config_tcmp(size_t core_id, unsigned long value)
+status_t clint_config_tcmp(size_t core_id, uint64_t value)
 {
 	assert(port.baddr);
 	if(core_id >= N_CORES)
@@ -71,10 +71,10 @@ status_t clint_config_tcmp(size_t core_id, unsigned long value)
 	return success;
 }
 
-unsigned long clint_read_time()
+uint64_t clint_read_time()
 {
 	assert(port.baddr);
-	unsigned long time_stamp;
+	uint64_t time_stamp;
 	time_stamp = MMIO64(port.baddr + MTIME_OFFSET);
 	return time_stamp;
 }

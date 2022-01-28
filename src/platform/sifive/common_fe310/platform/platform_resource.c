@@ -79,7 +79,7 @@ mret_t platform_fetch_dp(unsigned int a0, unsigned int a1 _UNUSED, unsigned int 
 	{
 		case clock:
 			ret.p = (uintptr_t)dp_get_base_clock();
-			ret.size = (ret.p) ? sizeof(unsigned long) : 0;
+			ret.size = (ret.p) ? sizeof(uint64_t) : 0;
 			break;
 		case gpio:
 			ret.p = (uintptr_t)dp_get_port_info(a0 | a1);

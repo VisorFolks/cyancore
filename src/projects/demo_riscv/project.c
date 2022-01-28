@@ -19,7 +19,7 @@
 #include <hal/clint.h>
 #include <hal/gpio.h>
 
-static unsigned long t;
+static unsigned long long t;
 
 static void test()
 {
@@ -57,7 +57,7 @@ void plug()
 
 void play()
 {
-	printf("Time: %lu\n", t);
+	printf("Time: %lu\n", (unsigned long)t);
 	gpio_pin_toggle(&gled);
 	gpio_pin_toggle(&bled);
 	gpio_pin_toggle(&rled);
