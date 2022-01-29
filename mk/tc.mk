@@ -18,14 +18,15 @@ endif
 
 ifeq ($(findstring riscv,$(ARCH)),riscv)
 TC	?= $(TOOLS_ROOT)/risc-v-toolchain/bin/riscv64-unknown-elf
-TI	:= $(TOOLS_ROOT)/risc-v-toolchain/riscv64-unknown-elf/include
-TL	:= $(TOOLS_ROOT)/risc-v-toolchain/riscv64-unknown-elf/lib
+TI	:= $(TOOLS_ROOT)/risc-v-toolchain/lib/gcc/riscv64-unknown-elf/$(TC_VER)/include-fixed/
+TI	+= $(TOOLS_ROOT)/risc-v-toolchain/riscv64-unknown-elf/include/
+TL	:= $(TOOLS_ROOT)/risc-v-toolchain/lib/gcc/riscv64-unknown-elf/$(TC_VER)/
 endif
 
 ifeq ($(findstring avr,$(ARCH)),avr)
 TC	?= $(TOOLS_ROOT)/avr-toolchain/bin/avr
-TI	:= $(TOOLS_ROOT)/avr-toolchain/lib/gcc/avr/5.4.0/include-fixed
-TL	:= $(TOOLS_ROOT)/avr-toolchain/lib/gcc/avr/5.4.0/$(ARCH)$(ARCH_VARIANT)/
+TI	:= $(TOOLS_ROOT)/avr-toolchain/lib/gcc/avr/$(TC_VER)/include-fixed
+TL	:= $(TOOLS_ROOT)/avr-toolchain/lib/gcc/avr/$(TC_VER)/$(ARCH)$(ARCH_VARIANT)/
 endif
 
 ifneq ($(ARCH),)

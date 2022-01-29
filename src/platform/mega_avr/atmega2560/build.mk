@@ -7,7 +7,7 @@
 #			  all other directories that have atmega328p
 #			  board support sources
 # Primary Author	: Rahul Goyal [rhgoyal01@gmail.com]
-# Organisation		: Cyancore Core-Team
+# Organisation		: Cyancore Contributor
 #
 
 ATMEGA328P_DIR	:= $(GET_PATH)

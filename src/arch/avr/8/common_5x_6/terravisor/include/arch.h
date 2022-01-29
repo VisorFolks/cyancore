@@ -43,7 +43,7 @@ void arch_panic_handler();
  *
  * Refer arch.c for more details.
  */
-mret_t arch_machine_call(unsigned  int, unsigned int, unsigned  int, unsigned  int);
+void arch_machine_call(unsigned  int, unsigned int, unsigned  int, unsigned  int, mret_t *);
 #endif
 
 /**
@@ -90,27 +90,11 @@ static inline void arch_nop()
 	asm volatile("nop");
 }
 
-static inline void arch_sync()
-{
-	arch_nop();
-}
-
-static inline void arch_msb()
-{
-	arch_nop();
-}
-
-static inline void arch_isb()
-{
-	arch_nop();
-}
-
-static inline void arch_dsb()
-{
-	arch_nop();
-}
-
-static inline void arch_wfe()
-{
-	arch_nop();
-}
+/*
+ * AVR CPU arch doesn't describe memory ordering
+ * type and avr arch supports only 1 core.
+ * Hence defining isb, dsb and dmb as nop.
+ */
+#define arch_isb()	arch_nop()
+#define arch_dsb()	arch_nop()
+#define arch_dmb()	arch_nop()

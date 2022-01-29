@@ -27,9 +27,9 @@ typedef struct wdt_port
 	void (*wdt_handler)(void);
 } wdt_port_t;
 
-status_t wdt_setup(wdt_port_t *);
-status_t wdt_shutdown(wdt_port_t *);
-status_t wdt_set_timeout(wdt_port_t *);
-void wdt_hush(wdt_port_t *);
-status_t wdt_sre(wdt_port_t *);
-status_t wdt_srd(wdt_port_t *);
+status_t wdt_setup(const wdt_port_t *);
+status_t wdt_shutdown(const wdt_port_t *);
+status_t wdt_set_timeout(const wdt_port_t *);
+void wdt_hush(const wdt_port_t *);
+status_t wdt_sre(const wdt_port_t *);
+status_t wdt_srd(const wdt_port_t *);

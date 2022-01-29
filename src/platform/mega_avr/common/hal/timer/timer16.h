@@ -25,7 +25,7 @@
 #define TIMSK_BASE		0x6E
 #endif
 
-static void timer16_config_mode(timer_port_t *port, unsigned int mode)
+static void timer16_config_mode(const timer_port_t *port, unsigned int mode)
 {
 	uint8_t reg1, reg2;
 	reg1 = MMIO8(port->baddr + TCCRA_16B_OFFSET);
@@ -45,7 +45,7 @@ static void timer16_config_mode(timer_port_t *port, unsigned int mode)
 	MMIO8(port->baddr + TCCRB_16B_OFFSET) = reg2;
 }
 
-static void timer16_config_ps(timer_port_t *port, unsigned int ps)
+static void timer16_config_ps(const timer_port_t *port, unsigned int ps)
 {
 	uint8_t reg;
 	reg = MMIO8(port->baddr + TCCRB_16B_OFFSET);
@@ -60,7 +60,7 @@ static void timer16_config_ps(timer_port_t *port, unsigned int ps)
 	MMIO8(port->baddr + TCCRB_16B_OFFSET) = reg;
 }
 
-static void timer16_config_op_mode(timer_port_t *port, bool en, bool inv)
+static void timer16_config_op_mode(const timer_port_t *port, bool en, bool inv)
 {
 	uint8_t reg, id;
 	id = port->port_id & 0xf;
@@ -74,7 +74,7 @@ static void timer16_config_op_mode(timer_port_t *port, bool en, bool inv)
 	MMIO8(port->baddr + TCCRA_16B_OFFSET) = reg;
 }
 
-static void timer16_set(timer_port_t *port, uint16_t value)
+static void timer16_set(const timer_port_t *port, uint16_t value)
 {
 	uint8_t id = port->port_id & 0xf;
 	if(id == 0)
@@ -93,21 +93,21 @@ static void timer16_set(timer_port_t *port, uint16_t value)
 	}
 }
 
-static void timer16_irq_en(timer_port_t *port)
+static void timer16_irq_en(const timer_port_t *port)
 {
 	uint8_t unit = port->port_id & 0xf;
 	uint8_t id = (port->port_id & 0xf0) >> 4;
 	MMIO8(TIMSK_BASE + id) |= (1 << (unit+1));
 }
 
-static void timer16_irq_dis(timer_port_t *port)
+static void timer16_irq_dis(const timer_port_t *port)
 {
 	uint8_t unit = port->port_id & 0xf;
 	uint8_t id = (port->port_id & 0xf0) >> 4;
 	MMIO8(TIMSK_BASE + id) &= ~(1 << (unit+1));
 }
 
-static uint16_t timer16_read(timer_port_t *port)
+static uint16_t timer16_read(const timer_port_t *port)
 {
 	return MMIO16(port->baddr + TCNTL_16B_OFFSET);
 }

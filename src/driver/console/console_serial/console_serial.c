@@ -29,13 +29,13 @@ void console_serial_read_irq_handler(void);
 status_t console_serial_setup()
 {
 	mret_t mres;
-	module_t *dp;
+	const module_t *dp;
 	hw_devid_t devid;
-	mres = arch_machine_call(fetch_sp, console_uart, 0, 0);
+	arch_machine_call(fetch_sp, console_uart, 0, 0, &mres);
 	if(mres.status != success)
 		return mres.status;
 	devid = (hw_devid_t) mres.p;
-	mres = arch_machine_call(fetch_dp, (devid & (0xff00)), (devid & (0x00ff)), 0);
+	arch_machine_call(fetch_dp, (devid & 0xff00), (devid & 0x00ff), 0, &mres);
 	if(mres.status != success)
 		return mres.status;
 	dp = (module_t *)mres.p;
@@ -93,58 +93,27 @@ status_t console_serial_flush()
 
 console_t console_serial_driver =
 {
-	.setup = console_serial_setup,
-	.write = console_serial_write,
-	.error = console_serial_write,
-	.read = console_serial_read,
-	.flush = console_serial_flush
+	.setup = &console_serial_setup,
+	.write = &console_serial_write,
+	.error = &console_serial_write,
+	.read = &console_serial_read,
+	.flush = &console_serial_flush
 };
-
-console_t earlycon_serial_driver =
-{
-	.setup = console_serial_setup,
-	.write = console_serial_write,
-};
-
-
-static unsigned int earlycon_flag, con_flag;
 
 status_t console_serial_driver_setup()
 {
-	con_flag = 1;
+	driver_exit("earlycon");
 	return console_attach_device(&console_serial_driver);
-}
-
-status_t earlycon_serial_driver_setup()
-{
-	earlycon_flag = 1;
-	return console_attach_device(&earlycon_serial_driver);
 }
 
 status_t console_serial_driver_exit()
 {
 	status_t ret;
-	con_flag = 0;
 	ret = console_release_device();
-	if(!earlycon_flag)
-		ret |= uart_shutdown(&console_port);
+	ret |= uart_shutdown(&console_port);
 	return ret;
 }
-
-status_t earlycon_serial_driver_exit()
-{
-	status_t ret;
-	earlycon_flag = 0;
-	ret = console_release_device();
-	if(!con_flag)
-		ret |= uart_shutdown(&console_port);
-	return ret;
-}
-
-#if EARLYCON_SERIAL==1
-INCLUDE_DRIVER(earlycon, earlycon_serial_driver_setup, earlycon_serial_driver_exit, 0, 0);
-#endif
 
 #if CONSOLE_SERIAL==1
-INCLUDE_DRIVER(console, console_serial_driver_setup, console_serial_driver_exit, 0, 0);
+INCLUDE_DRIVER(console, console_serial_driver_setup, console_serial_driver_exit, 0, 255, 0);
 #endif

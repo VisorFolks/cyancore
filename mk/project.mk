@@ -16,12 +16,21 @@
 include mk/path.mk
 include mk/mk_helper.mk
 
-T_ALLOWLIST	+= help list
+P_TARGETS	+= default cyancore check version copy_to_remote clean_remote
+T_ALLOWLIST	+= help list clean all_projects
+PROJECT_LIST	:= $(shell ls $(SRC)/projects/ -I *.template)
 
 .PHONY: aux_target
 
 default: aux_target
 	make $(PROJECT) cyancore -j$(N_JOBS)
+
+all_projects:
+	for project in $(PROJECT_LIST);	\
+	do				\
+		make $$project check;	\
+		make $$project;		\
+	done
 
 cyancore: version elf
 	$(info < / > Done !)
@@ -32,15 +41,16 @@ clean:
 
 list:
 	$(info Available projects are :)
-	ls $(SRC)/projects/ -I *.template
+	echo $(PROJECT_LIST)
 
 check: --lint
 
+copy_to_remote: --cpremote
+clean_remote: --rmremote
+
+
 ifeq ($(findstring $(MAKECMDGOALS),$(T_ALLOWLIST)),)
-ifneq ($(firstword $(MAKECMDGOALS)),clean)
-ifneq ($(firstword $(MAKECMDGOALS)),default)
-ifneq ($(firstword $(MAKECMDGOALS)),cyancore)
-ifneq ($(firstword $(MAKECMDGOALS)),check)
+ifeq ($(findstring $(firstword $(MAKECMDGOALS)),$(P_TARGETS)),)
 PROJECT		?= $(firstword $(MAKECMDGOALS))
 CMD		:= $(word 2,$(MAKECMDGOALS))
 ifeq ($(CMD),)
@@ -50,9 +60,6 @@ endif
 .PHONY: $(PROJECT)
 $(PROJECT): $(CMD)
 
-endif
-endif
-endif
 endif
 
 ifeq ($(PROJECT),)
@@ -64,14 +71,15 @@ $(info < x > Invalid project name...)
 $(info < ! > Run `make list` to get list of projects)
 $(error < x > Build Failed!)
 endif
-endif
 
 ifeq ($(findstring $(MAKECMDGOALS),$(T_ALLOWLIST)),)
 include $(SRC)/sources.mk
 include mk/tc.mk
+include mk/copy_to_remote.mk
+endif
 endif
 
-ifeq ($(findstring $(CMD),$(T_ALLOWLIST) default clean cyancore),)
+ifeq ($(findstring $(CMD),$(T_ALLOWLIST) $(P_TARGETS)),)
 $(CMD): $(filter %/$(CMD),$(DEP_LIBS) $(DEP_OBJS))
 	if [ "$<" = "" ]; then			\
 		echo "No such target: $@";	\

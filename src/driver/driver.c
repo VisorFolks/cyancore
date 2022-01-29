@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <status.h>
+#include <arch.h>
 #include <driver.h>
 
 /**
@@ -72,7 +73,7 @@ status_t driver_setup_all()
  */
 status_t driver_exit_all()
 {
-	status_t ret = error_func_inval_arg;
+	status_t ret = success;
 	device_t *ptr;
 	unsigned int order;
 	/* This loop controls the exit order */
@@ -86,7 +87,7 @@ status_t driver_exit_all()
 		while(ptr <= &_driver_table_end)
 		{
 			if(order == ptr->eorder)
-				ret = driver_deregister(ptr);
+				ret |= driver_deregister(ptr);
 			ptr++;
 		}
 	}
@@ -135,7 +136,7 @@ status_t driver_setup(const char *name)
  */
 status_t driver_exit(const char *name)
 {
-	status_t ret = error_func_inval;
+	status_t ret = error_device_inval;
 	device_t *ptr = &_driver_table_start;
 	while(ptr < &_driver_table_end)
 	{
@@ -161,11 +162,29 @@ status_t driver_exit(const char *name)
 status_t driver_register(device_t *dev _UNUSED)
 {
 	status_t ret;
-	if(dev->exec)
-		return error_driver_init_done;
+	uint8_t flag;
+
+	if(!dev->percpu)
+	{
+		lock_acquire(&dev->key);
+		flag = dev->exec;
+		lock_release(&dev->key);
+
+		if(flag)
+		{
+			ret = error_driver_init_done;
+			goto exit;
+		}
+
+		lock_acquire(&dev->key);
+		dev->exec = 1;
+		arch_dmb();
+		lock_release(&dev->key);
+	}
+
 	ret = dev->driver_setup();
-	dev->exec = 1;
 	(ret == success) ? printf("< / > Started %s\n", dev->name) : 0;
+exit:
 	return ret;
 }
 
@@ -180,8 +199,29 @@ status_t driver_register(device_t *dev _UNUSED)
  */
 status_t driver_deregister(device_t *dev _UNUSED)
 {
-	if(dev->exec != 1)
-		return error_driver;
+	status_t ret;
+	uint8_t flag;
+
+	if(!dev->percpu)
+	{
+		lock_acquire(&dev->key);
+		flag = dev->exec;
+		lock_release(&dev->key);
+
+		if(!flag)
+		{
+			ret = error_driver;
+			goto exit;
+		}
+
+		lock_acquire(&dev->key);
+		dev->exec = 0;
+		arch_dmb();
+		lock_release(&dev->key);
+	}
+
 	printf("< / > Stopping %s\n", dev->name);
-	return dev->driver_exit();
+	ret = dev->driver_exit();
+exit:
+	return ret;
 }

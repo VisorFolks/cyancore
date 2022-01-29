@@ -18,5 +18,6 @@ typedef enum reset
 	brownout_reset		= 2,
 	wdog_reset		= 3,
 	jtag_reset		= 4,
+	not_reset		= 254,
 	inval_reset		= 255
 } reset_t;

@@ -11,14 +11,11 @@
 
 #include <status.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <interrupt.h>
 #include <arch.h>
-#if LOCAL_INTERRUPT_DEVICE==1
-#include <hal/local_interrupt.h>
-#endif
-#if PLAT_INTERRUPT_DEVICE==1
-#include <hal/plat_interrupt.h>
-#endif
+#include <platform.h>
+#include <driver/interrupt_controller.h>
 
 status_t link_interrupt(int_module_t target, unsigned int id, void (*handler)(void))
 {
@@ -35,7 +32,7 @@ status_t link_interrupt(int_module_t target, unsigned int id, void (*handler)(vo
 #endif
 #if PLAT_INTERRUPT_DEVICE==1
 		case plat:
-			plat_register_interrupt_handler(id, handler);
+			ic_register_interrupt_handler(id, handler);
 			break;
 #endif
 		default:
@@ -45,15 +42,13 @@ status_t link_interrupt(int_module_t target, unsigned int id, void (*handler)(vo
 	return ret;
 }
 
-void plat_panic_handler();
-
 status_t unlink_interrupt(int_module_t target, unsigned int id)
 {
 	status_t ret = success;
 	switch(target)
 	{
 		case arch:
-			arch_register_interrupt_handler(id, &plat_panic_handler);
+			arch_register_interrupt_handler(id, &arch_panic_handler);
 			break;
 #if LOCAL_INTERRUPT_DEVICE==1
 		case local:
@@ -62,7 +57,7 @@ status_t unlink_interrupt(int_module_t target, unsigned int id)
 #endif
 #if PLAT_INTERRUPT_DEVICE==1
 		case plat:
-			plat_register_interrupt_handler(id, &plat_panic_handler);
+			ic_register_interrupt_handler(id, &plat_panic_handler);
 			break;
 #endif
 		default:

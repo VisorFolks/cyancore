@@ -5,7 +5,7 @@
  * File Name		: project.c
  * Description		: This file consists of project srouces
  * Primary Author	: Rahul Goyal [rhgoyal01@gmail.com]
- * Organisation		: Cyancore Core-Team
+ * Organisation		: Cyancore Contributor
  */
 
 #include <stdio.h>

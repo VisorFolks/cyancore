@@ -42,7 +42,7 @@ status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 
 	port->pin = pinID;
 	port->port = portID;
-	mres = arch_machine_call(fetch_dp, gpio, portID, 0);
+	arch_machine_call(fetch_dp, gpio, portID, 0, &mres);
 	if(mres.status != success)
 		return mres.status;
 	dp = (gpio_module_t *)mres.p;
@@ -50,7 +50,7 @@ status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 	return success;
 }
 
-status_t gpio_pin_mode(gpio_port_t *port, gpio_mode_t mode)
+status_t gpio_pin_mode(const gpio_port_t *port, gpio_mode_t mode)
 {
 	uintptr_t pbaddr;
 	assert(port);
@@ -85,28 +85,28 @@ status_t gpio_pin_free(gpio_port_t *port)
 	return success;
 }
 
-status_t gpio_pin_set(gpio_port_t *port)
+status_t gpio_pin_set(const gpio_port_t *port)
 {
 	assert(port);
 	MMIO8(port->pbaddr + PORT_OFFSET) |= (1 << port->pin);
 	return success;
 }
 
-status_t gpio_pin_clear(gpio_port_t *port)
+status_t gpio_pin_clear(const gpio_port_t *port)
 {
 	assert(port);
 	MMIO8(port->pbaddr + PORT_OFFSET) &= ~(1 << port->pin);
 	return success;
 }
 
-status_t gpio_pin_toggle(gpio_port_t *port)
+status_t gpio_pin_toggle(const gpio_port_t *port)
 {
 	assert(port);
 	MMIO8(port->pbaddr + PORT_OFFSET) ^= (1 << port->pin);
 	return success;
 }
 
-bool gpio_pin_read(gpio_port_t *port)
+bool gpio_pin_read(const gpio_port_t *port)
 {
 	assert(port);
 	return (MMIO8(port->pbaddr + PIN_OFFSET) & (1 << port->pin)) ? true : false;
@@ -132,7 +132,7 @@ status_t gpio_port_alloc(gpio_port_t *port, uint8_t portID)
 
 	port->pin = (uint8_t)((uint16_t)(1 << BIT) - 1);
 	port->port = portID;
-	mres = arch_machine_call(fetch_dp, gpio, portID, 0);
+	arch_machine_call(fetch_dp, gpio, portID, 0, &mres);
 	if(mres.status != success)
 		return mres.status;
 	dp = (gpio_module_t *)mres.p;
@@ -140,7 +140,7 @@ status_t gpio_port_alloc(gpio_port_t *port, uint8_t portID)
 	return success;
 }
 
-status_t gpio_port_mode(gpio_port_t *port, gpio_mode_t mode)
+status_t gpio_port_mode(const gpio_port_t *port, gpio_mode_t mode)
 {
 	uintptr_t pbaddr;
 	assert(port);
@@ -175,7 +175,7 @@ status_t gpio_port_free(gpio_port_t *port)
 	return success;
 }
 
-status_t gpio_port_write(gpio_port_t *port, gpio_parallel_t val)
+status_t gpio_port_write(const gpio_port_t *port, gpio_parallel_t val)
 {
 	assert(port);
 	// MegaAVR has 8-bit i/o modules, value to write should be 8-bit wide
@@ -183,7 +183,7 @@ status_t gpio_port_write(gpio_port_t *port, gpio_parallel_t val)
 	return success;
 }
 
-status_t gpio_port_read(gpio_port_t *port, gpio_parallel_t *val)
+status_t gpio_port_read(const gpio_port_t *port, gpio_parallel_t *val)
 {
 	assert(port);
 	// MegaAVR has 8-bit i/o modules, value returned is 8-bit wide

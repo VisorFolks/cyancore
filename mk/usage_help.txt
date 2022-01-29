@@ -2,7 +2,8 @@
 Usage   : make <option> <command>
 option  : {list | get_all_tc | get_arm_tc | get_avr_tv |
            get_riscv_tc | help} or <Project Name>
-command : default (implicit) | clean
+command : default (implicit) | clean | check | cyancore |
+	  copy_to_remote clean_remote | all_projects
 ----------------------------------------------------------
 > Project Name:
 * The project name is the name of directory under
@@ -20,4 +21,17 @@ command : default (implicit) | clean
 * This option fetches AVR-8 toolchain.
 > get_riscv_tc:
 * This option fetched RISC-V toolchain.
+
+> cyancore (avoid if not needed):
+* This command builds the project with 1 thread
+> check:
+* This command performs cppcheck on code base for
+  the project.
+> copy_to_remote:
+* This command copies the bin, elf and hex to remote
+  machine.
+> clean_remote:
+* This command removes folders from remote machine.
+> all_projects:
+* This command build all the projects listed by make list
 ==========================================================
