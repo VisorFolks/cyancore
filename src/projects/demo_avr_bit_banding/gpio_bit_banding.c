@@ -11,14 +11,14 @@
 /* 8bit Register */
 typedef struct reg8
 {
-	char b0:1;
-	char b1:1;
-	char b2:1;
-	char b3:1;
-	char b4:1;
-	char b5:1;
-	char b6:1;
-	char b7:1;
+	unsigned char b0:1;
+	unsigned char b1:1;
+	unsigned char b2:1;
+	unsigned char b3:1;
+	unsigned char b4:1;
+	unsigned char b5:1;
+	unsigned char b6:1;
+	unsigned char b7:1;
 } reg8_t;
 
 
