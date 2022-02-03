@@ -16,7 +16,18 @@
 
 #include <driver.h>
 #include <driver/console.h>
-#include <syslog/syslog_config.h>
+
+#if SYSLOG_MAX_CALLBACKS < 1
+ERROR(SYSLOG_MAX_CALLBACKS shall be greater than 0)
+#endif
+
+#if SYSLOG_BUFFER_LEN < 256
+ERROR(SYSLOG_BUFFER_LEN shall be greater than 255 bytes)
+#endif
+
+#if SYSLOG_COLORED_LOG
+ERROR(SYSLOG_COLORED_LOG not supported yet in cyancore)
+#endif
 
 #if SYSLOG_SHOW_FILENAME_LINENO
 #define SYSLOG_FMT_DEF		"%15s : [ %s ] : %s : %d: %s\r\n"	///> "Agent" : [ LOG_LEVEL ] : File_Name : Line_Number : "Output String"

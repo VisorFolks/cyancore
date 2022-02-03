@@ -17,7 +17,6 @@ LD_SUPPLEMENT	+= $(DRIVER_PATH)/driver.ld.sx
 include $(DRIVER_PATH)/interrupt/build.mk
 include $(DRIVER_PATH)/watchdog/build.mk
 include $(DRIVER_PATH)/console/build.mk
-include $(DRIVER_PATH)/syslog/build.mk
 
 #==========< User Config Drivers >==========#
 
