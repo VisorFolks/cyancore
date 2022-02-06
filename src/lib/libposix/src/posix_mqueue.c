@@ -43,9 +43,9 @@ static int s_queue_write(mqd_t mqdes, const void * buff, size_t size, unsigned m
 
 	RET_ERR_IF_FALSE((p_mqd_section->attr.mq_flags & O_RDONLY), -ENOTSUP, int);
 
-	memcpy((void *)p_mqd_section->kernel_buff_send, buff, size);
+	memcpy((void *)p_mqd_section->kernel_buff, buff, size);
 
-	super_call(scall_id_mq_send, p_mqd_section->kernel_buff_send, size, msg_prio, &mq_sys_ret);
+	super_call(scall_id_mq_send, p_mqd_section->id, size, msg_prio, &mq_sys_ret);
 	RET_ERR_IF_FALSE(mq_sys_ret.status == SUCCESS, -EBADF, int);
 
 	return SUCCESS;
@@ -58,10 +58,10 @@ static int s_queue_read(mqd_t mqdes, const void * buff, size_t size)
 
 	RET_ERR_IF_FALSE((p_mqd_section->attr.mq_flags & O_WRONLY), -ENOTSUP, int);
 
-	super_call(scall_id_mq_receive, p_mqd_section->kernel_buff_recv, size, RST_VAL, &mq_sys_ret);
+	super_call(scall_id_mq_receive, p_mqd_section->id, size, RST_VAL, &mq_sys_ret);
 	RET_ERR_IF_FALSE(mq_sys_ret.status == SUCCESS, -EBADF, int);
 
-	memcpy((void *)buff, (void *) (mq_sys_ret.p), size);
+	memcpy((void *)buff, (void *) (p_mqd_section->kernel_buff), size);
 
 	return SUCCESS;
 }
@@ -146,6 +146,9 @@ mqd_t mq_open( 	const char * name,
 	{
 		/* Get the queue ID from kernel handler as mq_sys_ret.size */
 		p_mqd_section->id = mq_sys_ret.size;
+
+		/* Get kernel buffer address */
+		p_mqd_section->kernel_buff = mq_sys_ret.p;
 
 		/* Set queue name as specified */
 		memcpy(&(p_mqd_section->mq_name), name, name_len);
