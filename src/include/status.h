@@ -64,7 +64,7 @@ typedef enum status
 	error_system_irq_unlink_fail	= -0x0b02,
 /* Network related error */
 	error_net			= -0x0c00,
-	error_net_con_timeout		= -0x0c001,
+	error_net_con_timeout		= -0x0c01,
 /* User space related error */
 	error_user			= -0x0d00,
 /* IO related error */
