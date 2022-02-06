@@ -33,9 +33,6 @@
 #endif
 
 #if posixconfigENABLE_SEM_T == 1
-    typedef sem_internal_t             PosixSemType_t;
-#else
-    typedef void                       * PosixSemType_t;
 #endif
 
 #if posixconfigENABLE_PTHREAD_MUTEXATTR_T == 1

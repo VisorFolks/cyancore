@@ -21,7 +21,11 @@
 /**
  * @brief Semaphore type.
  */
-typedef PosixSemType_t sem_t;
+typedef struct sem
+{
+        size_t id;
+        size_t value;
+}sem_t;
 
 /**
  * @brief Destroy an unnamed semaphore.
