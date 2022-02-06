@@ -1,4 +1,4 @@
-# ![Cyancore](./icons/cyancore_50x50.png)  Cyancore Framework
+# ![Cyancore](https://github.com/VisorFolks/vf_artifacts/blob/stable/cyancore/icons/cyancore_50x50.png?raw=true)  Cyancore Framework
 ###### *A unified software platform for embedded system projects ...*
 ---
 
