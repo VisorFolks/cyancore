@@ -36,19 +36,6 @@ static int s_find_queue_in_desc_list(char * name, mqd_section_t * p_mqd_section)
 	return SUCCESS;
 }
 
-static int s_queue_desc_allocator(size_t index, mqd_section_t ** p_mqd_section)
-{
-	(void)(index);
-	(void)(p_mqd_section);
-	return SUCCESS;
-}
-
-static int s_queue_desc_deallocator(mqd_section_t ** p_mqd_section)
-{
-	(void)(p_mqd_section);
-	return SUCCESS;
-}
-
 static int s_queue_write(mqd_t mqdes, const void * buff, size_t size, unsigned msg_prio)
 {
 	mqd_section_t * p_mqd_section = (mqd_section_t *) mqdes;
@@ -131,42 +118,37 @@ mqd_t mq_open( 	const char * name,
 	/* Grab resource access else return EBUSY */
 	RET_ERR_IF_FALSE( s_mq_acquire_lock() == SUCCESS, -EBUSY, mqd_t);
 
-	/* Find available slot in descriptor table else return ENOSPC */
-	if(s_queue_desc_allocator(g_mq_id_ctr++, &p_mqd_section ) == SUCCESS)
+	if (attr != NULL)
 	{
-		if (attr != NULL)
-		{
-			/* Fill user attributes */
-			memcpy(&(p_mqd_section->attr), attr, sizeof(mq_attr_t));
-		}
-		else
-		{	/* Fill default attribute vals */
-			p_mqd_section->attr.mq_maxmsg 	= posixconfigMQ_MAX_MESSAGES;
-			p_mqd_section->attr.mq_msgsize 	= posixconfigMQ_MAX_SIZE;
-		}
+		/* Fill user attributes */
+		memcpy(&(p_mqd_section->attr), attr, sizeof(mq_attr_t));
+	}
+	else
+	{	/* Fill default attribute vals */
+		p_mqd_section->attr.mq_maxmsg 	= posixconfigMQ_MAX_MESSAGES;
+		p_mqd_section->attr.mq_msgsize 	= posixconfigMQ_MAX_SIZE;
+	}
 
-		p_mqd_section->attr.mq_flags = oflag;
+	p_mqd_section->attr.mq_flags = oflag;
 
-		/* Perform super_call */
-		super_call(scall_id_mq_open,
-			(p_mqd_section->attr.mq_maxmsg * p_mqd_section->attr.mq_msgsize),
-			(unsigned int) &(p_mqd_section->kernel_buff_send),
-			(unsigned int) &(p_mqd_section->kernel_buff_recv),
-			&mq_sys_ret
-			);
-		if (mq_sys_ret.status != SUCCESS)
-		{
-			p_mqd_section = (mqd_section_t *) -ENOTSUP;
-		}
-		else
-		{
-			/* Set queue name as specified */
-			memcpy(&(p_mqd_section->mq_name), name, name_len);
-		}
+	/* Perform super_call */
+	super_call(scall_id_mq_open,
+		(p_mqd_section->attr.mq_maxmsg * p_mqd_section->attr.mq_msgsize),
+		RST_VAL,
+		RST_VAL,
+		&mq_sys_ret
+		);
+	if (mq_sys_ret.status != SUCCESS)
+	{
+		p_mqd_section = (mqd_section_t *) -ENOTSUP;
 	}
 	else
 	{
-		DO_NOTHING;
+		/* Get the queue ID from kernel handler as mq_sys_ret.size */
+		p_mqd_section->id = mq_sys_ret.size;
+
+		/* Set queue name as specified */
+		memcpy(&(p_mqd_section->mq_name), name, name_len);
 	}
 
 	RET_ERR_IF_FALSE( s_mq_release_lock() == SUCCESS, -EBUSY, mqd_t);
@@ -191,15 +173,14 @@ int mq_close( mqd_t mqdes )
 		memset(&((mqd_section_t *) mqdes)->attr, RST_VAL, sizeof(mq_attr_t));
 
 		/* Perform Super Call */
-		super_call(scall_id_mq_close, ((mqd_section_t *) mqdes)->kernel_buff_send, RST_VAL, RST_VAL, &mq_sys_ret);
+		super_call(scall_id_mq_close, ((mqd_section_t *) mqdes)->id, RST_VAL, RST_VAL, &mq_sys_ret);
 		if (mq_sys_ret.status != SUCCESS)
 		{
 			err = -ENOTSUP;
 		}
 		else
 		{
-			/* Deallocate the descriptor section from user space */
-			err = s_queue_desc_deallocator((mqd_section_t **) &mqdes);
+			DO_NOTHING;
 		}
 	}
 	else

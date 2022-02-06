@@ -16,11 +16,6 @@
 #include <posix/utils.h>
 
 /*********************
- * Static Variable
- ********************/
-static size_t sem_id_gen = 0;
-
-/*********************
  * Static Functions
  ********************/
 static int s_sem_wait( sem_t * sem )
@@ -29,8 +24,11 @@ static int s_sem_wait( sem_t * sem )
 	{
 		.status = SUCCESS
 	};
+	/* Assertion checks */
 	ASSERT_IF_FALSE(sem != NULL, int);
+	ASSERT_IF_FALSE(sem->id != RST_VAL, int);
 
+	/* Perform super_call */
 	super_call(scall_id_sem_wait, sem->id, RST_VAL, RST_VAL, &sem_sys_ret);
 
 	return sem_sys_ret.status;
@@ -45,12 +43,16 @@ int sem_destroy( sem_t * sem )
 	{
 		.status = SUCCESS
 	};
+	/* Assertion checks */
 	ASSERT_IF_FALSE(sem != NULL, int);
+	ASSERT_IF_FALSE(sem->id != RST_VAL, int);
 
+	/* Perform super_call */
 	super_call(scall_id_sem_destroy, sem->id, RST_VAL, RST_VAL, &sem_sys_ret);
 	RET_ERR_IF_FALSE(sem_sys_ret.status == SUCCESS, sem_sys_ret.status, int);
 
-	sem->id = -1;
+	/* Reset semaphore ID */
+	sem->id = RST_VAL;
 
 	return SUCCESS;
 }
@@ -61,38 +63,39 @@ int sem_getvalue( sem_t * sem, int * sval )
 	{
 		.status = SUCCESS
 	};
+	/* Assertion checks */
 	ASSERT_IF_FALSE(sem != NULL, int);
 
+	/* Perform super_call */
 	super_call(scall_id_sem_getvalue, sem->id, RST_VAL, RST_VAL, &sem_sys_ret);
 	RET_ERR_IF_FALSE(sem_sys_ret.status == SUCCESS, sem_sys_ret.status, int);
 
+	/* Copy sem value */
 	sem->value = (int) sem_sys_ret.p;
 	*sval = sem->value;
 
 	return SUCCESS;
 }
 
-int sem_init( sem_t * sem,
-              int pshared _UNUSED,
-              unsigned value )
+int sem_init( sem_t * sem, int pshared _UNUSED, unsigned value )
 {
 	sret_t sem_sys_ret=
 	{
 		.status = SUCCESS
 	};
-
+	/* Assertion checks */
 	ASSERT_IF_FALSE(sem != NULL, int);
+	ASSERT_IF_FALSE(sem->id == RST_VAL, int);
 
-	sem_id_gen++;
-
-	super_call(scall_id_sem_init, sem_id_gen, value, RST_VAL, &sem_sys_ret);
+	/* Perform super_call */
+	super_call(scall_id_sem_init, value, RST_VAL, RST_VAL, &sem_sys_ret);
 	if (sem_sys_ret.status != SUCCESS)
 	{
-		sem_id_gen--;
 		return sem_sys_ret.status;
 	}
 
-	sem->id = sem_id_gen;
+	/* Get sem id as sem_sys_ret.size param */
+	sem->id = sem_sys_ret.size;
 
 	return SUCCESS;
 }
@@ -103,8 +106,11 @@ int sem_post( sem_t * sem )
 	{
 		.status = SUCCESS
 	};
+	/* Assertion checks */
 	ASSERT_IF_FALSE(sem != NULL, int);
+	ASSERT_IF_FALSE(sem->id != RST_VAL, int);
 
+	/* Perform super_call */
 	super_call(scall_id_sem_post, sem->id, RST_VAL, RST_VAL, &sem_sys_ret);
 
 	return sem_sys_ret.status;
@@ -113,17 +119,20 @@ int sem_post( sem_t * sem )
 int sem_timedwait( sem_t * sem, const struct timespec * abstime )
 {
 	ASSERT_IF_FALSE(sem != NULL, int);
+	ASSERT_IF_FALSE(sem->id != RST_VAL, int);
 
 	int err = SUCCESS;
 	TickType_t abs_ticks;
 
 	if (abstime == NULL)
 	{
+		/* Check if in ISR context */
 		abs_ticks = IS_ISR() ? RST_VAL : posixconfigMAX_DELAY;
 	}
 
 	else
 	{
+		/* Assertion checks */
 		ASSERT_IF_FALSE ( UTILS_TimespecToTicks(abstime, &abs_ticks) == SUCCESS, ssize_t );
 	}
 
