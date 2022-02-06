@@ -16,6 +16,11 @@
 #include <posix/utils.h>
 
 /*********************
+ * Static Variable
+ ********************/
+static size_t sem_id_gen = 0;
+
+/*********************
  * Static Functions
  ********************/
 static int s_sem_wait( sem_t * sem )
@@ -26,7 +31,7 @@ static int s_sem_wait( sem_t * sem )
 	};
 	ASSERT_IF_FALSE(sem != NULL, int);
 
-	super_call(scall_id_sem_wait, (uintptr_t) *sem, RST_VAL, RST_VAL, &sem_sys_ret);
+	super_call(scall_id_sem_wait, sem->id, RST_VAL, RST_VAL, &sem_sys_ret);
 
 	return sem_sys_ret.status;
 }
@@ -42,16 +47,15 @@ int sem_destroy( sem_t * sem )
 	};
 	ASSERT_IF_FALSE(sem != NULL, int);
 
-	super_call(scall_id_sem_destroy, (uintptr_t) *sem, RST_VAL, RST_VAL, &sem_sys_ret);
+	super_call(scall_id_sem_destroy, sem->id, RST_VAL, RST_VAL, &sem_sys_ret);
 	RET_ERR_IF_FALSE(sem_sys_ret.status == SUCCESS, sem_sys_ret.status, int);
 
-	*sem = (sem_t) NULL;
+	sem->id = -1;
 
 	return SUCCESS;
 }
 
-int sem_getvalue( sem_t * sem,
-                  int * sval )
+int sem_getvalue( sem_t * sem, int * sval )
 {
 	sret_t sem_sys_ret=
 	{
@@ -59,10 +63,11 @@ int sem_getvalue( sem_t * sem,
 	};
 	ASSERT_IF_FALSE(sem != NULL, int);
 
-	super_call(scall_id_sem_getvalue, (uintptr_t) *sem, RST_VAL, RST_VAL, &sem_sys_ret);
+	super_call(scall_id_sem_getvalue, sem->id, RST_VAL, RST_VAL, &sem_sys_ret);
 	RET_ERR_IF_FALSE(sem_sys_ret.status == SUCCESS, sem_sys_ret.status, int);
 
-	*sval = (int) sem_sys_ret.p;
+	sem->value = (int) sem_sys_ret.p;
+	*sval = sem->value;
 
 	return SUCCESS;
 }
@@ -78,10 +83,16 @@ int sem_init( sem_t * sem,
 
 	ASSERT_IF_FALSE(sem != NULL, int);
 
-	super_call(scall_id_sem_init, value, RST_VAL, RST_VAL, &sem_sys_ret);
-	RET_ERR_IF_FALSE(sem_sys_ret.status == SUCCESS, sem_sys_ret.status, int);
+	sem_id_gen++;
 
-	*sem = (sem_t) sem_sys_ret.p;
+	super_call(scall_id_sem_init, sem_id_gen, value, RST_VAL, &sem_sys_ret);
+	if (sem_sys_ret.status != SUCCESS)
+	{
+		sem_id_gen--;
+		return sem_sys_ret.status;
+	}
+
+	sem->id = sem_id_gen;
 
 	return SUCCESS;
 }
@@ -94,13 +105,12 @@ int sem_post( sem_t * sem )
 	};
 	ASSERT_IF_FALSE(sem != NULL, int);
 
-	super_call(scall_id_sem_post, (uintptr_t) *sem, RST_VAL, RST_VAL, &sem_sys_ret);
+	super_call(scall_id_sem_post, sem->id, RST_VAL, RST_VAL, &sem_sys_ret);
 
 	return sem_sys_ret.status;
 }
 
-int sem_timedwait( sem_t * sem,
-                   const struct timespec * abstime )
+int sem_timedwait( sem_t * sem, const struct timespec * abstime )
 {
 	ASSERT_IF_FALSE(sem != NULL, int);
 

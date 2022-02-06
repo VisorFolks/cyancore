@@ -360,7 +360,7 @@ int mq_timedsend( mqd_t mqdes,
 					else
 					{
 						os_delay_ticks((const TickType_t)DELAY_MIN_TICK);
-						abs_ticks--;;
+						abs_ticks--;
 					}
 				}
 			}
