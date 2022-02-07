@@ -1,8 +1,6 @@
 # ![Cyancore](https://github.com/VisorFolks/vf_artifacts/blob/stable/cyancore/icons/cyancore_50x50.png?raw=true)  Cyancore
 *An unified software platform for embedded system projects ...*
 
----
-
 > **Version (arch:2 | major:4 | minor:2): 1.2.0**
 
 [![GitHub CI](https://github.com/VisorFolks/cyancore/actions/workflows/github_ci.yml/badge.svg)](https://github.com/VisorFolks/cyancore/actions/workflows/github_ci.yml)
