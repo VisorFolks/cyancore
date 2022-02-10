@@ -17,6 +17,8 @@
 /* C standard library includes. */
 #include <stdint.h>
 
+#include <cc_posix_config.h>
+
 /**
  * @brief Used for system times in clock ticks or CLOCKS_PER_SEC.
  *
@@ -183,3 +185,10 @@
 #if !defined( posixconfigENABLE_OFF_T ) || ( posixconfigENABLE_OFF_T == 1 )
 	typedef long int 		off_t;
 #endif
+
+#if( posixconfigUSE_16_BIT_TICKS == 1 )
+	typedef uint16_t TickType_t;
+#else
+	typedef size_t TickType_t;
+#endif
+#define posixconfigMAX_DELAY			(TickType_t)(~0)

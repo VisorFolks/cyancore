@@ -16,7 +16,6 @@
 
 /* CC+POSIX includes. */
 #include <posix/time.h>
-#include <cc_posix_types.h>
 
 /**
  * @brief Semaphore type.

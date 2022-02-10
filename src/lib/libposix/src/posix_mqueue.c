@@ -23,7 +23,7 @@
 size_t g_mq_id_ctr = RST_VAL;
 
 pthread_mutex_t g_mq_mutex;
-pthread_mutexattr_t g_mq_mutex_attr = NULL;
+pthread_mutexattr_t g_mq_mutex_attr;
 
 /*********************
  * Static Functions
