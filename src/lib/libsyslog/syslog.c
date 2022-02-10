@@ -8,7 +8,7 @@
  * Organisation		: Cyancore Core-Team
  */
 
-#include <syslog/syslog.h>
+#include <syslog.h>
 #include <string.h>
 
 #define MEMSET_CLEAR	0x00
@@ -184,7 +184,7 @@ status_t syslog_log(const char * agent, const char * fname _UNUSED, int line _UN
 	}
 	if (log_level >= syslog_ctrl.sys_log_level)
 	{
-		snprintf(syslog_buffer, SYSLOG_BUFFER_LEN, syslog_ctrl.syslog_fmt, agent_str, syslog_loglevel_table[log_level],
+		snprintf(syslog_buffer, (SYSLOG_BUFFER_LEN - 1), syslog_ctrl.syslog_fmt, agent_str, syslog_loglevel_table[log_level],
 #ifdef 	SYSLOG_SHOW_FILENAME_LINENO
 		fname, line,
 #endif
@@ -193,7 +193,7 @@ status_t syslog_log(const char * agent, const char * fname _UNUSED, int line _UN
 		{
 			if (syslog_ctrl.syslog_cb_table[index] != NULL)
 			{
-				syslog_ctrl.syslog_cb_table[index](syslog_buffer, strlen(syslog_buffer));
+				syslog_ctrl.syslog_cb_table[index](syslog_buffer, strnlen(syslog_buffer, SYSLOG_BUFFER_LEN));
 			}
 		}
 	}

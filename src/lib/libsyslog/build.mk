@@ -8,7 +8,14 @@
 # Organisation		: Cyancore Core-Team
 #
 
-SYSLOG_PATH	:= $(GET_PATH)
+LIBSYSLOG_PATH	:= $(GET_PATH)
+LIB_OBJS	:=
 
-DIR		:= $(SYSLOG_PATH)
-include mk/obj.mk
+LIB		+= libsyslog.a
+LIB_INCLUDE	+= $(LIBSYSLOG_PATH)/include
+DEP_LIB_ARG	+= -lsyslog
+
+include $(LIBSYSLOG_PATH)/config.mk
+
+DIR		:= $(LIBSYSLOG_PATH)
+include mk/lib.mk

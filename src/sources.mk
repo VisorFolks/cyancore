@@ -56,7 +56,7 @@ PROJECT_INCLUDE	:=
 LIB_INCLUDE	:=
 
 # Below order needs to be strictly maintained
-include $(SRC)/projects/$(PROJECT)/build.mk
+include projects/$(PROJECT)/build.mk
 include $(SRC)/platform/build.mk
 include $(SRC)/arch/build.mk
 include $(SRC)/driver/build.mk

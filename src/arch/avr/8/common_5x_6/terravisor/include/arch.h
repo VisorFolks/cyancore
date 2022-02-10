@@ -13,6 +13,7 @@
 #define _ARCH_H_
 
 #include <plat_arch.h>
+#include <avr.h>
 #include <mmio.h>
 
 /**
