@@ -18,7 +18,7 @@ include mk/mk_helper.mk
 
 P_TARGETS	+= default cyancore check version copy_to_remote clean_remote
 T_ALLOWLIST	+= help list clean all_projects
-PROJECT_LIST	:= $(shell ls $(SRC)/projects/ -I *.template)
+PROJECT_LIST	:= $(shell ls projects/ -I *.template)
 
 .PHONY: aux_target
 
@@ -66,7 +66,7 @@ ifeq ($(PROJECT),)
 $(info < x > Project name was not specified...)
 $(info < ! > Please try running `make help` for more details)
 $(error < x > Build Failed!)
-else ifeq ($(filter $(PROJECT), $(shell ls $(SRC)/projects)),)
+else ifeq ($(filter $(PROJECT), $(shell ls projects)),)
 $(info < x > Invalid project name...)
 $(info < ! > Run `make list` to get list of projects)
 $(error < x > Build Failed!)

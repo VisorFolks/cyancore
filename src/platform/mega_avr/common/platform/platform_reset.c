@@ -27,7 +27,9 @@ extern uint8_t reset_syndrome;
  */
 reset_t platform_get_reset_syndrome()
 {
-	if(reset_syndrome & 1)		/* Power on Reset */
+	if(!reset_syndrome)
+		return not_reset;
+	else if(reset_syndrome & 1)		/* Power on Reset */
 		return power_on_reset;
 	else if(reset_syndrome & 2)	/* External Reset */
 		return external_reset;
@@ -58,6 +60,8 @@ _WEAK void brownout_reset_handler()
  */
 void platform_reset_handler(reset_t rsyn)
 {
+	if(rsyn == not_reset)
+		return;
 	if((rsyn == power_on_reset) || (rsyn == external_reset))
 		return;
 	else if(rsyn ==  brownout_reset)
