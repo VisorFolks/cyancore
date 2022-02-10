@@ -25,10 +25,10 @@
  * @brief Scheduling parameters required for implementation of each supported
  * scheduling policy.
  */
-struct sched_param
+typedef struct sched_param
 {
     int sched_priority; /**< Process or thread execution scheduling priority. */
-};
+}sched_param_t;
 
 /**
  * @brief Get priority limit (max).

@@ -15,6 +15,13 @@
 #endif
 
 /*******************
+ * PTHREAD configs
+ *******************/
+#ifndef posixconfigPTHREAD_MIN_STACK_SIZE
+#define posixconfigPTHREAD_MIN_STACK_SIZE	(128)
+#endif
+
+/*******************
  * MQUEUE configs
  *******************/
 

@@ -18,6 +18,7 @@
 #include <stdint.h>
 
 #include <cc_posix_config.h>
+#include <posix/sched.h>
 
 /**
  * @brief Used for system times in clock ticks or CLOCKS_PER_SEC.
@@ -63,7 +64,10 @@
 #if !defined( posixconfigENABLE_PTHREAD_ATTR_T ) || ( posixconfigENABLE_PTHREAD_ATTR_T == 1 )
 	typedef struct pthread_attr
 	{
-		/* pthread_attr structure place holder */
+		int		detach_state;
+		int		policy;
+		sched_param_t	sched_param;
+		size_t		stacksize;
 	}pthread_attr_t;
 #endif
 

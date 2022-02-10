@@ -19,6 +19,8 @@
 #include "posix/sched.h"
 #include "posix/time.h"
 
+#include <cc_posix_config.h>
+
 /**
  * @name pthread detach state.
  */
@@ -90,8 +92,7 @@ int pthread_attr_destroy( pthread_attr_t * attr );
  *
  * @retval 0 - Upon successful completion.
  */
-int pthread_attr_getdetachstate( const pthread_attr_t * attr,
-                                 int * detachstate );
+int pthread_attr_getdetachstate( const pthread_attr_t * attr, int * detachstate );
 
 /**
  * @brief Get schedparam attribute.
@@ -100,8 +101,7 @@ int pthread_attr_getdetachstate( const pthread_attr_t * attr,
  *
  * @retval 0 - Upon successful completion.
  */
-int pthread_attr_getschedparam( const pthread_attr_t * attr,
-                                struct sched_param * param );
+int pthread_attr_getschedparam( const pthread_attr_t * attr, sched_param_t * param );
 
 /**
  * @brief Get stacksize attribute.
