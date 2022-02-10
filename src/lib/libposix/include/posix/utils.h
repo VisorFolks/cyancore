@@ -23,7 +23,7 @@
 #define DO_NOTHING
 #define RST_VAL				        (0)
 #define ASSERT_IF_FALSE(con, type)	        RET_ERR_IF_FALSE(con, -EINVAL, type)
-#define RET_ERR_IF_FALSE(con, ret, type)	if(!(con)){return (type) ret;}
+#define RET_ERR_IF_FALSE(con, ret, type)	if(!(con)) return (type) ret
 #define IS_ISR()			        true
 
 /**
