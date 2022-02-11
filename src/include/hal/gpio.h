@@ -18,32 +18,13 @@
 typedef uint64_t gpio_parallel_t;
 
 typedef enum gpio_port_name
-{	PORTA,
-	PORTB,
-	PORTC,
-	PORTD,
-	PORTE,
-	PORTF,
-	PORTG,
-	PORTH,
-	PORTI,
-	PORTJ,
-	PORTK,
-	PORTL,
-	PORTM,
-	PORTN,
-	PORTO,
-	PORTP,
-	PORTQ,
-	PORTR,
-	PORTS,
-	PORTT,
-	PORTU,
-	PORTV,
-	PORTW,
-	PORTX,
-	PORTY,
-	PORTZ
+{	PORTA,	PORTB, PORTC, PORTD,
+	PORTE,  PORTF, PORTG, PORTH,
+	PORTI,	PORTJ, PORTK, PORTL,
+	PORTM,	PORTN, PORTO, PORTP,
+	PORTQ,	PORTR, PORTS, PORTT,
+	PORTU,	PORTV, PORTW, PORTX,
+	PORTY,	PORTZ
 }gpio_port_name_t;
 
 typedef enum gpio_mode
