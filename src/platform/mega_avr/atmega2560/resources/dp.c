@@ -12,6 +12,7 @@
 #include <status.h>
 #include <resource.h>
 #include <plat_mem.h>
+#include <hal/gpio.h>
 
 #ifndef FCLK
 #define FCLK 0
@@ -45,77 +46,77 @@ module_t uart0 =
 
 gpio_module_t port0 =
 {
-	.id = gpio | 0,
+	.id = gpio | PORTA,
 	.baddr = 0x20,
 	.stride = 3
 };
 
 gpio_module_t port1 =
 {
-	.id = gpio | 1,
+	.id = gpio | PORTB,
 	.baddr = 0x23,
 	.stride = 3
 };
 
 gpio_module_t port2 =
 {
-	.id = gpio | 2,
+	.id = gpio | PORTC,
 	.baddr = 0x26,
 	.stride = 3
 };
 
 gpio_module_t port3 =
 {
-	.id = gpio | 3,
+	.id = gpio | PORTD,
 	.baddr = 0x29,
 	.stride = 3
 };
 
 gpio_module_t port4 =
 {
-	.id = gpio | 4,
+	.id = gpio | PORTE,
 	.baddr = 0x2c,
 	.stride = 3
 };
 
 gpio_module_t port5 =
 {
-	.id = gpio | 5,
+	.id = gpio | PORTF,
 	.baddr = 0x2f,
 	.stride = 3
 };
 
 gpio_module_t port6 =
 {
-	.id = gpio | 6,
+	.id = gpio | PORTG,
 	.baddr = 0x32,
 	.stride = 3
 };
 
 gpio_module_t port7 =
 {
-	.id = gpio | 7,
+	.id = gpio | PORTH,
 	.baddr = 0x100,
 	.stride = 3
 };
 
 gpio_module_t port8 =
 {
-	.id = gpio | 8,
+	.id = gpio | PORTJ,
 	.baddr = 0x103,
 	.stride = 3
 };
 
 gpio_module_t port9 =
 {
-	.id = gpio | 9,
+	.id = gpio | PORTK,
 	.baddr = 0x106,
 	.stride = 3
 };
 
 gpio_module_t port10 =
 {
-	.id = gpio | 10,
+	.id = gpio | PORTL,
 	.baddr = 0x109,
 	.stride = 3
 };
