@@ -42,10 +42,10 @@ void delay(unsigned long d)
 
 void play()
 {
-	static int i = 0;
+	static unsigned int i = 0;
 	wdog_guard(2, true, NULL);
 	gpio_pin_toggle(&onboad_led);
-	printf("%c]", progress[i++ % strlen(progress)]);
+	printf("%c]", progress[(i++) % strlen(progress)]);
 	wdog_hush();
 	delay(500000);
 	printf("\b\b");
