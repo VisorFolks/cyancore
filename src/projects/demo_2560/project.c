@@ -4,8 +4,8 @@
  *
  * File Name		: project.c
  * Description		: This file consists of project srouces
- * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
- * Organisation		: Cyancore Core-Team
+ * Primary Author	: Rahul Goyal [rhgoyal01@gmail.com]
+ * Organisation		: Cyancore Contributor
  */
 
 #include <stdio.h>
@@ -17,15 +17,15 @@
 #include <driver/watchdog.h>
 #include <hal/gpio.h>
 
-gpio_port_t onboad_led;
+gpio_port_t onboard_led;
 
 void plug()
 {
 	bootstrap();
 	driver_setup_all();
-	gpio_pin_alloc(&onboad_led, PORTB, 5);
-	gpio_pin_mode(&onboad_led, out);
-	gpio_pin_clear(&onboad_led);
+	gpio_pin_alloc(&onboard_led, PORTB, 7);
+	gpio_pin_mode(&onboard_led, out);
+	gpio_pin_clear(&onboard_led);
 	printf("Demo Program!\n");
 	printf("< ! > Running Blinky ... [");
 	return;
@@ -43,8 +43,8 @@ void delay(unsigned long d)
 void play()
 {
 	static int i = 0;
-	wdog_guard(2, true, NULL);
-	gpio_pin_toggle(&onboad_led);
+	wdog_guard(3, true, NULL);
+	gpio_pin_toggle(&onboard_led);
 	printf("%c]", progress[i++ % strlen(progress)]);
 	wdog_hush();
 	delay(500000);
