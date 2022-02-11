@@ -19,7 +19,7 @@ extern "C"
 /* Outside declaration of the member function of class onBoardLed */
 void onBoardLed::setup()
 {
-	gpio_pin_alloc(&led13, 0, 5);
+	gpio_pin_alloc(&led13, PORTB, 5);
 	gpio_pin_mode(&led13, out);
 	gpio_pin_clear(&led13);
 }

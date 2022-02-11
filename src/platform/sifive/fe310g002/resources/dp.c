@@ -12,6 +12,7 @@
 #include <status.h>
 #include <resource.h>
 #include <plat_mem.h>
+#include <hal/gpio.h>
 
 #ifndef FCLK
 #define FCLK 0
@@ -63,7 +64,7 @@ module_t prci0 =
 
 gpio_module_t port0 =
 {
-	.id = gpio | 0,
+	.id = gpio | PORTA,
 	.baddr = 0x10012000,
 	.stride = 0x4c,
 };

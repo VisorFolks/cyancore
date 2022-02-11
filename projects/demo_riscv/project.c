@@ -40,9 +40,9 @@ void plug()
 	arch_machine_call(0, 100, 200, 300, &mres);
 	link_interrupt(local, 7, test);
 
-	gpio_pin_alloc(&gled, 0, 19);
-	gpio_pin_alloc(&bled, 0, 21);
-	gpio_pin_alloc(&rled, 0, 22);
+	gpio_pin_alloc(&gled, PORTA, 19);
+	gpio_pin_alloc(&bled, PORTA, 21);
+	gpio_pin_alloc(&rled, PORTA, 22);
 	gpio_pin_mode(&gled, out);
 	gpio_pin_mode(&bled, out);
 	gpio_pin_mode(&rled, out);
