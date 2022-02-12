@@ -41,7 +41,7 @@ void platform_wdt_handler();
  *
  * @return status: returns function execution status
  */
-status_t platform_wdt_setup()
+static status_t platform_wdt_setup()
 {
 	mret_t mres;
 	module_t *dp;
@@ -74,7 +74,7 @@ status_t platform_wdt_setup()
  *
  * @return status: returns function execution status
  */
-status_t platform_wdt_guard(size_t timeout, bool bite, void *cb_bark)
+static status_t platform_wdt_guard(size_t timeout, bool bite, void *cb_bark)
 {
 	status_t ret;
 	plat_wdt.timeout = timeout;
@@ -91,7 +91,7 @@ status_t platform_wdt_guard(size_t timeout, bool bite, void *cb_bark)
  *
  * @return status: returns function execution status
  */
-status_t platform_wdt_hush()
+static status_t platform_wdt_hush()
 {
 	status_t ret;
 	wdt_hush(&plat_wdt);
@@ -114,9 +114,8 @@ void platform_wdt_handler()
 /**
  * @brief This struct links top level and low level driver apis
  */
-wdog_t plat_wdt_driver =
+static wdog_t plat_wdt_driver =
 {
-	.setup = &platform_wdt_setup,
 	.guard = &platform_wdt_guard,
 	.hush = &platform_wdt_hush
 };
@@ -126,9 +125,12 @@ wdog_t plat_wdt_driver =
  * 
  * @brief This function is called to initialise wdt driver during boot
  */
-status_t plat_wdt_driver_setup()
+static status_t plat_wdt_driver_setup()
 {
-	return wdog_attach_device(&plat_wdt_driver);
+	status_t ret;
+	ret = platform_wdt_setup();
+	ret |= wdog_attach_device(ret, &plat_wdt_driver);
+	return ret;
 }
 
 /**
@@ -136,7 +138,7 @@ status_t plat_wdt_driver_setup()
  *
  * @brief This function is called to shutdown wdt device and unlink driver
  */
-status_t plat_wdt_driver_exit()
+static status_t plat_wdt_driver_exit()
 {
 	status_t ret;
 	ret = wdog_release_device();

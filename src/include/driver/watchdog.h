@@ -16,12 +16,11 @@
 
 typedef struct wdog
 {
-	status_t (*setup)(void);
 	status_t (*guard)(size_t, bool, void *);
 	status_t (*hush)(void);
 } wdog_t;
 
-status_t wdog_attach_device(wdog_t *);
+status_t wdog_attach_device(status_t, wdog_t *);
 status_t wdog_release_device();
 status_t wdog_guard(size_t timeout, bool bite, void *cb_bark);
 status_t wdog_hush();

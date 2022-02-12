@@ -13,7 +13,6 @@
 
 typedef struct interrupt_controller
 {
-	status_t (*setup)(void);
 	uint32_t (*get_priority)(uint32_t irq);
 	status_t (*set_priority)(uint32_t irq, uint32_t priority);
 	uint32_t (*get_affinity)(uint32_t core_id);
@@ -25,7 +24,7 @@ typedef struct interrupt_controller
 	void (* register_handler)(uint32_t id, void (* handler)(void));
 } ic_t;
 
-status_t ic_attach_device(ic_t *pic);
+status_t ic_attach_device(status_t, ic_t *pic);
 status_t ic_release_device();
 unsigned int ic_get_irq();
 status_t ic_set_priority_of_irq(unsigned int irq_id, unsigned int priority);
