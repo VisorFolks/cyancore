@@ -154,6 +154,10 @@ loop:
 						padn = (padn * 10) + (ch - '0');
 						fmt++;
 					}
+				case '%':
+					ret += console_putc((int)*fmt);
+					fmt++;
+					break;
 				default:
 					return -1;
 			}
