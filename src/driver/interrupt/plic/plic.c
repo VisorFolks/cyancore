@@ -118,7 +118,7 @@ static status_t plic_int_dis(uint32_t irq_id)
 	return success;
 }
 
-void plic_irqhandler()
+static void plic_irqhandler()
 {
 	uint32_t irq = plic_get_interrupt();
 	plic_irq_handler[irq]();
@@ -133,7 +133,7 @@ static bool plic_get_pending(uint32_t irq_id)
 	return (pending & (1 << (irq_id % 32))) ? true : false;
 }
 
-void plic_register_irq_handler(uint32_t id, void (* handler)(void))
+static void plic_register_irq_handler(uint32_t id, void (* handler)(void))
 {
 	assert(id);
 	assert(handler);
@@ -143,7 +143,6 @@ void plic_register_irq_handler(uint32_t id, void (* handler)(void))
 
 static ic_t plic_port =
 {
-	.setup			= &plic_setup,
 	.get_priority		= &plic_get_priority,
 	.set_priority		= &plic_set_priority,
 	.get_affinity		= &plic_get_threshold,
@@ -158,7 +157,8 @@ static ic_t plic_port =
 static status_t plic_driver_setup()
 {
 	status_t ret;
-	ret = ic_attach_device(&plic_port);
+	ret = plic_setup();
+	ret |= ic_attach_device(ret, &plic_port);
 	plic_clr_interrupt(plic_get_interrupt());
 	return ret;
 }
