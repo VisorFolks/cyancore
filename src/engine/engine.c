@@ -9,13 +9,16 @@
  * Organisation		: Cyancore Core-Team
  */
 
-#include <engine.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <compiler_macros.h>
+#include <status.h>
+#include <engine.h>
 
-volatile uint32_t FWVersion __attribute__((section(".version"))) = VERSION;
+const ccver_t FWVersion _SECTION(".version") =
+{
+	.v32 = VERSION,
+};
 
 const char cyancore_ascii_insignia[] =
 "\n\r    | | | | |\n\r\
