@@ -51,6 +51,8 @@ void platform_early_setup()
 	MMIO8(MCUSR) = 0;
 
 	ret |= platform_wdt_reset();
+	ret |= platform_resources_setup();
+	ret |= driver_setup("earlycon");
 
 	if(ret != success)
 		exit(EXIT_FAILURE);
@@ -67,8 +69,6 @@ void platform_early_setup()
 void platform_setup()
 {
 	status_t ret = success;
-	ret |= platform_resources_setup();
-	ret |= driver_setup("earlycon");
 	cyancore_insignia_lite();
 
 	if(ret != success)

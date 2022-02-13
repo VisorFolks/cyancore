@@ -17,6 +17,7 @@ void platform_early_setup()
 	ret |= platform_copy_itim();
 	ret |= platform_bss_clear();
 	ret |= platform_resources_setup();
+	ret |= driver_setup("earlycon");
 
 	if(ret != success)
 		exit(EXIT_FAILURE);
@@ -27,7 +28,6 @@ void platform_setup()
 {
 	status_t ret = success;
 
-	ret |= driver_setup("earlycon");
 	cyancore_insignia();
 
 	if(ret != success)

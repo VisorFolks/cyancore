@@ -59,7 +59,6 @@ static status_t earlycon_serial_write(const char c)
 static console_t earlycon_serial_driver =
 {
 	.write = &earlycon_serial_write,
-	.error = &earlycon_serial_write,
 };
 
 status_t earlycon_serial_driver_setup()

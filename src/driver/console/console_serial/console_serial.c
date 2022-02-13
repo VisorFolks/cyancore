@@ -94,7 +94,6 @@ static status_t console_serial_flush()
 static console_t console_serial_driver =
 {
 	.write = &console_serial_write,
-	.error = &console_serial_write,
 	.read = &console_serial_read,
 	.flush = &console_serial_flush
 };

@@ -49,7 +49,6 @@ static status_t membuf_flush()
 static console_t membuf_driver =
 {
 	.write	= &membuf_writeb,
-	.error	= &membuf_writeb,
 	.flush	= &membuf_flush
 };
 
