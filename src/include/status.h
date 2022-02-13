@@ -33,6 +33,7 @@ typedef enum status
 	error_scall			= -0x0500,
 	error_memory			= -0x0600,
 	error_file			= -0x0700,
+	error_file_io			= -0x0701,
 	error_string			= -0x0800,
 	error_math			= -0x0900,
 	error_math_inval_arg		= -0x0901,

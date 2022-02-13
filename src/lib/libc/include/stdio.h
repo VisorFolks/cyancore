@@ -14,8 +14,19 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <status.h>
+#include <ccpfs.h>
 
 #define EOF		-1
+
+typedef ccpdfs_t FILE;
+
+extern FILE stddev[];
+
+#define stdin		&stddev[0]
+#define stdout		&stddev[1]
+#define stderr		&stddev[2]
+#define stdlog		&stddev[3]
 
 int printf(const char *fmt, ...);
 int snprintf(char *s, size_t n, const char *fmt, ...);
