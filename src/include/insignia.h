@@ -19,7 +19,7 @@ static inline void cyancore_insignia()
 {
 	extern char cyancore_ascii_insignia[];
 	extern ccver_t FWVersion;
-	printf("%s\nVersion %d.%d.%d\n", cyancore_ascii_insignia,
+	printf("%s\nVersion %u.%u.%u\n", cyancore_ascii_insignia,
 		FWVersion.v.arch, FWVersion.v.major, FWVersion.v.minor);
 }
 
@@ -27,6 +27,6 @@ static inline void cyancore_insignia_lite()
 {
 	extern char cyancore_ascii_insignia_lite[];
 	extern ccver_t FWVersion;
-	printf("%s v%d.%d.%d\n", cyancore_ascii_insignia_lite,
+	printf("%s v%u.%u.%u\n", cyancore_ascii_insignia_lite,
 		FWVersion.v.arch, FWVersion.v.major, FWVersion.v.minor);
 }
