@@ -16,7 +16,7 @@
 status_t ccpdfs_write(ccpdfs_t *dev, const char c)
 {
 	assert(dev);
-	if(dev->write)
+	if(!dev->write)
 		return error_file_io;
 	return dev->write(c);
 }
@@ -24,7 +24,7 @@ status_t ccpdfs_write(ccpdfs_t *dev, const char c)
 status_t ccpdfs_read(ccpdfs_t *dev, char *c)
 {
 	assert(dev);
-	if(dev->write)
+	if(!dev->write)
 		return error_file_io;
 	return dev->read(c);
 }

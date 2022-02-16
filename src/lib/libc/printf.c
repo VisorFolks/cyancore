@@ -9,12 +9,13 @@
  * Organisation		: Cyancore Core-Team
  */
 
+#include <stdint.h>
+#include <status.h>
 #include <stddef.h>
 #include <stdarg.h>
 #include <stdbool.h>
-#include <stdint.h>
+#include <ccpfs.h>
 #include <stdio.h>
-#include <status.h>
 #include <lock/lock.h>
 #include <driver/console.h>
 
@@ -30,13 +31,9 @@
 int __fputc(FILE *dev, bool en_stdout, const char c)
 {
 	int ret;
-	FILE *out = stdout;
-	if(!dev->write)
-		ret = error_device;
-	else
-		ret = dev->write(c);
-	if(en_stdout && out->write)
-		out->write(c);
+	ret = ccpdfs_write(dev, c);
+	if(en_stdout)
+		ccpdfs_write(stdout, c);
 	return ret;
 }
 
