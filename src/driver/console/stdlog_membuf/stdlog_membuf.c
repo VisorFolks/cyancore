@@ -13,6 +13,7 @@
 #include <status.h>
 #include <driver.h>
 #include <driver/console.h>
+#include <stdio.h>
 
 /*
  * membuf is present in bss section hence will
@@ -40,6 +41,18 @@ static status_t membuf_writeb(const char c)
 	return success;
 }
 
+static status_t membuf_read(char *c)
+{
+	static size_t pread = 0;
+	*c = membuf[pread++];
+	if(pread == MEMBUF_SIZE)
+	{
+		pread = 0;
+		return success;
+	}
+	return error_generic;	// to be used in while loop to read the full buffer
+}
+
 static status_t membuf_flush()
 {
 	// This is necessary for cpus that uses cache
@@ -49,6 +62,7 @@ static status_t membuf_flush()
 static console_t membuf_driver =
 {
 	.write	= &membuf_writeb,
+	.read = &membuf_read,
 	.flush	= &membuf_flush
 };
 
@@ -56,15 +70,15 @@ status_t membuf_driver_setup()
 {
 	status_t ret;
 	ret = membuf_setup();
-	ret |= console_attach_device(ret, &membuf_driver);
+	ret |= logger_attach_device(ret, &membuf_driver);
 	return ret;
 }
 
 status_t membuf_driver_exit()
 {
-	return console_release_device();
+	return logger_release_device();
 }
 
-#if EARLYCON_MEMBUF==1
-INCLUDE_DRIVER(earlycon, membuf_driver_setup, membuf_driver_exit, 0, 0, 0);
+#if STDLOG_MEMBUF==1
+INCLUDE_DRIVER(stdlogger, membuf_driver_setup, membuf_driver_exit, 0, 0, 0);
 #endif

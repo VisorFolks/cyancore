@@ -25,3 +25,11 @@ status_t console_putc(const char);
 status_t console_puts(const char *);
 status_t console_getc(char *);
 status_t console_flush(void);
+
+status_t logger_attach_device(status_t, console_t *);
+status_t logger_release_device();
+status_t logger_putc(const char);
+
+#ifdef _STDIO_H_
+status_t logger_dprint(FILE *);
+#endif

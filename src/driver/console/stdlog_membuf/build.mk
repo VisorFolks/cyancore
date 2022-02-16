@@ -10,8 +10,8 @@
 
 DIR		:= $(GET_PATH)
 
-$(eval $(call add_define,EARLYCON_MEMBUF))
+$(eval $(call add_define,STDLOG_MEMBUF))
 
-ifeq ($(EARLYCON_MEMBUF),1)
+ifeq ($(STDLOG_MEMBUF),1)
 include mk/obj.mk
 endif

@@ -112,9 +112,10 @@ status_t console_serial_driver_exit()
 	status_t ret;
 	ret = console_release_device();
 	ret |= uart_shutdown(&console_port);
+	driver_setup("earlycon");
 	return ret;
 }
 
 #if CONSOLE_SERIAL==1
-INCLUDE_DRIVER(console, console_serial_driver_setup, console_serial_driver_exit, 0, 255, 0);
+INCLUDE_DRIVER(console, console_serial_driver_setup, console_serial_driver_exit, 0, 255, 255);
 #endif

@@ -17,6 +17,7 @@
 #include <terravisor/platform.h>
 #include <terravisor/workers.h>
 #include <driver.h>
+#include <syslog.h>
 #include <insignia.h>
 #include <platform.h>
 
@@ -52,7 +53,10 @@ void platform_early_setup()
 
 	ret |= platform_wdt_reset();
 	ret |= platform_resources_setup();
-	ret |= driver_setup("earlycon");
+	driver_setup("stdlogger");
+	driver_setup("earlycon");
+	syslog_print();
+	syslog_stdout_enable();
 
 	if(ret != success)
 		exit(EXIT_FAILURE);
@@ -70,7 +74,6 @@ void platform_setup()
 {
 	status_t ret = success;
 	cyancore_insignia_lite();
-
 	if(ret != success)
 		exit(EXIT_FAILURE);
 	return;
