@@ -29,13 +29,12 @@ extern FILE stddev[];
 #define stdlog		&stddev[3]
 
 int printf(const char *fmt, ...);
-int snprintf(char *s, size_t n, const char *fmt, ...);
-int putch(int c);
-int puts(const char *s);
+int fputs(FILE *, const char *);
+int fputc(FILE *, const char);
 
-char getch();
-char getchar();
-
+#ifdef _STDBOOL_H_
+int dprintf(FILE *, bool, const char *fmt, ...);
 #ifdef _STDARG_H_
-int vprintf(const char *fmt, va_list args);
+int vprintf(FILE *, bool, const char *fmt, va_list args);
+#endif
 #endif

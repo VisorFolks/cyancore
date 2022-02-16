@@ -17,7 +17,7 @@ FILE stddev[N_STDDEV];
 
 status_t stdin_register(status_t (*read)(char *))
 {
-	if(read)
+	if(!read)
 		return error_device_inval;
 	stddev[0].read = read;
 	return success;
@@ -25,7 +25,7 @@ status_t stdin_register(status_t (*read)(char *))
 
 status_t stdout_register(status_t (*write)(const char))
 {
-	if(write)
+	if(!write)
 		return error_device_inval;
 	stddev[1].write = write;
 	return success;
@@ -33,7 +33,7 @@ status_t stdout_register(status_t (*write)(const char))
 
 status_t stderr_register(status_t (*write)(const char))
 {
-	if(write)
+	if(!write)
 		return error_device_inval;
 	stddev[2].write = write;
 	return success;
@@ -41,7 +41,7 @@ status_t stderr_register(status_t (*write)(const char))
 
 status_t stdlog_register(status_t (*write)(const char))
 {
-	if(write)
+	if(!write)
 		return error_device_inval;
 	stddev[3].write = write;
 	return success;

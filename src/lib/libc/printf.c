@@ -27,19 +27,42 @@
 	(((_lcount) >= 1)  ? va_arg(_args, unsigned long) :	\
 			    va_arg(_args, unsigned int))
 
-int puts(const char *i)
+int __fputc(FILE *dev, bool en_stdout, const char c)
+{
+	int ret;
+	FILE *out = stdout;
+	if(!dev->write)
+		ret = error_device;
+	else
+		ret = dev->write(c);
+	if(en_stdout && out->write)
+		out->write(c);
+	return ret;
+}
+
+int __fputs(FILE *dev, bool en_stdout, const char *i)
 {
 	int ret = 0;
 	while(*i != '\0')
 	{
-		console_putc(*i);
+		__fputc(dev, en_stdout, *i);
 		ret++;
 		i++;
 	}
 	return ret;
 }
 
-static int unumprint(unsigned long unum, unsigned int radix, char padc, int padn)
+int fputc(FILE *dev, const char c)
+{
+	return __fputc(dev, 0, c);
+}
+
+int fputs(FILE *dev, const char *i)
+{
+	return __fputs(dev, 0, i);
+}
+
+static int unumprint(FILE *dev, bool en_stdout, unsigned long unum, unsigned int radix, char padc, int padn)
 {
 	char buf[20];
 	int i = 0, ret = 0;
@@ -59,20 +82,20 @@ static int unumprint(unsigned long unum, unsigned int radix, char padc, int padn
 	{
 		while(i < padn)
 		{
-			console_putc(padc);
+			__fputc(dev, en_stdout, padc);
 			ret++;
 			padn--;
 		}
 	}
 	while(--i >= 0)
 	{
-		console_putc(buf[i]);
+		__fputc(dev, en_stdout, buf[i]);
 		ret++;
 	}
 	return ret;
 }
 
-int vprintf(const char *fmt, va_list args)
+int vprintf(FILE *dev, bool en_stdout, const char *fmt, va_list args)
 {
 	int l_ret;
 	long num;
@@ -97,35 +120,35 @@ loop:
 					num = get_num_va_args(args, l_ret);
 					if (num < 0)
 					{
-						console_putc('-');
+						__fputc(dev, en_stdout, '-');
 						unum = (unsigned long)-num;
 						padn--;
 					}
 					else
 						unum = (unsigned long)num;
-					ret += unumprint(unum, 10, padc, padn);
+					ret += unumprint(dev, en_stdout, unum, 10, padc, padn);
 					break;
 				case 'c':
 					str = va_arg(args, char *);
-					ret += console_putc((int)str);
+					ret += __fputc(dev, en_stdout, (int)str);
 					break;
 				case 's':
 					str = va_arg(args, char *);
-					ret += puts(str);
+					ret += __fputs(dev, en_stdout, str);
 					break;
 				case 'p':
 					unum = (uintptr_t)va_arg(args, void *);
 					if (unum > 0U)
 					{
-						ret += puts("0x");
+						ret += __fputs(dev, en_stdout, "0x");
 						padn -= 2;
 					}
 
-					ret += unumprint(unum, 16, padc, padn);
+					ret += unumprint(dev, en_stdout, unum, 16, padc, padn);
 					break;
 				case 'x':
 					unum = get_unum_va_args(args, l_ret);
-					ret += unumprint(unum, 16, padc, padn);
+					ret += unumprint(dev, en_stdout, unum, 16, padc, padn);
 					break;
 				case 'z':
 					if (sizeof(size_t) == 8U)
@@ -139,7 +162,7 @@ loop:
 					goto loop;
 				case 'u':
 					unum = get_unum_va_args(args, l_ret);
-					ret += unumprint(unum, 10, padc, padn);
+					ret += unumprint(dev, en_stdout, unum, 10, padc, padn);
 					break;
 				case '0':
 					padc = '0';
@@ -155,7 +178,7 @@ loop:
 						fmt++;
 					}
 				case '%':
-					ret += console_putc((int)*fmt);
+					ret += __fputc(dev, en_stdout, (int)*fmt);
 					fmt++;
 					break;
 				default:
@@ -166,8 +189,8 @@ loop:
 		}
 
 		else if(*fmt == '\n')
-			console_putc('\r');
-		console_putc(*fmt);
+			__fputc(dev, en_stdout, '\r');
+		__fputc(dev, en_stdout, *fmt);
 		fmt++;
 		ret++;
 	}
@@ -179,7 +202,17 @@ int printf(const char *fmt, ...)
 	int ret;
 	va_list va;
 	va_start(va, fmt);
-	ret = vprintf(fmt, va);
+	ret = vprintf(stdout, 0, fmt, va);
+	va_end(va);
+	return ret;
+}
+
+int dprintf(FILE *dev, bool en_stdout, const char *fmt, ...)
+{
+	int ret;
+	va_list va;
+	va_start(va, fmt);
+	ret = vprintf(dev, en_stdout, fmt, va);
 	va_end(va);
 	return ret;
 }

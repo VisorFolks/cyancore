@@ -13,7 +13,7 @@ LIB_OBJS	:=
 
 LIB		+= libsyslog.a
 LIB_INCLUDE	+= $(LIBSYSLOG_PATH)/include
-DEP_LIB_ARG	+= -lsyslog
+DEP_LIBS_ARG	+= -lsyslog
 
 include $(LIBSYSLOG_PATH)/config.mk
 

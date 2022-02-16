@@ -10,6 +10,7 @@
  */
 
 #pragma once
+#define _STDBOOL_H_
 
 #ifndef __cplusplus
 typedef _Bool bool;
