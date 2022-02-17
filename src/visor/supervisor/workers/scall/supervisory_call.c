@@ -19,7 +19,7 @@
 extern scall_t _scall_table_start;
 extern scall_t _scall_table_end;
 
-void super_call(scall_id_t id, unsigned int a0, unsigned int a1, unsigned int a2, sret_t *ret)
+void super_call(scall_id_t id, call_args a0, call_args a1, call_args a2, sret_t *ret)
 {
 	/* mcall Table pointer */
 	scall_t *ptr;

@@ -25,8 +25,8 @@
  *
  * Enabled/disabled by posixconfigENABLE_CLOCK_T.
  */
-#if !defined( posixconfigENABLE_CLOCK_T ) || ( posixconfigENABLE_CLOCK_T == 1 )
-	typedef uint32_t	clock_t;
+#if !defined(posixconfigENABLE_CLOCK_T) || (posixconfigENABLE_CLOCK_T == 1)
+typedef uint32_t clock_t;
 #endif
 
 /**
@@ -34,8 +34,8 @@
  *
  * Enabled/disabled by posixconfigENABLE_CLOCKID_T.
  */
-#if !defined( posixconfigENABLE_CLOCKID_T ) || ( posixconfigENABLE_CLOCKID_T == 1 )
-	typedef int		clockid_t;
+#if !defined(posixconfigENABLE_CLOCKID_T) || (posixconfigENABLE_CLOCKID_T == 1)
+typedef int clockid_t;
 #endif
 
 /**
@@ -43,8 +43,8 @@
  *
  * Enabled/disabled by posixconfigENABLE_MODE_T.
  */
-#if !defined( posixconfigENABLE_MODE_T ) || ( posixconfigENABLE_MODE_T == 1 )
-	typedef int		mode_t;
+#if !defined(posixconfigENABLE_MODE_T) || (posixconfigENABLE_MODE_T == 1)
+typedef int mode_t;
 #endif
 
 /**
@@ -52,8 +52,8 @@
  *
  * Enabled/disabled by posixconfigENABLE_PID_T.
  */
-#if !defined( posixconfigENABLE_PID_T ) || ( posixconfigENABLE_PID_T == 1 )
-	typedef int		pid_t;
+#if !defined(posixconfigENABLE_PID_T) || (posixconfigENABLE_PID_T == 1)
+typedef int pid_t;
 #endif
 
 /**
@@ -61,14 +61,14 @@
  *
  * Enabled/disabled by posixconfigENABLE_PTHREAD_ATTR_T.
  */
-#if !defined( posixconfigENABLE_PTHREAD_ATTR_T ) || ( posixconfigENABLE_PTHREAD_ATTR_T == 1 )
-	typedef struct pthread_attr
-	{
-		int		detach_state;
-		int		policy;
-		sched_param_t	sched_param;
-		size_t		stacksize;
-	}pthread_attr_t;
+#if !defined(posixconfigENABLE_PTHREAD_ATTR_T) || (posixconfigENABLE_PTHREAD_ATTR_T == 1)
+typedef struct pthread_attr
+{
+	int detach_state;
+	int policy;
+	sched_param_t sched_param;
+	size_t stacksize;
+} pthread_attr_t;
 #endif
 
 /**
@@ -76,28 +76,28 @@
  *
  * Enabled/disabled by posixconfigENABLE_PTHREAD_BARRIER_T.
  */
-#if !defined( posixconfigENABLE_PTHREAD_BARRIER_T ) || ( posixconfigENABLE_PTHREAD_BARRIER_T == 1 )
-	typedef struct pthread_barrier
-	{
-		/* pthread_barrier structure place holder */
-	}pthread_barrier_t;
+#if !defined(posixconfigENABLE_PTHREAD_BARRIER_T) || (posixconfigENABLE_PTHREAD_BARRIER_T == 1)
+typedef struct pthread_barrier
+{
+	/* pthread_barrier structure place holder */
+} pthread_barrier_t;
 #endif
 
 /**
  * @brief Used to define a barrier attributes object.
  */
-	typedef void 		* pthread_barrierattr_t;
+typedef void *pthread_barrierattr_t;
 
 /**
  * @brief Used for condition variables.
  *
  * Enabled/disabled by posixconfigENABLE_PTHREAD_COND_T.
  */
-#if !defined( posixconfigENABLE_PTHREAD_COND_T ) || ( posixconfigENABLE_PTHREAD_COND_T == 1 )
-	typedef  struct  pthread_cond
-	{
-		/* pthread_cond structure place holder */
-	}pthread_cond_t;
+#if !defined(posixconfigENABLE_PTHREAD_COND_T) || (posixconfigENABLE_PTHREAD_COND_T == 1)
+typedef struct pthread_cond
+{
+	/* pthread_cond structure place holder */
+} pthread_cond_t;
 #endif
 
 /**
@@ -105,8 +105,8 @@
  *
  * Enabled/disabled by posixconfigENABLE_PTHREAD_CONDATTR_T.
  */
-#if !defined( posixconfigENABLE_PTHREAD_CONDATTR_T ) || ( posixconfigENABLE_PTHREAD_CONDATTR_T == 1 )
-	typedef void		* pthread_condattr_t;
+#if !defined(posixconfigENABLE_PTHREAD_CONDATTR_T) || (posixconfigENABLE_PTHREAD_CONDATTR_T == 1)
+typedef void *pthread_condattr_t;
 #endif
 
 /**
@@ -114,11 +114,11 @@
  *
  * Enabled/disabled by posixconfigENABLE_PTHREAD_MUTEX_T.
  */
-#if !defined( posixconfigENABLE_PTHREAD_MUTEX_T ) || ( posixconfigENABLE_PTHREAD_MUTEX_T == 1 )
-	typedef struct pthread_mutex
-	{
-		/* pthread_mutex structure place holder */
-	}pthread_mutex_t;
+#if !defined(posixconfigENABLE_PTHREAD_MUTEX_T) || (posixconfigENABLE_PTHREAD_MUTEX_T == 1)
+typedef struct pthread_mutex
+{
+	/* pthread_mutex structure place holder */
+} pthread_mutex_t;
 #endif
 
 /**
@@ -126,11 +126,11 @@
  *
  * Enabled/disabled by posixconfigENABLE_PTHREAD_MUTEXATTR_T.
  */
-#if !defined( posixconfigENABLE_PTHREAD_MUTEXATTR_T ) || ( posixconfigENABLE_PTHREAD_MUTEXATTR_T == 1 )
-	typedef struct pthread_mutexattr
-	{
-		/* pthread_mutexattr structure place holder */
-	}pthread_mutexattr_t;
+#if !defined(posixconfigENABLE_PTHREAD_MUTEXATTR_T) || (posixconfigENABLE_PTHREAD_MUTEXATTR_T == 1)
+typedef struct pthread_mutexattr
+{
+	/* pthread_mutexattr structure place holder */
+} pthread_mutexattr_t;
 #endif
 
 /**
@@ -138,11 +138,13 @@
  *
  * Enabled/disabled by posixconfigENABLE_PTHREAD_T.
  */
-#if !defined( posixconfigENABLE_PTHREAD_T ) || ( posixconfigENABLE_PTHREAD_T == 1 )
-	typedef struct pthread
-	{
-		/* pthread structure place holder */
-	}pthread_t;
+#if !defined(posixconfigENABLE_PTHREAD_T) || (posixconfigENABLE_PTHREAD_T == 1)
+typedef struct pthread
+{
+	pthread_attr_t *attr;
+	void *(*fn)(void *);
+	int pid;
+} pthread_t;
 #endif
 
 /**
@@ -150,8 +152,8 @@
  *
  * Enabled/disabled by posixconfigENABLE_SSIZE_T.
  */
-#if !defined( posixconfigENABLE_SSIZE_T ) || ( posixconfigENABLE_SSIZE_T == 1 )
-	typedef size_t			ssize_t;
+#if !defined(posixconfigENABLE_SSIZE_T) || (posixconfigENABLE_SSIZE_T == 1)
+typedef size_t ssize_t;
 #endif
 
 /**
@@ -159,8 +161,8 @@
  *
  * Enabled/disabled by posixconfigENABLE_TIME_T.
  */
-#if !defined( posixconfigENABLE_TIME_T ) || ( posixconfigENABLE_TIME_T == 1 )
-	typedef int64_t 		time_t;
+#if !defined(posixconfigENABLE_TIME_T) || (posixconfigENABLE_TIME_T == 1)
+typedef int64_t time_t;
 #endif
 
 /**
@@ -168,8 +170,8 @@
  *
  * Enabled/disabled by posixconfigENABLE_TIMER_T.
  */
-#if !defined( posixconfigENABLE_TIMER_T ) || ( posixconfigENABLE_TIMER_T == 1 )
-	typedef void 			* timer_t;
+#if !defined(posixconfigENABLE_TIMER_T) || (posixconfigENABLE_TIMER_T == 1)
+typedef void *timer_t;
 #endif
 
 /**
@@ -177,8 +179,8 @@
  *
  * Enabled/disabled by posixconfigENABLE_USECONDS_T.
  */
-#if !defined( posixconfigENABLE_USECONDS_T ) || ( posixconfigENABLE_USECONDS_T == 1 )
-	typedef unsigned long 		useconds_t;
+#if !defined(posixconfigENABLE_USECONDS_T) || (posixconfigENABLE_USECONDS_T == 1)
+typedef unsigned long useconds_t;
 #endif
 
 /**
@@ -186,13 +188,13 @@
  *
  * Enabled/disabled by posixconfigENABLE_OFF_T.
  */
-#if !defined( posixconfigENABLE_OFF_T ) || ( posixconfigENABLE_OFF_T == 1 )
-	typedef long int 		off_t;
+#if !defined(posixconfigENABLE_OFF_T) || (posixconfigENABLE_OFF_T == 1)
+typedef long int off_t;
 #endif
 
-#if( posixconfigUSE_16_BIT_TICKS == 1 )
-	typedef uint16_t TickType_t;
+#if (posixconfigUSE_16_BIT_TICKS == 1)
+typedef uint16_t TickType_t;
 #else
-	typedef size_t TickType_t;
+typedef size_t TickType_t;
 #endif
-#define posixconfigMAX_DELAY			(TickType_t)(~0)
+#define posixconfigMAX_DELAY (TickType_t)(~0)
