@@ -204,7 +204,17 @@ int printf(const char *fmt, ...)
 	return ret;
 }
 
-int dprintf(FILE *dev, bool en_stdout, const char *fmt, ...)
+int eprintf(const char *fmt, ...)
+{
+	int ret;
+	va_list va;
+	va_start(va, fmt);
+	ret = vprintf(stderr, 0, fmt, va);
+	va_end(va);
+	return ret;
+}
+
+int fprintf(FILE *dev, bool en_stdout, const char *fmt, ...)
 {
 	int ret;
 	va_list va;
