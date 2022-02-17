@@ -10,8 +10,8 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <status.h>
+#include <syslog.h>
 #include <arch.h>
 #include <lock/lock.h>
 #include <driver/watchdog.h>
@@ -137,6 +137,6 @@ extern void plat_panic_handler();
  */
 void wdog_reset_handler()
 {
-	printf("\n< x > Watchdog Bite on Core: [%d]\n", (int)arch_core_index());
+	syslog(fail, "Watchdog Bite on Core: [%d]\n", (int)arch_core_index());
 	plat_panic_handler();
 }

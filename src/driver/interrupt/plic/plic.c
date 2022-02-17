@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 #include <status.h>
-#include <stdio.h>
+#include <syslog.h>
 #include <stdbool.h>
 #include <assert.h>
 #include <arch.h>
@@ -44,7 +44,7 @@ static status_t plic_setup()
 	port.stride = dp->stride;
 	port.port_id = plic;
 	port.irq = dp->interrupt_id[0];
-	printf("< ! > PLIC @ 0x%x found.\n", (unsigned int)port.baddr);
+	syslog(info, "PLIC @ 0x%x found.\n", (unsigned int)port.baddr);
 	return success;
 }
 
