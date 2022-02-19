@@ -167,7 +167,7 @@ int clock_settime( clockid_t clock_id,
  *
  */
 int nanosleep( const timespec_t * rqtp,
-               timespec_t * rmtp );
+               const timespec_t * rmtp );
 
 /**
  * @brief Create a per-process timer.

@@ -110,7 +110,7 @@ int sem_timedwait( const sem_t * sem,
  * <br>
  * EAGAIN - The semaphore was already locked, so it cannot be immediately locked by the sem_trywait() operation.
  */
-int sem_trywait( sem_t * sem );
+int sem_trywait( const sem_t * sem );
 
 /**
  * @brief Lock a semaphore.
@@ -122,4 +122,4 @@ int sem_trywait( sem_t * sem );
  *
  * @note Deadlock detection is not implemented.
  */
-int sem_wait( sem_t * sem );
+int sem_wait( const sem_t * sem );
