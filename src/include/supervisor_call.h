@@ -13,6 +13,7 @@
 
 #include <stdint.h>
 #include <status.h>
+#include <arch.h>
 
 // Supervisor call IDs
 typedef enum scall_id
@@ -71,8 +72,6 @@ typedef struct sret
 	size_t size;
 	status_t status;
 } sret_t;
-
-#include <arch.h>
 
 typedef struct scall
 {

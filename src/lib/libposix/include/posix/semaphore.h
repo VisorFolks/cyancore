@@ -95,7 +95,7 @@ int sem_post( const sem_t * sem );
  *
  * @note Deadlock detection is not implemented.
  */
-int sem_timedwait( sem_t * sem,
+int sem_timedwait( const sem_t * sem,
                    const struct timespec * abstime );
 
 /**

@@ -319,7 +319,7 @@ int mq_timedsend( mqd_t mqdes, const char * msg_ptr, size_t msg_len, unsigned ms
 		}
 		else
 		{
-			os_delay_ticks((const TickType_t)DELAY_MIN_TICK);
+			os_delay_ticks(DELAY_MIN_TICK);
 			abs_ticks--;
 		}
 	}while(abs_ticks > RST_VAL);

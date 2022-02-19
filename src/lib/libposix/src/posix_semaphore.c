@@ -116,7 +116,7 @@ int sem_post( const sem_t * sem )
 	return sem_sys_ret.status;
 }
 
-int sem_timedwait( sem_t * sem, const struct timespec * abstime )
+int sem_timedwait( const sem_t * sem, const struct timespec * abstime )
 {
 	ASSERT_IF_FALSE(sem != NULL, int);
 	ASSERT_IF_FALSE(sem->id != RST_VAL, int);

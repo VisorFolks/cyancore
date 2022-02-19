@@ -14,11 +14,23 @@
 
 unsigned sleep( unsigned seconds )
 {
-	return (unsigned) usleep(MICROSECONDS_PER_SECOND * seconds);
+        timespec_t rqtp =
+        {
+                .tv_nsec = NANOSECONDS_PER_TICK * seconds,
+                .tv_sec = seconds
+        };
+        return (unsigned)nanosleep(&rqtp, NULL);
 }
 
 int usleep( useconds_t usec )
 {
         (void) usec;
+        return SUCCESS;
+}
+
+int nanosleep(const timespec_t *rqtp, timespec_t *rmtp)
+{
+        (void) rqtp;
+        (void) rmtp;
         return SUCCESS;
 }
