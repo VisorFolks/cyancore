@@ -13,7 +13,7 @@
 
 #include <stdint.h>
 #include <status.h>
-#include <call_type.h>
+#include <arch.h>
 
 // Machine call IDs
 typedef enum mcall_id
@@ -33,7 +33,7 @@ typedef struct mret
 typedef struct mcall
 {
 	mcall_id_t id;
-	mret_t (*callback)(call_args a0, call_args a1, call_args a2);
+	mret_t (*callback)(call_arg_t a0, call_arg_t a1, call_arg_t a2);
 } mcall_t;
 
 #define INCLUDE_MCALL(_name, _id , _callback)		\

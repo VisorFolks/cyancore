@@ -13,7 +13,7 @@
 
 #include <stdint.h>
 #include <status.h>
-#include <call_type.h>
+#include <arch.h>
 
 // Supervisor call IDs
 typedef enum scall_id
@@ -76,7 +76,7 @@ typedef struct sret
 typedef struct scall
 {
 	scall_id_t id;
-	sret_t (*callback)(call_args a0, call_args a1, call_args a2);
+	sret_t (*callback)(call_arg_t a0, call_arg_t a1, call_arg_t a2);
 } scall_t;
 
 #define INCLUDE_SCALL(_name, _id , _callback)		\
