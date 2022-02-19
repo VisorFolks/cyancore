@@ -21,12 +21,12 @@
 
 char membuf[MEMBUF_SIZE];
 
-status_t membuf_setup()
+static status_t membuf_setup()
 {
 	return success;
 }
 
-status_t membuf_writeb(const char c)
+static status_t membuf_writeb(const char c)
 {
 	static size_t pointer = 0;
 	if(c == '\b' && pointer)
@@ -40,15 +40,14 @@ status_t membuf_writeb(const char c)
 	return success;
 }
 
-status_t membuf_flush()
+static status_t membuf_flush()
 {
 	// This is necessary for cpus that uses cache
 	return success;
 }
 
-console_t membuf_driver =
+static console_t membuf_driver =
 {
-	.setup	= &membuf_setup,
 	.write	= &membuf_writeb,
 	.error	= &membuf_writeb,
 	.flush	= &membuf_flush
@@ -56,7 +55,10 @@ console_t membuf_driver =
 
 status_t membuf_driver_setup()
 {
-	return console_attach_device(&membuf_driver);
+	status_t ret;
+	ret = membuf_setup();
+	ret |= console_attach_device(ret, &membuf_driver);
+	return ret;
 }
 
 status_t membuf_driver_exit()

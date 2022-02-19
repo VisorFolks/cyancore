@@ -13,6 +13,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <status.h>
+#include <lock/lock.h>
 #include <driver/console.h>
 
 /**
@@ -22,6 +23,7 @@
  * when the device driver is initialized
  */
 static console_t *con;
+static lock_t console_lock;
 
 /**
  * console_attached - Flag to indicate the console status
@@ -42,19 +44,20 @@ static bool console_attached = false;
  * @param[in] *pcon: pointer for console hardware driver
  * @return status: status of device/hardware driver
  */
-status_t console_attach_device(console_t *pcon)
+status_t console_attach_device(status_t dev_status, console_t *pcon)
 {
 	status_t ret;
+	lock_acquire(&console_lock);
 	console_attached = false;
 	con = pcon;
 	if(con != NULL)
 	{
-		/* Run the hardware driver setup and verify */
-		ret = con->setup();
+		ret = dev_status;
 		console_attached = (ret == success) ? true : false;
 	}
 	else
 		ret = error_device_inval;
+	lock_release(&console_lock);
 	return ret;
 }
 
@@ -69,8 +72,10 @@ status_t console_attach_device(console_t *pcon)
  */
 status_t console_release_device()
 {
+	lock_acquire(&console_lock);
 	con = NULL;
 	console_attached = false;
+	lock_release(&console_lock);
 	return success;
 }
 
@@ -86,10 +91,13 @@ status_t console_release_device()
  */
 status_t console_putc(const char c)
 {
+	status_t ret = error_func_inval;
 	/* Check if the console is attached and write methos is valid */
+	lock_acquire(&console_lock);
 	if(console_attached && con->write != NULL)
-		return con->write(c);
-	return error_func_inval;
+		ret = con->write(c);
+	lock_release(&console_lock);
+	return ret;
 }
 
 /**
@@ -122,9 +130,12 @@ status_t console_puts(const char *s)
  */
 status_t console_getc(char *c)
 {
+	status_t ret = error_func_inval;
+	lock_acquire(&console_lock);
 	if(console_attached && con->read != NULL)
-		return con->read(c);
-	return error_func_inval;
+		ret = con->read(c);
+	lock_release(&console_lock);
+	return ret;
 }
 
 /**
@@ -134,7 +145,10 @@ status_t console_getc(char *c)
  */
 status_t console_flush()
 {
+	status_t ret = error_func_inval;
+	lock_acquire(&console_lock);
 	if(console_attached && con->flush != NULL)
-		return con->flush();
-	return error_func_inval;
+		ret = con->flush();
+	lock_release(&console_lock);
+	return ret;
 }

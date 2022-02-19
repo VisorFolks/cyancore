@@ -195,7 +195,7 @@ int pthread_barrier_destroy( pthread_barrier_t * barrier );
  * @note attr is ignored.
  *
  * @note pthread_barrier_init() is implemented with Kernel event group.
- * To ensure count fits in event group, count may be at most 8 when configUSE_16_BIT_TICKS is 1;
+ * To ensure count fits in event group, count may be at most 8 when configUSE_16_BIT_TICKS is 1.
  * it may be at most 24 otherwise. configUSE_16_BIT_TICKS is configured in application FreeRTOSConfig.h
  * file, which defines how many bits tick count type has. See further details and limitation about event
  * group and configUSE_16_BIT_TICKS in Kernel site.

@@ -76,7 +76,7 @@ int mq_getattr( mqd_t mqdes,
  *
  * http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_open.html
  *
- * @note Supported name pattern: leading &lt;slash&gt; character in name is always required;
+ * @note Supported name pattern: character in name is always required.
  * the maximum length (excluding null-terminator) of the name argument can be NAME_MAX.
  * The default value of NAME_MAX in FreeRTOS_POSIX_portable_default.h is 64, which can be
  * overwritten by user.
@@ -101,7 +101,7 @@ int mq_getattr( mqd_t mqdes,
 mqd_t mq_open( 	const char * name,
 		int oflag,
 		mode_t mode,
-		mq_attr_t * attr );
+		const mq_attr_t * attr );
 
 /**
  * @brief Receive a message from a message queue.

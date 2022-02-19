@@ -25,7 +25,7 @@ extern "C"
 
 class onBoardLed led;
 
-/* Use EXPORT_C macro for calling cpp functoin in c file */
+/* Use EXPORT_C macro for calling cpp function in c file */
 EXPORT_C(void plug())
 {
 	bootstrap();
@@ -50,14 +50,13 @@ void delay(unsigned long d)
 
 EXPORT_C(void play())
 {
-	static int i = 0;
+	static unsigned int i = 0;
 
 	wdog_guard(3, true, NULL);
 
 	/* call the toggle member of led object */
 	led.toggle();
-	printf("%c]", progress[i++]);
-	i = i > 3 ? 0 : i;
+	printf("%c]", progress[(i++) % 4]);
 	wdog_hush();
 	delay(500000);
 	printf("\b\b");

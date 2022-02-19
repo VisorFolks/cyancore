@@ -18,7 +18,6 @@
 #include <posix/fcntl.h>
 
 #define DELAY_MIN_TICK			(1U)
-#define IS_ISR()			true
 
 size_t g_mq_id_ctr = RST_VAL;
 
@@ -29,7 +28,7 @@ pthread_mutexattr_t g_mq_mutex_attr;
  * Static Functions
  ********************/
 
-static int s_find_queue_in_desc_list(char * name, mqd_section_t * p_mqd_section)
+static int s_find_queue_in_desc_list(const char * name, const mqd_section_t * p_mqd_section)
 {
 	(void)(name);
 	(void)(p_mqd_section);
@@ -38,7 +37,7 @@ static int s_find_queue_in_desc_list(char * name, mqd_section_t * p_mqd_section)
 
 static int s_queue_write(mqd_t mqdes, const void * buff, size_t size, unsigned msg_prio)
 {
-	mqd_section_t * p_mqd_section = (mqd_section_t *) mqdes;
+	const mqd_section_t * p_mqd_section = (mqd_section_t *) mqdes;
 	sret_t mq_sys_ret;
 
 	RET_ERR_IF_FALSE((p_mqd_section->attr.mq_flags & O_RDONLY), -ENOTSUP, int);
@@ -51,7 +50,7 @@ static int s_queue_write(mqd_t mqdes, const void * buff, size_t size, unsigned m
 	return SUCCESS;
 }
 
-static int s_queue_read(mqd_t mqdes, const void * buff, size_t size)
+static int s_queue_read(mqd_t mqdes, void * buff, size_t size)
 {
 	mqd_section_t * p_mqd_section = (mqd_section_t *) mqdes;
 	sret_t mq_sys_ret;
@@ -95,7 +94,7 @@ static int s_mq_release_lock(void)
 mqd_t mq_open( 	const char * name,
 		int oflag,
 		mode_t mode _UNUSED,
-		mq_attr_t * attr )
+		const mq_attr_t * attr )
 {
 	mqd_section_t * p_mqd_section = NULL;
 	sret_t mq_sys_ret;
@@ -106,7 +105,7 @@ mqd_t mq_open( 	const char * name,
 	ASSERT_IF_FALSE( name_len < posixconfigMQ_NAME_LEN_MAX, mqd_t);
 
 	/* Return ENOENT if element already exist */
-	RET_ERR_IF_FALSE(s_find_queue_in_desc_list((char *) name, NULL) == SUCCESS, -ENOENT, mqd_t);
+	RET_ERR_IF_FALSE(s_find_queue_in_desc_list((const char *) name, NULL) == SUCCESS, -ENOENT, mqd_t);
 
 	/* Return ENOENT if oflag is not equal to O_CREAT */
 	RET_ERR_IF_FALSE( oflag & O_CREAT, -ENOENT, mqd_t);
@@ -234,6 +233,8 @@ ssize_t mq_timedreceive( mqd_t mqdes,
 	ASSERT_IF_FALSE(msg_ptr != NULL, ssize_t);
 	ASSERT_IF_FALSE(msg_len > RST_VAL, ssize_t);
 
+	*msg_prio = RST_VAL;
+
 	ssize_t err = SUCCESS;
 	TickType_t abs_ticks;
 
@@ -251,42 +252,34 @@ ssize_t mq_timedreceive( mqd_t mqdes,
 	RET_ERR_IF_FALSE( s_mq_acquire_lock() == SUCCESS, -EBUSY, ssize_t);
 
 	/* Check the availability of the Queue entry */
-	if (s_find_queue_in_desc_list(NULL, (mqd_section_t *) mqdes) == SUCCESS)
-	{
-		do
-		{
-			/* Try to read queue from kernel */
-			if (s_queue_read(mqdes, msg_ptr, msg_len) == SUCCESS)
-			{
-				break;
-			}
-			else
-			{
-				if (((mqd_section_t *) mqdes)->attr.mq_flags & O_NONBLOCK)
-				{
-					err = -ENOSPC;
-					break;
-				}
-				else
-				{
-					if (abs_ticks == RST_VAL)
-					{
-						err = -ETIMEDOUT;
-					}
-					else
-					{
-						os_delay_ticks((const TickType_t)DELAY_MIN_TICK);
-						abs_ticks--;
-					}
-				}
-			}
-		}while(abs_ticks > RST_VAL);
-	}
-	else
+	if (s_find_queue_in_desc_list(NULL, (mqd_section_t *) mqdes) != SUCCESS)
 	{
 		err = -EBADF;
+		goto exit_mq_timedreceive;
 	}
+	do
+	{
+		/* Try to read queue from kernel */
+		if (s_queue_read(mqdes, msg_ptr, msg_len) == SUCCESS)
+		{
+			break;
+		}
+		else if (((mqd_section_t *) mqdes)->attr.mq_flags & O_NONBLOCK)
+		{
+			abs_ticks = RST_VAL;
+		}
+		if (abs_ticks == RST_VAL)
+		{
+			err = -ETIMEDOUT;
+		}
+		else
+		{
+			os_delay_ticks((const TickType_t)DELAY_MIN_TICK);
+			abs_ticks--;
+		}
+	}while(abs_ticks > RST_VAL);
 
+exit_mq_timedreceive:
 	RET_ERR_IF_FALSE( s_mq_release_lock() == SUCCESS, -EBUSY, ssize_t );
 
 	return err;
@@ -319,49 +312,40 @@ int mq_timedsend( mqd_t mqdes,
 	RET_ERR_IF_FALSE( s_mq_acquire_lock() == SUCCESS, -EBUSY, ssize_t);
 
 	/* Check the availability of the Queue entry */
-	if (s_find_queue_in_desc_list(NULL, (mqd_section_t *) mqdes) == SUCCESS)
-	{
-		do
-		{
-			/* Try to send to kernel queue buffer */
-			if (s_queue_write(mqdes, msg_ptr, msg_len, msg_prio) == SUCCESS)
-			{
-				break;
-			}
-			else
-			{
-				if (((mqd_section_t *) mqdes)->attr.mq_flags & O_NONBLOCK)
-				{
-					err = -ENOSPC;
-					break;
-				}
-				else
-				{
-					if (abs_ticks == RST_VAL)
-					{
-						err = -ETIMEDOUT;
-					}
-					else
-					{
-						os_delay_ticks((const TickType_t)DELAY_MIN_TICK);
-						abs_ticks--;
-					}
-				}
-			}
-		}while(abs_ticks > RST_VAL);
-	}
-	else
+	if (s_find_queue_in_desc_list(NULL, (mqd_section_t *) mqdes) != SUCCESS)
 	{
 		err = -EBADF;
+		goto exit_mq_timedsend;
 	}
+	do
+	{
+		/* Try to send to kernel queue buffer */
+		if (s_queue_write(mqdes, msg_ptr, msg_len, msg_prio) == SUCCESS)
+		{
+			break;
+		}
+		else if (((mqd_section_t *) mqdes)->attr.mq_flags & O_NONBLOCK)
+		{
+			abs_ticks = RST_VAL;
+		}
+		if (abs_ticks == RST_VAL)
+		{
+			err = -ETIMEDOUT;
+		}
+		else
+		{
+			os_delay_ticks((const TickType_t)DELAY_MIN_TICK);
+			abs_ticks--;
+		}
+	}while(abs_ticks > RST_VAL);
 
+exit_mq_timedsend:
 	RET_ERR_IF_FALSE( s_mq_release_lock() == SUCCESS, -EBUSY, ssize_t );
 
 	return err;
 }
 
-int mq_unlink( const char * name )
+int mq_unlink( const char * name _UNUSED)
 {
-	(void)(name);
 	return SUCCESS;
 }
