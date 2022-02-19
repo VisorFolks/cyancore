@@ -30,12 +30,12 @@ extern FILE stddev[];
 
 int printf(const char *fmt, ...);
 int eprintf(const char *fmt, ...);
-int fputs(FILE *, const char *);
-int fputc(FILE *, const char);
+int fputs(const FILE *, const char *);
+int fputc(const FILE *, const char);
 
 #ifdef _STDBOOL_H_
-int fprintf(FILE *, bool, const char *fmt, ...);
+int fprintf(const FILE *, bool, const char *fmt, ...);
 #ifdef _STDARG_H_
-int vprintf(FILE *, bool, const char *fmt, va_list args);
+int vprintf(const FILE *, bool, const char *fmt, va_list args);
 #endif
 #endif

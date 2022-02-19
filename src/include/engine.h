@@ -13,11 +13,14 @@
 #include <status.h>
 #include <syslog.h>
 
-#define bootmsgs_enable()	if(BOOTMSGS)			\
-				{				\
-					syslog_print();		\
-					syslog_stdout_enable();	\
-				}
+#define bootmsgs_enable()	do					\
+				{					\
+					if(BOOTMSGS)			\
+					{				\
+						syslog_print();		\
+						syslog_stdout_enable();	\
+					}				\
+				} while(false)
 
 typedef union __ccver
 {

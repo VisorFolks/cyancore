@@ -18,5 +18,5 @@ typedef struct ccpdfs
 	status_t (*read)(char *);
 } ccpdfs_t;
 
-status_t ccpdfs_write(ccpdfs_t *, const char);
-status_t ccpdfs_read(ccpdfs_t *, char *);
+status_t ccpdfs_write(const ccpdfs_t *, const char);
+status_t ccpdfs_read(const ccpdfs_t *, char *);

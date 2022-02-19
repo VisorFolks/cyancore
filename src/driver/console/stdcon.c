@@ -176,7 +176,7 @@ status_t logger_putc(const char c)
 	return ret;
 }
 
-status_t logger_dprint(FILE *device)
+status_t logger_dprint(const FILE *device)
 {
 	status_t lvar;
 	char c;

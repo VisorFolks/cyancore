@@ -31,5 +31,5 @@ status_t logger_release_device();
 status_t logger_putc(const char);
 
 #ifdef _STDIO_H_
-status_t logger_dprint(FILE *);
+status_t logger_dprint(const FILE *);
 #endif

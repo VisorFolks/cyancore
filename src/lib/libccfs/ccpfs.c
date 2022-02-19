@@ -13,7 +13,7 @@
 #include <status.h>
 #include <ccpfs.h>
 
-status_t ccpdfs_write(ccpdfs_t *dev, const char c)
+status_t ccpdfs_write(const ccpdfs_t *dev, const char c)
 {
 	assert(dev);
 	if(!dev->write)
@@ -21,7 +21,7 @@ status_t ccpdfs_write(ccpdfs_t *dev, const char c)
 	return dev->write(c);
 }
 
-status_t ccpdfs_read(ccpdfs_t *dev, char *c)
+status_t ccpdfs_read(const ccpdfs_t *dev, char *c)
 {
 	assert(dev);
 	if(!dev->write)

@@ -28,7 +28,7 @@
 	(((_lcount) >= 1)  ? va_arg(_args, unsigned long) :	\
 			    va_arg(_args, unsigned int))
 
-int __fputc(FILE *dev, bool en_stdout, const char c)
+int __fputc(const FILE *dev, bool en_stdout, const char c)
 {
 	int ret;
 	ret = ccpdfs_write(dev, c);
@@ -37,7 +37,7 @@ int __fputc(FILE *dev, bool en_stdout, const char c)
 	return ret;
 }
 
-int __fputs(FILE *dev, bool en_stdout, const char *i)
+int __fputs(const FILE *dev, bool en_stdout, const char *i)
 {
 	int ret = 0;
 	while(*i != '\0')
@@ -49,17 +49,18 @@ int __fputs(FILE *dev, bool en_stdout, const char *i)
 	return ret;
 }
 
-int fputc(FILE *dev, const char c)
+int fputc(const FILE *dev, const char c)
 {
 	return __fputc(dev, 0, c);
 }
 
-int fputs(FILE *dev, const char *i)
+int fputs(const FILE *dev, const char *i)
 {
 	return __fputs(dev, 0, i);
 }
 
-static int unumprint(FILE *dev, bool en_stdout, unsigned long unum, unsigned int radix, char padc, int padn)
+static int unumprint(const FILE *dev, bool en_stdout, unsigned long unum,
+		unsigned int radix, char padc, int padn)
 {
 	char buf[20];
 	int i = 0, ret = 0;
@@ -92,7 +93,7 @@ static int unumprint(FILE *dev, bool en_stdout, unsigned long unum, unsigned int
 	return ret;
 }
 
-int vprintf(FILE *dev, bool en_stdout, const char *fmt, va_list args)
+int vprintf(const FILE *dev, bool en_stdout, const char *fmt, va_list args)
 {
 	int l_ret;
 	long num;
@@ -214,7 +215,7 @@ int eprintf(const char *fmt, ...)
 	return ret;
 }
 
-int fprintf(FILE *dev, bool en_stdout, const char *fmt, ...)
+int fprintf(const FILE *dev, bool en_stdout, const char *fmt, ...)
 {
 	int ret;
 	va_list va;
