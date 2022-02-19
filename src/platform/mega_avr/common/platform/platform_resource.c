@@ -48,7 +48,7 @@ status_t platform_resources_setup()
  *
  * @return status: return the function execution status
  */
-mret_t platform_fetch_sp(unsigned int a0, unsigned int a1 _UNUSED, unsigned int a2 _UNUSED)
+mret_t platform_fetch_sp(call_arg_t a0, call_arg_t a1 _UNUSED, call_arg_t a2 _UNUSED)
 {
 	mret_t ret;
 	ret.p = (uintptr_t) sp_terravisor_dev_info(a0);
@@ -72,7 +72,7 @@ INCLUDE_MCALL(atmega328p_fetch_sp, fetch_sp, platform_fetch_sp);
  *
  * @return status: return the function execution status
  */
-mret_t platform_fetch_dp(unsigned int a0, unsigned int a1 _UNUSED, unsigned int a2 _UNUSED)
+mret_t platform_fetch_dp(call_arg_t a0, call_arg_t a1 _UNUSED, call_arg_t a2 _UNUSED)
 {
 	mret_t ret;
 	switch(a0)

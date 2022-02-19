@@ -23,5 +23,7 @@ typedef struct context_frame
 		r6, r5, r4, r3, r2, sreg, r0, r1, r24;
 } context_frame_t;
 
+typedef uint16_t call_arg_t;
+
 context_frame_t *get_context_frame();
 void arch_panic_handler_callback();
