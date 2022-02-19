@@ -1,7 +1,7 @@
 # ![Cyancore](https://github.com/VisorFolks/vf_artifacts/blob/stable/cyancore/icons/cyancore_50x50.png?raw=true)  Cyancore
 *An unified software platform for embedded system projects ...*
 
-> **Version (arch:2 | major:4 | minor:2): 1.2.0**
+> **Version (arch:2 | major:4 | minor:2): 1.2.1**
 
 [![GitHub CI](https://github.com/VisorFolks/cyancore/actions/workflows/github_ci.yml/badge.svg)](https://github.com/VisorFolks/cyancore/actions/workflows/github_ci.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=VisorFolks_cyancore&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=VisorFolks_cyancore)

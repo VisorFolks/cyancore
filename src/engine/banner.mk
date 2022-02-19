@@ -10,7 +10,7 @@
 
 .PHONY:	version
 NAME		= Helium
-VERSION		= 0x01000200
+VERSION		= 0x01000201
 
 $(eval $(call add_define,VERSION))
 
