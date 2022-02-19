@@ -132,7 +132,7 @@ int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*startr
 	/* Grab resource access else return EBUSY */
 	RET_ERR_IF_FALSE(s_pthread_acquire_lock() == SUCCESS, -EBUSY, int);
 
-	super_call(scall_id_pthread_create, (call_args) startroutine, (call_args) arg, thread->attr->stacksize, &pthread_sys_ret);
+	super_call(scall_id_pthread_create, (call_arg_t) startroutine, (call_arg_t) arg, thread->attr->stacksize, &pthread_sys_ret);
 	if (pthread_sys_ret.status != SUCCESS)
 	{
 		err = -EAGAIN;

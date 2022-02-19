@@ -19,7 +19,7 @@
 extern mcall_t _mcall_table_start;
 extern mcall_t _mcall_table_end;
 
-void machine_call(mcall_id_t id, call_args a0, call_args a1, call_args a2, mret_t *ret)
+void machine_call(mcall_id_t id, call_arg_t a0, call_arg_t a1, call_arg_t a2, mret_t *ret)
 {
 	/* mcall Table pointer */
 	mcall_t *ptr;
