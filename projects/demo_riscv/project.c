@@ -20,12 +20,13 @@
 #include <hal/gpio.h>
 
 static unsigned long long t;
+static unsigned int ticks = 16384;
 
 static void test()
 {
 	arch_di_mtime();
 	t = clint_read_time();
-	clint_config_tcmp(0, (t + 12500));
+	clint_config_tcmp(0, (t + ticks));
 	arch_ei_mtime();
 }
 
@@ -51,7 +52,7 @@ void plug()
 	gpio_pin_set(&rled);
 
 	t = clint_read_time();
-	clint_config_tcmp(0, (t + 12500));
+	clint_config_tcmp(0, (t + ticks));
 	arch_ei_mtime();
 }
 

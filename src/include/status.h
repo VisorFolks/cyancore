@@ -50,6 +50,7 @@ typedef enum status
 	error_file_not_found		= -0x0703,
 	error_file_no_space		= -0x0704,
 	error_file_long_name		= -0x0705,
+	error_file_io			= -0x0706,
 /* String related error */
 	error_string			= -0x0800,
 /* Math related error */

@@ -11,7 +11,7 @@
 
 #include <stdint.h>
 #include <status.h>
-#include <stdio.h>
+#include <syslog.h>
 #include <arch.h>
 #include <terravisor/workers.h>
 #include <interrupt.h>
@@ -90,8 +90,9 @@ void arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsi
 _WEAK void arch_panic_handler()
 {
 	const context_frame_t *frame = get_context_frame();
-	printf("< x > Arch Panic!\n");
-	printf("Info:\nCause\t: 0x%x\t Address\t: 0x%x\n", frame->mcause, frame->mepc);
+	syslog_stdout_enable();
+	syslog(fail, "Arch Panic!\n");
+	syslog(info, "Info:\nCause\t: 0x%x\t Address\t: 0x%x\n", frame->mcause, frame->mepc);
 	while(1)
 		arch_wfi();
 }
@@ -99,8 +100,9 @@ _WEAK void arch_panic_handler()
 _WEAK void arch_unhandled_irq()
 {
 	const context_frame_t *frame = get_context_frame();
-	printf("< x > Arch Unhandled IRQ!\n");
-	printf("Info:\nIRQ ID\t: 0x%x\n", frame->mcause & ~(1U << 31));
+	syslog_stdout_enable();
+	syslog(fail, "Arch Unhandled IRQ!\n");
+	syslog(info, "Info:\nIRQ ID\t: 0x%x\n", frame->mcause & ~(1U << 31));
 	while(1)
 		arch_wfi();
 }

@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stddev.h>
 #include <status.h>
 #include <lock/lock.h>
 #include <driver/console.h>
@@ -54,6 +55,9 @@ status_t console_attach_device(status_t dev_status, console_t *pcon)
 	{
 		ret = dev_status;
 		console_attached = (ret == success) ? true : false;
+		ret |= stdout_register(&console_putc);
+		ret |= stderr_register(&console_putc);
+		ret |= stdin_register(&console_getc);
 	}
 	else
 		ret = error_device_inval;
@@ -101,28 +105,6 @@ status_t console_putc(const char c)
 }
 
 /**
- * console_puts - Sends series of char data to console device
- *
- * @brief This API call sends char data console_putc until the stream
- * of data end with a null char.
- *
- * @param[in] *s: stream of char data
- * @return status: function execution status
- */
-status_t console_puts(const char *s)
-{
-	status_t ret;
-	while(*s != '\0')
-	{
-		ret = console_putc(*s);
-		if(ret == error_func_inval)
-			return ret;
-		s++;
-	}
-	return success;
-}
-
-/**
  * console_getc - Fetch a char (8-bits) data form device driver
  *
  * @param[out] *c: pointer to store the read data
@@ -151,4 +133,62 @@ status_t console_flush()
 		ret = con->flush();
 	lock_release(&console_lock);
 	return ret;
+}
+
+static console_t *log;
+static lock_t log_lock;
+static bool logger_attached;
+
+status_t logger_attach_device(status_t dev_status, console_t *pcon)
+{
+	status_t ret;
+	lock_acquire(&log_lock);
+	logger_attached = false;
+	log = pcon;
+	if(log != NULL)
+	{
+		ret = dev_status;
+		logger_attached = (ret == success) ? true : false;
+		ret |= stdlog_register(&logger_putc);
+	}
+	else
+		ret = error_device_inval;
+	lock_release(&log_lock);
+	return ret;
+}
+
+status_t logger_release_device()
+{
+	lock_acquire(&log_lock);
+	log = NULL;
+	logger_attached = false;
+	lock_release(&log_lock);
+	return success;
+}
+
+status_t logger_putc(const char c)
+{
+	status_t ret = error_func_inval;
+	lock_acquire(&log_lock);
+	if(logger_attached && log->write != NULL)
+		ret = log->write(c);
+	lock_release(&log_lock);
+	return ret;
+}
+
+status_t logger_dprint(const FILE *device)
+{
+	status_t lvar;
+	char c;
+	if(!device || !logger_attached)
+		return error_device_inval;
+	lock_acquire(&log_lock);
+	do
+	{
+		lvar = log->read(&c);
+		device->write(c);
+	}
+	while(lvar);
+	lock_release(&log_lock);
+	return success;
 }

@@ -14,17 +14,28 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <status.h>
+#include <ccpfs.h>
 
 #define EOF		-1
 
+typedef ccpdfs_t FILE;
+
+extern FILE stddev[];
+
+#define stdin		&stddev[0]
+#define stdout		&stddev[1]
+#define stderr		&stddev[2]
+#define stdlog		&stddev[3]
+
 int printf(const char *fmt, ...);
-int snprintf(char *s, size_t n, const char *fmt, ...);
-int putch(int c);
-int puts(const char *s);
+int eprintf(const char *fmt, ...);
+int fputs(const FILE *, const char *);
+int fputc(const FILE *, const char);
 
-char getch();
-char getchar();
-
+#ifdef _STDBOOL_H_
+int fprintf(const FILE *, bool, const char *fmt, ...);
 #ifdef _STDARG_H_
-int vprintf(const char *fmt, va_list args);
+int vprintf(const FILE *, bool, const char *fmt, va_list args);
+#endif
 #endif

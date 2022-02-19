@@ -12,6 +12,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <status.h>
+#include <syslog.h>
 #include <lock/spinlock.h>
 #include <resource.h>
 #include <machine_call.h>
@@ -30,17 +31,25 @@ static status_t earlycon_serial_setup()
 	hw_devid_t devid;
 	arch_machine_call(fetch_sp, console_uart, 0, 0, &mres);
 	if(mres.status != success)
+	{
+		sysdbg("Console could not found!\n");
 		return mres.status;
+	}
 	devid = (hw_devid_t) mres.p;
 	arch_machine_call(fetch_dp, (devid & 0xff00), (devid & 0x00ff), 0, &mres);
 	if(mres.status != success)
+	{
+		sysdbg("UART Device %d not found!\n", devid);
 		return mres.status;
+	}
 	dp = (module_t *)mres.p;
 	earlycon_port.port_id = dp->id;
 	earlycon_port.clk_id = dp->clk_id;
 	earlycon_port.baddr = dp->baddr;
 	earlycon_port.stride = dp->stride;
 	earlycon_port.baud = dp->clk;
+
+	sysdbg("UART engine @ %p\n", earlycon_port.baddr);
 	/*
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
@@ -59,7 +68,6 @@ static status_t earlycon_serial_write(const char c)
 static console_t earlycon_serial_driver =
 {
 	.write = &earlycon_serial_write,
-	.error = &earlycon_serial_write,
 };
 
 status_t earlycon_serial_driver_setup()
@@ -79,5 +87,5 @@ status_t earlycon_serial_driver_exit()
 }
 
 #if EARLYCON_SERIAL==1
-INCLUDE_DRIVER(earlycon, earlycon_serial_driver_setup, earlycon_serial_driver_exit, 0, 0, 0);
+INCLUDE_DRIVER(earlycon, earlycon_serial_driver_setup, earlycon_serial_driver_exit, 0, 1, 1);
 #endif

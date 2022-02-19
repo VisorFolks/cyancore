@@ -12,6 +12,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <status.h>
+#include <syslog.h>
 #include <lock/spinlock.h>
 #include <resource.h>
 #include <machine_call.h>
@@ -33,11 +34,17 @@ static status_t console_serial_setup()
 	hw_devid_t devid;
 	arch_machine_call(fetch_sp, console_uart, 0, 0, &mres);
 	if(mres.status != success)
+	{
+		sysdbg("Console could not found!\n");
 		return mres.status;
+	}
 	devid = (hw_devid_t) mres.p;
 	arch_machine_call(fetch_dp, (devid & 0xff00), (devid & 0x00ff), 0, &mres);
 	if(mres.status != success)
+	{
+		sysdbg("UART Device %d not found!\n", devid);
 		return mres.status;
+	}
 	dp = (module_t *)mres.p;
 	console_port.port_id = dp->id;
 	console_port.clk_id = dp->clk_id;
@@ -48,6 +55,8 @@ static status_t console_serial_setup()
 	console_port.tx_handler = console_serial_write_irq_handler;
 	console_port.rx_irq = dp->interrupt_id[0];
 	console_port.rx_handler = console_serial_read_irq_handler;
+
+	sysdbg("UART engine @ %p\n", console_port.baddr);
 	/*
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
@@ -94,7 +103,6 @@ static status_t console_serial_flush()
 static console_t console_serial_driver =
 {
 	.write = &console_serial_write,
-	.error = &console_serial_write,
 	.read = &console_serial_read,
 	.flush = &console_serial_flush
 };
@@ -113,9 +121,10 @@ status_t console_serial_driver_exit()
 	status_t ret;
 	ret = console_release_device();
 	ret |= uart_shutdown(&console_port);
+	driver_setup("earlycon");
 	return ret;
 }
 
 #if CONSOLE_SERIAL==1
-INCLUDE_DRIVER(console, console_serial_driver_setup, console_serial_driver_exit, 0, 255, 0);
+INCLUDE_DRIVER(console, console_serial_driver_setup, console_serial_driver_exit, 0, 255, 255);
 #endif

@@ -10,5 +10,27 @@
 
 #pragma once
 #define _ENGINE_H_
+#include <status.h>
+#include <syslog.h>
+
+#define bootmsgs_enable()	do					\
+				{					\
+					if(BOOTMSGS)			\
+					{				\
+						syslog_print();		\
+						syslog_stdout_enable();	\
+					}				\
+				} while(false)
+
+typedef union __ccver
+{
+	uint32_t v32;
+	struct
+	{
+		uint32_t minor: 8;
+		uint32_t major: 16;
+		uint32_t arch : 8;
+	} v;
+} ccver_t;
 
 void engine();
