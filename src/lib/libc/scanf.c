@@ -11,14 +11,20 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <status.h>
-#include <driver/console.h>
+#include <ccpfs.h>
+#include <stdio.h>
+#include <stddev.h>
+
+int __fgetc(const FILE *dev, char *c)
+{
+	return ccpdfs_read(dev, c);
+}
 
 char getch()
 {
     char c;
-    console_getc(&c);
+    __fgetc(stdin, &c);
     return c;
 }
 
@@ -30,7 +36,7 @@ char getchar()
         temp = getch();
         if(c == 0)
             c = temp;
-        console_putc(temp);
+        fputc(stdout, temp);
     }
     while(temp != '\r');
     return c;
