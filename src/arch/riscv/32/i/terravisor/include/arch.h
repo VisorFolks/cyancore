@@ -11,8 +11,8 @@
 
 #pragma once
 #define _ARCH_H_
-#include <machine_call.h>
 #include <riscv.h>
+#include <machine_call.h>
 
 /**
  * arch_early_setup - This needs to be called in early stages of boot

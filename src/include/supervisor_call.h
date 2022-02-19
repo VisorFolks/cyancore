@@ -20,16 +20,7 @@ typedef enum scall_id
 	scall_id_generic				= 0x0000,
 	scall_id_is_irq,
 /* pthread related */
-	scall_id_pthread_attr_destroy			= 0x1000,
-	scall_id_pthread_attr_getdetachstate,
-	scall_id_pthread_attr_getschedparam,
-	scall_id_pthread_attr_getstacksize,
-	scall_id_pthread_attr_init,
-	scall_id_pthread_attr_setdetachstate,
-	scall_id_pthread_attr_setschedparam,
-	scall_id_pthread_attr_setschedpolicy,
-	scall_id_pthread_attr_setstacksize,
-	scall_id_pthread_barrier_destroy,
+	scall_id_pthread_barrier_destroy		= 0x1000,
 	scall_id_pthread_barrier_init,
 	scall_id_pthread_barrier_wait,
 	scall_id_pthread_create,
@@ -81,10 +72,12 @@ typedef struct sret
 	status_t status;
 } sret_t;
 
+#include <arch.h>
+
 typedef struct scall
 {
 	scall_id_t id;
-	sret_t (*callback)(unsigned int a0, unsigned int a1, unsigned int a2);
+	sret_t (*callback)(call_arg_t a0, call_arg_t a1, call_arg_t a2);
 } scall_t;
 
 #define INCLUDE_SCALL(_name, _id , _callback)		\

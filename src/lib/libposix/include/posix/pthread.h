@@ -310,7 +310,7 @@ int pthread_equal( pthread_t t1,
  *
  * @retval void - this function cannot return to its caller.
  */
-void pthread_exit( void * value_ptr );
+void pthread_exit( const void * value_ptr );
 
 /**
  * @brief Dynamic thread scheduling parameters access.
