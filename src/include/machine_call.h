@@ -13,7 +13,6 @@
 
 #include <stdint.h>
 #include <status.h>
-#include <arch.h>
 
 // Machine call IDs
 typedef enum mcall_id
@@ -29,6 +28,8 @@ typedef struct mret
 	size_t size;
 	status_t status;
 } mret_t;
+
+#include <arch.h>
 
 typedef struct mcall
 {
