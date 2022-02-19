@@ -24,6 +24,8 @@ typedef struct context_frame
 		 /* Padding is necessary for alignment */
 } context_frame_t;
 
+typedef uint32_t call_arg_t;
+
 static inline unsigned int arch_core_isa()
 {
 	unsigned int ret;

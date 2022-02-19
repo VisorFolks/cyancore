@@ -22,8 +22,6 @@ typedef enum mcall_id
 	set_sleep_mode		= 0x0003,
 } mcall_id_t;
 
-
-
 typedef struct mret
 {
 	uintptr_t p;
@@ -31,10 +29,12 @@ typedef struct mret
 	status_t status;
 } mret_t;
 
+#include <arch.h>
+
 typedef struct mcall
 {
 	mcall_id_t id;
-	mret_t (*callback)(unsigned int a0, unsigned int a1, unsigned int a2);
+	mret_t (*callback)(call_arg_t a0, call_arg_t a1, call_arg_t a2);
 } mcall_t;
 
 #define INCLUDE_MCALL(_name, _id , _callback)		\
