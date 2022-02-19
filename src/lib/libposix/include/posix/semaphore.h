@@ -76,7 +76,7 @@ int sem_init( sem_t * sem,
  *
  * @retval 0 - upon successful completion
  */
-int sem_post( sem_t * sem );
+int sem_post( const sem_t * sem );
 
 /**
  * @brief Lock a semaphore with timeout.

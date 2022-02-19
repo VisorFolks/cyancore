@@ -18,7 +18,7 @@
 /*********************
  * Static Functions
  ********************/
-static int s_sem_wait( sem_t * sem )
+static int s_sem_wait( const sem_t * sem )
 {
 	sret_t sem_sys_ret=
 	{
@@ -100,7 +100,7 @@ int sem_init( sem_t * sem, int pshared _UNUSED, unsigned value )
 	return SUCCESS;
 }
 
-int sem_post( sem_t * sem )
+int sem_post( const sem_t * sem )
 {
 	sret_t sem_sys_ret=
 	{
@@ -150,7 +150,7 @@ int sem_timedwait( sem_t * sem, const struct timespec * abstime )
 			}
 			else
 			{
-				os_delay_ticks((const TickType_t)DELAY_MIN_TICK);
+				os_delay_ticks(DELAY_MIN_TICK);
 				abs_ticks--;
 			}
 		}

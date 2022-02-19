@@ -52,7 +52,7 @@ static int s_queue_write(mqd_t mqdes, const void * buff, size_t size, unsigned m
 
 static int s_queue_read(mqd_t mqdes, void * buff, size_t size)
 {
-	mqd_section_t * p_mqd_section = (mqd_section_t *) mqdes;
+	const mqd_section_t * p_mqd_section = (mqd_section_t *) mqdes;
 	sret_t mq_sys_ret;
 
 	RET_ERR_IF_FALSE((p_mqd_section->attr.mq_flags & O_WRONLY), -ENOTSUP, int);
@@ -60,7 +60,7 @@ static int s_queue_read(mqd_t mqdes, void * buff, size_t size)
 	super_call(scall_id_mq_receive, p_mqd_section->id, size, RST_VAL, &mq_sys_ret);
 	RET_ERR_IF_FALSE(mq_sys_ret.status == SUCCESS, -EBADF, int);
 
-	memcpy((void *)buff, (void *) (p_mqd_section->kernel_buff), size);
+	memcpy(buff, (void *) (p_mqd_section->kernel_buff), size);
 
 	return SUCCESS;
 }
@@ -197,8 +197,7 @@ int mq_close( mqd_t mqdes )
 	return err;
 }
 
-int mq_getattr( mqd_t mqdes,
-                mq_attr_t * attr )
+int mq_getattr( mqd_t mqdes, mq_attr_t * attr )
 {
 	ASSERT_IF_FALSE(mqdes != NULL, ssize_t);
 
@@ -207,27 +206,17 @@ int mq_getattr( mqd_t mqdes,
 	return SUCCESS;
 }
 
-ssize_t mq_receive( mqd_t mqdes,
-		    char * msg_ptr,
-		    size_t msg_len,
-		    unsigned int * msg_prio )
+ssize_t mq_receive( mqd_t mqdes, char * msg_ptr, size_t msg_len, unsigned int * msg_prio )
 {
 	return mq_timedreceive( mqdes, msg_ptr, msg_len, msg_prio, NULL );
 }
 
-int mq_send( mqd_t mqdes,
-	     const char * msg_ptr,
-	     size_t msg_len,
-	     unsigned msg_prio )
+int mq_send( mqd_t mqdes, const char * msg_ptr, size_t msg_len, unsigned msg_prio )
 {
 	return mq_timedsend( mqdes, msg_ptr, msg_len, msg_prio, NULL );
 }
 
-ssize_t mq_timedreceive( mqd_t mqdes,
-			 char * msg_ptr,
-			 size_t msg_len,
-			 unsigned * msg_prio _UNUSED,
-			 const timespec_t * abstime )
+ssize_t mq_timedreceive( mqd_t mqdes, char * msg_ptr, size_t msg_len, unsigned * msg_prio _UNUSED, const timespec_t * abstime )
 {
 	ASSERT_IF_FALSE(mqdes != NULL, ssize_t);
 	ASSERT_IF_FALSE(msg_ptr != NULL, ssize_t);
@@ -255,7 +244,7 @@ ssize_t mq_timedreceive( mqd_t mqdes,
 	if (s_find_queue_in_desc_list(NULL, (mqd_section_t *) mqdes) != SUCCESS)
 	{
 		err = -EBADF;
-		goto exit_mq_timedreceive;
+		goto EXIT_MQ_TIMED_RECEIVE;
 	}
 	do
 	{
@@ -274,22 +263,18 @@ ssize_t mq_timedreceive( mqd_t mqdes,
 		}
 		else
 		{
-			os_delay_ticks((const TickType_t)DELAY_MIN_TICK);
+			os_delay_ticks(DELAY_MIN_TICK);
 			abs_ticks--;
 		}
 	}while(abs_ticks > RST_VAL);
 
-exit_mq_timedreceive:
+EXIT_MQ_TIMED_RECEIVE:
 	RET_ERR_IF_FALSE( s_mq_release_lock() == SUCCESS, -EBUSY, ssize_t );
 
 	return err;
 }
 
-int mq_timedsend( mqd_t mqdes,
-		  const char * msg_ptr,
-		  size_t msg_len,
-		  unsigned msg_prio,
-		  const struct timespec * abstime )
+int mq_timedsend( mqd_t mqdes, const char * msg_ptr, size_t msg_len, unsigned msg_prio, const struct timespec * abstime )
 {
 	ASSERT_IF_FALSE(mqdes != NULL, int);
 	ASSERT_IF_FALSE(msg_ptr != NULL, int);
@@ -315,7 +300,7 @@ int mq_timedsend( mqd_t mqdes,
 	if (s_find_queue_in_desc_list(NULL, (mqd_section_t *) mqdes) != SUCCESS)
 	{
 		err = -EBADF;
-		goto exit_mq_timedsend;
+		goto EXIT_MQ_TIMED_SEND;
 	}
 	do
 	{
@@ -339,7 +324,7 @@ int mq_timedsend( mqd_t mqdes,
 		}
 	}while(abs_ticks > RST_VAL);
 
-exit_mq_timedsend:
+EXIT_MQ_TIMED_SEND:
 	RET_ERR_IF_FALSE( s_mq_release_lock() == SUCCESS, -EBUSY, ssize_t );
 
 	return err;

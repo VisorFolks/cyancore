@@ -57,7 +57,7 @@ cc_os_err_t cc_os_add_task (cc_os_task_t * cc_os_task)
 	return success;
 }
 
-cc_os_err_t cc_os_del_task (char * name)
+cc_os_err_t cc_os_del_task (const char * name)
 {
 	cc_shed_tcb_t * ptr = g_curr_task;
 	int name_found = 0;
@@ -106,7 +106,7 @@ cc_os_err_t cc_os_del_task (char * name)
 	return success;
 }
 
-cc_os_err_t cc_os_pause_task (char * name)
+cc_os_err_t cc_os_pause_task (const char * name)
 {
 	cc_shed_tcb_t * ptr = g_curr_task;
 	int name_found = 0;
@@ -133,7 +133,7 @@ cc_os_err_t cc_os_pause_task (char * name)
 	return success;
 }
 
-cc_os_err_t cc_os_resume_task (char * name)
+cc_os_err_t cc_os_resume_task (const char * name)
 {
 	ASSERT_IF_FALSE(name != NULL);
 
@@ -159,7 +159,7 @@ cc_os_err_t cc_os_resume_task (char * name)
 	return success;
 }
 
-cc_os_err_t cc_os_wait_task (size_t ticks _UNUSED)
+cc_os_err_t cc_os_wait_task (const size_t ticks _UNUSED)
 {
 	return success;
 }

@@ -108,12 +108,9 @@ int UTILS_TimespecToTicks( const struct timespec * const pxTimespec,
 			uint32_t ulTickTypeSize = sizeof( TickType_t );
 
 			/* check for downcast overflow */
-			if( ulTickTypeSize == sizeof( uint32_t ) )
+			if ((ulTickTypeSize == sizeof(uint32_t)) && (total_ticks > UINT_MAX))
 			{
-				if( total_ticks > UINT_MAX )
-				{
-					err_staus = -EINVAL;
-				}
+				err_staus = -EINVAL;
 			}
 		}
 
@@ -326,14 +323,10 @@ bool UTILS_ValidateTimespec( const struct timespec * const pxTimespec )
 {
 	bool ret = false;
 
-	if( pxTimespec != NULL )
+	/* Verify 0 <= tv_nsec < 1000000000. */
+	if(( pxTimespec != NULL ) && ((pxTimespec->tv_nsec >= 0) && (pxTimespec->tv_nsec < NANOSECONDS_PER_SECOND)))
 	{
-		/* Verify 0 <= tv_nsec < 1000000000. */
-		if( ( pxTimespec->tv_nsec >= 0 ) &&
-			( pxTimespec->tv_nsec < NANOSECONDS_PER_SECOND ) )
-		{
-			ret = true;
-		}
+		ret = true;
 	}
 
 	return ret;
