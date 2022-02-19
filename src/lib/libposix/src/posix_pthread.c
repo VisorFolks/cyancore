@@ -156,7 +156,7 @@ int pthread_equal(pthread_t t1, pthread_t t2)
 	return memcmp(&t1, &t2, sizeof(pthread_t));
 }
 
-void pthread_exit(void *value_ptr _UNUSED)
+void pthread_exit( const void *value_ptr _UNUSED)
 {
 	sret_t pthread_sys_ret =
 	{

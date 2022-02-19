@@ -11,14 +11,11 @@
 #pragma once
 
 #if defined(ARCH_ARM_32)
-#define __CALL_ARG_TYPE__ unsigned long
+typedef unsigned long call_args;
 
 #elif defined(ARCH_RISCV_64) || defined(ARCH_ARM_64)
-#define __CALL_ARG_TYPE__ unsigned long
+typedef unsigned long long call_args;
 
 #else
-#define __CALL_ARG_TYPE__ unsigned int
-
+typedef unsigned int call_args;
 #endif
-
-typedef __CALL_ARG_TYPE__ call_args;
