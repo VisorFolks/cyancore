@@ -23,7 +23,7 @@
 
 static uart_port_t earlycon_port;
 
-status_t earlycon_serial_setup()
+static status_t earlycon_serial_setup()
 {
 	mret_t mres;
 	const module_t *dp;
@@ -48,7 +48,7 @@ status_t earlycon_serial_setup()
 	return uart_setup(&earlycon_port, tx, no_parity);
 }
 
-status_t earlycon_serial_write(const char c)
+static status_t earlycon_serial_write(const char c)
 {
 	status_t ret;
 	ret = uart_tx(&earlycon_port, c);
@@ -56,16 +56,18 @@ status_t earlycon_serial_write(const char c)
 	return ret;
 }
 
-console_t earlycon_serial_driver =
+static console_t earlycon_serial_driver =
 {
-	.setup = &earlycon_serial_setup,
 	.write = &earlycon_serial_write,
 	.error = &earlycon_serial_write,
 };
 
 status_t earlycon_serial_driver_setup()
 {
-	return console_attach_device(&earlycon_serial_driver);
+	status_t ret;
+	ret = earlycon_serial_setup();
+	ret |= console_attach_device(ret, &earlycon_serial_driver);
+	return ret;
 }
 
 status_t earlycon_serial_driver_exit()
