@@ -5,12 +5,10 @@ on:
     branches:
     - stable
     - development
-    - dev-cc-kernel
   pull_request:
     branches:
     - stable
     - development
-    - dev-cc-kernel
 
 jobs:
   build:
