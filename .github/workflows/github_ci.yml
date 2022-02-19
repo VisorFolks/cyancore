@@ -2,10 +2,10 @@ name: GitHub CI
 
 on:
   push:
-    branches: [ stable, development ]
+    branches: [ stable, development, dev-cc-kernel ]
 
   pull_request:
-    branches: [ stable, development ]
+    branches: [ stable, development, dev-cc-kernel ]
 
 jobs:
   build:
@@ -15,7 +15,7 @@ jobs:
       contents: read
       security-events: write
       statuses: write
-    
+
     strategy:
       fail-fast: true
       matrix:
