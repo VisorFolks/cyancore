@@ -13,6 +13,7 @@
 #define _ARCH_H_
 
 #include <plat_arch.h>
+#include <avr.h>
 #include <mmio.h>
 
 /**
@@ -43,7 +44,7 @@ void arch_panic_handler();
  *
  * Refer arch.c for more details.
  */
-void arch_machine_call(unsigned  int, unsigned int, unsigned  int, unsigned  int, mret_t *);
+void arch_machine_call(call_arg_t, call_arg_t, call_arg_t, call_arg_t, mret_t *);
 #endif
 
 /**

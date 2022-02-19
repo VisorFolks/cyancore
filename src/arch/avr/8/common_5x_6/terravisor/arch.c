@@ -11,6 +11,7 @@
 
 #include <stdint.h>
 #include <status.h>
+#include <syslog.h>
 #include <machine_call.h>
 #include <terravisor/workers.h>
 #include <plat_arch.h>
@@ -91,4 +92,13 @@ void arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsi
 		return;
 	machine_call(code, a0, a1, a2, ret);
 	return;
+}
+
+void arch_panic_handler_callback()
+{
+	context_frame_t *frame;
+	frame = get_context_frame();
+	syslog_stdout_enable();
+	syslog(info, "SREG = %u", frame->sreg);
+	while(1) arch_wfi();
 }

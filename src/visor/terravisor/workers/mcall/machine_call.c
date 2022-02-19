@@ -19,7 +19,7 @@
 extern mcall_t _mcall_table_start;
 extern mcall_t _mcall_table_end;
 
-void machine_call(mcall_id_t id, unsigned int a0, unsigned int a1, unsigned int a2, mret_t *ret)
+void machine_call(mcall_id_t id, call_arg_t a0, call_arg_t a1, call_arg_t a2, mret_t *ret)
 {
 	/* mcall Table pointer */
 	mcall_t *ptr;
@@ -41,7 +41,10 @@ void machine_call(mcall_id_t id, unsigned int a0, unsigned int a1, unsigned int 
 		if(ptr->id == id)
 		{
 			/* Execute the callback function and update the "ret" */
-			*ret = ptr->callback(a0, a1, a2);
+			if (ptr->callback != NULL)
+			{
+				*ret = ptr->callback(a0, a1, a2);
+			}
 			/* Stop parsing the table and return */
 			break;
 		}

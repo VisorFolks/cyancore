@@ -24,6 +24,8 @@
 #define SPMCSR		0x57
 #define SPL		0x5d
 #define SPH		0x5e
+#define IO_SPL		0x3d
+#define IO_SPH		0x3e
 #define SREG		0x3f
 #define SMCR		0x53
 #define WDTCSR		0x60

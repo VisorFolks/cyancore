@@ -10,5 +10,8 @@
 
 DIR		:= $(GET_PATH)
 
+BOOTMSGS        ?= 1
+$(eval $(call add_define,BOOTMSGS))
+
 include $(DIR)/banner.mk
 include mk/elf.mk

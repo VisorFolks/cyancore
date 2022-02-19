@@ -16,5 +16,8 @@ LIB		:= libc.a
 LIB_INCLUDE	+= $(LIBC_PATH)/include/
 DEP_LIBS_ARG	+= -lc
 
+N_STDDEV	?= 4
+$(eval $(call add_define,N_STDDEV))
+
 DIR		:= $(LIBC_PATH)
 include mk/lib.mk

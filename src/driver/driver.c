@@ -9,9 +9,9 @@
  */
 
 #include <stdint.h>
-#include <stdio.h>
-#include <string.h>
 #include <status.h>
+#include <syslog.h>
+#include <string.h>
 #include <arch.h>
 #include <driver.h>
 
@@ -183,7 +183,7 @@ status_t driver_register(device_t *dev _UNUSED)
 	}
 
 	ret = dev->driver_setup();
-	(ret == success) ? printf("< / > Started %s\n", dev->name) : 0;
+	(ret == success) ? syslog(pass, "Started %s\n", dev->name) : syslog(fail, "Couldn't start %s\n", dev->name);
 exit:
 	return ret;
 }
@@ -220,7 +220,7 @@ status_t driver_deregister(device_t *dev _UNUSED)
 		lock_release(&dev->key);
 	}
 
-	printf("< / > Stopping %s\n", dev->name);
+	syslog(pass, "Stopping %s\n", dev->name);
 	ret = dev->driver_exit();
 exit:
 	return ret;

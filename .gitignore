@@ -5,7 +5,7 @@ out/
 toolchain/
 backup/
 bkp/
-mk/tc_get.mk
+projects/
 *.elf
 *.bin
 *.d

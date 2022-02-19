@@ -1,9 +1,11 @@
 #include <stdint.h>
+#include <status.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <status.h>
+#include <stddev.h>
 #include <arch.h>
 #include <driver.h>
+#include <driver/console.h>
 #include <insignia.h>
 #include <terravisor/platform.h>
 #include <terravisor/workers.h>
@@ -17,6 +19,12 @@ void platform_early_setup()
 	ret |= platform_copy_itim();
 	ret |= platform_bss_clear();
 	ret |= platform_resources_setup();
+	driver_setup("stdlogger");
+#if 0
+	driver_setup("earlycon");
+	bootmsgs_enable();
+#endif
+	stdout_register(&logger_putc);
 
 	if(ret != success)
 		exit(EXIT_FAILURE);
@@ -27,7 +35,6 @@ void platform_setup()
 {
 	status_t ret = success;
 
-	ret |= driver_setup("earlycon");
 	cyancore_insignia();
 
 	if(ret != success)

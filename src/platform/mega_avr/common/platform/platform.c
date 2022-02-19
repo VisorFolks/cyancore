@@ -17,6 +17,7 @@
 #include <terravisor/platform.h>
 #include <terravisor/workers.h>
 #include <driver.h>
+#include <syslog.h>
 #include <insignia.h>
 #include <platform.h>
 
@@ -51,6 +52,10 @@ void platform_early_setup()
 	MMIO8(MCUSR) = 0;
 
 	ret |= platform_wdt_reset();
+	ret |= platform_resources_setup();
+	driver_setup("stdlogger");
+	driver_setup("earlycon");
+	bootmsgs_enable();
 
 	if(ret != success)
 		exit(EXIT_FAILURE);
@@ -67,10 +72,7 @@ void platform_early_setup()
 void platform_setup()
 {
 	status_t ret = success;
-	ret |= platform_resources_setup();
-	ret |= driver_setup("earlycon");
 	cyancore_insignia_lite();
-
 	if(ret != success)
 		exit(EXIT_FAILURE);
 	return;
@@ -91,3 +93,10 @@ void platform_cpu_setup()
 	return;
 }
 
+void plat_panic_handler_callback()
+{
+	context_frame_t *frame;
+	frame = get_context_frame();
+	printf("SREG = %u", frame->sreg);
+	while(1) arch_wfi();
+}

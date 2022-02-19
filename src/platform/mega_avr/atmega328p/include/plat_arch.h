@@ -24,13 +24,11 @@
 #define SPMCSR		0x57
 #define SPL		0x5d
 #define SPH		0x5e
+#define IO_SPL		0x3d
+#define IO_SPH		0x3e
 #define SREG		0x3f
 #define SMCR		0x53
 #define WDTCSR		0x60
 #define CLKPR		0x61
 #define PRR		0x64
 #define OSCCAL		0x66
-
-#ifdef _MACHINE_CALL_H_
-extern void (*mcall)(unsigned int, unsigned int, unsigned int, unsigned int, mret_t *);
-#endif

@@ -10,9 +10,10 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <status.h>
+#include <syslog.h>
 #include <arch.h>
+#include <lock/lock.h>
 #include <driver/watchdog.h>
 
 /**
@@ -24,6 +25,7 @@ static wdog_t *port[N_CORES];
  * wdog_attached - Individual flags for each core
  */
 static bool wdog_attached[N_CORES] = {[0 ... N_CORES-1] = false};
+static lock_t wdog_lock[N_CORES];
 
 /**
  * wdog_attach_device - Link lower level driver with wdog driver
@@ -36,22 +38,25 @@ static bool wdog_attached[N_CORES] = {[0 ... N_CORES-1] = false};
  *
  * @return status: returns initialization status
  */
-status_t wdog_attach_device(wdog_t *pwdog)
+status_t wdog_attach_device(status_t dev_status, wdog_t *pwdog)
 {
 	status_t ret;
 	size_t cpu_index = arch_core_index();
+	lock_t *lock = &wdog_lock[cpu_index];
 
+	lock_acquire(lock);
 	/* Link the driver structs */
 	port[cpu_index] = pwdog;
 
 	/* Check if the link is valid */
 	if(port[cpu_index] != NULL)
 	{
-		ret = port[cpu_index]->setup();
+		ret = dev_status;
 		wdog_attached[cpu_index] = (ret == success) ? true : false;
 	}
 	else
 		ret = error_device_inval;
+	lock_release(lock);
 	return ret;
 }
 
@@ -65,8 +70,11 @@ status_t wdog_attach_device(wdog_t *pwdog)
 status_t wdog_release_device()
 {
 	size_t cpu_index = arch_core_index();
+	lock_t *lock = &wdog_lock[cpu_index];
+	lock_acquire(lock);
 	port[cpu_index] = NULL;
 	wdog_attached[cpu_index] = false;
+	lock_release(lock);
 	return success;
 }
 
@@ -85,10 +93,14 @@ status_t wdog_release_device()
  */
 status_t wdog_guard(size_t timeout, bool bite, void *cb_bark)
 {
+	status_t ret = error_func_inval;
 	size_t cpu_index = arch_core_index();
+	lock_t *lock = &wdog_lock[cpu_index];
+	lock_acquire(lock);
 	if(wdog_attached[cpu_index] && port[cpu_index]->guard != NULL)
-		return port[cpu_index]->guard(timeout, bite, cb_bark);
-	return error_func_inval;
+		ret = port[cpu_index]->guard(timeout, bite, cb_bark);
+	lock_release(lock);
+	return ret;
 }
 
 /**
@@ -102,13 +114,17 @@ status_t wdog_guard(size_t timeout, bool bite, void *cb_bark)
  */
 status_t wdog_hush()
 {
+	status_t ret = error_func_inval;
 	size_t cpu_index = arch_core_index();
+	lock_t *lock = &wdog_lock[cpu_index];
+	lock_acquire(lock);
 	if(wdog_attached[cpu_index] && port[cpu_index]->hush != NULL)
 	{
 		port[cpu_index]->hush();
-		return success;
+		ret = success;
 	}
-	return error_func_inval;
+	lock_release(lock);
+	return ret;
 }
 
 extern void plat_panic_handler();
@@ -121,6 +137,6 @@ extern void plat_panic_handler();
  */
 void wdog_reset_handler()
 {
-	printf("\n< x > Watchdog Bite on Core: [%d]\n", (int)arch_core_index());
+	syslog(fail, "Watchdog Bite on Core: [%d]\n", (int)arch_core_index());
 	plat_panic_handler();
 }
