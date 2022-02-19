@@ -55,8 +55,7 @@ void platform_early_setup()
 	ret |= platform_resources_setup();
 	driver_setup("stdlogger");
 	driver_setup("earlycon");
-	syslog_print();
-	syslog_stdout_enable();
+	bootmsgs_enable();
 
 	if(ret != success)
 		exit(EXIT_FAILURE);

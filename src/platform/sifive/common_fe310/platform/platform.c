@@ -20,9 +20,10 @@ void platform_early_setup()
 	ret |= platform_bss_clear();
 	ret |= platform_resources_setup();
 	driver_setup("stdlogger");
-	//driver_setup("earlycon");
-	//syslog_print();
-	//syslog_stdout_enable();
+#if 0
+	driver_setup("earlycon");
+	bootmsgs_enable();
+#endif
 	stdout_register(&logger_putc);
 
 	if(ret != success)

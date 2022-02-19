@@ -24,3 +24,5 @@ int syslog(logtype_t, const char *, ...);
 status_t syslog_print();
 void syslog_stdout_enable();
 void syslog_stdout_disable();
+
+#define sysdbg(fmt, ...)	if(DEBUG) syslog(dbug, fmt, ##__VA_ARGS__)

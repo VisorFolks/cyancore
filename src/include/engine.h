@@ -10,6 +10,14 @@
 
 #pragma once
 #define _ENGINE_H_
+#include <status.h>
+#include <syslog.h>
+
+#define bootmsgs_enable()	if(BOOTMSGS)			\
+				{				\
+					syslog_print();		\
+					syslog_stdout_enable();	\
+				}
 
 typedef union __ccver
 {

@@ -12,7 +12,7 @@
 # !NOTE!		: IT IS RECOMMENDED NOT TO MODIFY THIS FILE FOR BEST RESULTS
 #
 
-DEBUG		?= 1
+DEBUG		?= 0
 TARGET_FLAGS	?=
 
 INCLUDE		+= $(SRC)/include/ $(PROJECT_INCLUDES)	\
@@ -31,8 +31,9 @@ CFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 
 ifeq ($(DEBUG),1)
 CFLAGS		+= -g
-$(eval $(call add_define,DEBUG))
 endif
+
+$(eval $(call add_define,DEBUG))
 
 ASFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 		   $(TARGET_FLAGS)			\
