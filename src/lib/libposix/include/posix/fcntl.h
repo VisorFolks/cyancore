@@ -1,6 +1,6 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2022, Cyancore Team
  *
  * File Name		: fcntl.h
  * Description		: File control options.

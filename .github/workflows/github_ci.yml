@@ -2,10 +2,10 @@ name: GitHub CI
 
 on:
   push:
-    branches: [ stable, development, dev_cc_kernel ]
+    branches: [ stable, development]
 
   pull_request:
-    branches: [ stable, development, dev_cc_kernel ]
+    branches: [ stable, development]
 
 jobs:
   build:

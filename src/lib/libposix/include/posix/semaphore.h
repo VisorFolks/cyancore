@@ -1,6 +1,6 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2022, Cyancore Team
  *
  * File Name		: semaphore.h
  * Description		: This file consists of posix semaphore related declarations
