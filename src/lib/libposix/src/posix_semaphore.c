@@ -160,12 +160,12 @@ int sem_timedwait( const sem_t * sem, const struct timespec * abstime )
 	return err;
 }
 
-int sem_trywait( sem_t * sem )
+int sem_trywait( const sem_t * sem )
 {
 	return sem_timedwait(sem, RST_VAL);
 }
 
-int sem_wait( sem_t * sem )
+int sem_wait( const sem_t * sem )
 {
-	return sem_timedwait(sem, NULL);
+	return sem_timedwait( sem, NULL);
 }

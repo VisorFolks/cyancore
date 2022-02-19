@@ -28,7 +28,7 @@ int usleep( useconds_t usec )
         return SUCCESS;
 }
 
-int nanosleep(const timespec_t *rqtp, timespec_t *rmtp)
+int nanosleep(const timespec_t *rqtp, const timespec_t *rmtp)
 {
         (void) rqtp;
         (void) rmtp;
