@@ -2,7 +2,7 @@
 sonar-cfamily-reproducer.zip
 temp
 out/
-toolchain/
+tools/
 backup/
 bkp/
 projects/

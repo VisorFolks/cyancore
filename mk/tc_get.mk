@@ -30,7 +30,7 @@ ifeq ($(ARM_TC_REPO),)
 endif
 	$(info < ! > Fetching ARM Toolchain ...)
 	$(info < ? > Please be patient as this might take a while ...)
-	mkdir -p toolchain
+	mkdir -p $(TOOLS_ROOT)
 	cd $(TOOLS_ROOT); git clone $(ARM_TC_REPO) arm-toolchain; chmod +x -R $(@D)/..
 	echo "< / > Done !"
 
@@ -41,7 +41,7 @@ ifeq ($(AVR_TC_REPO),)
 endif
 	$(info < ! > Fetching AVR Toolchain ...)
 	$(info < ? > Please be patient as this might take a while ...)
-	mkdir -p toolchain
+	mkdir -p $(TOOLS_ROOT)
 	cd $(TOOLS_ROOT); git clone $(AVR_TC_REPO) avr-toolchain; chmod +x -R $(@D)/..
 	echo "< / > Done !"
 
@@ -52,7 +52,7 @@ ifeq ($(RISC_V_TC_REPO),)
 endif
 	$(info < ! > Fetching RISC-V Toolchain ...)
 	$(info < ? > Please be patient as this might take a while ...)
-	mkdir -p toolchain
+	mkdir -p $(TOOLS_ROOT)
 	cd $(TOOLS_ROOT); git clone $(RISC_V_TC_REPO) risc-v-toolchain; chmod +x -R $(@D)/..
 	echo "< / > Done !"
 

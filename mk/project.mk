@@ -15,9 +15,10 @@
 
 include mk/path.mk
 include mk/mk_helper.mk
+include mk/qemu.mk
 
 P_TARGETS	+= default cyancore check version copy_to_remote clean_remote
-T_ALLOWLIST	+= help list clean all_projects
+T_ALLOWLIST	+= help list clean all_projects get_qemu
 PROJECT_LIST	:= $(shell ls projects/ -I *.template)
 
 .PHONY: aux_target
