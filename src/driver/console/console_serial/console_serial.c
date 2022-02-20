@@ -57,11 +57,12 @@ static status_t console_serial_setup()
 	console_port.rx_handler = console_serial_read_irq_handler;
 
 	sysdbg("UART engine @ %p\n", console_port.baddr);
+	sysdbg("UART baud @ %dbps\n", console_port.baud);
 	/*
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
 	 */
-	return uart_setup(&console_port, trx, no_parity);
+	return uart_setup(&console_port, trx, no_parity); //
 }
 
 static int_wait_t con_write_wait;
@@ -111,6 +112,7 @@ status_t console_serial_driver_setup()
 {
 	status_t ret;
 	driver_exit("earlycon");
+	sysdbg("Hello There\n");
 	ret = console_serial_setup();
 	ret |= console_attach_device(ret, &console_serial_driver);
 	return ret;

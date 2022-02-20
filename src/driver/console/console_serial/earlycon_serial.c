@@ -50,6 +50,7 @@ static status_t earlycon_serial_setup()
 	earlycon_port.baud = dp->clk;
 
 	sysdbg("UART engine @ %p\n", earlycon_port.baddr);
+	sysdbg("UART baud @ %dbps\n", earlycon_port.baud);
 	/*
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.

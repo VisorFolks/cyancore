@@ -14,7 +14,7 @@
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.#
 
 CC_ROOT		:= .
-TOOLS_ROOT	?= $(abspath $(CC_ROOT))/toolchain
+TOOLS_ROOT	?= $(abspath $(CC_ROOT))/tools
 
 SRC		:= $(CC_ROOT)/src
 OUT_PATH	?= $(CC_ROOT)/out

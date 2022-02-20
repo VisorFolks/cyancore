@@ -21,13 +21,13 @@
 			"label": "Load qemu-avr demo_avr",
 			"type": "shell",
 			"isBackground": true,
-			"command": "${workspaceFolder}/../qemu/build/${input:qemu_system} -M ${input:machine} -nographic -bios ${workspaceFolder}/out/${input:project}/${input:project}.elf -s -S",
+			"command": "${workspaceFolder}/tools/qemu/build/${input:qemu_system} -M ${input:machine} -nographic -bios ${workspaceFolder}/out/${input:project}/${input:project}.elf -s -S",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
 				"focus": true,
 				"panel": "new",
-				"showReuseMessage": true,
+				"showReuseMessage": false,
 				"clear": true
 			},
 			"options": {
@@ -38,9 +38,14 @@
 	"inputs": [
 		{
 			"id": "project",
-			"type": "promptString",
+			"type": "pickString",
 			"description": "Provide the project to build",
-			"default": ""
+			"options": [
+				"demo_avr",
+				"demo_avr_cpp",
+				"demo_riscv",
+			],
+			"default": "demo_avr"
 		},
 		{
 			"id": "machine",

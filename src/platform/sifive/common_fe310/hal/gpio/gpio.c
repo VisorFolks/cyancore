@@ -10,6 +10,7 @@
 
 #include <status.h>
 #include <stdint.h>
+#include <syslog.h>
 #include <stdbool.h>
 #include <assert.h>
 #include <mmio.h>
@@ -36,15 +37,23 @@ status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 	lock_release(&gpio_lock);
 
 	if(flag)
+	{
+		sysdbg("GPIO Pin %d on Port %d is already taken\n", pinID, portID);
 		return error_driver_busy;
+	}
 
 	port->pin = pinID;
 	port->port = portID;
 	arch_machine_call(fetch_dp, gpio, portID, 0, &mres);
 	if(mres.status != success)
+	{
+		sysdbg("GPIO Port %d not found in DP\n", portID);
 		return mres.status;
+	}
 	dp = (gpio_module_t *)mres.p;
 	port->pbaddr = dp->baddr;
+	sysdbg("GPIO engine @ %p\n", dp->baddr);
+	sysdbg("Using GPIO Pin %d on Port %d\n", port->pin, port->port);
 	return success;
 }
 
@@ -83,6 +92,7 @@ status_t gpio_pin_free(gpio_port_t *port)
 {
 	assert(port);
 	lock_acquire(&gpio_lock);
+	sysdbg("Releasing GPIO Pin %d on Port, %d", port->pin, port->port);
 	port_status[port->port] &= ~(1 << port->pin);
 	port->pbaddr = 0;
 	port->port = 0;

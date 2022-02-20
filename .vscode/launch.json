@@ -20,7 +20,7 @@
 				"require": true,
 				"limit": 10
 			},
-			"miDebuggerPath": "${workspaceFolder}/toolchain/avr-toolchain/bin/avr-gdb",
+			"miDebuggerPath": "${workspaceFolder}/tools/avr-toolchain/bin/avr-gdb",
 			"miDebuggerArgs": "${workspaceFolder}/out/${input:project}/${input:project}.elf",
 			"linux": {
 				"externalConsole": true,
@@ -42,9 +42,14 @@
 	"inputs": [
 		{
 			"id": "project",
-			"type": "promptString",
+			"type": "pickString",
 			"description": "Provide the project to build",
-			"default": ""
+			"options": [
+				"demo_avr",
+				"demo_avr_cpp",
+				"demo_riscv",
+			],
+			"default": "demo_avr"
 		},
 	]
 }
