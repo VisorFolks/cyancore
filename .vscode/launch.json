@@ -1,0 +1,55 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "atmel-debug",
+			"type": "cppdbg",
+			"request": "launch",
+			"miDebuggerServerAddress": ":1234",
+			"program": "${workspaceFolder}/out/${input:project}/${input:project}.elf",
+			"stopAtEntry": true,
+			"cwd": "${workspaceFolder}",
+			"MIMode": "gdb",
+			"externalConsole": false,
+			"showDisplayString": true,
+			"preLaunchTask": "Build",
+			"hardwareBreakpoints": {
+				"require": true,
+				"limit": 10
+			},
+			"miDebuggerPath": "${workspaceFolder}/tools/avr-toolchain/bin/avr-gdb",
+			"miDebuggerArgs": "${workspaceFolder}/out/${input:project}/${input:project}.elf",
+			"linux": {
+				"externalConsole": true,
+				"preLaunchTask": "Load qemu-avr demo_avr",
+			},
+			"setupCommands":
+			[
+				{
+					"text": "b init"
+				},
+				{
+					"text": "b plug"
+				},
+			],
+
+
+		}
+	],
+	"inputs": [
+		{
+			"id": "project",
+			"type": "pickString",
+			"description": "Provide the project to build",
+			"options": [
+				"demo_avr",
+				"demo_avr_cpp",
+				"demo_riscv",
+			],
+			"default": "demo_avr"
+		},
+	]
+}
