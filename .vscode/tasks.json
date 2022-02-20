@@ -1,0 +1,63 @@
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build",
+			"type": "shell",
+			"command": "make ${input:project} DEBUG=1",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Clean Build",
+			"type": "shell",
+			"command": "make ${input:project} clean default DEBUG=1",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Load qemu-avr demo_avr",
+			"type": "shell",
+			"isBackground": true,
+			"command": "${workspaceFolder}/../qemu/build/${input:qemu_system} -M ${input:machine} -nographic -bios ${workspaceFolder}/out/${input:project}/${input:project}.elf -s -S",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "new",
+				"showReuseMessage": true,
+				"clear": true
+			},
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+		}
+	],
+	"inputs": [
+		{
+			"id": "project",
+			"type": "promptString",
+			"description": "Provide the project to build",
+			"default": ""
+		},
+		{
+			"id": "machine",
+			"type": "pickString",
+			"description": "Type of QEMU machine",
+			"options": [
+				"arduino-uno"
+			]
+		},
+		{
+			"id": "qemu_system",
+			"type": "pickString",
+			"description": "Type of QEMU machine",
+			"options": [
+				"qemu-system-avr"
+			],
+			"default": "qemu-system-avr"
+		}
+	]
+}
