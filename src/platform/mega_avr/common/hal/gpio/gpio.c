@@ -54,8 +54,8 @@ status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 	}
 	dp = (gpio_module_t *)mres.p;
 	port->pbaddr = dp->baddr;
-	sysdbg("GPIO engine @ %p\n", dp->baddr);
-	sysdbg("Using GPIO Pin %d on Port %d\n", port->pin, port->port);
+	sysdbg4("GPIO engine @ %p\n", dp->baddr);
+	sysdbg4("Using GPIO Pin %d on Port %d\n", port->pin, port->port);
 	return success;
 }
 
@@ -86,7 +86,7 @@ status_t gpio_pin_free(gpio_port_t *port)
 {
 	assert(port);
 	lock_acquire(&gpio_lock);
-	sysdbg("Releasing GPIO Pin %d on Port, %d", port->pin, port->port);
+	sysdbg4("Releasing GPIO Pin %d on Port, %d", port->pin, port->port);
 	port_status[port->port] &= ~(1 << port->pin);
 	port->pbaddr = 0x00;
 	port->port = 0;
@@ -153,7 +153,7 @@ status_t gpio_port_alloc(gpio_port_t *port, uint8_t portID)
 	}
 	dp = (gpio_module_t *)mres.p;
 	port->pbaddr = dp->baddr;
-	sysdbg("GPIO engine @ %p\n", dp->baddr);
+	sysdbg4("GPIO engine @ %p\n", dp->baddr);
 	return success;
 }
 
@@ -184,7 +184,7 @@ status_t gpio_port_free(gpio_port_t *port)
 {
 	assert(port);
 	lock_acquire(&gpio_lock);
-	sysdbg("Releasing GPIO Port, %d", port->port);
+	sysdbg4("Releasing GPIO Port, %d", port->port);
 	port_status[port->port] = 0;
 	port->pbaddr = 0x00;
 	port->port = 0;

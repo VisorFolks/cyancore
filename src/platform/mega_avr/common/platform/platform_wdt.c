@@ -83,11 +83,11 @@ static status_t platform_wdt_setup()
 static status_t platform_wdt_guard(size_t timeout, bool bite, void *cb_bark)
 {
 	status_t ret;
-	sysdbg("Configuring WDT timeout to gear %d\n", timeout);
+	sysdbg3("Configuring WDT timeout to gear %d\n", timeout);
 	plat_wdt.timeout = timeout;
 	callback_on_bark = cb_bark;
 	ret = wdt_set_timeout(&plat_wdt);
-	sysdbg("WDT Bite %s\n", bite ? "enabled" : "disabled");
+	sysdbg3("WDT Bite %s\n", bite ? "enabled" : "disabled");
 	ret |= bite ? wdt_sre(&plat_wdt) : wdt_srd(&plat_wdt);
 	return ret;
 }
@@ -103,7 +103,7 @@ static status_t platform_wdt_hush()
 {
 	status_t ret;
 	wdt_hush(&plat_wdt);
-	sysdbg("WDT Hush!\n");
+	sysdbg3("WDT Hush!\n");
 	plat_wdt.timeout = 0;
 	ret = wdt_set_timeout(&plat_wdt);
 	ret |= wdt_srd(&plat_wdt);

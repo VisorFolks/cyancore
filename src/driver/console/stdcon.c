@@ -11,9 +11,10 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <status.h>
+#include <syslog.h>
 #include <stdio.h>
 #include <stddev.h>
-#include <status.h>
 #include <lock/lock.h>
 #include <driver/console.h>
 
@@ -56,8 +57,11 @@ status_t console_attach_device(status_t dev_status, console_t *pcon)
 		ret = dev_status;
 		console_attached = (ret == success) ? true : false;
 		ret |= stdout_register(&console_putc);
+		sysdbg5("Registering stdout\n");
 		ret |= stderr_register(&console_putc);
+		sysdbg5("Registering stderr\n");
 		ret |= stdin_register(&console_getc);
+		sysdbg5("Registering stdin\n");
 	}
 	else
 		ret = error_device_inval;
@@ -150,6 +154,7 @@ status_t logger_attach_device(status_t dev_status, console_t *pcon)
 		ret = dev_status;
 		logger_attached = (ret == success) ? true : false;
 		ret |= stdlog_register(&logger_putc);
+		sysdbg5("Registering stdlog\n");
 	}
 	else
 		ret = error_device_inval;

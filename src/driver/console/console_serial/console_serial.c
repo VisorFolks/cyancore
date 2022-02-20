@@ -56,8 +56,9 @@ static status_t console_serial_setup()
 	console_port.rx_irq = dp->interrupt_id[0];
 	console_port.rx_handler = console_serial_read_irq_handler;
 
-	sysdbg("UART engine @ %p\n", console_port.baddr);
-	sysdbg("UART baud @ %dbps\n", console_port.baud);
+	sysdbg2("UART engine @ %p\n", console_port.baddr);
+	sysdbg2("UART baud @ %ubps\n", console_port.baud);
+	sysdbg2("UART irqs - %u & %u\n", dp->interrupt_id[1], dp->interrupt_id[0]);
 	/*
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
@@ -112,7 +113,6 @@ status_t console_serial_driver_setup()
 {
 	status_t ret;
 	driver_exit("earlycon");
-	sysdbg("Hello There\n");
 	ret = console_serial_setup();
 	ret |= console_attach_device(ret, &console_serial_driver);
 	return ret;

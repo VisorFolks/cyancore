@@ -97,6 +97,6 @@ void plat_panic_handler_callback()
 {
 	context_frame_t *frame;
 	frame = get_context_frame();
-	printf("SREG = %u", frame->sreg);
+	syslog(info, "SP=%p\tSREG = %p\n", frame, frame->sreg);
 	while(1) arch_wfi();
 }

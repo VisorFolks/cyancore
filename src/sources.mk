@@ -29,7 +29,7 @@ CFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 		   -ffunction-sections -fdata-sections	\
 		   -fno-builtin	-nostdinc -nostdlib
 
-ifeq ($(DEBUG),1)
+ifneq ($(DEBUG),0)
 CFLAGS		+= -g
 endif
 

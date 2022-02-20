@@ -26,3 +26,8 @@ void syslog_stdout_enable();
 void syslog_stdout_disable();
 
 #define sysdbg(fmt, ...)	if(DEBUG) syslog(dbug, fmt, ##__VA_ARGS__)
+#define sysdbg1(fmt, ...)	if(DEBUG>=1) syslog(dbug, fmt, ##__VA_ARGS__)
+#define sysdbg2(fmt, ...)	if(DEBUG>=2) syslog(dbug, fmt, ##__VA_ARGS__)
+#define sysdbg3(fmt, ...)	if(DEBUG>=3) syslog(dbug, fmt, ##__VA_ARGS__)
+#define sysdbg4(fmt, ...)	if(DEBUG>=4) syslog(dbug, fmt, ##__VA_ARGS__)
+#define sysdbg5(fmt, ...)	if(DEBUG>=5) syslog(dbug, fmt, ##__VA_ARGS__)
