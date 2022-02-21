@@ -6,14 +6,28 @@
 		{
 			"label": "Build",
 			"type": "shell",
-			"command": "make ${input:project} DEBUG=1",
+			"command": "make ${input:project}",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Clean",
+			"type": "shell",
+			"command": "make ${input:project} clean",
 			"problemMatcher": [],
 			"group": "build"
 		},
 		{
 			"label": "Clean Build",
 			"type": "shell",
-			"command": "make ${input:project} clean default DEBUG=1",
+			"command": "make ${input:project} clean default",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Debug Build",
+			"type": "shell",
+			"command": "make ${input:project} clean default DEBUG=${input:debug_level}",
 			"problemMatcher": [],
 			"group": "build"
 		},
@@ -58,11 +72,20 @@
 		{
 			"id": "qemu_system",
 			"type": "pickString",
-			"description": "Type of QEMU machine",
+			"description": "Type of QEMU Arch",
 			"options": [
 				"qemu-system-avr"
 			],
 			"default": "qemu-system-avr"
-		}
+		},
+		{
+			"id": "debug_level",
+			"type": "pickString",
+			"description": "Enter Debug level",
+			"options": [
+				"0", "1", "2", "3", "4", "5"
+			],
+			"default": "1"
+		},
 	]
 }

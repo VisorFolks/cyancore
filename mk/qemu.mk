@@ -8,16 +8,22 @@
 # Organisation		: Cyancore Core-Team
 #
 
-get_qemu: $(TOOLS_ROOT)/qemu
+T_ALLOWLIST		+= get_qemu
 
-$(TOOLS_ROOT)/qemu:
+get_qemu: | $(TOOLS_ROOT)/qemu/ $(TOOLS_ROOT)/qemu/build/
+
+$(TOOLS_ROOT)/qemu/:
 	@echo "< ! > Fetching qemu ..."
 	mkdir -p $(TOOLS_ROOT)
 	cd $(TOOLS_ROOT); git clone https://gitlab.com/qemu-project/qemu.git;
+	cd $@; git submodule init; git submodule update --recursive
+	@echo "< / > Done !"
+
+$(TOOLS_ROOT)/qemu/build/: $(TOOLS_ROOT)/qemu/
 	@echo "< ! > Building qemu ..."
 	@echo "< ? > Please be patient as this might take a while ..."
-	cd $@; git submodule init --quiet; git submodule update --recursive --quiet;\
-	./configure 1> /dev/null ; make -j $(N_JOBS) 1> /dev/null
+	cd $<; ./configure
+	make -j $(N_JOBS) -C $<
 	@echo "< ! > Adding load_qemu alias to bashrc ..."
 	@echo "< ! > run 'load_qemu' before trying to launch qemu!"
 	echo "alias load_qemu='export PATH=\"\$$PATH\":$@/build/'" >> ~/.bashrc
