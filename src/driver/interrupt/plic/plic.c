@@ -89,6 +89,7 @@ static void plic_clr_interrupt(uint32_t irq_id)
 	uint32_t core_id;
 	assert(port.baddr);
 	core_id = arch_core_index();
+	sysdbg2("Clearing IRQ#%u on Core-%u\n", irq_id, core_id);
 	MMIO32(port.baddr + PLIC_ICLAIM_OFFSET(core_id)) = irq_id;
 	arch_dmb();
 	return;
@@ -99,6 +100,7 @@ static status_t plic_int_en(uint32_t irq_id)
 	uint32_t core_id, irq_offset, irq_shift;
 	assert(port.baddr);
 	core_id = arch_core_index();
+	sysdbg3("Enabling IRQ#%u on Core-%u\n", irq_id, core_id);
 	irq_offset = irq_id / 32;
 	irq_shift = irq_id % 32;
 	MMIO32(port.baddr + PLIC_IENABLE_OFFSET(core_id, irq_offset)) |= (1 << irq_shift);
@@ -111,6 +113,7 @@ static status_t plic_int_dis(uint32_t irq_id)
 	uint32_t core_id, irq_offset, irq_shift;
 	assert(port.baddr);
 	core_id = arch_core_index();
+	sysdbg3("Disabling IRQ#%u on Core-%u\n", irq_id, core_id);
 	irq_offset = irq_id / 32;
 	irq_shift = irq_id % 32;
 	MMIO32(port.baddr + PLIC_IENABLE_OFFSET(core_id, irq_offset)) &= ~(1 << irq_shift);
@@ -166,6 +169,7 @@ static status_t plic_driver_setup()
 static status_t plic_driver_setup_pcpu()
 {
 	status_t ret;
+	sysdbg4("Linking local IRQ#%u on Core-%u\n", port.irq, arch_core_index());
 	ret = link_interrupt(local, port.irq, &plic_irqhandler);
 	arch_ei();
 	return ret;
@@ -179,6 +183,7 @@ static status_t plic_driver_exit()
 static status_t plic_driver_exit_pcpu()
 {
 	arch_di();
+	sysdbg4("Linking local IRQ#%u on Core-%u\n", port.irq, arch_core_index());
 	return unlink_interrupt(local, port.irq);
 }
 

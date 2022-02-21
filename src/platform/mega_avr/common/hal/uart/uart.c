@@ -13,6 +13,7 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <status.h>
+#include <syslog.h>
 #include <resource.h>
 #include <mmio.h>
 #include <lock/spinlock.h>
@@ -66,6 +67,7 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p)
 		default:
 			en = 0;
 			ret = error_func_inval_arg;
+			goto uart_setup_exit;
 	}
 	MMIO8(port->baddr + UCSRB_OFFSET) |= en;
 
@@ -78,6 +80,7 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p)
 	// Defaults to
 	// Async UART, 1 stop bit, Rising edge clk
 	MMIO8(port->baddr + UCSRC_OFFSET) = (p << UPM0) | (3 << UCSZ0); // Set Parity & 8 bit frame
+uart_setup_exit:
 	return ret;
 }
 

@@ -9,9 +9,10 @@
  * Organisation		: Cyancore Core-Team
  */
 
-#include <status.h>
 #include <stdint.h>
+#include <status.h>
 #include <stdbool.h>
+#include <syslog.h>
 #include <assert.h>
 #include <mmio.h>
 #include <resource.h>
@@ -38,15 +39,23 @@ status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 	lock_release(&gpio_lock);
 
 	if(flag)
+	{
+		sysdbg("GPIO Pin %d on Port %d is already taken\n", pinID, portID);
 		return error_driver_busy;
+	}
 
 	port->pin = pinID;
 	port->port = portID;
 	arch_machine_call(fetch_dp, gpio, portID, 0, &mres);
 	if(mres.status != success)
+	{
+		sysdbg("GPIO Port %d not found in DP\n", portID);
 		return mres.status;
+	}
 	dp = (gpio_module_t *)mres.p;
 	port->pbaddr = dp->baddr;
+	sysdbg4("GPIO engine @ %p\n", dp->baddr);
+	sysdbg4("Using GPIO Pin %d on Port %d\n", port->pin, port->port);
 	return success;
 }
 
@@ -77,6 +86,7 @@ status_t gpio_pin_free(gpio_port_t *port)
 {
 	assert(port);
 	lock_acquire(&gpio_lock);
+	sysdbg4("Releasing GPIO Pin %d on Port, %d", port->pin, port->port);
 	port_status[port->port] &= ~(1 << port->pin);
 	port->pbaddr = 0x00;
 	port->port = 0;
@@ -128,15 +138,22 @@ status_t gpio_port_alloc(gpio_port_t *port, uint8_t portID)
 	lock_release(&gpio_lock);
 
 	if(flag)
+	{
+		sysdbg("GPIO Port %d is already taken\n", portID);
 		return error_driver_busy;
+	}
 
 	port->pin = (uint8_t)((uint16_t)(1 << BIT) - 1);
 	port->port = portID;
 	arch_machine_call(fetch_dp, gpio, portID, 0, &mres);
 	if(mres.status != success)
+	{
+		sysdbg("GPIO Port %d not found in DP\n", portID);
 		return mres.status;
+	}
 	dp = (gpio_module_t *)mres.p;
 	port->pbaddr = dp->baddr;
+	sysdbg4("GPIO engine @ %p\n", dp->baddr);
 	return success;
 }
 
@@ -167,6 +184,7 @@ status_t gpio_port_free(gpio_port_t *port)
 {
 	assert(port);
 	lock_acquire(&gpio_lock);
+	sysdbg4("Releasing GPIO Port, %d", port->port);
 	port_status[port->port] = 0;
 	port->pbaddr = 0x00;
 	port->port = 0;

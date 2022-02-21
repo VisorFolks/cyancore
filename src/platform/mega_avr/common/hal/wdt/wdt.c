@@ -12,6 +12,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <status.h>
+#include <syslog.h>
 #include <mmio.h>
 #include <assert.h>
 #include <interrupt.h>
@@ -38,6 +39,7 @@ static lock_t wdt_lock;
 static inline uint8_t get_timeout(size_t timeout)
 {
 	uint8_t temp;
+	sysdbg5("Configuring WDT timeout gear to %u\n", timeout);
 	temp = (timeout & 0xf);
 	timeout = (temp & ((1 << WDP0) | (1 << WDP1) | (1 << WDP2)));
 	timeout |= ((temp >> 3) << WDP3);
@@ -63,6 +65,7 @@ status_t wdt_setup(const wdt_port_t *port)
 	if(port->wdt_handler == NULL)
 		return error_func_inval_arg;
 
+	sysdbg5("Linking WDT IRQ to arch mode IRQ#%u\n", port->wdt_irq);
 	ret = link_interrupt(arch, port->wdt_irq, port->wdt_handler);
 
 	lock_acquire(&wdt_lock);

@@ -56,12 +56,14 @@ static status_t console_serial_setup()
 	console_port.rx_irq = dp->interrupt_id[0];
 	console_port.rx_handler = console_serial_read_irq_handler;
 
-	sysdbg("UART engine @ %p\n", console_port.baddr);
+	sysdbg2("UART engine @ %p\n", console_port.baddr);
+	sysdbg2("UART baud @ %ubps\n", console_port.baud);
+	sysdbg2("UART irqs - %u & %u\n", dp->interrupt_id[1], dp->interrupt_id[0]);
 	/*
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
 	 */
-	return uart_setup(&console_port, trx, no_parity);
+	return uart_setup(&console_port, trx, no_parity); //
 }
 
 static int_wait_t con_write_wait;
