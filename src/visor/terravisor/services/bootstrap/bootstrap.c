@@ -9,11 +9,9 @@
  */
 
 #include <stdint.h>
-#include <stdio.h>
 #include <status.h>
+#include <syslog.h>
 #include <arch.h>
-#include <driver.h>
-#include <insignia.h>
 #include <terravisor/platform.h>
 #include <terravisor/bootstrap.h>
 
@@ -27,6 +25,7 @@ status_t bootstrap()
 	if(arch_core_index() == BOOT_CORE_ID)
 		platform_early_setup();
 
+	sysdbg3("Performing Arch Setup\n");
 	arch_setup();
 
 	if(arch_core_index() == BOOT_CORE_ID)

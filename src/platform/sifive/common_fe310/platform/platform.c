@@ -19,7 +19,7 @@ void platform_early_setup()
 	ret |= platform_copy_itim();
 	ret |= platform_bss_clear();
 	ret |= platform_resources_setup();
-	driver_setup("stdlogger");
+	driver_setup("mslog");
 #if 0
 	driver_setup("earlycon");
 	bootmsgs_enable();

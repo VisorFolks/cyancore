@@ -44,18 +44,19 @@ void platform_early_setup()
 {
 	status_t ret = success;
 
+	/* Setup platform memories */
 	ret |= platform_copy_data();
 	ret |= platform_bss_clear();
-	ret |= platform_clk_reset();
+	ret |= platform_resources_setup();
+
+	/* Setup memory syslogger */
+	driver_setup("mslog");
 
 	reset_syndrome = MMIO8(MCUSR) & 0x1f;
 	MMIO8(MCUSR) = 0;
 
+	ret |= platform_clk_reset();
 	ret |= platform_wdt_reset();
-	ret |= platform_resources_setup();
-	driver_setup("stdlogger");
-	driver_setup("earlycon");
-	bootmsgs_enable();
 
 	if(ret != success)
 		exit(EXIT_FAILURE);
@@ -72,7 +73,11 @@ void platform_early_setup()
 void platform_setup()
 {
 	status_t ret = success;
+	sysdbg3("In %s\n", __func__);
+	driver_setup("earlycon");
+	bootmsgs_enable();
 	cyancore_insignia_lite();
+
 	if(ret != success)
 		exit(EXIT_FAILURE);
 	return;
@@ -87,6 +92,7 @@ void platform_setup()
 void platform_cpu_setup()
 {
 	status_t ret = success;
+	sysdbg3("In %s\n", __func__);
 	arch_ei();
 	if(ret != success)
 		exit(EXIT_FAILURE);
@@ -96,6 +102,7 @@ void platform_cpu_setup()
 void plat_panic_handler_callback()
 {
 	context_frame_t *frame;
+	sysdbg3("In %s\n", __func__);
 	frame = get_context_frame();
 	syslog(info, "SP=%p\tSREG = %p\n", frame, frame->sreg);
 	while(1) arch_wfi();

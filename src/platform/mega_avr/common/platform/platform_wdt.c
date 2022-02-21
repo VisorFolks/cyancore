@@ -50,7 +50,7 @@ static status_t platform_wdt_setup()
 
 	if(mres.status != success)
 	{
-		sysdbg("WDT not found in DP\n");
+		sysdbg2("WDT not found in DP\n");
 		return mres.status;
 	}
 	dp = (module_t *) mres.p;
@@ -62,7 +62,7 @@ static status_t platform_wdt_setup()
 	plat_wdt.wdt_irq = dp->interrupt_id[0];
 	plat_wdt.wdt_handler = &platform_wdt_handler;
 
-	sysdbg("WDT engine @ %p\n", plat_wdt.baddr);
+	sysdbg2("WDT engine @ %p\n", plat_wdt.baddr);
 
 	return wdt_setup(&plat_wdt);
 }
@@ -137,6 +137,7 @@ static wdog_t plat_wdt_driver =
 static status_t plat_wdt_driver_setup()
 {
 	status_t ret;
+	sysdbg3("In %s\n", __func__);
 	ret = platform_wdt_setup();
 	ret |= wdog_attach_device(ret, &plat_wdt_driver);
 	return ret;

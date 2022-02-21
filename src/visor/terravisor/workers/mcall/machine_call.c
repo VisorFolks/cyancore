@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <status.h>
+#include <syslog.h>
 #include <machine_call.h>
 #include <platform.h>
 #include <resource.h>
@@ -21,6 +22,7 @@ extern mcall_t _mcall_table_end;
 
 void machine_call(mcall_id_t id, call_arg_t a0, call_arg_t a1, call_arg_t a2, mret_t *ret)
 {
+	sysdbg4("MCall: id=%p, a0=%p, a1=%p, a2=%p\n", id, a0, a1, a2);
 	/* mcall Table pointer */
 	mcall_t *ptr;
 

@@ -8,10 +8,9 @@
  * Organisation		: Cyancore Core-Team
  */
 
-#include <stdio.h>
 #include <status.h>
+#include <stdio.h>
 #include <string.h>
-#include <terravisor/platform.h>
 #include <terravisor/bootstrap.h>
 #include <driver.h>
 #include <driver/watchdog.h>

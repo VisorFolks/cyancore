@@ -183,7 +183,8 @@ status_t driver_register(device_t *dev _UNUSED)
 	}
 
 	ret = dev->driver_setup();
-	(ret == success) ? syslog(pass, "Started %s\n", dev->name) : syslog(fail, "Couldn't start %s\n", dev->name);
+	(ret == success) ? syslog(pass, "Started %s\n", dev->name) :
+		syslog(fail, "Couldn't start %s\n", dev->name);
 exit:
 	return ret;
 }
