@@ -13,9 +13,9 @@
 #--------< Library Object Builder >---------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*#
 
-C_SRCS		:= $(wildcard $(DIR)/*.c)
-CPP_SRCS	:= $(wildcard $(DIR)/*.cpp)
-S_SRCS		:= $(wildcard $(DIR)/*.S)
+C_SRCS		:= $(wildcard $(DIR)/*.c) $(filter %.c,$(Ex_SRCS))
+CPP_SRCS	:= $(wildcard $(DIR)/*.cpp) $(filter %.cpp,$(Ex_SRCS))
+S_SRCS		:= $(wildcard $(DIR)/*.S) $(filter %.S,$(Ex_SRCS))
 
 C_OBJS		:= $(addprefix $(OUT)/,$(C_SRCS:.c=.o))
 CPP_OBJS	:= $(addprefix $(OUT)/,$(CPP_SRCS:.cpp=.o))
@@ -46,3 +46,5 @@ $(S_OBJS): $(OUT)/%.o: %.S | $$(@D)/
 ifneq ($(PP),1)
 	rm $(@:.o=.pre.S)
 endif
+
+Ex_SRCS		:=
