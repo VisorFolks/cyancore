@@ -45,6 +45,7 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p)
 			en |= (1 << TXEN);
 			if(port->tx_irq)
 			{
+				sysdbg5("Linking arch Tx IRQ#%u\n", port->tx_irq);
 				link_interrupt(arch, port->tx_irq, port->tx_handler);
 				uart_tx_int_en(port);
 			}
@@ -52,6 +53,7 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p)
 			en |= (1 << RXEN);
 			if(port->rx_irq)
 			{
+				sysdbg5("Linking arch Rx IRQ#%u\n", port->tx_irq);
 				link_interrupt(arch, port->rx_irq, port->rx_handler);
 				uart_rx_int_en(port);
 			}
@@ -60,6 +62,7 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p)
 			en |= (1 << TXEN);
 			if(port->tx_irq)
 			{
+				sysdbg5("Linking arch Tx IRQ#%u\n", port->tx_irq);
 				link_interrupt(arch, port->tx_irq, port->tx_handler);
 				uart_tx_int_en(port);
 			}
@@ -73,6 +76,7 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p)
 
 	// Set baud rate
 	uint16_t b = BAUD_RATE_VALUE(*clk, port->baud);
+	sysdbg5("Baud Prescalar = %u\n", b);
 	MMIO8(port->baddr + UBRRH_OFFSET) = (b >> 8);
 	MMIO8(port->baddr + UBRRL_OFFSET) = (b & 0xff);
 

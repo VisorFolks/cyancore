@@ -40,7 +40,7 @@ status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 
 	if(flag)
 	{
-		sysdbg("GPIO Pin %d on Port %d is already taken\n", pinID, portID);
+		sysdbg4("GPIO Pin %d on Port %d is already taken\n", pinID, portID);
 		return error_driver_busy;
 	}
 
@@ -49,7 +49,7 @@ status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 	arch_machine_call(fetch_dp, gpio, portID, 0, &mres);
 	if(mres.status != success)
 	{
-		sysdbg("GPIO Port %d not found in DP\n", portID);
+		sysdbg4("GPIO Port %d not found in DP\n", portID);
 		return mres.status;
 	}
 	dp = (gpio_module_t *)mres.p;
@@ -139,7 +139,7 @@ status_t gpio_port_alloc(gpio_port_t *port, uint8_t portID)
 
 	if(flag)
 	{
-		sysdbg("GPIO Port %d is already taken\n", portID);
+		sysdbg4("GPIO Port %d is already taken\n", portID);
 		return error_driver_busy;
 	}
 
@@ -148,7 +148,7 @@ status_t gpio_port_alloc(gpio_port_t *port, uint8_t portID)
 	arch_machine_call(fetch_dp, gpio, portID, 0, &mres);
 	if(mres.status != success)
 	{
-		sysdbg("GPIO Port %d not found in DP\n", portID);
+		sysdbg4("GPIO Port %d not found in DP\n", portID);
 		return mres.status;
 	}
 	dp = (gpio_module_t *)mres.p;

@@ -32,14 +32,14 @@ static status_t earlycon_serial_setup()
 	arch_machine_call(fetch_sp, console_uart, 0, 0, &mres);
 	if(mres.status != success)
 	{
-		sysdbg("Console could not found!\n");
+		sysdbg3("Console could not found!\n");
 		return mres.status;
 	}
 	devid = (hw_devid_t) mres.p;
 	arch_machine_call(fetch_dp, (devid & 0xff00), (devid & 0x00ff), 0, &mres);
 	if(mres.status != success)
 	{
-		sysdbg("UART Device %d not found!\n", devid);
+		sysdbg3("UART Device %d not found!\n", devid);
 		return mres.status;
 	}
 	dp = (module_t *)mres.p;

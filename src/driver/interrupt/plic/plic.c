@@ -89,7 +89,7 @@ static void plic_clr_interrupt(uint32_t irq_id)
 	uint32_t core_id;
 	assert(port.baddr);
 	core_id = arch_core_index();
-	sysdbg2("Clearing IRQ#%u on Core-%u\n", irq_id, core_id);
+	sysdbg3("Clearing IRQ#%u on Core-%u\n", irq_id, core_id);
 	MMIO32(port.baddr + PLIC_ICLAIM_OFFSET(core_id)) = irq_id;
 	arch_dmb();
 	return;
@@ -183,7 +183,6 @@ static status_t plic_driver_exit()
 static status_t plic_driver_exit_pcpu()
 {
 	arch_di();
-	sysdbg4("Linking local IRQ#%u on Core-%u\n", port.irq, arch_core_index());
 	return unlink_interrupt(local, port.irq);
 }
 

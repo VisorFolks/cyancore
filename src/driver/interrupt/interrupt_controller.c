@@ -119,7 +119,7 @@ status_t ic_set_affinity_of_core(unsigned int irq_id)
 {
 	status_t ret = error_driver_init_failed;
 	unsigned int core_id = arch_core_index();
-	sysdbg2("Affining IRQ#%u to Core-%u\n", irq_id, core_id);
+	sysdbg3("Affining IRQ#%u to Core-%u\n", irq_id, core_id);
 	lock_acquire(&ic_lock);
 	if(ic_attached)
 		ret = ic->set_affinity(core_id, irq_id);
@@ -130,7 +130,7 @@ status_t ic_set_affinity_of_core(unsigned int irq_id)
 void ic_register_interrupt_handler(unsigned int id, void (* handler)(void))
 {
 	lock_acquire(&ic_lock);
-	sysdbg2("Registering IRQ#%u\n", id);
+	sysdbg3("Registering IRQ#%u\n", id);
 	if(ic_attached && (handler != NULL) && id)
 		ic->register_handler(id, handler);
 	lock_release(&ic_lock);

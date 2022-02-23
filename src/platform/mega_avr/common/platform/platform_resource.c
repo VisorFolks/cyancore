@@ -31,6 +31,7 @@ status_t platform_resources_setup()
 	status_t ret;
 	extern dp_t device_prop;
 	extern sp_t software_prop;
+	sysdbg3("In %s\n", __func__);
 	ret = dp_init(&device_prop);
 	ret |= sp_init(&software_prop);
 	return ret;
@@ -52,7 +53,7 @@ status_t platform_resources_setup()
 mret_t platform_fetch_sp(call_arg_t a0, call_arg_t a1 _UNUSED, call_arg_t a2 _UNUSED)
 {
 	mret_t ret;
-	sysdbg5("Fetch SP: Got request for %x\n", a0);
+	sysdbg2("Fetch SP: Got request for %x\n", a0);
 	ret.p = (uintptr_t) sp_terravisor_dev_info(a0);
 	ret.size = (ret.p) ? sizeof(hw_devid_t) : 0;
 	ret.status = (ret.p) ? success : error_device_id_inval;
@@ -77,7 +78,7 @@ INCLUDE_MCALL(atmega328p_fetch_sp, fetch_sp, platform_fetch_sp);
 mret_t platform_fetch_dp(call_arg_t a0, call_arg_t a1 _UNUSED, call_arg_t a2 _UNUSED)
 {
 	mret_t ret;
-	sysdbg5("Fetch DP: Got request for %x\n", a0);
+	sysdbg2("Fetch DP: Got request for %x\n", a0);
 	switch(a0)
 	{
 		case clock:

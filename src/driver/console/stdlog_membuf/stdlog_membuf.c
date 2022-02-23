@@ -80,5 +80,5 @@ status_t membuf_driver_exit()
 }
 
 #if STDLOG_MEMBUF==1
-INCLUDE_DRIVER(stdlogger, membuf_driver_setup, membuf_driver_exit, 0, 0, 0);
+INCLUDE_DRIVER(mslog, membuf_driver_setup, membuf_driver_exit, 0, 0, 0);
 #endif
