@@ -48,7 +48,7 @@ void arch_early_setup()
  */
 void arch_setup()
 {
-	link_interrupt(arch, 11, &arch_mcall_handler);
+	link_interrupt(int_arch, 11, &arch_mcall_handler);
 	return;
 }
 

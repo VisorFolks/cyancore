@@ -39,7 +39,7 @@ void plug()
 	driver_setup_all();
 	platform_print_cpu_info();
 	arch_machine_call(0, 100, 200, 300, &mres);
-	link_interrupt(local, 7, test);
+	link_interrupt(int_local, 7, test);
 
 	gpio_pin_alloc(&gled, PORTA, 19);
 	gpio_pin_alloc(&bled, PORTA, 21);

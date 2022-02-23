@@ -43,7 +43,7 @@ static status_t plic_setup()
 	port.baddr = dp->baddr;
 	port.stride = dp->stride;
 	port.port_id = plic;
-	port.irq = dp->interrupt_id[0];
+	port.irq = dp->interrupt[0].id;
 	syslog(info, "PLIC @ 0x%x found.\n", (unsigned int)port.baddr);
 	return success;
 }
@@ -162,7 +162,6 @@ static status_t plic_driver_setup()
 	status_t ret;
 	ret = plic_setup();
 	ret |= ic_attach_device(ret, &plic_port);
-	plic_clr_interrupt(plic_get_interrupt());
 	return ret;
 }
 
@@ -170,7 +169,8 @@ static status_t plic_driver_setup_pcpu()
 {
 	status_t ret;
 	sysdbg4("Linking local IRQ#%u on Core-%u\n", port.irq, arch_core_index());
-	ret = link_interrupt(local, port.irq, &plic_irqhandler);
+	plic_clr_interrupt(plic_get_interrupt());
+	ret = link_interrupt(int_local, port.irq, &plic_irqhandler);
 	arch_ei();
 	return ret;
 }
@@ -183,7 +183,7 @@ static status_t plic_driver_exit()
 static status_t plic_driver_exit_pcpu()
 {
 	arch_di();
-	return unlink_interrupt(local, port.irq);
+	return unlink_interrupt(int_local, port.irq);
 }
 
 INCLUDE_DRIVER(riscv_plic, plic_driver_setup, plic_driver_exit, 0, 0, 0);

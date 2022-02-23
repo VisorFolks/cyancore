@@ -46,7 +46,7 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p)
 			if(port->tx_irq)
 			{
 				sysdbg5("Linking arch Tx IRQ#%u\n", port->tx_irq);
-				link_interrupt(arch, port->tx_irq, port->tx_handler);
+				link_interrupt(int_arch, port->tx_irq, port->tx_handler);
 				uart_tx_int_en(port);
 			}
 		case rx:
@@ -54,7 +54,7 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p)
 			if(port->rx_irq)
 			{
 				sysdbg5("Linking arch Rx IRQ#%u\n", port->tx_irq);
-				link_interrupt(arch, port->rx_irq, port->rx_handler);
+				link_interrupt(int_arch, port->rx_irq, port->rx_handler);
 				uart_rx_int_en(port);
 			}
 			break;
@@ -63,7 +63,7 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p)
 			if(port->tx_irq)
 			{
 				sysdbg5("Linking arch Tx IRQ#%u\n", port->tx_irq);
-				link_interrupt(arch, port->tx_irq, port->tx_handler);
+				link_interrupt(int_arch, port->tx_irq, port->tx_handler);
 				uart_tx_int_en(port);
 			}
 			break;
@@ -95,12 +95,12 @@ status_t uart_shutdown(const uart_port_t *port)
 	if(port->tx_irq)
 	{
 		ret |= uart_tx_int_dis(port);
-		ret |= unlink_interrupt(arch, port->tx_irq);
+		ret |= unlink_interrupt(int_arch, port->tx_irq);
 	}
 	if(port->rx_irq)
 	{
 		ret |= uart_rx_int_dis(port);
-		ret |= unlink_interrupt(arch, port->rx_irq);
+		ret |= unlink_interrupt(int_arch, port->rx_irq);
 	}
 	ret |= platform_clk_dis(port->clk_id);
 	return ret;

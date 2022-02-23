@@ -36,7 +36,7 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
 			txctlr |= (1 << TXEN) | (7 << TXCNT);
 			if(port->tx_irq)
 			{
-				link_interrupt(plat, port->tx_irq, port->tx_handler);
+				link_interrupt(int_plat, port->tx_irq, port->tx_handler);
 				uart_tx_int_en(port);
 			}
 			_FALLTHROUGH;
@@ -44,7 +44,7 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
 			rxctlr |= (1 << RXEN) | (1 << RXCNT);
 			if(port->rx_irq)
 			{
-				link_interrupt(plat, port->rx_irq, port->rx_handler);
+				link_interrupt(int_plat, port->rx_irq, port->rx_handler);
 				uart_rx_int_en(port);
 			}
 			break;
@@ -52,7 +52,7 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
 			txctlr |= (1 << TXEN) | (7 << TXCNT);
 			if(port->tx_irq)
 			{
-				link_interrupt(plat, port->tx_irq, port->tx_handler);
+				link_interrupt(int_plat, port->tx_irq, port->tx_handler);
 				uart_tx_int_en(port);
 			}
 			break;
@@ -76,12 +76,12 @@ status_t uart_shutdown(const uart_port_t *port)
 	if(port->tx_irq)
 	{
 		ret |= uart_tx_int_dis(port);
-		ret |= unlink_interrupt(arch, port->tx_irq);
+		ret |= unlink_interrupt(int_plat, port->tx_irq);
 	}
 	if(port->rx_irq)
 	{
 		ret |= uart_rx_int_dis(port);
-		ret |= unlink_interrupt(arch, port->rx_irq);
+		ret |= unlink_interrupt(int_plat, port->rx_irq);
 	}
 	MMIO32(port->baddr + TXCTRL_OFFSET) = 0;
 	MMIO32(port->baddr + RXCTRL_OFFSET) = 0;

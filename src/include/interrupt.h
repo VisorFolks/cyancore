@@ -12,13 +12,7 @@
 #define _INTERRUPT_H_
 
 #include <stdint.h>
-
-typedef enum int_module
-{
-	arch = 1,
-	local = 2,
-	plat = 3
-} int_module_t;
+#include <resource.h>
 
 typedef struct int_wait
 {
