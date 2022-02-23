@@ -121,7 +121,7 @@ status_t adc_setup(adc_port_t *port)
 	ret |= _adc_set_prescaler(port);
 	if(port->adc_handler)
 	{
-		ret |= link_interrupt(arch, port->adc_irq, port->adc_handler);
+		ret |= link_interrupt(int_arch, port->adc_irq, port->adc_handler);
 		ret |= adc_int_en(port);
 	}
 	return ret;

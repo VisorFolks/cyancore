@@ -20,8 +20,7 @@ typedef struct module
 	uintptr_t stride;
 	unsigned long clk;
 	unsigned int clk_id;
-	size_t interrupt_id[MAX_INTERRUPTS_PER_DEVICE];
-	int_trigger_t interrupt_trigger[MAX_INTERRUPTS_PER_DEVICE];
+	irqs_t interrupt[MAX_INTERRUPTS_PER_DEVICE];
 } module_t;
 
 module_t *dp_get_module_info(hw_devid_t dev);

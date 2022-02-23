@@ -38,10 +38,8 @@ module_t uart0 =
 	.clk_id = 0x01,
 	.stride = 0x06,
 	.clk = 19200,
-	.interrupt_id[0] = 25,
-	.interrupt_id[1] = 27,
-	.interrupt_trigger[0] = i_level,
-	.interrupt_trigger[1] = i_level
+	.interrupt[0] = {int_arch, 25, int_level},
+	.interrupt[1] = {int_arch, 27, int_level},
 };
 
 gpio_module_t port0 =
@@ -126,8 +124,7 @@ module_t wdt0 =
 	.id = wdt | 0,
 	.baddr=0x60,
 	.stride=0x1,
-	.interrupt_id[0] = 0x6,
-	.interrupt_trigger[0] = i_level,
+	.interrupt[0] = {int_arch, 6, int_level},
 	.clk = 0x7
 };
 
@@ -136,8 +133,8 @@ module_t timer0 =
 	.id = timer | 0x00,
 	.baddr = 0x44,
 	.stride = 5,
-	.interrupt_id[0] = 21,
-	.interrupt_id[1] = 22,
+	.interrupt[0] = {int_arch, 21, int_level},
+	.interrupt[1] = {int_arch, 22, int_level},
 	.clk_id = 5,
 };
 
@@ -146,8 +143,8 @@ module_t timer1 =
 	.id = timer | 0x10,
 	.baddr = 0x80,
 	.stride = 12,
-	.interrupt_id[0] = 17,
-	.interrupt_id[1] = 18,
+	.interrupt[0] = {int_arch, 17, int_level},
+	.interrupt[1] = {int_arch, 18, int_level},
 	.clk_id = 3,
 };
 
@@ -156,8 +153,8 @@ module_t timer2 =
 	.id = timer | 0x20,
 	.baddr = 0xb0,
 	.stride = 5,
-	.interrupt_id[0] = 13,
-	.interrupt_id[1] = 14,
+	.interrupt[0] = {int_arch, 13, int_level},
+	.interrupt[1] = {int_arch, 24, int_level},
 	.clk_id = 6,
 };
 
@@ -166,8 +163,8 @@ module_t timer3 =
 	.id = timer | 0x30,
 	.baddr = 0x90,
 	.stride = 12,
-	.interrupt_id[0] = 32,
-	.interrupt_id[1] = 33,
+	.interrupt[0] = {int_arch, 32, int_level},
+	.interrupt[1] = {int_arch, 33, int_level},
 	.clk_id = 11,
 };
 
@@ -176,8 +173,8 @@ module_t timer4 =
 	.id = timer | 0x40,
 	.baddr = 0xa0,
 	.stride = 12,
-	.interrupt_id[0] = 42,
-	.interrupt_id[1] = 43,
+	.interrupt[0] = {int_arch, 42, int_level},
+	.interrupt[1] = {int_arch, 43, int_level},
 	.clk_id = 12,
 };
 
@@ -186,8 +183,8 @@ module_t timer5 =
 	.id = timer | 0x50,
 	.baddr = 0x120,
 	.stride = 12,
-	.interrupt_id[0] = 47,
-	.interrupt_id[1] = 48,
+	.interrupt[0] = {int_arch, 47, int_level},
+	.interrupt[1] = {int_arch, 48, int_level},
 	.clk_id = 13,
 };
 

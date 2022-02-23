@@ -36,7 +36,7 @@ module_t plic0 =
 	.id = plic,
 	.baddr = 0x0c000000,
 	.stride = 0x04000000,
-	.interrupt_id[0] = 11,
+	.interrupt[0] = {int_local, 11, int_rising_edge},
 };
 
 module_t clint0 =
@@ -52,7 +52,7 @@ module_t uart0 =
 	.baddr = 0x10013000,
 	.stride = 0x20,
 	.clk = 115200,
-	.interrupt_id[0] = 3,
+	.interrupt[0] = {int_plat, 3, int_rising_edge},
 };
 
 module_t prci0 =

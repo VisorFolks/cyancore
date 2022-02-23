@@ -22,16 +22,16 @@ status_t link_interrupt(int_module_t target, unsigned int id, void (*handler)(vo
 	status_t ret = success;
 	switch(target)
 	{
-		case arch:
+		case int_arch:
 			arch_register_interrupt_handler(id, handler);
 			break;
 #if LOCAL_INTERRUPT_DEVICE==1
-		case local:
+		case int_local:
 			local_register_interrupt_handler(id, handler);
 			break;
 #endif
 #if PLAT_INTERRUPT_DEVICE==1
-		case plat:
+		case int_plat:
 			ic_register_interrupt_handler(id, handler);
 			break;
 #endif
@@ -47,16 +47,16 @@ status_t unlink_interrupt(int_module_t target, unsigned int id)
 	status_t ret = success;
 	switch(target)
 	{
-		case arch:
+		case int_arch:
 			arch_register_interrupt_handler(id, &arch_panic_handler);
 			break;
 #if LOCAL_INTERRUPT_DEVICE==1
-		case local:
+		case int_local:
 			local_register_interrupt_handler(id, &plat_panic_handler);
 			break;
 #endif
 #if PLAT_INTERRUPT_DEVICE==1
-		case plat:
+		case int_plat:
 			ic_register_interrupt_handler(id, &plat_panic_handler);
 			break;
 #endif

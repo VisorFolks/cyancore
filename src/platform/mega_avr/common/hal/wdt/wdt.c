@@ -66,7 +66,7 @@ status_t wdt_setup(const wdt_port_t *port)
 		return error_func_inval_arg;
 
 	sysdbg5("Linking WDT IRQ to arch mode IRQ#%u\n", port->wdt_irq);
-	ret = link_interrupt(arch, port->wdt_irq, port->wdt_handler);
+	ret = link_interrupt(int_arch, port->wdt_irq, port->wdt_handler);
 
 	lock_acquire(&wdt_lock);
 	arch_di_save_state();
@@ -97,7 +97,7 @@ status_t wdt_shutdown(const wdt_port_t *port)
 	arch_wdt_reset();
 	MMIO8(MCUSR) &= ~(1 << MCUSR_WDRF);
 	write_wdtcsr(0);
-	unlink_interrupt(arch, port->wdt_irq);
+	unlink_interrupt(int_arch, port->wdt_irq);
 	arch_ei_restore_state();
 	lock_release(&wdt_lock);
 
