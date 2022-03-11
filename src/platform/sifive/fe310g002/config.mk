@@ -19,6 +19,9 @@
 N_CORES		:= 1
 $(eval $(call add_define,N_CORES))
 
+CCSMP		:= 0
+$(eval $(call add_define,CCSMP))
+
 $(eval $(call add_define,BIT))
 
 BOOT_CORE_ID:= 0

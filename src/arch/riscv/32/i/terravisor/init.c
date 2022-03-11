@@ -25,7 +25,21 @@ void init()
 	arch_di();
 	asm volatile("la	tp, _tls_start");
 	/* Boot framework */
+
+#if CCSMP == 0
 	engine();
+#else
+	if(arch_core_index() == BOOT_CORE_ID)
+	{
+		arch_early_signal_boot_start();
+		engine();
+	}
+	else
+	{
+		arch_wait_till_boot_done();
+		engine_secondary();
+	}
+#endif
 
 	/* Accidental trap, if control returns from framework */
 	exit(EXIT_FAILURE);

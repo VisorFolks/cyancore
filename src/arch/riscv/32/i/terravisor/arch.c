@@ -13,6 +13,7 @@
 #include <status.h>
 #include <syslog.h>
 #include <arch.h>
+#include <lock/lock.h>
 #include <terravisor/workers.h>
 #include <interrupt.h>
 
@@ -25,6 +26,26 @@ static void arch_mcall_handler()
 	frame->a0 = mres.p;
 	frame->a1 = mres.size;
 	frame->a2 = mres.status;
+	return;
+}
+
+static lock_t boot_key = LOCK_INITAL_VALUE;
+void arch_early_signal_boot_start()
+{
+	boot_key = LOCK_INITAL_VALUE;
+	return;
+}
+
+void arch_wait_till_boot_done()
+{
+	lock_acquire(&boot_key);
+	lock_release(&boot_key);
+	return;
+}
+
+void arch_signal_boot_done()
+{
+	lock_release(&boot_key);
 	return;
 }
 
@@ -47,6 +68,12 @@ void arch_early_setup()
  * @brief This function is called after initial setup is done.
  */
 void arch_setup()
+{
+	link_interrupt(int_arch, 11, &arch_mcall_handler);
+	return;
+}
+
+void arch_setup2()
 {
 	link_interrupt(int_arch, 11, &arch_mcall_handler);
 	return;

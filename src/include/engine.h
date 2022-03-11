@@ -34,3 +34,4 @@ typedef union __ccver
 } ccver_t;
 
 void engine();
+void engine_secondary();

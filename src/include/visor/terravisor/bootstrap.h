@@ -15,3 +15,4 @@
 #include <status.h>
 
 status_t bootstrap();
+status_t bootstrap_secondary();
