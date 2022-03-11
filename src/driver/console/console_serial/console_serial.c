@@ -51,13 +51,13 @@ static status_t console_serial_setup()
 	console_port.baddr = dp->baddr;
 	console_port.stride = dp->stride;
 	console_port.baud = dp->clk;
-	console_port.tx_irq = dp->interrupt[1].id;
+	console_port.tx_irq = &dp->interrupt[1];
 	console_port.tx_handler = console_serial_write_irq_handler;
-	console_port.rx_irq = dp->interrupt[0].id;
+	console_port.rx_irq = &dp->interrupt[0];
 	console_port.rx_handler = console_serial_read_irq_handler;
 
 	sysdbg2("UART engine @ %p\n", console_port.baddr);
-	sysdbg2("UART baud @ %ubps\n", console_port.baud);
+	sysdbg2("UART baud @ %llubps\n", console_port.baud);
 	sysdbg2("UART irqs - %u & %u\n", dp->interrupt[1].id, dp->interrupt[0].id);
 	/*
 	 * If memory mapping is applicable,
