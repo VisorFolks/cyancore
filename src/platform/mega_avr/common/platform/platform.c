@@ -99,11 +99,11 @@ void platform_cpu_setup()
 	return;
 }
 
-void plat_panic_handler_callback()
+void _NAKED plat_panic_handler_callback()
 {
 	context_frame_t *frame;
 	sysdbg3("In %s\n", __func__);
 	frame = get_context_frame();
 	syslog(info, "SP=%p\tSREG = %p\n", frame, frame->sreg);
-	while(1) arch_wfi();
+	exit(EXIT_FAILURE);
 }

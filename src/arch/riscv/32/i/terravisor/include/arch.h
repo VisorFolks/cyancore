@@ -31,8 +31,8 @@ void arch_ei_restore_state();
 /**
  * arch_panic_handler - Executes when arch error occurs
  */
-void arch_panic_handler();
-void arch_unhandled_irq();
+void arch_panic_handler() _NORETURN;
+void arch_unhandled_irq() _NORETURN;
 
 void arch_early_signal_boot_start();
 void arch_wait_till_boot_done();

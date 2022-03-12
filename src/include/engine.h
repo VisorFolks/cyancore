@@ -33,5 +33,5 @@ typedef union __ccver
 	} v;
 } ccver_t;
 
-void engine();
-void engine_secondary();
+void engine() _NORETURN;
+void engine_secondary() _NORETURN;

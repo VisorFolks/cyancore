@@ -20,7 +20,7 @@
  * @brief This function runs to reset the cpu reg bank to architectrually
  * reset state and jump to 'engine'.
  */
-void init()
+void _NAKED init()
 {
 	arch_di();
 	asm volatile("la	tp, _tls_start");
