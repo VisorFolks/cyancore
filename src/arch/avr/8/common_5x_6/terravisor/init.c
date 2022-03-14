@@ -21,7 +21,7 @@ extern uint16_t stack_start;
  *
  * This function is defined in asm.S file
  */
-extern void zero_reg(void);
+extern void zero_reg(void) _NAKED;
 
 /**
  * init - Entry point for the framework
@@ -29,7 +29,7 @@ extern void zero_reg(void);
  * @brief This function runs to reset the cpu reg bank to architectrually
  * reset state and jump to 'engine'.
  */
-void init()
+void _NAKED init()
 {
 	/* Set resisters to architecturally defined reset */
 	zero_reg();

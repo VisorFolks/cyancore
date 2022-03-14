@@ -23,6 +23,7 @@ void arch_early_setup();
  * arch_setup - This needs to be called after inital setup is completed
  */
 void arch_setup();
+void arch_setup2();
 
 void arch_di_save_state();
 void arch_ei_restore_state();
@@ -30,8 +31,12 @@ void arch_ei_restore_state();
 /**
  * arch_panic_handler - Executes when arch error occurs
  */
-void arch_panic_handler();
-void arch_unhandled_irq();
+void arch_panic_handler() _NORETURN;
+void arch_unhandled_irq() _NORETURN;
+
+void arch_early_signal_boot_start();
+void arch_wait_till_boot_done();
+void arch_signal_boot_done();
 
 /**
  * arch_machine_call - Performs machine call

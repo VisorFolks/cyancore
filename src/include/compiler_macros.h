@@ -26,4 +26,6 @@
 #define _DEPRICATE	_ATTRIBUTE(depricated)
 #define _ALIAS(x)	_ATTRIBUTE(alias(x))
 #define _FALLTHROUGH	_ATTRIBUTE(fallthrough)
+#define _NORETURN	_ATTRIBUTE(noreturn)
+#define _NAKED		_ATTRIBUTE(naked)
 #define EXPORT_C(x)	extern "C" x; x

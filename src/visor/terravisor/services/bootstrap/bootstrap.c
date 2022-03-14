@@ -20,16 +20,14 @@ status_t bootstrap()
 {
 	reset_t resetSyndrome;
 
+	sysdbg3("Entering %s...\n", __func__);
 	arch_early_setup();
 
-	if(arch_core_index() == BOOT_CORE_ID)
-		platform_early_setup();
+	platform_early_setup();
 
-	sysdbg3("Performing Arch Setup\n");
 	arch_setup();
 
-	if(arch_core_index() == BOOT_CORE_ID)
-		platform_setup();
+	platform_setup();
 
 	resetSyndrome = platform_get_reset_syndrome();
 	platform_reset_handler(resetSyndrome);
@@ -38,3 +36,16 @@ status_t bootstrap()
 
 	return success;
 }
+
+#if CCSMP
+status_t bootstrap_secondary()
+{
+	sysdbg3("Entering %s...\n", __func__);
+	arch_early_setup();
+
+	arch_setup2();
+
+	platform_cpu_setup();
+	return success;
+}
+#endif

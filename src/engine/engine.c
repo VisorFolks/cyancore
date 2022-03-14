@@ -43,10 +43,32 @@ _WEAK void play()
 	return;
 }
 
+_WEAK void plug_secondary()
+{
+	asm volatile("");
+	return;
+}
+
+_WEAK void play_secondary()
+{
+	asm volatile("");
+	return;
+}
+
 void engine()
 {
 	plug();
-player:
-	play();
-	goto player;
+
+	do
+		play();
+	while(1);
+}
+
+void engine_secondary()
+{
+	plug_secondary();
+
+	do
+		play_secondary();
+	while(1);
 }
