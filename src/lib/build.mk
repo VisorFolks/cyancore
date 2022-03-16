@@ -16,7 +16,7 @@ include $(LIB_DIR)/libc/build.mk
 include $(LIB_DIR)/libresource/build.mk
 include $(LIB_DIR)/libsyslog/build.mk
 include $(LIB_DIR)/libccfs/build.mk
-include $(LIB_DIR)/libposix/build.mk
 #==================================================
 
 include $(LIB_DIR)/libnmath/build.mk
+$(eval $(call check_and_include,POSIX,$(LIB_DIR)/libposix/build.mk))

@@ -27,3 +27,9 @@ endef
 define add_ldflag
 	LD_FLAGS	+= $(1)
 endef
+
+define check_and_include
+ifeq ($(1),1)
+include $(2)
+endif
+endef

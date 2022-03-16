@@ -57,7 +57,7 @@ static status_t console_serial_setup()
 	console_port.rx_handler = console_serial_read_irq_handler;
 
 	sysdbg2("UART engine @ %p\n", console_port.baddr);
-	sysdbg2("UART baud @ %llubps\n", console_port.baud);
+	sysdbg2("UART baud @ %lubps\n", console_port.baud);
 	sysdbg2("UART irqs - %u & %u\n", dp->interrupt[1].id, dp->interrupt[0].id);
 	/*
 	 * If memory mapping is applicable,

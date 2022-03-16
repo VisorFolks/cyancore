@@ -53,7 +53,7 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p)
 			en |= (1 << RXEN);
 			if(port->rx_irq)
 			{
-				sysdbg5("Linking module Rx IRQ#%u\n", port->rx_irq->module, port->rx_irq->id);
+				sysdbg5("Linking module#%u Rx IRQ#%u\n", port->rx_irq->module, port->rx_irq->id);
 				link_interrupt(port->rx_irq->module, port->rx_irq->id, port->rx_handler);
 				uart_rx_int_en(port);
 			}
