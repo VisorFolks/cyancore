@@ -130,7 +130,7 @@ status_t wdt_set_timeout(const wdt_port_t *port)
 	lock_acquire(&wdt_lock);
 	arch_di_save_state();
 	arch_wdt_reset();
-	write_wdtcsr((uint8_t) timeout);
+	write_wdtcsr(timeout);
 	arch_ei_restore_state();
 	lock_release(&wdt_lock);
 

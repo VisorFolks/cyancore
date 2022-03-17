@@ -15,15 +15,11 @@
 
 LT		:= $(shell which cppcheck)
 
-LINT_FLAGS	+= --error-exitcode=1 -j $(N_JOBS) -q	\
-		   --suppress=comparePointers		\
-		   --suppress=variableScope		\
-		   --suppress=knownConditionTrueFalse	\
-		   --suppress=noConstructor		\
-		   --suppress=unmatchedSuppression	\
+LINT_FLAGS	+= --error-exitcode=1 --std=c11		\
 		   --enable=warning,style,performance	\
 		   --enable=portability,information	\
-		   --enable=missingInclude
+		   --enable=missingInclude -q		\
+		   --max-ctu-depth=12 --max-configs=12
 
 --lint: $(DEP_SRCS)
 ifeq ($(LT),)

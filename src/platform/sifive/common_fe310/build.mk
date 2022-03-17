@@ -15,6 +15,8 @@ LD_SCRIPT		:= $(FE310_COMMON_DIR)/sections.ld.sx
 
 PLAT_INCLUDE		+= $(FE310_COMMON_DIR)/include
 
+LINT_FLAGS		+= --platform=unix32
+
 LOCAL_INTERRUPT_DEVICE	:= 1
 PLAT_INTERRUPT_DEVICE	:= 1
 

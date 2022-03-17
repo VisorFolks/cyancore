@@ -9,7 +9,6 @@
  */
 
 #include <stdint.h>
-#include <stddef.h>
 #include <status.h>
 #include <syslog.h>
 #include <machine_call.h>
@@ -20,38 +19,33 @@
 extern mcall_t _mcall_table_start;
 extern mcall_t _mcall_table_end;
 
+typedef mret_t (*mcb_t)(call_arg_t, call_arg_t, call_arg_t);
+static mcb_t get_callback_from_table(mcall_t *start, mcall_t *end, mcall_id_t id)
+{
+	mcall_t *ptr = start;
+	while(ptr < end)
+	{
+		if(ptr->id == id)
+			return (ptr->callback != NULL) ? ptr->callback : NULL;
+		ptr++;
+	}
+	return (mcb_t) 0;
+}
+
 void machine_call(mcall_id_t id, call_arg_t a0, call_arg_t a1, call_arg_t a2, mret_t *ret)
 {
 	sysdbg4("MCall: id=%p, a0=%p, a1=%p, a2=%p\n", id, a0, a1, a2);
-	/* mcall Table pointer */
-	mcall_t *ptr;
+	/* Callback function pointer */
+	mcb_t cb;
 
 	/* Assign "ret" parameters to default error case,
 	 * on execution of the call, the ret will updated.
 	 */
-	ret->p = (uintptr_t) NULL;
+	ret->p = (uintptr_t) 0;
 	ret->size = 0;
 	ret->status = error_mcall_code_inval;
 
-	/* Assign the pointer to start of table */
-	ptr = &_mcall_table_start;
-
-	/* Run through the table till the end */
-	while(ptr < & _mcall_table_end)
-	{
-		/* Check if the mcall ID matches */
-		if(ptr->id == id)
-		{
-			/* Execute the callback function and update the "ret" */
-			if (ptr->callback != NULL)
-			{
-				*ret = ptr->callback(a0, a1, a2);
-			}
-			/* Stop parsing the table and return */
-			break;
-		}
-		/* Increament location pointer */
-		ptr++;
-	}
+	cb = get_callback_from_table(&_mcall_table_start, &_mcall_table_end, id);
+	*ret = (cb != 0) ? cb(a0, a1, a2) : *ret;
 	return;
 }

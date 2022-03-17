@@ -35,7 +35,7 @@ status_t timer_setup(const timer_port_t *port, unsigned int mode, unsigned int p
 	{
 		if(port->tmr_handler)
 		{
-			timer8_set(port, port->value);
+			timer8_set(port, (uint8_t) port->value);
 			ret |= link_interrupt(int_arch, port->tmr_irq, port->tmr_handler);
 			timer8_irq_en(port);
 		}
@@ -46,7 +46,7 @@ status_t timer_setup(const timer_port_t *port, unsigned int mode, unsigned int p
 	{
 		if(port->tmr_handler)
 		{
-			timer16_set(port, port->value);
+			timer16_set(port, (uint8_t) port->value);
 			ret |= link_interrupt(int_arch, port->tmr_irq, port->tmr_handler);
 			timer16_irq_en(port);
 		}
@@ -101,7 +101,7 @@ status_t timer_pwm_set(const timer_port_t *port, bool invert, size_t value)
 	if(id == 0 || id == 0x20)
 	{
 		timer8_config_op_mode(port, 1, invert);
-		timer8_set(port, (uint8_t)value);
+		timer8_set(port, (uint8_t) value);
 	}
 	else
 	{

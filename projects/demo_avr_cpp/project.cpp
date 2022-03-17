@@ -31,7 +31,8 @@ EXPORT_C(void plug())
 	bootstrap();
 	driver_setup_all();
 
-	/* call the setup member of led object */
+	/* call the constructor and setup member of led object */
+	led = onBoardLed();
 	led.setup();
 
 	printf("Demo Program! - Cpp\n");

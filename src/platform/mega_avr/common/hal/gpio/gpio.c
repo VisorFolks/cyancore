@@ -172,7 +172,7 @@ status_t gpio_port_mode(const gpio_port_t *port, gpio_mode_t mode)
 		case pull_up:
 			MMIO8(pbaddr + PORT_OFFSET) = value;
 		case in:
-			MMIO8(pbaddr + DDR_OFFSET) &= ~(value);
+			MMIO8(pbaddr + DDR_OFFSET) &= ~value;
 			break;
 		default:
 			return error_func_inval_arg;

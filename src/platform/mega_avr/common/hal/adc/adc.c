@@ -178,7 +178,6 @@ status_t adc_config_pin(adc_port_t *port, uint8_t pin, adc_trig_t trigger, uint8
 status_t adc_read(adc_port_t *port, uint16_t *adc_val)
 {
 	status_t ret = success;
-	uint16_t temp;
 	assert(port);
 	assert(adc_val);
 	if(MMIO8(port->baddr + ADMUX_OFFSET) & (1 << ADLAR))
@@ -188,7 +187,7 @@ status_t adc_read(adc_port_t *port, uint16_t *adc_val)
 	else
 	{
 		*adc_val = MMIO8(port->baddr + ADCL_OFFSET);
-		temp = MMIO8(port->baddr + ADCH_OFFSET);
+		uint16_t temp = MMIO8(port->baddr + ADCH_OFFSET);
 		temp <<= 8;
 		*adc_val |= temp;
 	}

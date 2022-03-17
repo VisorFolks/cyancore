@@ -83,7 +83,7 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p)
 	// Configure frame
 	// Defaults to
 	// Async UART, 1 stop bit, Rising edge clk
-	MMIO8(port->baddr + UCSRC_OFFSET) = (p << UPM0) | (3 << UCSZ0); // Set Parity & 8 bit frame
+	MMIO8(port->baddr + UCSRC_OFFSET) = (uint8_t) (p << UPM0) | (3 << UCSZ0); // Set Parity & 8 bit frame
 uart_setup_exit:
 	return ret;
 }
@@ -109,7 +109,7 @@ status_t uart_shutdown(const uart_port_t *port)
 bool uart_buffer_available(const uart_port_t *port)
 {
 	assert(port);
-	return (bool)(MMIO8(port->baddr + UCSRA_OFFSET) >> UDRE) & 0x01;
+	return (bool)((MMIO8(port->baddr + UCSRA_OFFSET) >> UDRE) & 0x01);
 }
 
 void uart_tx_wait_till_done(const uart_port_t *port)
@@ -123,7 +123,7 @@ void uart_tx_wait_till_done(const uart_port_t *port)
 bool uart_rx_done(const uart_port_t *port)
 {
 	assert(port);
-	return (bool)(MMIO8(port->baddr + UCSRA_OFFSET) >> RXC) & 0x01;
+	return (bool)((MMIO8(port->baddr + UCSRA_OFFSET) >> RXC) & 0x01);
 }
 
 bool uart_frame_error(const uart_port_t *port)

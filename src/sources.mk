@@ -44,7 +44,7 @@ LD_FLAGS	+= --error-unresolved-symbols		\
 		   --check-sections -nostdlib		\
 		   --gc-sections -b $(OUTPUT_FORMAT)
 
-LINT_FLAGS	+= $(foreach i,$(INCLUDE),-I$(i))	\
+LINT_FLAGS	+= $(foreach i,$(INCLUDE),-I $(i))	\
 		   $(filter -D%,$(CFLAGS))
 
 DEP_LIB_PATH	:=

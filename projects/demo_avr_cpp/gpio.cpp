@@ -17,9 +17,13 @@ extern "C"
 #include "gpio.h"
 
 /* Outside declaration of the member function of class onBoardLed */
-void onBoardLed::setup()
+onBoardLed::onBoardLed()
 {
 	gpio_pin_alloc(&led13, PORTB, 5);
+}
+
+void onBoardLed::setup()
+{
 	gpio_pin_mode(&led13, out);
 	gpio_pin_clear(&led13);
 }
