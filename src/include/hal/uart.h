@@ -37,9 +37,9 @@ typedef struct uart_port
 	unsigned long baud;
 	uintptr_t baddr;
 	uintptr_t stride;
-	size_t tx_irq;
+	const irqs_t *tx_irq;
 	void (*tx_handler)(void);
-	size_t rx_irq;
+	const irqs_t *rx_irq;
 	void (*rx_handler)(void);
 } uart_port_t;
 

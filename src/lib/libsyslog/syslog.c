@@ -28,7 +28,7 @@ int syslog(logtype_t t, const char *c, ...)
 	va_list va;
 	char logsign[] = {'/', 'i', '!', 'x', '$'};
 	va_start(va, c);
-	ret = fprintf(stdlog, flag_enable_stdout,"< %c >", logsign[t]);
+	ret = fprintf(stdlog, flag_enable_stdout,"< %c > ", logsign[t]);
 	ret += vprintf(stdlog, flag_enable_stdout, c, va);
 	va_end(va);
 	return ret;
