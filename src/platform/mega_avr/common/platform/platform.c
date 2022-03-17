@@ -72,14 +72,10 @@ void platform_early_setup()
  */
 void platform_setup()
 {
-	status_t ret = success;
 	sysdbg3("In %s\n", __func__);
 	driver_setup("earlycon");
 	bootmsgs_enable();
 	cyancore_insignia_lite();
-
-	if(ret != success)
-		exit(EXIT_FAILURE);
 	return;
 }
 
@@ -91,11 +87,8 @@ void platform_setup()
  */
 void platform_cpu_setup()
 {
-	status_t ret = success;
 	sysdbg3("In %s\n", __func__);
 	arch_ei();
-	if(ret != success)
-		exit(EXIT_FAILURE);
 	return;
 }
 

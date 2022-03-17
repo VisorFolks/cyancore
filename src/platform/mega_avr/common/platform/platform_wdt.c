@@ -59,7 +59,7 @@ static status_t platform_wdt_setup()
 	plat_wdt.baddr = dp->baddr;
 	plat_wdt.stride = dp->stride;
 	plat_wdt.timeout = dp->clk;
-	plat_wdt.wdt_irq = dp->interrupt[0].id;
+	plat_wdt.wdt_irq = (unsigned int) dp->interrupt[0].id;
 	plat_wdt.wdt_handler = &platform_wdt_handler;
 
 	sysdbg2("WDT engine @ %p\n", plat_wdt.baddr);

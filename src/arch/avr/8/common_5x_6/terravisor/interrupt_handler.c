@@ -69,7 +69,6 @@ void arch_register_interrupt_handler(unsigned int id, void (* handler)(void))
  */
 void interrupt_handler(unsigned char id, context_frame_t *frame)
 {
-	void (*handler)(void);
 	set_context_frame(frame);
 
 	/* Check for valid interrupt ID */
@@ -83,7 +82,7 @@ void interrupt_handler(unsigned char id, context_frame_t *frame)
 		id --;
 
 		/* Get corresponding interrupt handling function */
-		handler = int_handler[id];
+		void (*handler)(void) = int_handler[id];
 
 		/* Check if the interrupt handler is valid */
 		assert(handler);

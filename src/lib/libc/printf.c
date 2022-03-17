@@ -64,14 +64,13 @@ static int unumprint(const FILE *dev, bool en_stdout, unsigned long unum,
 {
 	char buf[20];
 	int i = 0, ret = 0;
-	unsigned int rem;
 	do
 	{
-		rem = unum % radix;
+		unsigned int rem = unum % radix;
 		if(rem < 0xa)
-			buf[i] = '0' + rem;
+			buf[i] = '0' + (char)rem;
 		else
-			buf[i] = 'a' + (rem - 0xa);
+			buf[i] = 'a' + (char)(rem - 0xa);
 		i++;
 		unum /= radix;
 	}
@@ -176,7 +175,7 @@ loop:
 						fmt++;
 					}
 				case '%':
-					ret += __fputc(dev, en_stdout, (int)*fmt);
+					ret += __fputc(dev, en_stdout, *fmt);
 					fmt++;
 					break;
 				default:

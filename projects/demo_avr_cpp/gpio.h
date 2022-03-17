@@ -15,6 +15,7 @@ class onBoardLed
 	private:
 		gpio_port_t led13;
 	public:
+		onBoardLed();
 		void setup();
 		void toggle();
 };

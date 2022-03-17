@@ -33,20 +33,11 @@ void platform_early_setup()
 
 void platform_setup()
 {
-	status_t ret = success;
-
 	cyancore_insignia();
-
-	if(ret != success)
-		exit(EXIT_FAILURE);
 	return;
 }
 
 void platform_cpu_setup()
 {
-	status_t ret = success;
-
-	if(ret != success)
-		exit(EXIT_FAILURE);
 	return;
 }

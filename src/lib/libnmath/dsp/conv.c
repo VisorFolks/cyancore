@@ -28,9 +28,6 @@
  */
 status_t conv(float *a, int size_a, float *b, int size_b, float *c, int size_c)
 {
-	/* Selected region variables */
-	int rstart, rend, r;
-
 	/* As per linear convolution if the size of output 1D matrix
 	 * is not greater than or equal to 1 less than sum of sizes of
 	 * input 1D matrices that are being convolved then the conv
@@ -42,11 +39,11 @@ status_t conv(float *a, int size_a, float *b, int size_b, float *c, int size_c)
 	for(int ci = 0; ci < size_c; ci++)
 	{
 		/* Compute index of convolution */
-		rstart = (ci >= (size_b - 1)) ? (ci - (size_b - 1)) : 0;
-		rend = (ci < (rstart - 1)) ? ci : (size_a - 1);
+		int rstart = (ci >= (size_b - 1)) ? (ci - (size_b - 1)) : 0;
+		int rend = (ci < (rstart - 1)) ? ci : (size_a - 1);
 
 		/* Compute sum of products */
-		for(r = rstart; r <= rend; r++)
+		for(int r = rstart; r <= rend; r++)
 			c[ci] += a[r] * b[ci - r];
 	}
 	return success;

@@ -94,7 +94,7 @@ void arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsi
 	return;
 }
 
-void arch_panic_handler_callback()
+void _NORETURN arch_panic_handler_callback()
 {
 	context_frame_t *frame;
 	frame = get_context_frame();
