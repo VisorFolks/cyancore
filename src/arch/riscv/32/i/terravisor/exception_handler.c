@@ -58,8 +58,9 @@ void exception_handler(uint32_t mcause, context_frame_t *frame)
 	if(mcause & (1U << 31))
 		irqhandler[cpuid][cause]();
 	else
+	{
 		exhandler[cpuid][cause]();
-
-	frame->mepc += (MMIO8(frame->mepc) & 0x3) ? 4 : 2;
+		frame->mepc += (MMIO8(frame->mepc) & 0x3) ? 4 : 2;
+	}
 	fence(ow, ow);
 }
