@@ -19,12 +19,8 @@ void platform_early_setup()
 	ret |= platform_copy_itim();
 	ret |= platform_bss_clear();
 	ret |= platform_resources_setup();
+	syslog_stdout_disable();
 	driver_setup("mslog");
-#if 0
-	driver_setup("earlycon");
-	bootmsgs_enable();
-#endif
-	stdout_register(&logger_putc);
 
 	if(ret != success)
 		exit(EXIT_FAILURE);
@@ -33,6 +29,8 @@ void platform_early_setup()
 
 void platform_setup()
 {
+	driver_setup("earlycon");
+	bootmsgs_enable();
 	cyancore_insignia();
 	return;
 }

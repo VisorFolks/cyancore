@@ -13,6 +13,7 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <status.h>
+#include <syslog.h>
 #include <resource.h>
 #include <mmio.h>
 #include <platform.h>
@@ -28,8 +29,8 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
 	assert(port);
 
 	// Enable module based on direction
-	uint8_t txctlr = 0;
-	uint8_t rxctlr = 0;
+	uint32_t txctlr = 0;
+	uint32_t rxctlr = 0;
 	switch(d)
 	{
 		case trx:
@@ -59,9 +60,11 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
 		default:
 			ret = error_func_inval_arg;
 	}
-
+	MMIO32(0x10012000 + 0x38) |= (3 << 16);
 	MMIO32(port->baddr + TXCTRL_OFFSET) = txctlr;
+	sysdbg5("TXCTRL=%x", txctlr);
 	MMIO32(port->baddr + RXCTRL_OFFSET) = rxctlr;
+	sysdbg5("RXCTRL=%x", rxctlr);
 	arch_dsb();
 
 	// Set baud rate
@@ -93,8 +96,8 @@ void uart_update_baud(const uart_port_t *port)
 {
 	assert(port);
 	TODO(Replace with clock get api!)
-	unsigned long plat_clk = 14400000;
-	MMIO32(port->baddr + UARTBR_OFFSET) = BAUD_DIV(plat_clk, port->baud);
+	unsigned long plat_clk = 20000000;
+	MMIO32(port->baddr + UARTBR_OFFSET) = BAUD_DIV(plat_clk, port->baud) & 0xffff;
 	arch_dsb();
 }
 
