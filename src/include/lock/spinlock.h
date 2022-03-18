@@ -15,5 +15,5 @@
 
 typedef size_t spinlock_t;
 
-void spinlock_acquire(spinlock_t *);
-void spinlock_release(spinlock_t *);
+void spinlock_acquire(volatile spinlock_t *);
+void spinlock_release(volatile spinlock_t *);

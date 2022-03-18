@@ -13,7 +13,7 @@
 #include <arch.h>
 #include <lock/lock.h>
 
-_WEAK void spinlock_acquire(spinlock_t *key)
+_WEAK void spinlock_acquire(volatile spinlock_t *key)
 {
 	while(1)
 	{
@@ -29,7 +29,7 @@ _WEAK void spinlock_acquire(spinlock_t *key)
 	arch_ei();
 }
 
-_WEAK void spinlock_release(spinlock_t *key)
+_WEAK void spinlock_release(volatile spinlock_t *key)
 {
 	fence(rw, r);
 	*key = 0;
