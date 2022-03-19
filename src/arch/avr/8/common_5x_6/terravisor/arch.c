@@ -43,17 +43,15 @@ void arch_setup()
 	return;
 }
 
-uint8_t sreg_i_backup;
-
-void arch_di_save_state()
+void arch_di_save_state(istate_t *sreg_i_backup)
 {
-	sreg_i_backup = MMIO8(SREG+0x20) & (1 << 7);
+	*sreg_i_backup = MMIO8(SREG+0x20) & (1 << 7);
 	arch_di();
 }
 
-void arch_ei_restore_state()
+void arch_ei_restore_state(istate_t *sreg_i_backup)
 {
-	MMIO8(SREG+0x20) |= sreg_i_backup;
+	MMIO8(SREG+0x20) |= *sreg_i_backup;
 }
 
 /**
