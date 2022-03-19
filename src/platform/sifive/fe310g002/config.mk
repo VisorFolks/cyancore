@@ -28,8 +28,10 @@ BOOT_CORE_ID:= 0
 $(eval $(call add_define,BOOT_CORE_ID))
 
 # Call this FLAG from Project config file if needed
-FCLK		?= 16000000
-$(eval $(call add_define,FCLK))
+XCLK		?= 16000000
+ICLK		?= 72000000
+$(eval $(call add_define,XCLK))
+$(eval $(call add_define,ICLK))
 
 N_EXCEP		:= 12
 $(eval $(call add_define,N_EXCEP))

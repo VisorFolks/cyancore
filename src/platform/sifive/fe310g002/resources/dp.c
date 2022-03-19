@@ -14,9 +14,9 @@
 #include <plat_mem.h>
 #include <hal/gpio.h>
 
-#ifndef FCLK
-#define FCLK 0
-WARN(< ! > FCLK is not defined!)
+#ifndef XCLK
+#define XCLK 0
+WARN(< ! > XCLK is not defined!)
 #endif
 
 cpu_t core0 =
@@ -88,7 +88,7 @@ module_t *mod_list[] =
 
 dp_t device_prop =
 {
-	.base_clock = FCLK,
+	.base_clock = XCLK,
 	.core[0] = &core0,
 	.memory = &mem,
 
