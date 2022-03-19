@@ -25,11 +25,11 @@ const char cyancore_ascii_insignia[] =
 ---           ---\n\r\
 ---           ---\n\r\
 ---   < / >   ---\n\r\
---- Cyancore® ---\n\r\
+--- Cyancore© ---\n\r\
 ---           ---\n\r\
     | | | | |\n\n\r";
 
-const char cyancore_ascii_insignia_lite[] = "Cyancore® < / >";
+const char cyancore_ascii_insignia_lite[] = "Cyancore© < / >";
 
 _WEAK void plug()
 {
