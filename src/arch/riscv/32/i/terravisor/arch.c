@@ -79,12 +79,17 @@ void arch_setup2()
 	return;
 }
 
-void arch_di_save_state()
+void arch_di_save_state(istate_t *istate)
 {
+	istate_t temp;
+	asm volatile("csrr %0, mstatus" : "=r" (temp));
+	*istate = temp & (1 << 3 | 1 << 7);
+	arch_di();
 }
 
-void arch_ei_restore_state()
+void arch_ei_restore_state(istate_t *istate)
 {
+	asm volatile("csrs mstatus, %0" : : "r" (*istate));
 }
 
 /**
