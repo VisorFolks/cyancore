@@ -1,6 +1,6 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2019-2022, Cyancore Team
  *
  * File Name		: machine_call.c
  * Description		: This file contains sources of machine call handler
@@ -19,7 +19,7 @@
 extern mcall_t _mcall_table_start;
 extern mcall_t _mcall_table_end;
 
-typedef mret_t (*mcb_t)(call_arg_t, call_arg_t, call_arg_t);
+typedef void (*mcb_t)(call_arg_t, call_arg_t, call_arg_t, mret_t *);
 static mcb_t get_callback_from_table(mcall_t *start, mcall_t *end, mcall_id_t id)
 {
 	mcall_t *ptr = start;
@@ -46,6 +46,7 @@ void machine_call(mcall_id_t id, call_arg_t a0, call_arg_t a1, call_arg_t a2, mr
 	ret->status = error_mcall_code_inval;
 
 	cb = get_callback_from_table(&_mcall_table_start, &_mcall_table_end, id);
-	*ret = (cb != 0) ? cb(a0, a1, a2) : *ret;
+	if(cb != 0)
+		cb(a0, a1, a2, ret);
 	return;
 }

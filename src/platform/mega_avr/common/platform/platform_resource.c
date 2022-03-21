@@ -50,14 +50,14 @@ status_t platform_resources_setup()
  *
  * @return status: return the function execution status
  */
-static mret_t platform_fetch_sp(call_arg_t a0, call_arg_t a1 _UNUSED, call_arg_t a2 _UNUSED)
+static void platform_fetch_sp(call_arg_t a0, call_arg_t a1 _UNUSED,
+		call_arg_t a2 _UNUSED, mret_t *ret)
 {
-	mret_t ret;
 	sysdbg2("Fetch SP: Got request for %x\n", a0);
-	ret.p = (uintptr_t) sp_terravisor_dev_info(a0);
-	ret.size = (ret.p) ? sizeof(hw_devid_t) : 0;
-	ret.status = (ret.p) ? success : error_device_id_inval;
-	return ret;
+	ret->p = (uintptr_t) sp_terravisor_dev_info(a0);
+	ret->size = (ret->p) ? sizeof(hw_devid_t) : 0;
+	ret->status = (ret->p) ? success : error_device_id_inval;
+	return;
 }
 
 INCLUDE_MCALL(atmega328p_fetch_sp, fetch_sp, platform_fetch_sp);
@@ -75,27 +75,27 @@ INCLUDE_MCALL(atmega328p_fetch_sp, fetch_sp, platform_fetch_sp);
  *
  * @return status: return the function execution status
  */
-static mret_t platform_fetch_dp(call_arg_t a0, call_arg_t a1 _UNUSED, call_arg_t a2 _UNUSED)
+static void platform_fetch_dp(call_arg_t a0, call_arg_t a1 _UNUSED,
+		call_arg_t a2 _UNUSED, mret_t *ret)
 {
-	mret_t ret;
 	sysdbg2("Fetch DP: Got request for %x\n", a0);
 	switch(a0)
 	{
 		case clock:
-			ret.p = (uintptr_t)dp_get_base_clock();
-			ret.size = (ret.p) ? sizeof(unsigned long) : 0;
+			ret->p = (uintptr_t)dp_get_base_clock();
+			ret->size = (ret->p) ? sizeof(unsigned long) : 0;
 			break;
 		case gpio:
-			ret.p = (uintptr_t)dp_get_port_info(a0 | a1);
-			ret.size = (ret.p) ? sizeof(gpio_module_t) : 0;
+			ret->p = (uintptr_t)dp_get_port_info(a0 | a1);
+			ret->size = (ret->p) ? sizeof(gpio_module_t) : 0;
 			break;
 		default:
-			ret.p = (uintptr_t) dp_get_module_info(a0 | a1);
-			ret.size = (ret.p) ? sizeof(module_t) : 0;
+			ret->p = (uintptr_t) dp_get_module_info(a0 | a1);
+			ret->size = (ret->p) ? sizeof(module_t) : 0;
 			break;
 	}
-	ret.status = (ret.p) ? success : error_device_id_inval;
-	return ret;
+	ret->status = (ret->p) ? success : error_device_id_inval;
+	return;
 }
 
 INCLUDE_MCALL(atmega328p_fetch_dp, fetch_dp, platform_fetch_dp);
