@@ -29,7 +29,7 @@ define add_ldflag
 endef
 
 define check_and_include
-ifeq ($(1),1)
+ifeq ($($(1)),1)
 include $(2)
 endif
 endef
