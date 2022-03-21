@@ -14,13 +14,14 @@
 #include <assert.h>
 #include <status.h>
 #include <syslog.h>
+#include <arch.h>
+#include <machine_call.h>
 #include <resource.h>
+#include <driver/sysclk.h>
 #include <mmio.h>
-#include <platform.h>
+//#include <platform.h>
 #include <interrupt.h>
 #include <hal/uart.h>
-#include <machine_call.h>
-#include <arch.h>
 #include "uart_private.h"
 
 status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
@@ -95,8 +96,8 @@ status_t uart_shutdown(const uart_port_t *port)
 void uart_update_baud(const uart_port_t *port)
 {
 	assert(port);
-	TODO(Replace with clock get api!)
-	unsigned long plat_clk = 20000000;
+	unsigned int plat_clk;
+	sysclk_get_clk(&plat_clk);
 	MMIO32(port->baddr + UARTBR_OFFSET) = BAUD_DIV(plat_clk, port->baud) & 0xffff;
 	arch_dsb();
 }

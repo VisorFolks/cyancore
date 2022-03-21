@@ -44,7 +44,7 @@
 
 #define PROCMONCFG_OFFSET	0xf0
 
-#define MAX_PLL_OUT		384000000U
+#define MAX_PLL_OUT		320000000U
 #define MIN_PLL_OUT		375000U
 #define MIN_REFR		6000000U
 #define MAX_REFR		12000000U
@@ -53,30 +53,3 @@
 #define MIN_PLLO		48000000U
 #define MAX_PLLO		384000000U
 
-void find_nearest(unsigned int, unsigned int);
-typedef struct pll_config
-{
-	uint8_t found;
-	uint8_t r;
-	uint8_t f;
-	uint8_t q;
-	uint8_t diven;
-	uint8_t n;
-} pllc_t;
-
-void __prci_pll_set_clk(sysclk_port_t *port, unsigned int clk);
-status_t __prci_pll_get_clk(sysclk_port_t *port, unsigned int *clk);
-void __prci_pll_select_xosc(sysclk_port_t *port);
-void __prci_pll_select_rosc(sysclk_port_t *port);
-void __prci_pll_select_pll(sysclk_port_t *port);
-void __prci_pll_deselect_pll(sysclk_port_t *port);
-void __prci_pll_bypass(sysclk_port_t *port);
-void __prci_pll_inline(sysclk_port_t *port);
-
-status_t __prci_hfxocs_enable(sysclk_port_t *port);
-status_t __prci_hfxocs_disable(sysclk_port_t *port);
-
-status_t __prci_hfosc_enable(sysclk_port_t *port);
-status_t __prci_hfosc_disable(sysclk_port_t *port);
-status_t __prci_hfosc_set_clk(sysclk_port_t *port, unsigned int clk);
-status_t __prci_hfosc_get_clk(sysclk_port_t *port, unsigned int *clk);

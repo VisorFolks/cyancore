@@ -10,7 +10,7 @@
  * Organisation		: Cyancore Core-Team
  */
 
-#include <hal/sysclk.h>
+#include <hal/prci.h>
 #include <mmio.h>
 #include <arch.h>
 #include "prci_private.h"
@@ -20,42 +20,40 @@
 INFO(< I > Using ICLK = 72Mhz)
 #endif
 
-status_t _NOINLINE __prci_hfxocs_enable(sysclk_port_t *port)
+status_t _NOINLINE prci_hfxocs_enable(sysclk_port_t *port)
 {
 	/* Enable External Crystal Osc (xtal) */
 	MMIO32(port->baddr + HFXOSCCFG_OFFSET) |= (1U << HFXOSCEN);
 	/* Wait till ready */
-	while(MMIO32(port->baddr + HFXOSCCFG_OFFSET) & (1U << HFXOSCRDY));
+	while(!(MMIO32(port->baddr + HFXOSCCFG_OFFSET) & (1U << HFXOSCRDY)));
 	return (MMIO32(port->baddr + HFXOSCCFG_OFFSET) & (1U << HFXOSCEN)) ?
 		success : error_system;
 }
 
-status_t _NOINLINE __prci_hfxocs_disable(sysclk_port_t *port)
+status_t _NOINLINE prci_hfxocs_disable(sysclk_port_t *port)
 {
 	/* Disable External Crystal Osc (xtal) */
 	MMIO32(port->baddr + HFXOSCCFG_OFFSET) &= ~(1U << HFXOSCEN);
-	/* Wait till ready */
-	while(MMIO32(port->baddr + HFXOSCCFG_OFFSET) & (1U << HFXOSCRDY));
 	return (MMIO32(port->baddr + HFXOSCCFG_OFFSET) & (1U << HFXOSCEN)) ?
 		error_system : success;
 }
 
-status_t _NOINLINE __prci_hfosc_enable(sysclk_port_t *port)
+status_t _NOINLINE prci_hfosc_enable(sysclk_port_t *port)
 {
 	MMIO32(port->baddr + HFROSCCFG_OFFSET) |= (1U << HFROSCEN);
-	while(MMIO32(port->baddr + HFROSCCFG_OFFSET) & (1U << HFROSCRDY));
+	while(!(MMIO32(port->baddr + HFROSCCFG_OFFSET) & (1U << HFROSCRDY)));
 	return (MMIO32(port->baddr + HFROSCCFG_OFFSET) & (1U << HFROSCEN)) ?
 		success : error_system;
 }
 
-status_t _NOINLINE __prci_hfosc_disable(sysclk_port_t *port)
+status_t _NOINLINE prci_hfosc_disable(sysclk_port_t *port)
 {
 	MMIO32(port->baddr + HFROSCCFG_OFFSET) &= ~(1U << HFROSCEN);
 	return (MMIO32(port->baddr + HFROSCCFG_OFFSET) & (1U << HFROSCEN)) ?
 		error_system : success;
 }
 
-status_t _NOINLINE __prci_hfosc_set_clk(sysclk_port_t *port, unsigned int clk)
+status_t _NOINLINE prci_hfosc_set_clk(sysclk_port_t *port, unsigned int clk)
 {
 	unsigned int hfrosc;
 	unsigned int divdr = ICLK / clk;
@@ -64,13 +62,13 @@ status_t _NOINLINE __prci_hfosc_set_clk(sysclk_port_t *port, unsigned int clk)
 	hfrosc &= ~HFROSCDIV_MASK;
 	hfrosc |= (divdr & HFROSCDIV_MASK);
 	MMIO32(port->baddr + HFROSCCFG_OFFSET) = hfrosc;
-	while(MMIO32(port->baddr + HFXOSCCFG_OFFSET) & (1U << HFXOSCRDY));
+	while(!(MMIO32(port->baddr + HFROSCCFG_OFFSET) & (1U << HFXOSCRDY)));
 
 	return ((MMIO32(port->baddr + HFROSCCFG_OFFSET) & HFROSCDIV_MASK) ==
 		divdr) ? success : error_system;
 }
 
-status_t _NOINLINE __prci_hfosc_get_clk(sysclk_port_t *port, unsigned int *clk)
+status_t _NOINLINE prci_hfosc_get_clk(sysclk_port_t *port, unsigned int *clk)
 {
 	unsigned int hfrosc;
 	unsigned int divdr;
@@ -87,7 +85,7 @@ status_t _NOINLINE __prci_hfosc_get_clk(sysclk_port_t *port, unsigned int *clk)
  * - Avoid calling this function
  * - This function is untested
  */
-status_t _NOINLINE __prci_hfosc_set_trim(sysclk_port_t *port, unsigned int trim)
+status_t _NOINLINE prci_hfosc_set_trim(sysclk_port_t *port, unsigned int trim)
 {
 	unsigned int hfrosc;
 
@@ -95,7 +93,7 @@ status_t _NOINLINE __prci_hfosc_set_trim(sysclk_port_t *port, unsigned int trim)
 	hfrosc &= ~HFROSCTRIM_MASK;
 	hfrosc |= (trim << HFROSCTRIM);
 	MMIO32(port->baddr + HFROSCCFG_OFFSET) = hfrosc;
-	while(MMIO32(port->baddr + HFXOSCCFG_OFFSET) & (1U << HFXOSCRDY));
+	while(!(MMIO32(port->baddr + HFROSCCFG_OFFSET) & (1U << HFXOSCRDY)));
 
 	return (((MMIO32(port->baddr + HFROSCCFG_OFFSET) & HFROSCTRIM_MASK)
 			>> HFROSCTRIM) == trim) ? success : error_system;

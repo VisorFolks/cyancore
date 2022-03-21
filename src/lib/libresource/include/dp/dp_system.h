@@ -62,6 +62,13 @@ typedef struct memory_info
 	uintptr_t size;
 } memory_t;
 
+typedef enum clock_type
+{
+	internal,
+	external,
+	pll
+} clock_type_t;
+
 cpu_t *dp_get_cpu_info(uint8_t);
 unsigned long *dp_get_base_clock();
 memory_t *dp_get_memory_info();
