@@ -13,13 +13,15 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <status.h>
+#include <syslog.h>
+#include <arch.h>
+#include <machine_call.h>
 #include <resource.h>
+#include <driver/sysclk.h>
 #include <mmio.h>
-#include <platform.h>
+//#include <platform.h>
 #include <interrupt.h>
 #include <hal/uart.h>
-#include <machine_call.h>
-#include <arch.h>
 #include "uart_private.h"
 
 status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
@@ -28,8 +30,8 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
 	assert(port);
 
 	// Enable module based on direction
-	uint8_t txctlr = 0;
-	uint8_t rxctlr = 0;
+	uint32_t txctlr = 0;
+	uint32_t rxctlr = 0;
 	switch(d)
 	{
 		case trx:
@@ -59,9 +61,11 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
 		default:
 			ret = error_func_inval_arg;
 	}
-
+	MMIO32(0x10012000 + 0x38) |= (3 << 16);
 	MMIO32(port->baddr + TXCTRL_OFFSET) = txctlr;
+	sysdbg5("TXCTRL=%x", txctlr);
 	MMIO32(port->baddr + RXCTRL_OFFSET) = rxctlr;
+	sysdbg5("RXCTRL=%x", rxctlr);
 	arch_dsb();
 
 	// Set baud rate
@@ -92,9 +96,9 @@ status_t uart_shutdown(const uart_port_t *port)
 void uart_update_baud(const uart_port_t *port)
 {
 	assert(port);
-	TODO(Replace with clock get api!)
-	unsigned long plat_clk = 14400000;
-	MMIO32(port->baddr + UARTBR_OFFSET) = BAUD_DIV(plat_clk, port->baud);
+	unsigned int plat_clk;
+	sysclk_get_clk(&plat_clk);
+	MMIO32(port->baddr + UARTBR_OFFSET) = BAUD_DIV(plat_clk, port->baud) & 0xffff;
 	arch_dsb();
 }
 

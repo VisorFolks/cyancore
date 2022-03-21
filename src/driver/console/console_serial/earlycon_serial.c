@@ -88,5 +88,5 @@ status_t earlycon_serial_driver_exit()
 }
 
 #if EARLYCON_SERIAL==1
-INCLUDE_DRIVER(earlycon, earlycon_serial_driver_setup, earlycon_serial_driver_exit, 0, 1, 1);
+INCLUDE_DRIVER(earlycon, earlycon_serial_driver_setup, earlycon_serial_driver_exit, 0, 2, 2);
 #endif

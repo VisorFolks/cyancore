@@ -32,8 +32,10 @@ $(info < ! > CPU - Execution mode is not defined !)
 $(error < x > Build Failed !)
 endif
 
+asm		:= __asm__
 $(eval $(call add_define,ARCH))
 $(eval $(call add_define,BIT))
 $(eval $(call add_define,ARCH_VARIANT))
+$(eval $(call add_define,asm))
 
 include $(ARCH_DIR)/$(ARCH)/$(BIT)/$(ARCH_VARIANT)/$(EXE_MODE)/build.mk

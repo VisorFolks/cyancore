@@ -131,3 +131,8 @@ long multiplicative_inverse(long base, long subject)
 	}
 	return mod(t1, base);
 }
+
+int abs(int x)
+{
+	return (x < 0) ? -x : x;
+}

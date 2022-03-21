@@ -19,7 +19,8 @@ LINT_FLAGS	+= --error-exitcode=1 --std=c11		\
 		   --enable=warning,style,performance	\
 		   --enable=portability,information	\
 		   --enable=missingInclude -q		\
-		   --max-ctu-depth=12 --max-configs=12
+		   --max-ctu-depth=12 --max-configs=12	\
+		   --check-config
 
 --lint: $(DEP_SRCS)
 ifeq ($(LT),)

@@ -20,7 +20,6 @@ status_t bootstrap()
 {
 	reset_t resetSyndrome;
 
-	sysdbg3("Entering %s...\n", __func__);
 	arch_early_setup();
 
 	platform_early_setup();
@@ -40,7 +39,6 @@ status_t bootstrap()
 #if CCSMP
 status_t bootstrap_secondary()
 {
-	sysdbg3("Entering %s...\n", __func__);
 	arch_early_setup();
 
 	arch_setup2();

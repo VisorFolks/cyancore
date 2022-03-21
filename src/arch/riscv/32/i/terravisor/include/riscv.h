@@ -25,6 +25,7 @@ typedef struct context_frame
 } context_frame_t;
 
 typedef uint32_t call_arg_t;
+typedef uint32_t istate_t;
 
 static inline unsigned int arch_core_isa()
 {

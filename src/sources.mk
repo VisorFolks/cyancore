@@ -22,6 +22,9 @@ INCLUDE		+= $(SRC)/include/ $(PROJECT_INCLUDES)	\
 
 OPTIMIZATION	?= s
 
+CCFLAGS		+= -std=c11
+CPPFLAGS	+= -std=c++11
+
 CFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 		   -O$(strip $(OPTIMIZATION))		\
 		   $(TARGET_FLAGS) -DARCH_$(BIT)	\

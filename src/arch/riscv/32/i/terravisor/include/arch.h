@@ -1,6 +1,6 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2019-2022, Cyancore Team
  *
  * File Name		: arch.h
  * Description		: This file prototypes arch related functions and
@@ -43,7 +43,7 @@ void arch_signal_boot_done();
  *
  * Refer arch.c for more details.
  */
-void arch_machine_call(unsigned  int, unsigned int, unsigned  int, unsigned  int, mret_t *);
+void arch_machine_call(unsigned int, unsigned int, unsigned  int, unsigned  int, mret_t *);
 
 /**
  * arch_register_interrupt_handler - Registers interrtup handler

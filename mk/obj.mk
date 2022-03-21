@@ -28,20 +28,20 @@ DEP_SRCS	+= $(C_SRCS) $(CPP_SRCS)
 $(CPP_OBJS): $(OUT)/%.o: %.cpp | $$(@D)/
 	@echo "Elf: Compiling $(@F:.o=.cpp) ..."
 ifeq ($(PP),1)
-	$(CCP) $(CFLAGS) -E -p $< -o $(@:.o=.pre.cpp)
+	$(CCP) $(CPPFLAGS) $(CFLAGS) -E -p $< -o $(@:.o=.pre.cpp)
 endif
-	$(CCP) $(CFLAGS) -c $< -o $@
+	$(CCP) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 $(C_OBJS): $(OUT)/%.o: %.c | $$(@D)/
 	@echo "Elf: Compiling $(@F:.o=.c) ..."
 ifeq ($(PP),1)
-	$(CC) $(CFLAGS) -E -p $< -o $(@:.o=.pre.c)
+	$(CC) $(CCFLAGS) $(CFLAGS) -E -p $< -o $(@:.o=.pre.c)
 endif
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CCFLAGS) $(CFLAGS) -c $< -o $@
 
 $(S_OBJS): $(OUT)/%.o: %.S | $$(@D)/
 	@echo "Elf: Assembling $(@F:.o=.S) ..."
-	$(CC) -E $(CFLAGS) -c $< -o $(@:.o=.pre.S)
+	$(CC) -E $(CCFLAGS) $(CFLAGS) -c $< -o $(@:.o=.pre.S)
 	$(AS) $(ASFLAGS) $(@:.o=.pre.S) -o $@
 ifneq ($(PP),1)
 	rm $(@:.o=.pre.S)

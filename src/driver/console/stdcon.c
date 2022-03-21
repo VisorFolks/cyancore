@@ -154,7 +154,6 @@ status_t logger_attach_device(status_t dev_status, console_t *pcon)
 		ret = dev_status;
 		logger_attached = (ret == success) ? true : false;
 		ret |= stdlog_register(&logger_putc);
-		sysdbg3("Registering stdlog\n");
 	}
 	else
 		ret = error_device_inval;
@@ -191,7 +190,7 @@ status_t logger_dprint(const FILE *device)
 	do
 	{
 		lvar = log->read(&c);
-		device->write(c);
+		fputc(device, c);
 	}
 	while(lvar);
 	lock_release(&log_lock);
