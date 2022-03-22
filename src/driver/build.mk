@@ -17,9 +17,9 @@ LD_SUPPLEMENT	+= $(DRIVER_PATH)/driver.ld.sx
 include $(DRIVER_PATH)/interrupt/build.mk
 include $(DRIVER_PATH)/watchdog/build.mk
 include $(DRIVER_PATH)/console/build.mk
-include $(DRIVER_PATH)/sysclk/build.mk
 
 #==========< User Config Drivers >==========#
+$(eval $(call check_and_include,SYSCLK_ENABLE,$(DRIVER_PATH)/sysclk/build.mk))
 
 
 DIR		:=$(DRIVER_PATH)

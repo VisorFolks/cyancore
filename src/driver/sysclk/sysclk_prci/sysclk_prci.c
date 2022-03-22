@@ -2,7 +2,7 @@
  * CYANCORE LICENSE
  * Copyrights (C) 2022, Cyancore Team
  *
- * File Name		: platform_reset.c
+ * File Name		: sysclk_prci.c
  * Description		: This file contains sources for sysclk based on
  *			  prci module
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
@@ -20,6 +20,7 @@
 #include <arch.h>
 #include <mmio.h>
 #include <platform.h>
+#include <driver/sysclk.h>
 #include <hal/prci.h>
 
 static sysclk_port_t sysclk;
@@ -118,7 +119,9 @@ static inline void sysclk_set_internal(unsigned int clk _UNUSED)
 {
 	status_t ret;
 	sysclk_port_t *port = &sysclk;
-	ret = prci_hfosc_enable(port);
+	ret = prci_hfxocs_enable(port);
+	prci_pll_bypass(port);
+	ret |= prci_hfosc_enable(port);
 	ret |= prci_hfosc_set_clk(port, clk);
 	prci_pll_select_rosc(port);
 	prci_pll_deselect_pll(port);
@@ -150,6 +153,7 @@ static inline void sysclk_set_pll(unsigned int clk)
 	sysclk_port_t *port = &sysclk;
 	ret = prci_hfosc_enable(port);
 	ret |= prci_hfxocs_enable(port);
+	prci_pll_bypass(port);
 	prci_pll_select_xosc(port);
 	prci_pll_set_clk(port, clk);
 	prci_pll_select_pll(port);
@@ -169,21 +173,22 @@ static void sysclk_configure_clk(call_arg_t a0, call_arg_t a1, call_arg_t a2 _UN
 
 	assert(port->baddr && port->base_clk);
 
-	lock_acquire(&sysclk_key);
-	arch_di_save_state(&ist);
-
 	ret->status = error_func_inval_arg;
 	ret->p = 0;
 	ret->size = 0;
+	ret->status |= sysclk_execute_pre_config_clk_callback();
+
+	lock_acquire(&sysclk_key);
+	arch_di_save_state(&ist);
 
 	switch(type)
 	{
 		case internal:
-			port->base_clk = ICLK;
 			sysclk_set_internal(clk);
 			clk_type = internal;
 			break;
 		case external:
+			sysclk_set_internal(clk);
 			sysclk_set_external();
 			clk_type = external;
 			break;
@@ -195,8 +200,10 @@ static void sysclk_configure_clk(call_arg_t a0, call_arg_t a1, call_arg_t a2 _UN
 			break;
 	}
 
+
 	arch_ei_restore_state(&ist);
 	lock_release(&sysclk_key);
+	ret->status |= sysclk_execute_post_config_clk_callback();
 	return;
 }
 
