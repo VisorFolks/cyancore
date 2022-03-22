@@ -39,10 +39,12 @@ $(eval $(call add_define,N_EXCEP))
 N_IRQ		:= 12
 $(eval $(call add_define,N_IRQ))
 
-N_PLAT_IRQS	:= 52
+N_PLAT_IRQS	:= 0
 $(eval $(call add_define,N_PLAT_IRQS))
 
-MAX_INTERRUPTS_PER_DEVICE	:= 2
+PLAT_INTERRUPT_DEVICE		:= 0
+
+MAX_INTERRUPTS_PER_DEVICE	:= 0
 $(eval $(call add_define,MAX_INTERRUPTS_PER_DEVICE))
 
 USE_SPINLOCK	?= 1
