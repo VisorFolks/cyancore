@@ -42,7 +42,7 @@ $(eval $(call add_define,N_IRQ))
 N_PLAT_IRQS	:= 52
 $(eval $(call add_define,N_PLAT_IRQS))
 
-MAX_INTERRUPTS_PER_DEVICE	:= 2
+MAX_INTERRUPTS_PER_DEVICE	:= 1
 $(eval $(call add_define,MAX_INTERRUPTS_PER_DEVICE))
 
 USE_SPINLOCK	?= 1
@@ -58,7 +58,7 @@ $(eval $(call add_define,MEMBUF_SIZE))
 #======================================================================
 # GPIO Configuration
 #======================================================================
-N_PORT		:= 3
+N_PORT		:= 1
 $(eval $(call add_define,N_PORT))
 #======================================================================
 
