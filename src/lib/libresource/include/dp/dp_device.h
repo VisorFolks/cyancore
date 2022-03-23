@@ -28,5 +28,6 @@ typedef enum
 	plic		= 0x00008500,
 	prci		= 0x00009000,
 	aon		= 0x0000a000,
+	adc		= 0x0000b000,
 } hw_devid_t;
 

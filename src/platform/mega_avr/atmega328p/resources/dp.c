@@ -102,6 +102,16 @@ module_t timer2 =
 	.clk_id = 6,
 };
 
+module_t adc0 =
+{
+	.id = adc | 0x00,
+	.baddr = 0x78,
+	.stride = 8,
+	.interrupt[0] = {int_arch, 21, int_level},
+	.interrupt[1] = {int_arch, 23, int_level},
+	.clk_id = 0,
+};
+
 gpio_module_t *port_list[] =
 {
 	&port0, &port1, &port2,
@@ -109,7 +119,7 @@ gpio_module_t *port_list[] =
 
 module_t *mod_list[] =
 {
-	&uart0, &wdt0, &timer0, &timer1, &timer2,
+	&uart0, &wdt0, &timer0, &timer1, &timer2, &adc0,
 };
 
 dp_t device_prop =
