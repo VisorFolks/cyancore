@@ -35,7 +35,7 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
 	switch(d)
 	{
 		case trx:
-			txctlr |= (1 << TXEN) | (7 << TXCNT);
+			txctlr |= (1 << TXEN) | (1 << TXCNT);
 			if(port->tx_irq)
 			{
 				link_interrupt(port->tx_irq->module, port->tx_irq->id, port->tx_handler);
@@ -51,7 +51,7 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
 			}
 			break;
 		case tx:
-			txctlr |= (1 << TXEN) | (7 << TXCNT);
+			txctlr |= (1 << TXEN) | (1 << TXCNT);
 			if(port->tx_irq)
 			{
 				link_interrupt(port->tx_irq->module, port->tx_irq->id, port->tx_handler);

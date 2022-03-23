@@ -16,6 +16,7 @@
 #include <syslog.h>
 #include <mmio.h>
 #include <arch.h>
+#include <hal/clint.h>
 #include "prci_private.h"
 
 typedef struct pll_config
@@ -116,7 +117,9 @@ status_t _NOINLINE prci_pll_get_clk(sysclk_port_t *port, unsigned int *clk)
 
 static inline void prci_pll_wait_to_lock(sysclk_port_t *port)
 {
-	TODO(< ! > Add a busy loop delay of 100uS)
+	uint64_t t = clint_read_time();
+	while((uint32_t)(clint_read_time() - t) < 10)
+		asm volatile("");
 	while(MMIO32(port->baddr + PLLCFG_OFFSET) & (1 << PLLLOCK))
 		arch_dsb();
 }
