@@ -58,6 +58,9 @@ void arch_signal_boot_done()
 void arch_early_setup()
 {
 	arch_di();
+	arch_di_mei();
+	arch_di_mtime();
+	arch_di_msoftirq();
 	riscv_update_vector();
 	return;
 }

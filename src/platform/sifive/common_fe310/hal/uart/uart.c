@@ -18,8 +18,8 @@
 #include <machine_call.h>
 #include <resource.h>
 #include <driver/sysclk.h>
+#include <driver/interrupt_controller.h>
 #include <mmio.h>
-//#include <platform.h>
 #include <interrupt.h>
 #include <hal/uart.h>
 #include "uart_private.h"
@@ -27,7 +27,6 @@
 status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
 {
 	status_t ret = success;
-	assert(port);
 
 	// Enable module based on direction
 	uint32_t txctlr = 0;
@@ -35,31 +34,29 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
 	switch(d)
 	{
 		case trx:
-			txctlr |= (1 << TXEN) | (1 << TXCNT);
-			if(port->tx_irq)
-			{
-				link_interrupt(port->tx_irq->module, port->tx_irq->id, port->tx_handler);
-				uart_tx_int_en(port);
-			}
+			txctlr |= (1 << TXEN) | (0 << TXCNT);
 			_FALLTHROUGH;
 		case rx:
 			rxctlr |= (1 << RXEN) | (1 << RXCNT);
-			if(port->rx_irq)
-			{
-				link_interrupt(port->rx_irq->module, port->rx_irq->id, port->rx_handler);
-				uart_rx_int_en(port);
-			}
 			break;
 		case tx:
-			txctlr |= (1 << TXEN) | (1 << TXCNT);
-			if(port->tx_irq)
-			{
-				link_interrupt(port->tx_irq->module, port->tx_irq->id, port->tx_handler);
-				uart_tx_int_en(port);
-			}
+			txctlr |= (1 << TXEN) | (0 << TXCNT);
 			break;
 		default:
 			ret = error_func_inval_arg;
+	}
+
+	if(port->irq->id && port->irq_handler)
+	{
+		ret |= link_interrupt(port->irq->module, port->irq->id, port->irq_handler);
+		ret |= ic_en_irq(port->irq->id);
+		if(d == rx)
+			ret |= uart_rx_int_en(port);
+		else if(d == trx)
+		{
+			ret |= uart_tx_int_en(port);
+			ret |= uart_rx_int_en(port);
+		}
 	}
 	MMIO32(0x10012000 + 0x38) |= (3 << 16);
 	MMIO32(port->baddr + TXCTRL_OFFSET) = txctlr;
@@ -76,16 +73,12 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
 status_t uart_shutdown(const uart_port_t *port)
 {
 	status_t ret = success;
-	assert(port);
-	if(port->tx_irq)
+	if(port->irq->id && port->irq_handler)
 	{
+		ret |= ic_dis_irq(port->irq->id);
 		ret |= uart_tx_int_dis(port);
-		ret |= unlink_interrupt(port->tx_irq->module, port->tx_irq->id);
-	}
-	if(port->rx_irq)
-	{
 		ret |= uart_rx_int_dis(port);
-		ret |= unlink_interrupt(port->rx_irq->module, port->rx_irq->id);
+		ret |= unlink_interrupt(port->irq->module, port->irq->id);
 	}
 	MMIO32(port->baddr + TXCTRL_OFFSET) = 0;
 	MMIO32(port->baddr + RXCTRL_OFFSET) = 0;
@@ -95,7 +88,6 @@ status_t uart_shutdown(const uart_port_t *port)
 
 void uart_update_baud(const uart_port_t *port)
 {
-	assert(port);
 	unsigned int plat_clk;
 	sysclk_get_clk(&plat_clk);
 	MMIO32(port->baddr + UARTBR_OFFSET) = BAUD_DIV(plat_clk, port->baud) & 0xffff;
@@ -104,20 +96,17 @@ void uart_update_baud(const uart_port_t *port)
 
 bool uart_buffer_available(const uart_port_t *port)
 {
-	assert(port);
 	return (bool)(MMIO32(port->baddr + TXDATA_OFFSET) >> TX_FULL) ^ 1;
 }
 
 void uart_tx_wait_till_done(const uart_port_t *port)
 {
-	assert(port);
 	while((MMIO32(port->baddr + TXDATA_OFFSET) & (1U << TX_FULL)))
 		arch_nop();
 }
 
 status_t uart_tx(const uart_port_t *port, const char data)
 {
-	assert(port);
 	while(!uart_buffer_available(port))
 		arch_nop();
 	MMIO32(port->baddr + TXDATA_OFFSET) |= data;
@@ -126,35 +115,40 @@ status_t uart_tx(const uart_port_t *port, const char data)
 
 status_t uart_rx(const uart_port_t *port, char *data)
 {
-	assert(port);
 	*data = MMIO32(port->baddr + RXDATA_OFFSET) & 0xff;
 	return success;
 }
 
 status_t uart_tx_int_en(const uart_port_t *port)
 {
-	assert(port);
 	MMIO32(port->baddr + UARTIE_OFFSET) |= (1 << TXWM);
 	return success;
 }
 
 status_t uart_tx_int_dis(const uart_port_t *port)
 {
-	assert(port);
 	MMIO32(port->baddr + UARTIE_OFFSET) &= ~(1 << TXWM);
 	return success;
 }
 
 status_t uart_rx_int_en(const uart_port_t *port)
 {
-	assert(port);
 	MMIO32(port->baddr + UARTIE_OFFSET) |= (1 << RXWM);
 	return success;
 }
 
 status_t uart_rx_int_dis(const uart_port_t *port)
 {
-	assert(port);
 	MMIO32(port->baddr + UARTIE_OFFSET) &= ~(1 << RXWM);
 	return success;
+}
+
+bool uart_tx_pending(const uart_port_t *port)
+{
+	return ((MMIO32(port->baddr + UARTIP_OFFSET) & (1 << TXWM)) ? false : true);
+}
+
+bool uart_rx_pending(const uart_port_t *port)
+{
+	return ((MMIO32(port->baddr + UARTIP_OFFSET) & (1 << RXWM)) ? true : false);
 }

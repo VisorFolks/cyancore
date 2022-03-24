@@ -41,6 +41,7 @@ SECTIONS
 
 	.rodata :
 	{
+		. = ALIGN(1);
 		*(.version)
 		KEEP(*(.version))
 		KEEP(*(.rdata))
@@ -103,8 +104,8 @@ SECTIONS
 		KEEP(*(.tdata))
 	} > vma_dmem AT > lma_mem
 
-	.driver_table : ALIGN(4) {} > vma_dmem AT > lma_mem
-	.mcall_table : ALIGN(4) {} > vma_dmem AT > lma_mem
+	.driver_table : ALIGN(1) {} > vma_dmem AT > lma_mem
+	.mcall_table : ALIGN(1) {} > vma_dmem AT > lma_mem
 
 	.stack :
 	{

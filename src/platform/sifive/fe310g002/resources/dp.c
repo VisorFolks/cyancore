@@ -55,6 +55,15 @@ module_t uart0 =
 	.interrupt[0] = {int_plat, 3, int_rising_edge},
 };
 
+module_t uart1 =
+{
+	.id = uart | 1,
+	.baddr = 0x10023000,
+	.stride = 0x20,
+	.clk = 115200,
+	.interrupt[0] = {int_plat, 4, int_rising_edge},
+};
+
 module_t prci0 =
 {
 	.id = prci,
@@ -83,7 +92,7 @@ gpio_module_t *port_list[] =
 
 module_t *mod_list[] =
 {
-	&plic0, &uart0, &prci0, &clint0, &aon0,
+	&plic0, &uart0, &prci0, &clint0, &aon0, &uart1,
 };
 
 dp_t device_prop =
