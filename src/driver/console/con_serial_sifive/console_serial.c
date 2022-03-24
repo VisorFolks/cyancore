@@ -24,8 +24,7 @@
 
 static uart_port_t console_port;
 
-static void console_serial_write_irq_handler(void);
-static void console_serial_read_irq_handler(void);
+static void console_serial_irq_handler(void);
 
 static status_t console_serial_setup()
 {
@@ -51,14 +50,12 @@ static status_t console_serial_setup()
 	console_port.baddr = dp->baddr;
 	console_port.stride = dp->stride;
 	console_port.baud = dp->clk;
-	console_port.tx_irq = &dp->interrupt[1];
-	console_port.tx_handler = console_serial_write_irq_handler;
-	console_port.rx_irq = &dp->interrupt[0];
-	console_port.rx_handler = console_serial_read_irq_handler;
+	console_port.irq = &dp->interrupt[0];
+	console_port.irq_handler = console_serial_irq_handler;
 
 	sysdbg2("UART engine @ %p\n", console_port.baddr);
 	sysdbg2("UART baud @ %lubps\n", console_port.baud);
-	sysdbg2("UART irqs - %u & %u\n", dp->interrupt[1].id, dp->interrupt[0].id);
+	sysdbg2("UART irqs - %u\n", dp->interrupt[0].id);
 	/*
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
@@ -68,48 +65,42 @@ static status_t console_serial_setup()
 
 static int_wait_t con_write_wait;
 
-static void console_serial_write_irq_handler()
-{
-	wait_release_on_irq(&con_write_wait);
-}
-
-status_t console_serial_write(const char c)
+static status_t console_serial_write(const char c)
 {
 	status_t ret;
-	ret = wait_lock(&con_write_wait);
-	ret |= uart_tx(&console_port, c);
-	ret |= wait_till_irq(&con_write_wait);
+	while(!uart_buffer_available(&console_port));
+	ret = uart_tx(&console_port, c);
 	return ret;
 }
 
 static int_wait_t con_read_wait;
 static char con_char;
 
-static void console_serial_read_irq_handler()
-{
-	wait_release_on_irq(&con_read_wait);
-	uart_rx(&console_port, &con_char);
-}
 
 static status_t console_serial_read(char *c)
 {
 	status_t ret;
-	ret = wait_lock(&con_read_wait);
+	ret = wait_lock(&con_write_wait);
 	ret |= wait_till_irq(&con_read_wait);
 	*c = con_char;
 	return ret;
 }
 
-static status_t console_serial_flush()
+static void console_serial_irq_handler()
 {
-	return success;
+	if(uart_tx_pending(&console_port))
+		wait_release_on_irq(&con_write_wait);
+	if(uart_rx_pending(&console_port))
+	{
+		wait_release_on_irq(&con_read_wait);
+		uart_rx(&console_port, &con_char);
+	}
 }
 
 static console_t console_serial_driver =
 {
 	.write = &console_serial_write,
 	.read = &console_serial_read,
-	.flush = &console_serial_flush
 };
 
 status_t console_serial_driver_setup()

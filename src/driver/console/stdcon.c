@@ -101,10 +101,10 @@ status_t console_putc(const char c)
 {
 	status_t ret = error_func_inval;
 	/* Check if the console is attached and write methos is valid */
-	lock_acquire(&console_lock);
+	//lock_acquire(&console_lock);
 	if(console_attached && con->write != NULL)
 		ret = con->write(c);
-	lock_release(&console_lock);
+	//lock_release(&console_lock);
 	return ret;
 }
 

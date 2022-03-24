@@ -24,7 +24,7 @@ typedef struct plic_port
 	hw_devid_t port_id;
 	uintptr_t baddr;
 	uintptr_t stride;
-	size_t irq;
+	const irqs_t *irq;
 } plic_port_t;
 
 static void (* plic_irq_handler[N_PLAT_IRQS])(void) = {[0 ... N_PLAT_IRQS-1] = &plat_panic_handler};
