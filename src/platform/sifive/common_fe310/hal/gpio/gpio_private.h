@@ -1,6 +1,6 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2022, Cyancore Team
  *
  * File Name		: gpio_private.h
  * Description		: This file contains macors used by gpio HAL
@@ -30,5 +30,5 @@
 #define PHIE_OFFSET		0x44
 #define PLIE_OFFSET		0x48
 
-lock_t gpio_lock;
+static lock_t gpio_key;
 uint8_t port_status[N_PORT];
