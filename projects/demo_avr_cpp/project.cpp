@@ -17,6 +17,7 @@ extern "C"
 	#include <terravisor/bootstrap.h>
 	#include <driver.h>
 	#include <driver/watchdog.h>
+	#include <platform.h>
 	#include <hal/gpio.h>
 }
 
@@ -53,7 +54,7 @@ EXPORT_C(void play())
 {
 	static unsigned int i = 0;
 
-	wdog_guard(3, true, NULL);
+	wdog_guard(WDT_64MS, true, NULL);
 
 	/* call the toggle member of led object */
 	led.toggle();

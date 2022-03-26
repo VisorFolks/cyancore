@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <terravisor/bootstrap.h>
+#include <platform.h>
 #include <driver.h>
 #include <driver/watchdog.h>
 #include <hal/gpio.h>
@@ -42,7 +43,7 @@ void delay(unsigned long d)
 void play()
 {
 	static unsigned int i = 0;
-	wdog_guard(2, true, NULL);
+	wdog_guard(WDT_64MS, true, NULL);
 	gpio_pin_toggle(&onboad_led);
 	printf("%c]", progress[(i++) % strlen(progress)]);
 	wdog_hush();
