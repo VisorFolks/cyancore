@@ -20,16 +20,19 @@
 #include <driver.h>
 #include <interrupt.h>
 #include <hal/uart.h>
+#include <hal/gpio.h>
 #include <driver/console.h>
 
 static uart_port_t console_port;
+static gpio_port_t io[2];
 
 static void console_serial_irq_handler(void);
 
 static status_t console_serial_setup()
 {
 	mret_t mres;
-	const module_t *dp;
+	swdev_t *sp;
+	module_t *dp;
 	hw_devid_t devid;
 	arch_machine_call(fetch_sp, console_uart, 0, 0, &mres);
 	if(mres.status != success)
@@ -37,7 +40,16 @@ static status_t console_serial_setup()
 		sysdbg3("Console could not found!\n");
 		return mres.status;
 	}
-	devid = (hw_devid_t) mres.p;
+	sp = (swdev_t *) mres.p;
+	devid = sp->hwdev_id;
+	console_port.pmux = sp->pmux;
+
+	for(uint8_t i = 0; i < sp->pmux->npins; i++)
+	{
+		gpio_pin_alloc(&io[i], sp->pmux->port, sp->pmux->pins[i]);
+		gpio_enable_alt_io(&io[i], sp->pmux->function);
+	}
+
 	arch_machine_call(fetch_dp, (devid & 0xff00), (devid & 0x00ff), 0, &mres);
 	if(mres.status != success)
 	{
@@ -60,10 +72,8 @@ static status_t console_serial_setup()
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
 	 */
-	return uart_setup(&console_port, trx, no_parity); //
+	return uart_setup(&console_port, trx, no_parity);
 }
-
-static int_wait_t con_write_wait;
 
 static status_t console_serial_write(const char c)
 {
@@ -74,26 +84,37 @@ static status_t console_serial_write(const char c)
 }
 
 static int_wait_t con_read_wait;
-static char con_char;
+static char con_buff[32];
+static uint8_t wp, rp, occ;
 
 
 static status_t console_serial_read(char *c)
 {
-	status_t ret;
-	ret = wait_lock(&con_write_wait);
-	ret |= wait_till_irq(&con_read_wait);
-	*c = con_char;
+	status_t ret = success;
+	if(!occ)
+	{
+		ret = wait_lock(&con_read_wait);
+		ret |= wait_till_irq(&con_read_wait);
+	}
+
+	*c = con_buff[(wp++)];
+	wp = wp % 32;
+	occ--;
+
 	return ret;
 }
 
 static void console_serial_irq_handler()
 {
-	if(uart_tx_pending(&console_port))
-		wait_release_on_irq(&con_write_wait);
 	if(uart_rx_pending(&console_port))
 	{
 		wait_release_on_irq(&con_read_wait);
-		uart_rx(&console_port, &con_char);
+		while(uart_rx_pending(&console_port))
+		{
+			uart_rx(&console_port, &con_buff[(rp++)]);
+			rp = rp % 32;
+			occ++;
+		}
 	}
 }
 
@@ -117,6 +138,11 @@ status_t console_serial_driver_exit()
 	status_t ret;
 	ret = console_release_device();
 	ret |= uart_shutdown(&console_port);
+	for(uint8_t i = 0; i < console_port.pmux->npins; i++)
+	{
+		ret |= gpio_disable_alt_io(&io[i]);
+		ret |= gpio_pin_free(&io[i]);
+	}
 	driver_setup("earlycon");
 	return ret;
 }

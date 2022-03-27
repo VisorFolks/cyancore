@@ -44,20 +44,20 @@ typedef enum
 } visor_id_t;
 
 
-hw_devid_t sp_terravisor_dev_info(sw_devid_t devid);
+swdev_t *sp_terravisor_dev_info(sw_devid_t devid);
 
 #if NSEC_HYP == 1
-hw_devid_t sp_nsec_hypervisor_dev_into(sw_devid_t devid);
+swdev_t *sp_nsec_hypervisor_dev_into(sw_devid_t devid);
 #endif
 
-#if SEC_HYP == 1
-hw_devid_t sp_sec_hypervisor_dev_info(sw_devid_t devid);
+#if SEC_*HYP == 1
+swdev_t *sp_sec_hypervisor_dev_info(sw_devid_t devid);
 #endif
 
-#if NSEC_SUP >= 1
-hw_devid_t sp_nsec_supervisor_dev_info(size_t index, sw_devid_t devid);
+#if NSEC*_SUP >= 1
+swdev_t *sp_nsec_supervisor_dev_info(size_t index, sw_devid_t devid);
 #endif
 
-#if SEC_SUP >= 1
-hw_devid_t sp_sec_supervisor_dev_info(size_t index, sw_devid_t devid);
+#if SEC_*SUP >= 1
+swdev_t *sp_sec_supervisor_dev_info(size_t index, sw_devid_t devid);
 #endif

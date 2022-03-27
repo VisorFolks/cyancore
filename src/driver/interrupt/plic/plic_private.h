@@ -14,7 +14,7 @@
 #if PLIC_VERSION == 0x0100		// v 01.00
 #define PLIC_IPRIORITY_OFFSET(irq)	(0x00000000 + 0x04 * (irq))
 #define PLIC_IPENDING_OFFSET(irq)	(0x00001000 + 0x04 * (irq/31))
-#define PLIC_IENABLE_OFFSET(core, irq)	(0x00002000 + 0x80 * (core) + 0x04 * (irq/31))
+#define PLIC_IENABLE_OFFSET(core, irq)	(0x00002000 + 0x80 * (core) + 0x04 * (irq/32))
 #define PLIC_ITHRESHOLD_OFFSET(core)	(0x00200000 + 0x1000 * (core))
 #define PLIC_ICLAIM_OFFSET(core)	(0x00200004 + 0x1000 * (core))
 #endif

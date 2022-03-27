@@ -1,6 +1,6 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2022, Cyancore Team
  *
  * File Name		: console_serial.c
  * Description		: This file contains sources of uart console
@@ -30,6 +30,7 @@ static void console_serial_read_irq_handler(void);
 static status_t console_serial_setup()
 {
 	mret_t mres;
+	const swdev_t *sp;
 	const module_t *dp;
 	hw_devid_t devid;
 	arch_machine_call(fetch_sp, console_uart, 0, 0, &mres);
@@ -38,7 +39,8 @@ static status_t console_serial_setup()
 		sysdbg3("Console could not found!\n");
 		return mres.status;
 	}
-	devid = (hw_devid_t) mres.p;
+	sp = (swdev_t *) mres.p;
+	devid = sp->hwdev_id;
 	arch_machine_call(fetch_dp, (devid & 0xff00), (devid & 0x00ff), 0, &mres);
 	if(mres.status != success)
 	{

@@ -32,6 +32,8 @@ int printf(const char *fmt, ...);
 int eprintf(const char *fmt, ...);
 int fputs(const FILE *, const char *);
 int fputc(const FILE *, const char);
+char getch();
+char getchar();
 
 #ifdef _STDBOOL_H_
 int fprintf(const FILE *, bool, const char *fmt, ...);

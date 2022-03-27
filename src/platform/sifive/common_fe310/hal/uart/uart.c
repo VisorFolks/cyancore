@@ -29,15 +29,15 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
 	status_t ret = success;
 
 	// Enable module based on direction
-	uint32_t txctlr = 0;
-	uint32_t rxctlr = 0;
+	volatile uint32_t txctlr = 0;
+	volatile uint32_t rxctlr = 0;
 	switch(d)
 	{
 		case trx:
 			txctlr |= (1 << TXEN) | (0 << TXCNT);
 			_FALLTHROUGH;
 		case rx:
-			rxctlr |= (1 << RXEN) | (1 << RXCNT);
+			rxctlr |= (1 << RXEN) | (0 << RXCNT);
 			break;
 		case tx:
 			txctlr |= (1 << TXEN) | (0 << TXCNT);
@@ -58,7 +58,6 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
 			ret |= uart_rx_int_en(port);
 		}
 	}
-	MMIO32(0x10012000 + 0x38) |= (3 << 16);
 	MMIO32(port->baddr + TXCTRL_OFFSET) = txctlr;
 	sysdbg5("TXCTRL=%x", txctlr);
 	MMIO32(port->baddr + RXCTRL_OFFSET) = rxctlr;
@@ -111,6 +110,11 @@ status_t uart_tx(const uart_port_t *port, const char data)
 		arch_nop();
 	MMIO32(port->baddr + TXDATA_OFFSET) |= data;
 	return success;
+}
+
+bool uart_rx_empty(const uart_port_t *port)
+{
+	return (MMIO32(port->baddr + RXDATA_OFFSET) & (1U << RX_EMPTY)) ? true : false;
 }
 
 status_t uart_rx(const uart_port_t *port, char *data)

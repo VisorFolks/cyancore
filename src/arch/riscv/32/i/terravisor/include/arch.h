@@ -88,12 +88,6 @@ static inline void arch_di_mei()
 	asm volatile("csrc mie, %0" : : "r" (bits));
 }
 
-static inline void arch_cl_mei()
-{
-	unsigned int bits = (1 << 11);
-	asm volatile("csrc mip, %0" : : "r" (bits));
-}
-
 static inline void arch_ei_mtime()
 {
 	unsigned int bits = (1 << 7);
@@ -125,8 +119,7 @@ static inline void arch_di()
 {
 	unsigned int bits = (1 << 3) | (1 << 7);
 	asm volatile("csrc mstatus, %0" : : "r" (bits));
-	bits = (1 << 3) | (1 << 7) | (1 << 11);
-	asm volatile("csrc mie, %0" : : "r" (bits));
+	bits |= (1 << 11);
 	asm volatile("csrc mie, %0" : : "r" (bits));
 
 }
