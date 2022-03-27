@@ -37,6 +37,5 @@ swdev_t *sw_devs[] =
 sp_t software_prop =
 {
 	.terravisor = &terravisor,
-	.swdev = sw_devs,
-	.n_swdev = sizeof(sw_devs)/sizeof(swdev_t *),
+	add_swdev(sw_devs),
 };

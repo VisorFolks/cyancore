@@ -58,6 +58,9 @@ void arch_signal_boot_done()
 void arch_early_setup()
 {
 	arch_di();
+	arch_di_mei();
+	arch_di_mtime();
+	arch_di_msoftirq();
 	riscv_update_vector();
 	return;
 }
@@ -82,14 +85,14 @@ void arch_setup2()
 void arch_di_save_state(istate_t *istate)
 {
 	istate_t temp;
-	asm volatile("csrr %0, mstatus" : "=r" (temp));
-	*istate = temp & (1 << 3 | 1 << 7);
+	asm volatile("csrr %0, mie" : "=r" (temp));
+	*istate = temp & (1 << 3 | 1 << 7 | 1 << 11);
 	arch_di();
 }
 
 void arch_ei_restore_state(istate_t *istate)
 {
-	asm volatile("csrs mstatus, %0" : : "r" (*istate));
+	asm volatile("csrs mie, %0" : : "r" (*istate));
 }
 
 /**

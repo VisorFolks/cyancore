@@ -12,6 +12,7 @@
 #define _MEGA_AVR_PLATFORM_H_
 
 #include <status.h>
+#include <plat_defines.h>
 
 void plat_panic_handler();
 status_t platform_copy_data();

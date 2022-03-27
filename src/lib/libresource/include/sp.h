@@ -43,4 +43,7 @@ typedef struct sp
 	size_t n_swdev;
 } sp_t;
 
+#define add_swdev(x)		.swdev = x,		\
+				.n_swdev = propsize(x)
+
 status_t sp_init(sp_t *);

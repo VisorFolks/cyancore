@@ -27,7 +27,8 @@ static uart_port_t earlycon_port;
 static status_t earlycon_serial_setup()
 {
 	mret_t mres;
-	const module_t *dp;
+	swdev_t *sp;
+	module_t *dp;
 	hw_devid_t devid;
 	arch_machine_call(fetch_sp, console_uart, 0, 0, &mres);
 	if(mres.status != success)
@@ -35,7 +36,8 @@ static status_t earlycon_serial_setup()
 		sysdbg3("Console could not found!\n");
 		return mres.status;
 	}
-	devid = (hw_devid_t) mres.p;
+	sp = (swdev_t *) mres.p;
+	devid = sp->hwdev_id;
 	arch_machine_call(fetch_dp, (devid & 0xff00), (devid & 0x00ff), 0, &mres);
 	if(mres.status != success)
 	{

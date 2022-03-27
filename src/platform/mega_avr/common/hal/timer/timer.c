@@ -46,7 +46,7 @@ status_t timer_setup(const timer_port_t *port, unsigned int mode, unsigned int p
 	{
 		if(port->tmr_handler)
 		{
-			timer16_set(port, (uint8_t) port->value);
+			timer16_set(port, port->value);
 			ret |= link_interrupt(int_arch, port->tmr_irq, port->tmr_handler);
 			timer16_irq_en(port);
 		}

@@ -67,9 +67,14 @@ status_t unlink_interrupt(int_module_t target, unsigned int id)
 	return ret;
 }
 
-status_t wait_till_irq(int_wait_t *var)
+status_t wait_lock(int_wait_t *var)
 {
 	var->lock = 1;
+	return success;
+}
+
+status_t wait_till_irq(int_wait_t *var)
+{
 	do
 		arch_wfi();
 	while(var->lock == 1);

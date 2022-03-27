@@ -23,11 +23,7 @@ sw_devid_t terra_devs[] =
 	console_uart,
 };
 
-visor_t terravisor =
-{
-	.devids = terra_devs,
-	.n_dev = sizeof(terra_devs)/sizeof(sw_devid_t),
-};
+visor_t terravisor = add_visor_devs(terra_devs);
 
 swdev_t *sw_devs[] =
 {
@@ -37,6 +33,5 @@ swdev_t *sw_devs[] =
 sp_t software_prop =
 {
 	.terravisor = &terravisor,
-	.swdev = sw_devs,
-	.n_swdev = sizeof(sw_devs)/sizeof(swdev_t *),
+	add_swdev(sw_devs),
 };
