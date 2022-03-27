@@ -11,5 +11,7 @@
 
 #pragma once
 
+#define propsize(x)	(sizeof(x)/sizeof(x[0]))
+
 #include <dp.h>
 #include <sp.h>

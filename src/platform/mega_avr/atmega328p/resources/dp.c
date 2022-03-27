@@ -128,9 +128,7 @@ dp_t device_prop =
 	.core[0] = &core0,
 	.memory = &mem,
 
-	.ports = port_list,
-	.n_ports = sizeof(port_list)/sizeof(gpio_module_t *),
+	add_ports(port_list),
 
-	.modules = mod_list,
-	.n_mods = sizeof(mod_list)/sizeof(module_t *)
+	add_modules(mod_list),
 };
