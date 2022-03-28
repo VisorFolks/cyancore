@@ -32,6 +32,7 @@ int printf(const char *fmt, ...);
 int eprintf(const char *fmt, ...);
 int fputs(const FILE *, const char *);
 int fputc(const FILE *, const char);
+int fgetc(const FILE *, char *);
 char getch();
 char getchar();
 

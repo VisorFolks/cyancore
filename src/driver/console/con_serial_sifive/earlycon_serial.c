@@ -90,7 +90,7 @@ static status_t earlycon_serial_post_clk_config()
 	return success;
 }
 
-sysclk_config_clk_callback_t earlycon_handle =
+static sysclk_config_clk_callback_t earlycon_handle =
 {
 	.pre_config = &earlycon_serial_pre_clk_config,
 	.post_config = &earlycon_serial_post_clk_config,
