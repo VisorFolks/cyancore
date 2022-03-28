@@ -21,6 +21,7 @@
 #include <interrupt.h>
 #include <hal/uart.h>
 #include <hal/gpio.h>
+#include <driver/sysclk.h>
 #include <driver/console.h>
 
 static uart_port_t console_port;
@@ -28,7 +29,7 @@ static gpio_port_t io[2];
 
 static void console_serial_irq_handler(void);
 
-static status_t console_serial_setup()
+static status_t console_serial_setup(void)
 {
 	mret_t mres;
 	swdev_t *sp;
@@ -104,7 +105,7 @@ static status_t console_serial_read(char *c)
 	return ret;
 }
 
-static void console_serial_irq_handler()
+static void console_serial_irq_handler(void)
 {
 	if(uart_rx_pending(&console_port))
 	{
@@ -124,19 +125,38 @@ static console_t console_serial_driver =
 	.read = &console_serial_read,
 };
 
-status_t console_serial_driver_setup()
+static status_t console_serial_pre_clk_config(void)
+{
+	return success;
+}
+
+static status_t console_serial_post_clk_config(void)
+{
+	uart_update_baud(&console_port);
+	return success;
+}
+
+static sysclk_config_clk_callback_t console_handle =
+{
+	.pre_config = &console_serial_pre_clk_config,
+	.post_config = &console_serial_post_clk_config
+};
+
+status_t console_serial_driver_setup(void)
 {
 	status_t ret;
 	driver_exit("earlycon");
 	ret = console_serial_setup();
+	ret |= sysclk_register_config_clk_callback(&console_handle);
 	ret |= console_attach_device(ret, &console_serial_driver);
 	return ret;
 }
 
-status_t console_serial_driver_exit()
+status_t console_serial_driver_exit(void)
 {
 	status_t ret;
 	ret = console_release_device();
+	ret |= sysclk_deregister_config_clk_callback(&console_handle);
 	ret |= uart_shutdown(&console_port);
 	for(uint8_t i = 0; i < console_port.pmux->npins; i++)
 	{
