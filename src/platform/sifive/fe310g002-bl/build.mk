@@ -20,5 +20,5 @@ PLAT_INCLUDE	+= $(FE310G002_DIR)/include
 OUTPUT_FORMAT	:= elf32-littleriscv
 
 include $(FE310G002_DIR)/config.mk
-include $(FE310G002_DIR)/resources/build.mk
+$(eval $(call check_and_include,USE_DEFAULT_RESOURCE,include $(FE310G002_DIR)/resources/build.mk))
 include $(FE310G002_DIR)/../common_fe310/build.mk
