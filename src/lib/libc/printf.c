@@ -28,7 +28,7 @@
 	(((_lcount) >= 1)  ? va_arg(_args, unsigned long) :	\
 			    va_arg(_args, unsigned int))
 
-int __fputc(const FILE *dev, bool en_stdout, const char c)
+static int __fputc(const FILE *dev, bool en_stdout, const char c)
 {
 	int ret;
 	ret = ccpdfs_write(dev, c);
@@ -37,7 +37,7 @@ int __fputc(const FILE *dev, bool en_stdout, const char c)
 	return ret;
 }
 
-int __fputs(const FILE *dev, bool en_stdout, const char *i)
+static int __fputs(const FILE *dev, bool en_stdout, const char *i)
 {
 	int ret = 0;
 	while(*i != '\0')
