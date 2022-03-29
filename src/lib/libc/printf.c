@@ -34,6 +34,8 @@ static int __fputc(const FILE *dev, bool en_stdout, const char c)
 	ret = ccpdfs_write(dev, c);
 	if(en_stdout)
 		ccpdfs_write(stdout, c);
+	if((c == '\n') && (dev == stdout))
+		__fputc(dev, en_stdout, '\r');
 	return ret;
 }
 
@@ -185,9 +187,7 @@ loop:
 			continue;
 		}
 
-		else if(*fmt == '\n')
-			__fputc(dev, en_stdout, '\r');
-		__fputc(dev, en_stdout, *fmt);
+		__fputc(dev, en_stdout, (char)*fmt);
 		fmt++;
 		ret++;
 	}
