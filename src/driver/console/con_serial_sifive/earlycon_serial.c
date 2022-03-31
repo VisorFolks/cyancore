@@ -20,47 +20,14 @@
 #include <driver.h>
 #include <interrupt.h>
 #include <hal/uart.h>
-#include <hal/gpio.h>
 #include <driver/console.h>
 #include <driver/sysclk.h>
 
 static uart_port_t earlycon_port;
-static gpio_port_t io[2];
 
 static status_t earlycon_serial_setup()
 {
-	mret_t mres;
-	swdev_t *sp;
-	module_t *dp;
-	hw_devid_t devid;
-	arch_machine_call(fetch_sp, console_uart, 0, 0, &mres);
-	if(mres.status != success)
-	{
-		sysdbg3("Console could not found!\n");
-		return mres.status;
-	}
-	sp = (swdev_t *) mres.p;
-	devid = sp->hwdev_id;
-	earlycon_port.pmux = sp->pmux;
-
-	for(uint8_t i = 0; i < sp->pmux->npins; i++)
-	{
-		gpio_pin_alloc(&io[i], sp->pmux->port, sp->pmux->pins[i]);
-		gpio_enable_alt_io(&io[i], sp->pmux->function);
-	}
-
-	arch_machine_call(fetch_dp, (devid & 0xff00), (devid & 0x00ff), 0, &mres);
-	if(mres.status != success)
-	{
-		sysdbg3("UART Device %d not found!\n", devid);
-		return mres.status;
-	}
-	dp = (module_t *)mres.p;
-	earlycon_port.port_id = dp->id;
-	earlycon_port.clk_id = dp->clk_id;
-	earlycon_port.baddr = dp->baddr;
-	earlycon_port.stride = dp->stride;
-	earlycon_port.baud = dp->clk;
+	uart_get_properties(&earlycon_port, console_uart);
 
 	sysdbg2("UART engine @ %p\n", earlycon_port.baddr);
 	sysdbg2("UART baud @ %lubps\n", earlycon_port.baud);
@@ -116,11 +83,6 @@ status_t earlycon_serial_driver_exit()
 	ret = console_release_device();
 	ret |= sysclk_deregister_config_clk_callback(&earlycon_handle);
 	ret |= uart_shutdown(&earlycon_port);
-	for(uint8_t i = 0; i < earlycon_port.pmux->npins; i++)
-	{
-		ret |= gpio_disable_alt_io(&io[i]);
-		ret |= gpio_pin_free(&io[i]);
-	}
 	return ret;
 }
 

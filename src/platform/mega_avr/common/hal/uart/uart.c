@@ -24,7 +24,7 @@
 #include <arch.h>
 #include "uart_private.h"
 
-status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p)
+status_t uart_setup(uart_port_t *port, direction_t d, parity_t p)
 {
 	status_t ret = success;
 	assert(port);
@@ -88,7 +88,7 @@ uart_setup_exit:
 	return ret;
 }
 
-status_t uart_shutdown(const uart_port_t *port)
+status_t uart_shutdown(uart_port_t *port)
 {
 	status_t ret = success;
 	assert(port);
