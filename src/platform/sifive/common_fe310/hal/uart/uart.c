@@ -147,7 +147,7 @@ bool uart_buffer_available(const uart_port_t *port)
 
 void uart_tx_wait_till_done(const uart_port_t *port)
 {
-	while((MMIO32(port->baddr + TXDATA_OFFSET) & (1U << TX_FULL)))
+	while(MMIO32(port->baddr + TXDATA_OFFSET) & (1U << TX_FULL))
 		arch_nop();
 }
 

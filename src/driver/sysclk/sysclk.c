@@ -92,7 +92,13 @@ status_t sysclk_execute_pre_config_clk_callback(void)
 
 	do
 	{
-		ret |= temp->pre_config();
+		if(temp->pre_config)
+			ret |= temp->pre_config();
+		else
+		{
+			syslog(fail, "Preconfig CB for node %p is not available!\n", temp);
+			ret |= error_func_inval;
+		}
 		temp = temp->next;
 	} while(temp);
 
@@ -111,6 +117,13 @@ status_t sysclk_execute_post_config_clk_callback(void)
 	do
 	{
 		ret |= temp->post_config();
+		if(temp->post_config)
+			ret |= temp->post_config();
+		else
+		{
+			syslog(fail, "Postconfig CB for node %p is not available!\n", temp);
+			ret |= error_func_inval;
+		}
 		temp = temp->next;
 	} while(temp);
 

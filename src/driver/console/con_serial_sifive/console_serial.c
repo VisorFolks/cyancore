@@ -65,7 +65,7 @@ static status_t console_serial_read(char *c)
 		ret |= wait_till_irq(&con_read_wait);
 	}
 
-	*c = con_buff[(wp++)];
+	*c = con_buff[wp++];
 	wp = wp % 32;
 	occ--;
 
@@ -79,7 +79,7 @@ static void console_serial_irq_handler(void)
 		wait_release_on_irq(&con_read_wait);
 		while(uart_rx_pending(&console_port))
 		{
-			uart_rx(&console_port, &con_buff[(rp++)]);
+			uart_rx(&console_port, &con_buff[rp++]);
 			rp = rp % 32;
 			occ++;
 		}

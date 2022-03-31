@@ -101,10 +101,8 @@ status_t console_putc(const char c)
 {
 	status_t ret = error_func_inval;
 	/* Check if the console is attached and write methos is valid */
-	//lock_acquire(&console_lock);
 	if(console_attached && con->write != NULL)
 		ret = con->write(c);
-	//lock_release(&console_lock);
 	return ret;
 }
 
@@ -117,10 +115,8 @@ status_t console_putc(const char c)
 status_t console_getc(char *c)
 {
 	status_t ret = error_func_inval;
-	lock_acquire(&console_lock);
 	if(console_attached && con->read != NULL)
 		ret = con->read(c);
-	lock_release(&console_lock);
 	return ret;
 }
 
@@ -132,10 +128,8 @@ status_t console_getc(char *c)
 status_t console_flush()
 {
 	status_t ret = error_func_inval;
-	lock_acquire(&console_lock);
 	if(console_attached && con->flush != NULL)
 		ret = con->flush();
-	lock_release(&console_lock);
 	return ret;
 }
 
@@ -173,10 +167,8 @@ status_t logger_release_device()
 status_t logger_putc(const char c)
 {
 	status_t ret = error_func_inval;
-	lock_acquire(&log_lock);
 	if(logger_attached && log->write != NULL)
 		ret = log->write(c);
-	lock_release(&log_lock);
 	return ret;
 }
 
@@ -186,13 +178,11 @@ status_t logger_dprint(const FILE *device)
 	char c;
 	if(!device || !logger_attached)
 		return error_device_inval;
-	lock_acquire(&log_lock);
 	do
 	{
 		lvar = log->read(&c);
 		fputc(device, c);
 	}
 	while(lvar);
-	lock_release(&log_lock);
 	return success;
 }

@@ -123,7 +123,7 @@ bool gpio_pin_read(const gpio_port_t *port)
 status_t gpio_enable_alt_io(const gpio_port_t *port, unsigned int alt_io)
 {
 	unsigned int pin = port->pin;
-	unsigned int baddr = port->pbaddr;
+	const uintptr_t baddr = port->pbaddr;
 	MMIO32(baddr + IOFSEL_OFFSET) |= (alt_io << pin);
 	MMIO32(baddr + IOFEN_OFFSET) |= (1 << pin);
 	return success;
@@ -132,7 +132,7 @@ status_t gpio_enable_alt_io(const gpio_port_t *port, unsigned int alt_io)
 status_t gpio_disable_alt_io(const gpio_port_t *port)
 {
 	unsigned int pin = port->pin;
-	unsigned int baddr = port->pbaddr;
+	const uintptr_t baddr = port->pbaddr;
 	MMIO32(baddr + IOFEN_OFFSET) &= ~(1 << pin);
 	MMIO32(baddr + IOFSEL_OFFSET) &= ~(1 << pin);
 	return success;

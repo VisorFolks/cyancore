@@ -58,7 +58,7 @@ static status_t platform_wdt_setup()
 	plat_wdt.clk_id = dp->clk_id;
 	plat_wdt.baddr = dp->baddr;
 	plat_wdt.stride = dp->stride;
-	plat_wdt.timeout = dp->clk;
+	plat_wdt.timeout = (size_t) dp->clk;
 	plat_wdt.wdt_irq = (unsigned int) dp->interrupt[0].id;
 	plat_wdt.wdt_handler = &platform_wdt_handler;
 

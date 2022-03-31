@@ -46,7 +46,8 @@ status_t uart_setup(uart_port_t *port, direction_t d, parity_t p)
 			if(port->tx_irq)
 			{
 				sysdbg5("Linking module#%u Tx IRQ#%u\n", port->tx_irq->module, port->tx_irq->id);
-				link_interrupt(port->tx_irq->module, port->tx_irq->id, port->tx_handler);
+				link_interrupt(port->tx_irq->module, (unsigned int) port->tx_irq->id,
+						port->tx_handler);
 				uart_tx_int_en(port);
 			}
 		case rx:
@@ -54,7 +55,8 @@ status_t uart_setup(uart_port_t *port, direction_t d, parity_t p)
 			if(port->rx_irq)
 			{
 				sysdbg5("Linking module#%u Rx IRQ#%u\n", port->rx_irq->module, port->rx_irq->id);
-				link_interrupt(port->rx_irq->module, port->rx_irq->id, port->rx_handler);
+				link_interrupt(port->rx_irq->module, (unsigned int) port->rx_irq->id,
+						port->rx_handler);
 				uart_rx_int_en(port);
 			}
 			break;
@@ -63,7 +65,8 @@ status_t uart_setup(uart_port_t *port, direction_t d, parity_t p)
 			if(port->tx_irq)
 			{
 				sysdbg5("Linking module#%u Tx IRQ#%u\n", port->tx_irq->module, port->tx_irq->id);
-				link_interrupt(port->tx_irq->module, port->tx_irq->id, port->tx_handler);
+				link_interrupt(port->tx_irq->module, (unsigned int )port->tx_irq->id,
+						port->tx_handler);
 				uart_tx_int_en(port);
 			}
 			break;
@@ -95,12 +98,12 @@ status_t uart_shutdown(uart_port_t *port)
 	if(port->tx_irq)
 	{
 		ret |= uart_tx_int_dis(port);
-		ret |= unlink_interrupt(port->tx_irq->module, port->tx_irq->id);
+		ret |= unlink_interrupt(port->tx_irq->module, (unsigned int) port->tx_irq->id);
 	}
 	if(port->rx_irq)
 	{
 		ret |= uart_rx_int_dis(port);
-		ret |= unlink_interrupt(port->rx_irq->module, port->rx_irq->id);
+		ret |= unlink_interrupt(port->rx_irq->module, (unsigned int) port->rx_irq->id);
 	}
 	ret |= platform_clk_dis(port->clk_id);
 	return ret;
