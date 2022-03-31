@@ -24,13 +24,52 @@
 #include <hal/uart.h>
 #include "uart_private.h"
 
-status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
+status_t uart_get_properties(uart_port_t *port, sw_devid_t dev)
+{
+	mret_t mres;
+	swdev_t *sp;
+	module_t *dp;
+	hw_devid_t devid;
+
+	arch_machine_call(fetch_sp, dev, 0, 0, &mres);
+	if(mres.status != success)
+	{
+		sysdbg3("%p - sp node could not be found!\n", dev);
+		return mres.status;
+	}
+	sp = (swdev_t *) mres.p;
+	devid = sp->hwdev_id;
+	port->pmux = sp->pmux;
+
+	arch_machine_call(fetch_dp, (devid & 0xff00), (devid & 0xff), 0, &mres);
+	if(mres.status != success)
+	{
+		sysdbg3("UART Device %d not found!\n", devid);
+		return mres.status;
+	}
+	dp = (module_t *) mres.p;
+	port->port_id = dp->id;
+	port->clk_id = dp->clk_id;
+	port->baddr = dp->baddr;
+	port->baud = dp->clk;
+	port->irq = &dp->interrupt[0];
+	return success;
+}
+
+status_t uart_setup(uart_port_t *port, direction_t d, parity_t p _UNUSED)
 {
 	status_t ret = success;
 
 	// Enable module based on direction
 	volatile uint32_t txctlr = 0;
 	volatile uint32_t rxctlr = 0;
+
+	for(uint8_t i = 0; i < port->pmux->npins; i++)
+	{
+		ret |= gpio_pin_alloc(&port->io[i], port->pmux->port, port->pmux->pins[i]);
+		ret |= gpio_enable_alt_io(&port->io[i], port->pmux->function);
+	}
+
 	switch(d)
 	{
 		case trx:
@@ -69,9 +108,16 @@ status_t uart_setup(const uart_port_t *port, direction_t d, parity_t p _UNUSED)
 	return ret;
 }
 
-status_t uart_shutdown(const uart_port_t *port)
+status_t uart_shutdown(uart_port_t *port)
 {
 	status_t ret = success;
+
+	for(uint8_t i = 0; i < port->pmux->npins; i++)
+	{
+		ret |= gpio_disable_alt_io(&port->io[i]);
+		ret |= gpio_pin_free(&port->io[i]);
+	}
+
 	if(port->irq->id && port->irq_handler)
 	{
 		ret |= ic_dis_irq(port->irq->id);
@@ -79,6 +125,7 @@ status_t uart_shutdown(const uart_port_t *port)
 		ret |= uart_rx_int_dis(port);
 		ret |= unlink_interrupt(port->irq->module, port->irq->id);
 	}
+	
 	MMIO32(port->baddr + TXCTRL_OFFSET) = 0;
 	MMIO32(port->baddr + RXCTRL_OFFSET) = 0;
 	arch_dsb();

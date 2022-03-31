@@ -34,7 +34,7 @@ static int __fputc(const FILE *dev, bool en_stdout, const char c)
 	ret = ccpdfs_write(dev, c);
 	if(en_stdout)
 		ccpdfs_write(stdout, c);
-	if((c == '\n') && (dev == stdout))
+	if((c == '\n') && ((dev == stdout) || (dev == stdlog)))
 		__fputc(dev, en_stdout, '\r');
 	return ret;
 }

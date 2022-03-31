@@ -20,55 +20,22 @@
 #include <driver.h>
 #include <interrupt.h>
 #include <hal/uart.h>
-#include <hal/gpio.h>
 #include <driver/sysclk.h>
 #include <driver/console.h>
 
 static uart_port_t console_port;
-static gpio_port_t io[2];
 
 static void console_serial_irq_handler(void);
 
 static status_t console_serial_setup(void)
 {
-	mret_t mres;
-	swdev_t *sp;
-	module_t *dp;
-	hw_devid_t devid;
-	arch_machine_call(fetch_sp, console_uart, 0, 0, &mres);
-	if(mres.status != success)
-	{
-		sysdbg3("Console could not found!\n");
-		return mres.status;
-	}
-	sp = (swdev_t *) mres.p;
-	devid = sp->hwdev_id;
-	console_port.pmux = sp->pmux;
+	uart_get_properties(&console_port, console_uart);
 
-	for(uint8_t i = 0; i < sp->pmux->npins; i++)
-	{
-		gpio_pin_alloc(&io[i], sp->pmux->port, sp->pmux->pins[i]);
-		gpio_enable_alt_io(&io[i], sp->pmux->function);
-	}
-
-	arch_machine_call(fetch_dp, (devid & 0xff00), (devid & 0x00ff), 0, &mres);
-	if(mres.status != success)
-	{
-		sysdbg3("UART Device %d not found!\n", devid);
-		return mres.status;
-	}
-	dp = (module_t *)mres.p;
-	console_port.port_id = dp->id;
-	console_port.clk_id = dp->clk_id;
-	console_port.baddr = dp->baddr;
-	console_port.stride = dp->stride;
-	console_port.baud = dp->clk;
-	console_port.irq = &dp->interrupt[0];
 	console_port.irq_handler = console_serial_irq_handler;
 
 	sysdbg2("UART engine @ %p\n", console_port.baddr);
 	sysdbg2("UART baud @ %lubps\n", console_port.baud);
-	sysdbg2("UART irqs - %u\n", dp->interrupt[0].id);
+	sysdbg2("UART irqs - %u\n", console_port.irq);
 	/*
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
@@ -158,11 +125,6 @@ status_t console_serial_driver_exit(void)
 	ret = console_release_device();
 	ret |= sysclk_deregister_config_clk_callback(&console_handle);
 	ret |= uart_shutdown(&console_port);
-	for(uint8_t i = 0; i < console_port.pmux->npins; i++)
-	{
-		ret |= gpio_disable_alt_io(&io[i]);
-		ret |= gpio_pin_free(&io[i]);
-	}
 	driver_setup("earlycon");
 	return ret;
 }
