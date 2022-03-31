@@ -28,7 +28,7 @@ jobs:
 
     - name: Configure Git
       env:
-        TOKEN: ${{ secrets.CI_PAT }}
+        TOKEN: ${{ secrets.AKASH_VF }}
       run: git config --global url."https://${TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
 
     - name: Get Toolchains
