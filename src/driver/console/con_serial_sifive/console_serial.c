@@ -55,7 +55,6 @@ static int_wait_t con_read_wait;
 static char con_buff[32];
 static uint8_t wp, rp, occ;
 
-
 static status_t console_serial_read(char *c)
 {
 	status_t ret = success;
@@ -90,6 +89,7 @@ static console_t console_serial_driver =
 {
 	.write = &console_serial_write,
 	.read = &console_serial_read,
+	.payload_size = (unsigned int *)&occ,
 };
 
 static status_t console_serial_pre_clk_config(void)

@@ -133,6 +133,19 @@ status_t console_flush()
 	return ret;
 }
 
+/*
+ * console_get_payload_size - Returns the size of payload available to read
+ *
+ * @return uint: size of payload to read
+ */
+unsigned int console_get_payload_size(void)
+{
+	status_t ret = 0;
+	if(console_attached && con->payload_size != NULL)
+		ret = *(con->payload_size);
+	return ret;
+}
+
 static console_t *log;
 static lock_t log_lock;
 static bool logger_attached;
