@@ -1,5 +1,18 @@
-# ![Cyancore](https://github.com/VisorFolks/vf_artifacts/blob/stable/cyancore/icons/cyancore_50x50.png?raw=true)  Cyancore
-*An unified software platform for embedded system projects ...*
+<h1>
+  <div align="center">
+    <a href="https://github.com/VisorFolks/cyancore">
+      <img align="top" src="https://github.com/VisorFolks/vf_artifacts/blob/stable/cyancore/icons/cyancore.png"
+           width=50 height=50 alt="Cyancore"/>
+    </a>
+    Cyancore
+  </div>
+</h1>
+<body>
+  <div align="center">
+    <i>An unified software platform for embedded system projects ...</i><br>
+    <i>From India with Pride!</i><br><br>
+  </div>
+</body>
 
 > **Version (arch:2 | major:4 | minor:2): 1.2.1**
 

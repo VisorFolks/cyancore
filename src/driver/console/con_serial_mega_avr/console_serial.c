@@ -1,6 +1,6 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2022, Cyancore Team
  *
  * File Name		: console_serial.c
  * Description		: This file contains sources of uart console
@@ -30,19 +30,21 @@ static void console_serial_read_irq_handler(void);
 static status_t console_serial_setup()
 {
 	mret_t mres;
+	const swdev_t *sp;
 	const module_t *dp;
 	hw_devid_t devid;
 	arch_machine_call(fetch_sp, console_uart, 0, 0, &mres);
 	if(mres.status != success)
 	{
-		sysdbg("Console could not found!\n");
+		sysdbg3("Console could not found!\n");
 		return mres.status;
 	}
-	devid = (hw_devid_t) mres.p;
+	sp = (swdev_t *) mres.p;
+	devid = sp->hwdev_id;
 	arch_machine_call(fetch_dp, (devid & 0xff00), (devid & 0x00ff), 0, &mres);
 	if(mres.status != success)
 	{
-		sysdbg("UART Device %d not found!\n", devid);
+		sysdbg3("UART Device %d not found!\n", devid);
 		return mres.status;
 	}
 	dp = (module_t *)mres.p;
@@ -51,17 +53,19 @@ static status_t console_serial_setup()
 	console_port.baddr = dp->baddr;
 	console_port.stride = dp->stride;
 	console_port.baud = dp->clk;
-	console_port.tx_irq = dp->interrupt_id[1];
+	console_port.tx_irq = &dp->interrupt[1];
 	console_port.tx_handler = console_serial_write_irq_handler;
-	console_port.rx_irq = dp->interrupt_id[0];
+	console_port.rx_irq = &dp->interrupt[0];
 	console_port.rx_handler = console_serial_read_irq_handler;
 
-	sysdbg("UART engine @ %p\n", console_port.baddr);
+	sysdbg2("UART engine @ %p\n", console_port.baddr);
+	sysdbg2("UART baud @ %lubps\n", console_port.baud);
+	sysdbg2("UART irqs - %u & %u\n", dp->interrupt[1].id, dp->interrupt[0].id);
 	/*
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
 	 */
-	return uart_setup(&console_port, trx, no_parity);
+	return uart_setup(&console_port, trx, no_parity); //
 }
 
 static int_wait_t con_write_wait;
@@ -74,8 +78,9 @@ static void console_serial_write_irq_handler()
 status_t console_serial_write(const char c)
 {
 	status_t ret;
-	ret = uart_tx(&console_port, c);
-	wait_till_irq(&con_write_wait);
+	ret = wait_lock(&con_write_wait);
+	ret |= uart_tx(&console_port, c);
+	ret |= wait_till_irq(&con_write_wait);
 	return ret;
 }
 
@@ -90,9 +95,11 @@ static void console_serial_read_irq_handler()
 
 static status_t console_serial_read(char *c)
 {
-	wait_till_irq(&con_read_wait);
+	status_t ret;
+	ret = wait_lock(&con_read_wait);
+	ret |= wait_till_irq(&con_read_wait);
 	*c = con_char;
-	return success;
+	return ret;
 }
 
 static status_t console_serial_flush()

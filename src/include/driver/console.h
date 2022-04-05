@@ -16,6 +16,7 @@ typedef struct console
 	status_t (*write)(const char);
 	status_t (*read)(char *);
 	status_t (*flush)(void);
+	unsigned int *payload_size;
 } console_t;
 
 status_t console_attach_device(status_t, console_t *);
@@ -25,6 +26,7 @@ status_t console_putc(const char);
 status_t console_puts(const char *);
 status_t console_getc(char *);
 status_t console_flush(void);
+unsigned int console_get_payload_size(void);
 
 status_t logger_attach_device(status_t, console_t *);
 status_t logger_release_device();

@@ -14,6 +14,7 @@
 typedef enum
 {
 	console_uart = 0x100,
+	bt_uart = 0x101,
 } sw_devid_t;
 
 

@@ -1,6 +1,6 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2019-2022, Cyancore Team
  *
  * File Name		: machine_call.h
  * Description		: This file consists of machine call IDs and prototypes
@@ -20,6 +20,8 @@ typedef enum mcall_id
 	fetch_sp		= 0x0001,
 	fetch_dp		= 0x0002,
 	set_sleep_mode		= 0x0003,
+	fetch_clk		= 0x0004,
+	config_clk		= 0x0005,
 } mcall_id_t;
 
 typedef struct mret
@@ -34,7 +36,7 @@ typedef struct mret
 typedef struct mcall
 {
 	mcall_id_t id;
-	mret_t (*callback)(call_arg_t a0, call_arg_t a1, call_arg_t a2);
+	void (*callback)(call_arg_t a0, call_arg_t a1, call_arg_t a2, mret_t *ret);
 } mcall_t;
 
 #define INCLUDE_MCALL(_name, _id , _callback)		\

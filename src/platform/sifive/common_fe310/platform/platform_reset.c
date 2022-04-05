@@ -11,6 +11,7 @@
 
 #include <stdint.h>
 #include <status.h>
+#include <syslog.h>
 #include <assert.h>
 #include <reset.h>
 #include <resource.h>
@@ -42,7 +43,7 @@ reset_t platform_get_reset_syndrome()
 	aonport.baddr = dp->baddr;
 
 	aon_pmucause(&aonport, &pmucause_val);
-
+	sysdbg5("Reset Syndrome = %u\n", pmucause_val);
 	if(!(pmucause_val & 0x1))			/* Check PMU cause for reset */
 		return not_reset;
 

@@ -54,3 +54,5 @@ status_t gpio_port_mode(const gpio_port_t *port, gpio_mode_t mode);
 status_t gpio_port_free(gpio_port_t *port);
 status_t gpio_port_write(const gpio_port_t *port, gpio_parallel_t value);
 status_t gpio_port_read(const gpio_port_t *port, gpio_parallel_t *value);
+status_t gpio_enable_alt_io(const gpio_port_t *port, unsigned int alt_io);
+status_t gpio_disable_alt_io(const gpio_port_t *port);

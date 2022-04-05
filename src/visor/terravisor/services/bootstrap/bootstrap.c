@@ -9,11 +9,9 @@
  */
 
 #include <stdint.h>
-#include <stdio.h>
 #include <status.h>
+#include <syslog.h>
 #include <arch.h>
-#include <driver.h>
-#include <insignia.h>
 #include <terravisor/platform.h>
 #include <terravisor/bootstrap.h>
 
@@ -24,13 +22,11 @@ status_t bootstrap()
 
 	arch_early_setup();
 
-	if(arch_core_index() == BOOT_CORE_ID)
-		platform_early_setup();
+	platform_early_setup();
 
 	arch_setup();
 
-	if(arch_core_index() == BOOT_CORE_ID)
-		platform_setup();
+	platform_setup();
 
 	resetSyndrome = platform_get_reset_syndrome();
 	platform_reset_handler(resetSyndrome);
@@ -39,3 +35,15 @@ status_t bootstrap()
 
 	return success;
 }
+
+#if CCSMP
+status_t bootstrap_secondary()
+{
+	arch_early_setup();
+
+	arch_setup2();
+
+	platform_cpu_setup();
+	return success;
+}
+#endif

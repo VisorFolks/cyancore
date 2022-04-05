@@ -30,8 +30,8 @@ void arch_setup();
  * arch_wfi - Wait for interrupt, with sleep mode
  */
 void arch_wfi();
-void arch_di_save_state();
-void arch_ei_restore_state();
+void arch_di_save_state(istate_t *);
+void arch_ei_restore_state(istate_t *);
 
 /**
  * arch_panic_handler - Executes when arch error occurs

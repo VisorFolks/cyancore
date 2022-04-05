@@ -15,6 +15,7 @@
 #include <stdbool.h>
 #include <status.h>
 #include <resource.h>
+#include <hal/gpio.h>
 
 typedef enum direction
 {
@@ -37,19 +38,26 @@ typedef struct uart_port
 	unsigned long baud;
 	uintptr_t baddr;
 	uintptr_t stride;
-	size_t tx_irq;
+	pinmux_t *pmux;
+	gpio_port_t io[2];
+#if MAX_INTERRUPTS_PER_DEVICE < 2
+	const irqs_t *irq;
+	void (*irq_handler)(void);
+#else
+	const irqs_t *tx_irq;
 	void (*tx_handler)(void);
-	size_t rx_irq;
+	const irqs_t *rx_irq;
 	void (*rx_handler)(void);
+#endif
 } uart_port_t;
 
 
-//spinlock_t uart_spinlock;
-
-status_t uart_setup(const uart_port_t *, direction_t, parity_t);
-status_t uart_shutdown(const uart_port_t *);
+status_t uart_get_properties(uart_port_t *, sw_devid_t);
+status_t uart_setup(uart_port_t *, direction_t, parity_t);
+status_t uart_shutdown(uart_port_t *);
 bool uart_buffer_available(const uart_port_t *);
 void uart_tx_wait_till_done(const uart_port_t *);
+bool uart_rx_empty(const uart_port_t *);
 bool uart_rx_done(const uart_port_t *);
 status_t uart_tx(const uart_port_t *, const char);
 status_t uart_rx(const uart_port_t *, char *);
@@ -58,3 +66,5 @@ status_t uart_tx_int_dis(const uart_port_t *);
 status_t uart_rx_int_en(const uart_port_t *);
 status_t uart_rx_int_dis(const uart_port_t *);
 void uart_update_baud(const uart_port_t *);
+bool uart_tx_pending(const uart_port_t *);
+bool uart_rx_pending(const uart_port_t *);

@@ -13,7 +13,7 @@
 #include <arch.h>
 #include <lock/lock.h>
 
-void spinlock_acquire(spinlock_t *key)
+void spinlock_acquire(volatile spinlock_t *key)
 {
 	unsigned int old, new;
 	new = 1;
@@ -28,7 +28,7 @@ void spinlock_acquire(spinlock_t *key)
 	}
 }
 
-void spinlock_release(spinlock_t *key)
+void spinlock_release(volatile spinlock_t *key)
 {
 	fence(r, rw);
 	*key = 0;

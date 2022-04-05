@@ -11,6 +11,7 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+#include <arch.h>
 
 static void (*exit_func)(int status);
 
@@ -18,7 +19,8 @@ void exit(int status)
 {
 	if(exit_func)
 		(*exit_func)(status);
-	while(true);
+	while(true)
+		arch_wfi();
 }
 
 int atexit(void (*func)(int status))

@@ -37,11 +37,9 @@ module_t uart0 =
 	.baddr = 0xc0,
 	.clk_id = 0x01,
 	.stride = 0x06,
-	.clk = 19200,
-	.interrupt_id[0] = 18,
-	.interrupt_id[1] = 20,
-	.interrupt_trigger[0] = i_level,
-	.interrupt_trigger[1] = i_level
+	.clk = 115200,
+	.interrupt[0] = {int_arch, 18, int_level},
+	.interrupt[1] = {int_arch, 20, int_level},
 };
 
 gpio_module_t port0 =
@@ -70,8 +68,7 @@ module_t wdt0 =
 	.id = wdt | 0,
 	.baddr=0x60,
 	.stride=0x1,
-	.interrupt_id[0] = 0x6,
-	.interrupt_trigger[0] = i_level,
+	.interrupt[0] = {int_arch, 0x6, int_level},
 	.clk = 0x7
 };
 
@@ -80,8 +77,8 @@ module_t timer0 =
 	.id = timer | 0x00,
 	.baddr = 0x44,
 	.stride = 5,
-	.interrupt_id[0] = 14,
-	.interrupt_id[1] = 15,
+	.interrupt[0] = {int_arch, 14, int_level},
+	.interrupt[1] = {int_arch, 15, int_level},
 	.clk_id = 5,
 };
 
@@ -90,8 +87,8 @@ module_t timer1 =
 	.id = timer | 0x10,
 	.baddr = 0x80,
 	.stride = 12,
-	.interrupt_id[0] = 11,
-	.interrupt_id[1] = 12,
+	.interrupt[0] = {int_arch, 11, int_level},
+	.interrupt[1] = {int_arch, 12, int_level},
 	.clk_id = 3,
 };
 
@@ -100,9 +97,19 @@ module_t timer2 =
 	.id = timer | 0x20,
 	.baddr = 0xb0,
 	.stride = 5,
-	.interrupt_id[0] = 7,
-	.interrupt_id[1] = 8,
+	.interrupt[0] = {int_arch, 7, int_level},
+	.interrupt[1] = {int_arch, 8, int_level},
 	.clk_id = 6,
+};
+
+module_t adc0 =
+{
+	.id = adc | 0x00,
+	.baddr = 0x78,
+	.stride = 8,
+	.interrupt[0] = {int_arch, 21, int_level},
+	.interrupt[1] = {int_arch, 23, int_level},
+	.clk_id = 0,
 };
 
 gpio_module_t *port_list[] =
@@ -112,7 +119,7 @@ gpio_module_t *port_list[] =
 
 module_t *mod_list[] =
 {
-	&uart0, &wdt0, &timer0, &timer1, &timer2,
+	&uart0, &wdt0, &timer0, &timer1, &timer2, &adc0,
 };
 
 dp_t device_prop =
@@ -121,9 +128,7 @@ dp_t device_prop =
 	.core[0] = &core0,
 	.memory = &mem,
 
-	.ports = port_list,
-	.n_ports = sizeof(port_list)/sizeof(gpio_module_t *),
+	add_ports(port_list),
 
-	.modules = mod_list,
-	.n_mods = sizeof(mod_list)/sizeof(module_t *)
+	add_modules(mod_list),
 };

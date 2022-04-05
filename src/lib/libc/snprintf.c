@@ -36,12 +36,11 @@ static void unsigned_dec_print(char **s, size_t n, size_t *chars_printed,
 {
 	char num_buf[10];
 	int i = 0;
-	unsigned int rem;
 
 	do
 	{
-		rem = unum % 10U;
-		num_buf[i++] = '0' + rem;
+		unsigned int rem = unum % 10U;
+		num_buf[i++] = '0' + (char)rem;
 		unum /= 10U;
 	}
 	while(unum > 0U);

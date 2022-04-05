@@ -1,6 +1,6 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2019-2022, Cyancore Team
  *
  * File Name		: arch.h
  * Description		: This file prototypes arch related functions and
@@ -23,6 +23,7 @@ void arch_early_setup();
  * arch_setup - This needs to be called after inital setup is completed
  */
 void arch_setup();
+void arch_setup2();
 
 void arch_di_save_state();
 void arch_ei_restore_state();
@@ -30,15 +31,19 @@ void arch_ei_restore_state();
 /**
  * arch_panic_handler - Executes when arch error occurs
  */
-void arch_panic_handler();
-void arch_unhandled_irq();
+void arch_panic_handler() _NORETURN;
+void arch_unhandled_irq() _NORETURN;
+
+void arch_early_signal_boot_start();
+void arch_wait_till_boot_done();
+void arch_signal_boot_done();
 
 /**
  * arch_machine_call - Performs machine call
  *
  * Refer arch.c for more details.
  */
-void arch_machine_call(unsigned  int, unsigned int, unsigned  int, unsigned  int, mret_t *);
+void arch_machine_call(unsigned int, unsigned int, unsigned  int, unsigned  int, mret_t *);
 
 /**
  * arch_register_interrupt_handler - Registers interrtup handler
@@ -71,6 +76,18 @@ static inline void arch_ei()
 	asm volatile("csrs mstatus, %0" : : "r" (bits));
 }
 
+static inline void arch_ei_mei()
+{
+	unsigned int bits = (1 << 11);
+	asm volatile("csrs mie, %0" : : "r" (bits));
+}
+
+static inline void arch_di_mei()
+{
+	unsigned int bits = (1 << 11);
+	asm volatile("csrc mie, %0" : : "r" (bits));
+}
+
 static inline void arch_ei_mtime()
 {
 	unsigned int bits = (1 << 7);
@@ -83,13 +100,13 @@ static inline void arch_di_mtime()
 	asm volatile("csrc mie, %0" : : "r" (bits));
 }
 
-static inline void arch_ei_softirq()
+static inline void arch_ei_msoftirq()
 {
 	unsigned int bits = (1 << 3);
 	asm volatile("csrs mie, %0" : : "r" (bits));
 }
 
-static inline void arch_di_softirq()
+static inline void arch_di_msoftirq()
 {
 	unsigned int bits = (1 << 3);
 	asm volatile("csrc mie, %0" : : "r" (bits));
@@ -102,7 +119,9 @@ static inline void arch_di()
 {
 	unsigned int bits = (1 << 3) | (1 << 7);
 	asm volatile("csrc mstatus, %0" : : "r" (bits));
+	bits |= (1 << 11);
 	asm volatile("csrc mie, %0" : : "r" (bits));
+
 }
 
 static inline void arch_nop()

@@ -14,9 +14,9 @@
 #include <plat_mem.h>
 #include <hal/gpio.h>
 
-#ifndef FCLK
-#define FCLK 0
-WARN(< ! > FCLK is not defined!)
+#ifndef XCLK
+#define XCLK 0
+WARN(< ! > XCLK is not defined!)
 #endif
 
 cpu_t core0 =
@@ -36,7 +36,7 @@ module_t plic0 =
 	.id = plic,
 	.baddr = 0x0c000000,
 	.stride = 0x04000000,
-	.interrupt_id[0] = 11,
+	.interrupt[0] = {int_local, 11, int_rising_edge},
 };
 
 module_t clint0 =
@@ -52,7 +52,16 @@ module_t uart0 =
 	.baddr = 0x10013000,
 	.stride = 0x20,
 	.clk = 115200,
-	.interrupt_id[0] = 3,
+	.interrupt[0] = {int_plat, 3, int_rising_edge},
+};
+
+module_t uart1 =
+{
+	.id = uart | 1,
+	.baddr = 0x10023000,
+	.stride = 0x20,
+	.clk = 115200,
+	.interrupt[0] = {int_plat, 4, int_rising_edge},
 };
 
 module_t prci0 =
@@ -83,18 +92,16 @@ gpio_module_t *port_list[] =
 
 module_t *mod_list[] =
 {
-	&plic0, &uart0, &prci0, &clint0, &aon0,
+	&plic0, &uart0, &prci0, &clint0, &aon0, &uart1,
 };
 
 dp_t device_prop =
 {
-	.base_clock = FCLK,
+	.base_clock = XCLK,
 	.core[0] = &core0,
 	.memory = &mem,
 
-	.ports = port_list,
-	.n_ports = sizeof(port_list)/sizeof(gpio_module_t *),
+	add_ports(port_list),
 
-	.modules = mod_list,
-	.n_mods = sizeof(mod_list)/sizeof(module_t *)
+	add_modules(mod_list),
 };

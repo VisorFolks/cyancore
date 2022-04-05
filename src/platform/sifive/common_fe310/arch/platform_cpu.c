@@ -12,5 +12,5 @@ void platform_print_cpu_info()
 		     imp_id = arch_core_impid(),
 		     vendor_id = arch_core_vendor();
 
-	syslog(info, "CPU Info: ID = %u\n-------------------------------\nISA\t: 0x%x\nArch ID\t: 0x%x\nImp ID\t: 0x%x\nVendor ID\t: 0x%x\n", core_id, isa, arch_id, imp_id, vendor_id);
+	syslog(info, "CPU Info: ID = %u\n-------------------------------\nISA\t\t: 0x%x\nArch ID\t\t: 0x%x\nImp ID\t\t: 0x%x\nVendor ID\t: 0x%x\n\n", core_id, isa, arch_id, imp_id, vendor_id);
 };

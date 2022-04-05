@@ -31,4 +31,4 @@
 #define TXWM		0
 #define RXWM		1
 
-#define BAUD_DIV(F, X)	(uint32_t)((F/X) - 1)
+#define BAUD_DIV(F, X)	((uint32_t)(F/X)-1)

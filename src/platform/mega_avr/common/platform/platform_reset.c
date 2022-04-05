@@ -11,6 +11,7 @@
 
 #include <stdint.h>
 #include <status.h>
+#include <syslog.h>
 #include <platform.h>
 #include <driver/watchdog.h>
 #include <terravisor/platform.h>
@@ -27,6 +28,7 @@ extern uint8_t reset_syndrome;
  */
 reset_t platform_get_reset_syndrome()
 {
+	sysdbg5("Reset Syndrome = %u\n", reset_syndrome);
 	if(!reset_syndrome)
 		return not_reset;
 	else if(reset_syndrome & 1)		/* Power on Reset */

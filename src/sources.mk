@@ -22,6 +22,9 @@ INCLUDE		+= $(SRC)/include/ $(PROJECT_INCLUDES)	\
 
 OPTIMIZATION	?= s
 
+CCFLAGS		+= -std=c11
+CPPFLAGS	+= -std=c++11
+
 CFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 		   -O$(strip $(OPTIMIZATION))		\
 		   $(TARGET_FLAGS) -DARCH_$(BIT)	\
@@ -29,7 +32,7 @@ CFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 		   -ffunction-sections -fdata-sections	\
 		   -fno-builtin	-nostdinc -nostdlib
 
-ifeq ($(DEBUG),1)
+ifneq ($(DEBUG),0)
 CFLAGS		+= -g
 endif
 
@@ -44,7 +47,7 @@ LD_FLAGS	+= --error-unresolved-symbols		\
 		   --check-sections -nostdlib		\
 		   --gc-sections -b $(OUTPUT_FORMAT)
 
-LINT_FLAGS	+= $(foreach i,$(INCLUDE),-I$(i))	\
+LINT_FLAGS	+= $(foreach i,$(INCLUDE),-I $(i))	\
 		   $(filter -D%,$(CFLAGS))
 
 DEP_LIB_PATH	:=

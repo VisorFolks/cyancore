@@ -5,7 +5,8 @@
 #include <stddev.h>
 #include <arch.h>
 #include <driver.h>
-#include <driver/console.h>
+//#include <driver/console.h>
+#include <driver/sysclk.h>
 #include <insignia.h>
 #include <terravisor/platform.h>
 #include <terravisor/workers.h>
@@ -19,12 +20,8 @@ void platform_early_setup()
 	ret |= platform_copy_itim();
 	ret |= platform_bss_clear();
 	ret |= platform_resources_setup();
-	driver_setup("stdlogger");
-#if 0
-	driver_setup("earlycon");
-	bootmsgs_enable();
-#endif
-	stdout_register(&logger_putc);
+	syslog_stdout_disable();
+	driver_setup("mslog");
 
 	if(ret != success)
 		exit(EXIT_FAILURE);
@@ -35,6 +32,11 @@ void platform_setup()
 {
 	status_t ret = success;
 
+	driver_setup("sysclk_prci");
+	ret |= sysclk_reset();
+
+	driver_setup("earlycon");
+	bootmsgs_enable();
 	cyancore_insignia();
 
 	if(ret != success)
@@ -44,9 +46,6 @@ void platform_setup()
 
 void platform_cpu_setup()
 {
-	status_t ret = success;
-
-	if(ret != success)
-		exit(EXIT_FAILURE);
+	arch_ei();
 	return;
 }

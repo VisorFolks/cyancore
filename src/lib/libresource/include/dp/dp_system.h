@@ -24,12 +24,28 @@ typedef enum cpu_sleep
 	sleep_power_off		= 0xaaa,
 } cpu_sleep_t;
 
+/* === Intrrupts structures === */
+
 typedef enum int_trigger
 {
-	i_falling_edge,
-	i_rising_edge,
-	i_level
+	int_falling_edge,
+	int_rising_edge,
+	int_level
 } int_trigger_t;
+
+typedef enum int_module
+{
+	int_arch = 1,
+	int_local = 2,
+	int_plat = 3
+} int_module_t;
+
+typedef struct irqs
+{
+	uint32_t module : 4;
+	uint32_t id	: 24;
+	uint32_t trigger: 4;
+} irqs_t;
 
 typedef struct cpu
 {
@@ -45,6 +61,13 @@ typedef struct memory_info
 	uintptr_t start;
 	uintptr_t size;
 } memory_t;
+
+typedef enum clock_type
+{
+	internal,
+	external,
+	pll
+} clock_type_t;
 
 cpu_t *dp_get_cpu_info(uint8_t);
 unsigned long *dp_get_base_clock();

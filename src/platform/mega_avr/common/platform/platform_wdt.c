@@ -11,6 +11,7 @@
 
 #include <status.h>
 #include <stdio.h>
+#include <syslog.h>
 #include <platform.h>
 #include <driver.h>
 #include <resource.h>
@@ -48,15 +49,20 @@ static status_t platform_wdt_setup()
 	arch_machine_call(fetch_dp, wdt, 0, 0, &mres);
 
 	if(mres.status != success)
+	{
+		sysdbg2("WDT not found in DP\n");
 		return mres.status;
+	}
 	dp = (module_t *) mres.p;
 	plat_wdt.port_id = dp->id;
 	plat_wdt.clk_id = dp->clk_id;
 	plat_wdt.baddr = dp->baddr;
 	plat_wdt.stride = dp->stride;
-	plat_wdt.timeout = dp->clk;
-	plat_wdt.wdt_irq = dp->interrupt_id[0];
+	plat_wdt.timeout = (size_t) dp->clk;
+	plat_wdt.wdt_irq = (unsigned int) dp->interrupt[0].id;
 	plat_wdt.wdt_handler = &platform_wdt_handler;
+
+	sysdbg2("WDT engine @ %p\n", plat_wdt.baddr);
 
 	return wdt_setup(&plat_wdt);
 }
@@ -77,9 +83,11 @@ static status_t platform_wdt_setup()
 static status_t platform_wdt_guard(size_t timeout, bool bite, void *cb_bark)
 {
 	status_t ret;
+	sysdbg3("Configuring WDT timeout to gear %d\n", timeout);
 	plat_wdt.timeout = timeout;
 	callback_on_bark = cb_bark;
 	ret = wdt_set_timeout(&plat_wdt);
+	sysdbg3("WDT Bite %s\n", bite ? "enabled" : "disabled");
 	ret |= bite ? wdt_sre(&plat_wdt) : wdt_srd(&plat_wdt);
 	return ret;
 }
@@ -95,6 +103,7 @@ static status_t platform_wdt_hush()
 {
 	status_t ret;
 	wdt_hush(&plat_wdt);
+	sysdbg3("WDT Hush!\n");
 	plat_wdt.timeout = 0;
 	ret = wdt_set_timeout(&plat_wdt);
 	ret |= wdt_srd(&plat_wdt);
@@ -128,6 +137,7 @@ static wdog_t plat_wdt_driver =
 static status_t plat_wdt_driver_setup()
 {
 	status_t ret;
+	sysdbg3("In %s\n", __func__);
 	ret = platform_wdt_setup();
 	ret |= wdog_attach_device(ret, &plat_wdt_driver);
 	return ret;

@@ -17,3 +17,4 @@ unsigned long gcd(unsigned long a, unsigned long b);
 unsigned long lcd(unsigned int *a, unsigned int n);
 long mod(long a, long b);
 long multiplicative_inverse(long base, long subject);
+int abs(int x);

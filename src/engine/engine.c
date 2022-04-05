@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <status.h>
+#include <arch.h>
 #include <engine.h>
 
 const ccver_t FWVersion _SECTION(".version") =
@@ -21,15 +22,15 @@ const ccver_t FWVersion _SECTION(".version") =
 };
 
 const char cyancore_ascii_insignia[] =
-"\n\r    | | | | |\n\r\
----           ---\n\r\
----           ---\n\r\
----   < / >   ---\n\r\
---- Cyancore® ---\n\r\
----           ---\n\r\
-    | | | | |\n\n\r";
+"\n    | | | | |\n\
+---           ---\n\
+---           ---\n\
+---   < / >   ---\n\
+--- Cyancore© ---\n\
+---           ---\n\
+    | | | | |\n\n";
 
-const char cyancore_ascii_insignia_lite[] = "Cyancore® < / >";
+const char cyancore_ascii_insignia_lite[] = "Cyancore© < / >";
 
 _WEAK void plug()
 {
@@ -39,14 +40,36 @@ _WEAK void plug()
 
 _WEAK void play()
 {
+	arch_wfi();
+	return;
+}
+
+_WEAK void plug_secondary()
+{
 	asm volatile("");
+	return;
+}
+
+_WEAK void play_secondary()
+{
+	arch_wfi();
 	return;
 }
 
 void engine()
 {
 	plug();
-player:
-	play();
-	goto player;
+
+	do
+		play();
+	while(1);
+}
+
+void engine_secondary()
+{
+	plug_secondary();
+
+	do
+		play_secondary();
+	while(1);
 }

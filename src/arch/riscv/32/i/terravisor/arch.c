@@ -13,6 +13,7 @@
 #include <status.h>
 #include <syslog.h>
 #include <arch.h>
+#include <lock/lock.h>
 #include <terravisor/workers.h>
 #include <interrupt.h>
 
@@ -28,6 +29,26 @@ static void arch_mcall_handler()
 	return;
 }
 
+static lock_t boot_key = LOCK_INITAL_VALUE;
+void arch_early_signal_boot_start()
+{
+	boot_key = LOCK_INITAL_VALUE;
+	return;
+}
+
+void arch_wait_till_boot_done()
+{
+	lock_acquire(&boot_key);
+	lock_release(&boot_key);
+	return;
+}
+
+void arch_signal_boot_done()
+{
+	lock_release(&boot_key);
+	return;
+}
+
 /**
  * arch_early_setup - This function is called in the early stages of boot
  *
@@ -37,6 +58,9 @@ static void arch_mcall_handler()
 void arch_early_setup()
 {
 	arch_di();
+	arch_di_mei();
+	arch_di_mtime();
+	arch_di_msoftirq();
 	riscv_update_vector();
 	return;
 }
@@ -48,16 +72,27 @@ void arch_early_setup()
  */
 void arch_setup()
 {
-	link_interrupt(arch, 11, &arch_mcall_handler);
+	link_interrupt(int_arch, 11, &arch_mcall_handler);
 	return;
 }
 
-void arch_di_save_state()
+void arch_setup2()
 {
+	link_interrupt(int_arch, 11, &arch_mcall_handler);
+	return;
 }
 
-void arch_ei_restore_state()
+void arch_di_save_state(istate_t *istate)
 {
+	istate_t temp;
+	asm volatile("csrr %0, mie" : "=r" (temp));
+	*istate = temp & (1 << 3 | 1 << 7 | 1 << 11);
+	arch_di();
+}
+
+void arch_ei_restore_state(istate_t *istate)
+{
+	asm volatile("csrs mie, %0" : : "r" (*istate));
 }
 
 /**

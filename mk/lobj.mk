@@ -13,9 +13,9 @@
 #--------< Library Object Builder >---------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*#
 
-C_SRCS		:= $(wildcard $(DIR)/*.c)
-CPP_SRCS	:= $(wildcard $(DIR)/*.cpp)
-S_SRCS		:= $(wildcard $(DIR)/*.S)
+C_SRCS		:= $(wildcard $(DIR)/*.c) $(filter %.c,$(Ex_SRCS))
+CPP_SRCS	:= $(wildcard $(DIR)/*.cpp) $(filter %.cpp,$(Ex_SRCS))
+S_SRCS		:= $(wildcard $(DIR)/*.S) $(filter %.S,$(Ex_SRCS))
 
 C_OBJS		:= $(addprefix $(OUT)/,$(C_SRCS:.c=.o))
 CPP_OBJS	:= $(addprefix $(OUT)/,$(CPP_SRCS:.cpp=.o))
@@ -28,21 +28,23 @@ DEP_SRCS	+= $(C_SRCS) $(CPP_SRCS)
 $(CPP_OBJS): $(OUT)/%.o: %.cpp | $$(@D)/
 	@echo "Elf: Compiling $(@F:.o=.cpp) ..."
 ifeq ($(PP),1)
-	$(CCP) $(CFLAGS) -E -p $< -o $(@:.o=.pre.cpp)
+	$(CCP) $(CPPFLAGS) $(CFLAGS) -E -p $< -o $(@:.o=.pre.cpp)
 endif
-	$(CCP) $(CFLAGS) -c $< -o $@
+	$(CCP) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 $(C_OBJS): $(OUT)/%.o: %.c | $$(@D)/
 	@echo "Lib: Compiling $(@F:.o=.c) ..."
 ifeq ($(PP),1)
-	$(CC) $(CFLAGS) -E -p $< -o $(@:.o=.pre.c)
+	$(CC) $(CCFLAGS) $(CFLAGS) -E -p $< -o $(@:.o=.pre.c)
 endif
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CCFLAGS) $(CFLAGS) -c $< -o $@
 
 $(S_OBJS): $(OUT)/%.o: %.S | $$(@D)/
 	@echo "Lib: Assembling $(@F:.o=.S) ..."
-	$(CC) -E $(CFLAGS) -c $< -o $(@:.o=.pre.S)
+	$(CC) -E $(CCFLAGS) $(CFLAGS) -c $< -o $(@:.o=.pre.S)
 	$(AS) $(ASFLAGS) $(@:.o=.pre.S) -o $@
 ifneq ($(PP),1)
 	rm $(@:.o=.pre.S)
 endif
+
+Ex_SRCS		:=

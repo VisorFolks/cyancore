@@ -21,14 +21,14 @@
 static lock_t syslog_lock;
 static bool flag_enable_stdout;
 
-static char *logsign[] = {"< / >", "< i >", "< ! >", "< x >", "< $ >"};
 
 int syslog(logtype_t t, const char *c, ...)
 {
 	int ret;
 	va_list va;
+	char logsign[] = {'/', 'i', '!', 'x', '$'};
 	va_start(va, c);
-	ret = fprintf(stdlog, flag_enable_stdout,"%s ", logsign[t]);
+	ret = fprintf(stdlog, flag_enable_stdout,"< %c > ", logsign[t]);
 	ret += vprintf(stdlog, flag_enable_stdout, c, va);
 	va_end(va);
 	return ret;

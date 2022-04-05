@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <stddev.h>
 
-int __fgetc(const FILE *dev, char *c)
+int fgetc(const FILE *dev, char *c)
 {
 	return ccpdfs_read(dev, c);
 }
@@ -24,20 +24,19 @@ int __fgetc(const FILE *dev, char *c)
 char getch()
 {
     char c;
-    __fgetc(stdin, &c);
+    fgetc(stdin, &c);
     return c;
 }
 
 char getchar()
 {
-    char c = 0, temp;
+    char c;
     do
     {
-        temp = getch();
-        if(c == 0)
-            c = temp;
-        fputc(stdout, temp);
-    }
-    while(temp != '\r');
+        c = getch();
+        fputc(stdout, c);
+        if(c == '\r')
+        	fputc(stdout, '\n');
+    } while(c != '\r');
     return c;
 }

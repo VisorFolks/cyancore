@@ -14,6 +14,8 @@
 #pragma once
 #define _LOCK_H_
 
+#define LOCK_INITAL_VALUE	1
+#define UNLOCK_INITIAL_VALUE	0
 
 #if USE_SPINLOCK
 #include <lock/spinlock.h>

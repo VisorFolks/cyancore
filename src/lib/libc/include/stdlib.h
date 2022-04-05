@@ -11,11 +11,11 @@
 
 #pragma once
 #define _STDLIB_H_
-
+#include <status.h>
 #define EXIT_FAILURE		1
 #define EXIT_SUCCESS		0
 #define ATEXIT_MAX		1
 
 void abort(void);
 int atexit(void (*func)(int));
-void exit(int status);
+void exit(int status) _NORETURN;

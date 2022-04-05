@@ -18,6 +18,7 @@
 #include <interrupt.h>
 #include <hal/adc.h>
 #include <arch.h>
+#include <syslog.h>
 #include "adc_private.h"
 
 static inline void _adc_enable(adc_port_t *port)
@@ -75,7 +76,8 @@ static inline status_t _adc_config_trigger(adc_port_t *port, adc_trig_t trigger)
 	uint8_t trig_value = (uint8_t) trigger;
 	ret |= (trig_value > 7) ? error_func_inval_arg : success;
 	MMIO8(port->baddr + ADCSRB_OFFSET) |= ((trig_value & 0x07) << ADTS);
-	MMIO8(port->baddr + ADCSRA_OFFSET) |= (1 << ADATE);
+	if(trigger > free_run)
+		MMIO8(port->baddr + ADCSRA_OFFSET) |= (1 << ADATE);
 	return ret;
 }
 
@@ -121,7 +123,7 @@ status_t adc_setup(adc_port_t *port)
 	ret |= _adc_set_prescaler(port);
 	if(port->adc_handler)
 	{
-		ret |= link_interrupt(arch, port->adc_irq, port->adc_handler);
+		ret |= link_interrupt(int_arch, port->adc_irq, port->adc_handler);
 		ret |= adc_int_en(port);
 	}
 	return ret;
@@ -141,10 +143,7 @@ bool adc_busy(adc_port_t *port)
 {
 	bool ret;
 	assert(port);
-	if(MMIO8(port->baddr + ADCSRA_OFFSET) & (1 << ADIE))
-		ret = (MMIO8(port->baddr + ADCSRA_OFFSET) & (1 << ADSC)) ? true : false;
-	else
-		ret = (MMIO8(port->baddr + ADCSRA_OFFSET) & (1 << ADIF)) ? false : true;
+	ret = (MMIO8(port->baddr + ADCSRA_OFFSET) & (1 << ADSC)) ? true : false;
 	return ret;
 }
 
@@ -172,13 +171,13 @@ status_t adc_config_pin(adc_port_t *port, uint8_t pin, adc_trig_t trigger, uint8
 	ret |= _adc_config_resolution(port, resolution);
 	ret |= _adc_config_trigger(port, trigger);
 	MMIO8(port->baddr + ADMUX_OFFSET) |= (pin << MUX);
+	_adc_start_conv(port);
 	return ret;
 }
 
 status_t adc_read(adc_port_t *port, uint16_t *adc_val)
 {
 	status_t ret = success;
-	uint16_t temp;
 	assert(port);
 	assert(adc_val);
 	if(MMIO8(port->baddr + ADMUX_OFFSET) & (1 << ADLAR))
@@ -188,7 +187,7 @@ status_t adc_read(adc_port_t *port, uint16_t *adc_val)
 	else
 	{
 		*adc_val = MMIO8(port->baddr + ADCL_OFFSET);
-		temp = MMIO8(port->baddr + ADCH_OFFSET);
+		uint16_t temp = MMIO8(port->baddr + ADCH_OFFSET);
 		temp <<= 8;
 		*adc_val |= temp;
 	}

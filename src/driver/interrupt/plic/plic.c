@@ -43,7 +43,7 @@ static status_t plic_setup()
 	port.baddr = dp->baddr;
 	port.stride = dp->stride;
 	port.port_id = plic;
-	port.irq = dp->interrupt_id[0];
+	port.irq = &dp->interrupt[0];
 	syslog(info, "PLIC @ 0x%x found.\n", (unsigned int)port.baddr);
 	return success;
 }
@@ -78,17 +78,22 @@ static status_t plic_set_threshold(uint32_t core_id, uint32_t threshold)
 
 static uint32_t plic_get_interrupt()
 {
+	unsigned int irq;
 	uint32_t core_id;
 	assert(port.baddr);
 	core_id = arch_core_index();
-	return MMIO32(port.baddr + PLIC_ICLAIM_OFFSET(core_id));
+	irq = MMIO32(port.baddr + PLIC_ICLAIM_OFFSET(core_id));
+	arch_dmb();
+	return irq;
 }
+
 
 static void plic_clr_interrupt(uint32_t irq_id)
 {
 	uint32_t core_id;
 	assert(port.baddr);
 	core_id = arch_core_index();
+	sysdbg3("Clearing IRQ#%u on Core-%u\n", irq_id, core_id);
 	MMIO32(port.baddr + PLIC_ICLAIM_OFFSET(core_id)) = irq_id;
 	arch_dmb();
 	return;
@@ -96,24 +101,24 @@ static void plic_clr_interrupt(uint32_t irq_id)
 
 static status_t plic_int_en(uint32_t irq_id)
 {
-	uint32_t core_id, irq_offset, irq_shift;
+	uint32_t core_id, irq_shift;
 	assert(port.baddr);
 	core_id = arch_core_index();
-	irq_offset = irq_id / 32;
+	sysdbg3("Enabling IRQ#%u on Core-%u\n", irq_id, core_id);
 	irq_shift = irq_id % 32;
-	MMIO32(port.baddr + PLIC_IENABLE_OFFSET(core_id, irq_offset)) |= (1 << irq_shift);
+	MMIO32(port.baddr + PLIC_IENABLE_OFFSET(core_id, irq_id)) |= (1 << irq_shift);
 	arch_dmb();
 	return success;
 }
 
 static status_t plic_int_dis(uint32_t irq_id)
 {
-	uint32_t core_id, irq_offset, irq_shift;
+	uint32_t core_id, irq_shift;
 	assert(port.baddr);
 	core_id = arch_core_index();
-	irq_offset = irq_id / 32;
+	sysdbg3("Disabling IRQ#%u on Core-%u\n", irq_id, core_id);
 	irq_shift = irq_id % 32;
-	MMIO32(port.baddr + PLIC_IENABLE_OFFSET(core_id, irq_offset)) &= ~(1 << irq_shift);
+	MMIO32(port.baddr + PLIC_IENABLE_OFFSET(core_id, irq_id)) &= ~(1 << irq_shift);
 	arch_dmb();
 	return success;
 }
@@ -121,8 +126,9 @@ static status_t plic_int_dis(uint32_t irq_id)
 static void plic_irqhandler()
 {
 	uint32_t irq = plic_get_interrupt();
-	plic_irq_handler[irq]();
 	plic_clr_interrupt(irq);
+	sysdbg3("Handling IRQ#%u\n", irq);
+	plic_irq_handler[irq]();
 }
 
 static bool plic_get_pending(uint32_t irq_id)
@@ -157,17 +163,31 @@ static ic_t plic_port =
 static status_t plic_driver_setup()
 {
 	status_t ret;
+	arch_di_mei();
 	ret = plic_setup();
 	ret |= ic_attach_device(ret, &plic_port);
-	plic_clr_interrupt(plic_get_interrupt());
+	for(uint32_t i = 1; i <= N_PLAT_IRQS; i++)
+	{
+		plic_int_dis(i);
+		plic_set_priority(i, 1);
+	}
 	return ret;
 }
 
 static status_t plic_driver_setup_pcpu()
 {
 	status_t ret;
-	ret = link_interrupt(local, port.irq, &plic_irqhandler);
-	arch_ei();
+	unsigned int irq;
+	sysdbg3("Linking local IRQ#%u on Core-%u\n", port.irq->id, arch_core_index());
+	plic_set_threshold(arch_core_index(), 0);
+	ret = link_interrupt(port.irq->module, port.irq->id, &plic_irqhandler);
+	do
+	{
+		irq = plic_get_interrupt();
+		if(irq)
+			plic_clr_interrupt(irq);
+	} while(irq);
+	arch_ei_mei();
 	return ret;
 }
 
@@ -178,8 +198,8 @@ static status_t plic_driver_exit()
 
 static status_t plic_driver_exit_pcpu()
 {
-	arch_di();
-	return unlink_interrupt(local, port.irq);
+	arch_di_mei();
+	return unlink_interrupt(port.irq->module, port.irq->id);
 }
 
 INCLUDE_DRIVER(riscv_plic, plic_driver_setup, plic_driver_exit, 0, 0, 0);

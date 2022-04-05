@@ -28,16 +28,18 @@
 	(((_lcount) >= 1)  ? va_arg(_args, unsigned long) :	\
 			    va_arg(_args, unsigned int))
 
-int __fputc(const FILE *dev, bool en_stdout, const char c)
+static int __fputc(const FILE *dev, bool en_stdout, const char c)
 {
 	int ret;
 	ret = ccpdfs_write(dev, c);
 	if(en_stdout)
 		ccpdfs_write(stdout, c);
+	if((c == '\n') && ((dev == stdout) || (dev == stdlog)))
+		__fputc(dev, en_stdout, '\r');
 	return ret;
 }
 
-int __fputs(const FILE *dev, bool en_stdout, const char *i)
+static int __fputs(const FILE *dev, bool en_stdout, const char *i)
 {
 	int ret = 0;
 	while(*i != '\0')
@@ -64,14 +66,13 @@ static int unumprint(const FILE *dev, bool en_stdout, unsigned long unum,
 {
 	char buf[20];
 	int i = 0, ret = 0;
-	unsigned int rem;
 	do
 	{
-		rem = unum % radix;
+		unsigned int rem = unum % radix;
 		if(rem < 0xa)
-			buf[i] = '0' + rem;
+			buf[i] = '0' + (char)rem;
 		else
-			buf[i] = 'a' + (rem - 0xa);
+			buf[i] = 'a' + (char)(rem - 0xa);
 		i++;
 		unum /= radix;
 	}
@@ -176,7 +177,7 @@ loop:
 						fmt++;
 					}
 				case '%':
-					ret += __fputc(dev, en_stdout, (int)*fmt);
+					ret += __fputc(dev, en_stdout, *fmt);
 					fmt++;
 					break;
 				default:
@@ -186,9 +187,7 @@ loop:
 			continue;
 		}
 
-		else if(*fmt == '\n')
-			__fputc(dev, en_stdout, '\r');
-		__fputc(dev, en_stdout, *fmt);
+		__fputc(dev, en_stdout, (char)*fmt);
 		fmt++;
 		ret++;
 	}

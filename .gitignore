@@ -2,7 +2,7 @@
 sonar-cfamily-reproducer.zip
 temp
 out/
-toolchain/
+tools/
 backup/
 bkp/
 projects/
@@ -31,7 +31,7 @@ projects/
 *.old
 *.temp
 *.tmp
-*.swp
+*.sw*
 *.exe
 *.out
 *.app

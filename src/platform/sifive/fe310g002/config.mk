@@ -19,14 +19,19 @@
 N_CORES		:= 1
 $(eval $(call add_define,N_CORES))
 
+CCSMP		:= 0
+$(eval $(call add_define,CCSMP))
+
 $(eval $(call add_define,BIT))
 
 BOOT_CORE_ID:= 0
 $(eval $(call add_define,BOOT_CORE_ID))
 
 # Call this FLAG from Project config file if needed
-FCLK		?= 16000000
-$(eval $(call add_define,FCLK))
+XCLK		?= 16000000
+ICLK		?= 72000000
+$(eval $(call add_define,XCLK))
+$(eval $(call add_define,ICLK))
 
 N_EXCEP		:= 12
 $(eval $(call add_define,N_EXCEP))
@@ -37,7 +42,7 @@ $(eval $(call add_define,N_IRQ))
 N_PLAT_IRQS	:= 52
 $(eval $(call add_define,N_PLAT_IRQS))
 
-MAX_INTERRUPTS_PER_DEVICE	:= 2
+MAX_INTERRUPTS_PER_DEVICE	:= 1
 $(eval $(call add_define,MAX_INTERRUPTS_PER_DEVICE))
 
 USE_SPINLOCK	?= 1
@@ -53,7 +58,7 @@ $(eval $(call add_define,MEMBUF_SIZE))
 #======================================================================
 # GPIO Configuration
 #======================================================================
-N_PORT		:= 3
+N_PORT		:= 1
 $(eval $(call add_define,N_PORT))
 #======================================================================
 
@@ -62,4 +67,11 @@ $(eval $(call add_define,N_PORT))
 #======================================================================
 ERRATA_CIP578	:= 1
 $(eval $(call add_define,ERRATA_CIP578))
+#======================================================================
+
+#======================================================================
+# PRCI Sysclk Configuration
+#======================================================================
+SYSCLK_ENABLE	:= 1
+PRCI_CLK	:= 1
 #======================================================================

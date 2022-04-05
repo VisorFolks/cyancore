@@ -118,16 +118,21 @@ long mod(long a, long b)
  */
 long multiplicative_inverse(long base, long subject)
 {
-	long q, r, t1 = 0, t2 = 1, t;
+	long t1 = 0, t2 = 1;
 	while(subject)
 	{
-		q = base / subject;
-		r = base % subject;
-		t = t1 - (q * t2);
+		long q = base / subject;
+		long r = base % subject;
+		long t = t1 - (q * t2);
 		base = subject;
 		subject = r;
 		t1 = t2;
 		t2 = t;
 	}
 	return mod(t1, base);
+}
+
+int abs(int x)
+{
+	return (x < 0) ? -x : x;
 }
