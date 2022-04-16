@@ -30,7 +30,7 @@ ENTRY(entry)
 
 SECTIONS
 {
-	.text :
+	.text : ALIGN(4)
 	{
 		KEEP(*(.text.entry))
 		*(.text)
@@ -39,9 +39,9 @@ SECTIONS
 		. = ALIGN(4);
 	} > vma_imem AT > lma_mem
 
-	.rodata :
+	.rodata : ALIGN(4)
 	{
-		. = ALIGN(1);
+		. = ALIGN(4);
 		*(.version)
 		KEEP(*(.version))
 		KEEP(*(.rdata))
@@ -52,25 +52,25 @@ SECTIONS
 		KEEP(*(.srodata))
 	} > vma_imem AT > lma_mem
 
-	.itim :
+	.itim : ALIGN(4)
 	{
 		. = ALIGN(4);
 		KEEP(*(.itim))
 		*(.itim.*)
 	} > vma_itmem AT > lma_mem
 
-	.bss :
+	.bss : ALIGN(8)
 	{
-		. = ALIGN(1);
+		. = ALIGN(8);
 		*(.bss)
 		*(.bss.*)
 		KEEP(*(.bss))
 		*(COMMON)
 	} > vma_dmem
 
-	.static_bss_global :
+	.static_bss_global : ALIGN(8)
 	{
-		. = ALIGN(1);
+		. = ALIGN(8);
 		*(.sbss)
 		*(.sbss.*)
 		KEEP(*(.sbss))
@@ -80,37 +80,39 @@ SECTIONS
 	{
 	} > vma_dmem
 
-	.static_data_global :
+	.static_data_global : ALIGN(8)
 	{
-		. = ALIGN(1);
+		. = ALIGN(8);
 		*(.sdata)
 		*(.sdata.*)
 		KEEP(*(.sdata))
 	} > vma_dmem AT > lma_mem
 
-	.data :
+	.data : ALIGN(8)
 	{
-		. = ALIGN(1);
+		. = ALIGN(8);
 		*(.data)
 		*(.data.*)
 		KEEP(*(.data))
 	} > vma_dmem AT > lma_mem
 
-	.tdata :
+	.tdata : ALIGN(8)
 	{
-		. = ALIGN(1);
+		. = ALIGN(8);
 		*(.tdata)
 		*(.tdata.*)
 		KEEP(*(.tdata))
 	} > vma_dmem AT > lma_mem
 
-	.driver_table : ALIGN(1) {} > vma_dmem AT > lma_mem
-	.mcall_table : ALIGN(1) {} > vma_dmem AT > lma_mem
+	.driver_table : ALIGN(8) {} > vma_dmem AT > lma_mem
+	.mcall_table : ALIGN(8) {} > vma_dmem AT > lma_mem
 
-	.stack :
+	.stack : ALIGN(16)
 	{
+		. = ALIGN(16);
 		*(.stack)
 		KEEP(*(.stack))
+		. = . + STACK_SIZE;
 	} > vma_dmem
 
 	PROVIDE(_data_start = LOADADDR(.static_data_global));
@@ -124,7 +126,7 @@ SECTIONS
 	PROVIDE(_stack_start = ADDR(.stack) + STACK_SIZE);
 
 	PROVIDE(_bss_start = ADDR(.bss));
-	PROVIDE(_bss_size = SIZEOF(.bss) + SIZEOF(.static_bss_global));
+	PROVIDE(_bss_size = SIZEOF(.bss) + SIZEOF(.static_bss_global) + 4);
 
 	PROVIDE(_itim_start = LOADADDR(.itim));
 	PROVIDE(_itim_size = SIZEOF(.itim));
@@ -133,7 +135,6 @@ SECTIONS
 
 	PROVIDE(_flash_size = _data_size + SIZEOF(.text) + _itim_size + SIZEOF(.rodata));
 	PROVIDE(_ram_size = _bss_size + _data_size + SIZEOF(.stack));
-
 
 	ASSERT((_flash_size < FLASH_SIZE), "< x > Flash size exceeded ...")
 	ASSERT((_ram_size < RAM_SIZE), "< x > RAM size exceeded ...")

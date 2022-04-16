@@ -20,7 +20,7 @@ ifeq ($(findstring riscv,$(ARCH)),riscv)
 TC	?= $(TOOLS_ROOT)/risc-v-toolchain/bin/riscv64-unknown-elf
 TI	:= $(TOOLS_ROOT)/risc-v-toolchain/lib/gcc/riscv64-unknown-elf/$(TC_VER)/include-fixed/
 TI	+= $(TOOLS_ROOT)/risc-v-toolchain/riscv64-unknown-elf/include/
-TL	:= $(TOOLS_ROOT)/risc-v-toolchain/lib/gcc/riscv64-unknown-elf/$(TC_VER)/
+TL	:= $(TOOLS_ROOT)/risc-v-toolchain/lib/gcc/riscv64-unknown-elf/$(TC_VER)/rv$(BIT)$(ARCH_VARIANT)/$(ARCH_ABI)/
 endif
 
 ifeq ($(findstring avr,$(ARCH)),avr)
