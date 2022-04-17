@@ -10,6 +10,7 @@
  */
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <status.h>
 #include <assert.h>
 #include <arch.h>
@@ -18,6 +19,12 @@
 static void (* exhandler[N_CORES][N_EXCEP])(void) = {{[0 ... N_EXCEP-1] = arch_panic_handler}};
 static void (* irqhandler[N_CORES][N_IRQ])(void) = {{[0 ... N_IRQ-1] = arch_unhandled_irq}};
 static context_frame_t *local_frame[N_CORES];
+
+bool in_isr(void)
+{
+	unsigned int cpuid = arch_core_index();
+	return (local_frame[cpuid] != NULL) ? true : false;
+}
 
 static void set_context_frame(context_frame_t *frame)
 {
@@ -62,5 +69,6 @@ void exception_handler(uint32_t mcause, context_frame_t *frame)
 		exhandler[cpuid][cause]();
 		frame->mepc += (MMIO8(frame->mepc) & 0x3) ? 4 : 2;
 	}
+	set_context_frame(NULL);
 	fence(ow, ow);
 }
