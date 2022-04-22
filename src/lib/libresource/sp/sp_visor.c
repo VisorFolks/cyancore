@@ -13,8 +13,8 @@ swdev_t *sp_terravisor_dev_info(sw_devid_t devid)
 		{
 			for(j = 0; j < n_swdevs; j++)
 			{
-				if(devid == sw_prop->swdev[i]->swdev_id)
-					return sw_prop->swdev[i];
+				if(devid == sw_prop->swdev[j]->swdev_id)
+					return sw_prop->swdev[j];
 			}
 		}
 	}
@@ -33,8 +33,8 @@ swdev_t *sp_nsec_hypervisor_dev_into(sw_devid_t devid)
 		{
 			for(j = 0; j < n_swdevs; j++)
 			{
-				if(devid == sw_prop->swdev[i]->swdev_id)
-					return sw_prop->swdev[i];
+				if(devid == sw_prop->swdev[j]->swdev_id)
+					return sw_prop->swdev[j];
 			}
 		}
 	}
@@ -54,8 +54,8 @@ swdev_t *sp_sec_hypervisor_dev_info(sw_devid_t devid)
 		{
 			for(j = 0; j < n_swdevs; j++)
 			{
-				if(devid == sw_prop->swdev[i]->swdev_id)
-					return sw_prop->swdev[i];
+				if(devid == sw_prop->swdev[j]->swdev_id)
+					return sw_prop->swdev[j];
 			}
 		}
 	}
@@ -75,8 +75,8 @@ swdev_t *sp_nsec_supervisor_dev_info(size_t index, sw_devid_t devid)
 		{
 			for(j = 0; j < n_swdevs; j++)
 			{
-				if(devid == sw_prop->swdev[i]->swdev_id)
-					return sw_prop->swdev[i];
+				if(devid == sw_prop->swdev[j]->swdev_id)
+					return sw_prop->swdev[j];
 			}
 		}
 	}
@@ -96,8 +96,8 @@ swdev_t *sp_sec_supervisor_dev_info(size_t index, sw_devid_t devid)
 		{
 			for(j = 0; j < n_swdevs; j++)
 			{
-				if(devid == sw_prop->swdev[i]->swdev_id)
-					return sw_prop->swdev[i];
+				if(devid == sw_prop->swdev[j]->swdev_id)
+					return sw_prop->swdev[j];
 			}
 		}
 	}
