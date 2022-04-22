@@ -10,6 +10,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <status.h>
 #include <string.h>
 #include <assert.h>
@@ -18,6 +19,11 @@
 #include <platform.h>
 
 static context_frame_t *local_frame;
+
+bool in_isr(void)
+{
+	return (local_frame != NULL) ? true : false;
+}
 
 static void set_context_frame(context_frame_t *frame)
 {

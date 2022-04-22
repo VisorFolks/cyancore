@@ -14,6 +14,7 @@
 #include <stdint.h>
 #include <mmio.h>
 #include <string.h>
+#include <stdbool.h>
 
 typedef struct context_frame
 {
@@ -28,3 +29,4 @@ typedef uint8_t istate_t;
 
 context_frame_t *get_context_frame();
 void arch_panic_handler_callback();
+bool in_isr(void);
