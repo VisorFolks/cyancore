@@ -14,14 +14,14 @@
   </div>
 </body>
 
-> **Version (arch:2 | major:4 | minor:2): 1.2.1**
+> **Version (arch:2 | major:4 | minor:2): 1.2.2**
 
 [![GitHub CI](https://github.com/VisorFolks/cyancore/actions/workflows/github_ci.yml/badge.svg)](https://github.com/VisorFolks/cyancore/actions/workflows/github_ci.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=VisorFolks_cyancore&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=VisorFolks_cyancore)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=VisorFolks_cyancore&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=VisorFolks_cyancore)
 
 ### Join VisorFolks Forum
-Connect with us over VisorFolks discord server: [ [**JOIN**](https://discord.gg/gxUQr77MT2) ]
+Connect with us over VisorFolks discord server: < [**JOIN**](https://discord.gg/gxUQr77MT2) >
 
 ### Supported Platforms
 
