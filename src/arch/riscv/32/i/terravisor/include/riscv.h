@@ -12,6 +12,7 @@
 #pragma once
 #define _RISC_V_
 #include <stdint.h>
+#include <stdbool.h>
 
 #define fence(predecessor, successor)	asm volatile("fence " #predecessor ", " #successor ::: "memory")
 
@@ -57,3 +58,4 @@ static inline unsigned int arch_core_impid()
 
 void riscv_update_vector();
 context_frame_t *get_context_frame();
+bool in_isr(void);
