@@ -15,6 +15,7 @@
 
 CC_ROOT		:= .
 TOOLS_ROOT	?= $(abspath $(CC_ROOT))/tools
+MISC_TOOLS	:= $(TOOLS_ROOT)/misc_bins
 
 SRC		:= $(CC_ROOT)/src
 OUT_PATH	?= $(CC_ROOT)/out
