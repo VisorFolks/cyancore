@@ -14,14 +14,16 @@ PICO_SDK_PATH	:= $(TOOLS_ROOT)/pico-sdk/
 PICO_TOOL_PATH	:= $(TOOLS_ROOT)/picotool/
 PICO_TOOL	:= $(MISC_TOOLS)/picotool
 PICO_TOOL_BUILD	:= $(PICO_TOOL_PATH)/build/picotool
+ELF2UF2		:= $(MISC_TOOLS)/elf2uf2
 
 ifneq ($(V),1)
 SILENT_LOGS	:= > cbuild.log 2> /dev/null
 endif
 
+P_TARGETS	+= elf2uf2
 T_ALLOWLIST	+= get_picotool pt_clean install_pt_dep
 
-get_picotool: $(PICO_TOOL)
+get_picotool: $(PICO_TOOL) $(ELF2UF2)
 
 $(PICO_TOOL): $(PICO_TOOL_BUILD)
 	mkdir -p $(dir $@)
@@ -33,6 +35,19 @@ $(PICO_TOOL_BUILD): $(PICO_SDK_PATH) $(PICO_TOOL_PATH)
 	cd build && export PICO_SDK_PATH=$(PICO_SDK_PATH) && \
 	cmake ../ $(SILENT_LOGS) \
 	&& make $(SILENT_LOGS)
+
+$(ELF2UF2): $(PICO_SDK_PATH)
+	@echo "Building elf2uf2 ..."
+	mkdir -p $(MISC_TOOLS)/temp
+	cd $(MISC_TOOLS)/temp; \
+	cmake $(PICO_SDK_PATH)/tools/elf2uf2 2>/dev/null >/dev/null; \
+	make >/dev/null 2>/dev/null
+	cp $(MISC_TOOLS)/temp/elf2uf2 $@
+	rm -rf $(MISC_TOOLS)/temp
+
+elf2uf2: $(ELF2UF2) elf
+	@echo "Generating $(notdir $(ELF:.elf=.uf2)) ..."
+	$(ELF2UF2) $(ELF) $(ELF:.elf=.uf2)
 
 $(PICO_SDK_PATH):
 	@echo "Fetching PICO SDK ..."
@@ -47,4 +62,4 @@ install_pt_dep:
 	@sudo apt-get install build-essential pkg-config libusb-1.0-0-dev -y -qq > /dev/null
 
 pt_clean:
-	rm -rf $(PICO_SDK_PATH) $(PICO_TOOL_PATH) $(PICO_TOOL)
+	rm -rf $(PICO_SDK_PATH) $(PICO_TOOL_PATH) $(PICO_TOOL) $(ELF2UF2)
