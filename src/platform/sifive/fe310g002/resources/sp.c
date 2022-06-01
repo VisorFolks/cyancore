@@ -22,16 +22,22 @@ swdev_t consoleUart =
 	.pmux = &uart0
 };
 
+swdev_t schedTimer =
+{
+	.swdev_id = sched_timer,
+	.hwdev_id = timer | 0,
+};
+
 sw_devid_t terra_devs[] =
 {
-	console_uart,
+	console_uart, sched_timer,
 };
 
 visor_t terravisor = add_visor_devs(terra_devs);
 
 swdev_t *sw_devs[] =
 {
-	&consoleUart,
+	&consoleUart, &schedTimer,
 };
 
 sp_t software_prop =

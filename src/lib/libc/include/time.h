@@ -12,6 +12,7 @@
 
 typedef struct time
 {
+	uint8_t cs;
 	uint8_t s;
 	uint8_t m;
 	uint8_t h;
@@ -20,3 +21,8 @@ typedef struct time
 	uint8_t yy;
 	uint8_t c;
 } time_t;
+
+status_t get_timestamp(uint64_t *);
+status_t get_timeticks(uint64_t *);
+status_t udelay(uint16_t);
+status_t mdelay(uint16_t);

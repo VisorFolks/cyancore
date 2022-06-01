@@ -16,6 +16,7 @@
 #include <driver.h>
 #include <driver/watchdog.h>
 #include <hal/gpio.h>
+#include <time.h>
 
 gpio_port_t onboad_led;
 
@@ -33,13 +34,6 @@ void plug()
 
 char progress[] = "-\\|/";
 
-void delay(unsigned long d)
-{
-	unsigned long c;
-	for(c = 0; c < d; c++)
-		asm volatile("nop");
-}
-
 void play()
 {
 	static unsigned int i = 0;
@@ -47,7 +41,7 @@ void play()
 	gpio_pin_toggle(&onboad_led);
 	printf("%c]", progress[(i++) % strlen(progress)]);
 	wdog_hush();
-	delay(500000);
+	mdelay(500);
 	printf("\b\b");
 	return;
 }

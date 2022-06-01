@@ -85,6 +85,13 @@ module_t aon0 =
 	.stride = 0x1000,
 };
 
+module_t timer_core0 =
+{
+	.id = timer | 0,
+	.clk = 32768,
+	.interrupt[0] = {int_local, 7, int_level},
+};
+
 gpio_module_t *port_list[] =
 {
 	&port0,
@@ -93,6 +100,7 @@ gpio_module_t *port_list[] =
 module_t *mod_list[] =
 {
 	&plic0, &uart0, &prci0, &clint0, &aon0, &uart1,
+	&timer_core0,
 };
 
 dp_t device_prop =

@@ -77,6 +77,7 @@ module_t timer0 =
 	.id = timer | 0x00,
 	.baddr = 0x44,
 	.stride = 5,
+	.clk = 16000000,
 	.interrupt[0] = {int_arch, 14, int_level},
 	.interrupt[1] = {int_arch, 15, int_level},
 	.clk_id = 5,
