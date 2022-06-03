@@ -3,7 +3,7 @@
         {
             "name": "Cyancore VSCode extension",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/src/**"
             ],
             "intelliSenseMode": "${default}",
             "compilerPath": "",
