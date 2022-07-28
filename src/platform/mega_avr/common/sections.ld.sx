@@ -52,6 +52,14 @@ SECTIONS
 		*(COMMON)
 	} > vma_dmem
 
+	.heap :
+	{
+		. = ALIGN(8);
+		*(.heap)
+		KEEP(*(.heap))
+		. = . + HEAP_SIZE;
+	} > vma_dmem
+
 	.data :
 	{
 		. = ALIGN(ALIGN_BOUND);
@@ -82,8 +90,10 @@ SECTIONS
 
 	PROVIDE(_bss_start = ADDR(.bss));
 	PROVIDE(_bss_size = SIZEOF(.bss));
+	PROVIDE(_heap_start = ADDR(.heap));
+	PROVIDE(_heap_end = _heap_start + SIZEOF(.heap));
 	PROVIDE(_flash_size = _data_size + SIZEOF(.text));
-	PROVIDE(_ram_size = _bss_size + _data_size + SIZEOF(.stack));
+	PROVIDE(_ram_size = _bss_size + _data_size + SIZEOF(.stack) + SIZEOF(.heap));
 
 	ASSERT((_flash_size < FLASH_SIZE), "< x > Flash size exceeded ...")
 	ASSERT((_ram_size < RAM_SIZE), "< x > RAM size exceeded ...")

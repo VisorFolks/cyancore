@@ -47,6 +47,7 @@ void platform_early_setup()
 	/* Setup platform memories */
 	ret |= platform_copy_data();
 	ret |= platform_bss_clear();
+	ret |= platform_init_heap();
 	ret |= platform_resources_setup();
 
 	/* Setup memory syslogger */

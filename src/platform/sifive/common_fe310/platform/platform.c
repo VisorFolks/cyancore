@@ -5,7 +5,6 @@
 #include <stddev.h>
 #include <arch.h>
 #include <driver.h>
-//#include <driver/console.h>
 #include <driver/sysclk.h>
 #include <insignia.h>
 #include <terravisor/platform.h>
@@ -19,6 +18,7 @@ void platform_early_setup()
 	ret |= platform_copy_data();
 	ret |= platform_copy_itim();
 	ret |= platform_bss_clear();
+	ret |= platform_init_heap();
 	ret |= platform_resources_setup();
 	syslog_stdout_disable();
 	driver_setup("mslog");
