@@ -24,16 +24,24 @@ swdev_t schedTimer =
 	.hwdev_id = timer | 0,
 };
 
+static uint8_t led0pins[] = {5};
+static pinmux_t obled0 = addpins(1, led0pins, 0);
+swdev_t onBoardLED0 =
+{
+	.swdev_id = onboard_led | 0,
+	.pmux = &obled0
+};
+
 sw_devid_t terra_devs[] =
 {
-	console_uart, sched_timer,
+	console_uart, sched_timer, (onboard_led | 0),
 };
 
 visor_t terravisor = add_visor_devs(terra_devs);
 
 swdev_t *sw_devs[] =
 {
-	&consoleUart, &schedTimer
+	&consoleUart, &schedTimer, &onBoardLED0,
 };
 
 sp_t software_prop =
