@@ -2,7 +2,7 @@
  * CYANCORE LICENSE
  * Copyrights (C) 2022, Cyancore Team
  *
- * File Name		: time.c
+ * File Name		: malloc_lite.c
  * Description		: This file contains sources of libc-malloc
  *			  functions
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
@@ -22,8 +22,6 @@ typedef struct chunk
 } chunk_t;
 
 extern uint8_t _heap_start, _heap_end;
-
-static uint8_t *arena = &_heap_start;
 static chunk_t *freeList;
 
 static void split(chunk_t *fit_slot, size_t size)
@@ -55,8 +53,8 @@ static void merge()
 
 status_t platform_init_heap()
 {
-	memset(arena, 0, (size_t)(&_heap_end - &_heap_start));
-	freeList = (void *)arena;
+	memset(&_heap_start, 0, (size_t)(&_heap_end - &_heap_start));
+	freeList = (void *)&_heap_start;
 	freeList->size = (size_t)(&_heap_end - &_heap_start) - sizeof(chunk_t);
 	freeList->free = 1;
 	freeList->next = NULL;
