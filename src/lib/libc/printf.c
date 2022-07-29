@@ -21,11 +21,13 @@
 
 
 #define get_num_va_args(_args, _lcount)			\
-	(((_lcount) >= 1)  ? va_arg(_args, long) :	\
+	(((_lcount) >= 2) ? va_arg(_args, int64_t) :	\
+	((_lcount) == 1) ? va_arg(_args, long) :	\
 			    va_arg(_args, int))
 
 #define get_unum_va_args(_args, _lcount)			\
-	(((_lcount) >= 1)  ? va_arg(_args, unsigned long) :	\
+	(((_lcount) >= 2) ? va_arg(_args, uint64_t) :		\
+	((_lcount) == 1) ? va_arg(_args, unsigned long) :	\
 			    va_arg(_args, unsigned int))
 
 static int __fputc(const FILE *dev, bool en_stdout, const char c)
