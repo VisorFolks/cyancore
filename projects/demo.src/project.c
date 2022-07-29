@@ -22,21 +22,25 @@ void plug()
 	driver_setup_all();
 
 	printf("Demo Program!\n");
-	printf("< ! > Running Blinky ... [");
 	return;
 }
 
 
 void play()
 {
-	char progress[] = "-\\|/";
 	static unsigned char i = 0;
-	printf("%c]", progress[(i++) % strlen(progress)]);
+	char progress[] = "-\\|/";
+	uint64_t time;
+	char c = progress[(i++) % strlen(progress)];
+	get_timestamp(&time);
+	time /= 1000U;
+
+	printf("[%012llu] Running Blinky ... [%c]", time, c);
 
 	onboardled_toggle();
 
 	mdelay(500);
 
-	printf("\b\b");
+	printf("\r");
 	return;
 }
