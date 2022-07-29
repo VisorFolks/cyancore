@@ -22,12 +22,39 @@
 #define PS	4
 #define PSVALUE	256
 
+/**
+ * tmr_cb - Timer event call back
+ */
 static void (*tmr_cb)(void);
+
+/**
+ * tport - Timer HAL device instance
+ */
 static timer_port_t tport;
+
+/**
+ * ticks - Driver variable for keeping track of timer ticks
+ * for event
+ */
 static uint64_t ticks;
+
+/**
+ * cntr - Timer counter
+ */
 static uint64_t cntr;
+
+/**
+ * tm - timer device module
+ */
 static module_t *tm;
 
+/**
+ * plat_tmr_isr - platform timer isr handler
+ *
+ * @brief This function is timer event handler. It updated timer counter.
+ * Also, this function executes registered timer callback additionally
+ * which will be used by scheduler.
+ */
 static void plat_tmr_isr(void)
 {
 	cntr += ticks;
@@ -35,11 +62,17 @@ static void plat_tmr_isr(void)
 		tmr_cb();
 }
 
+/**
+ * plat_timer_reg_cb - Funtion to register call back
+ */
 static void plat_timer_reg_cb(void *cb)
 {
 	tmr_cb = cb;
 }
 
+/**
+ * plat_get_timer_prop - Helper function to fetch timer properties
+ */
 static status_t plat_get_timer_prop(void)
 {
 	mret_t mres;
@@ -65,6 +98,9 @@ static status_t plat_get_timer_prop(void)
 	return success;
 }
 
+/**
+ * plat_get_timer_ticks_msec - Helper function to get tick/msec
+ */
 static uint64_t plat_get_timer_ticks_msec(uint64_t freq)
 {
 	uint64_t nt = freq / (2 * PSVALUE);
@@ -72,6 +108,14 @@ static uint64_t plat_get_timer_ticks_msec(uint64_t freq)
 	return nt;
 }
 
+/**
+ * plat_timer_set_period - Sets period for the timer events
+ *
+ * @brief This function configures timer to raise event after the
+ * programmed value.
+ *
+ * @param[in] p: Period of events in milli seconds
+ */
 static void plat_timer_set_period(unsigned int p)
 {
 	uint64_t nt = plat_get_timer_ticks_msec(tm->clk);
@@ -80,11 +124,22 @@ static void plat_timer_set_period(unsigned int p)
 	timer_setup(&tport, 2, PS);
 }
 
+/**
+ * plat_read_ticks - Returns timer ticks
+ */
 static uint64_t plat_read_ticks(void)
 {
 	return cntr;
 }
 
+/**
+ * plat_read_time - This function returns time
+ *
+ * @brief This function returns time based on timer events.
+ * The value might not be accurate to wall clock.
+ *
+ * @return time in microseconds
+ */
 static uint64_t plat_read_time(void)
 {
 	uint64_t stamp = cntr;
@@ -93,6 +148,9 @@ static uint64_t plat_read_time(void)
 	return stamp;
 }
 
+/**
+ * Driver ops for linking timer
+ */
 static tvisor_timer_t plat_timer_port =
 {
 	.read_ticks = &plat_read_ticks,
@@ -101,6 +159,10 @@ static tvisor_timer_t plat_timer_port =
 	.reg_cb = &plat_timer_reg_cb,
 };
 
+/**
+ * plat_timer_setup - Timer driver setup function
+ * To be exported to driver table.
+ */
 static status_t plat_timer_setup()
 {
 	status_t ret = success;
@@ -120,6 +182,10 @@ static status_t plat_timer_setup()
 	return ret;
 }
 
+/**
+ * plat_timer_exit - Timer driver shutdown function
+ * To be exported to driver table.
+ */
 static status_t plat_timer_exit(void)
 {
 	status_t ret = timer_shutdown(&tport);

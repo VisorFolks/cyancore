@@ -21,10 +21,30 @@
 #include <hal/clint.h>
 #include <terravisor/timer.h>
 
+/**
+ * tmr_cb - Timer event call back
+ */
 static void (*tmr_cb)(void);
+
+/**
+ * ticks - Driver variable for keeping track of timer ticks
+ * for event
+ */
 static uint64_t ticks;
+
+/**
+ * tm - timer device module
+ */
 static module_t *tm;
 
+/**
+ * plat_tmr_isr - platform timer isr handler
+ *
+ * @brief This function is timer event handler. This function
+ * updated timercmp reg to raise event after 'ticks' have elapsed.
+ * Also, this function executes registered timer callback additionally
+ * which will be used by scheduler.
+ */
 static void plat_tmr_isr(void)
 {
 	arch_di_mtime();
@@ -36,6 +56,9 @@ static void plat_tmr_isr(void)
 		tmr_cb();
 }
 
+/**
+ * plat_timer_reg_cb - Funtion to register call back
+ */
 static void plat_timer_reg_cb(void *cb)
 {
 	arch_di_mtime();
@@ -43,6 +66,9 @@ static void plat_timer_reg_cb(void *cb)
 	arch_ei_mtime();
 }
 
+/**
+ * plat_get_timer_prop - Helper function to fetch timer properties
+ */
 static status_t plat_get_timer_prop(void)
 {
 	mret_t mres;
@@ -68,12 +94,23 @@ static status_t plat_get_timer_prop(void)
 	return success;
 }
 
+/**
+ * plat_get_timer_ticks_msec - Helper function to get tick/msec
+ */
 static uint64_t plat_get_timer_ticks_msec(uint64_t freq)
 {
 	/* Compute ticks needed for 1 msec */
 	return (uint64_t)(freq/1000);
 }
 
+/**
+ * plat_timer_set_period - Sets period for the timer events
+ *
+ * @brief This function configures timer to raise event after the
+ * programmed value.
+ *
+ * @param[in] p: Period of events in milli seconds
+ */
 static void plat_timer_set_period(unsigned int p)
 {
 	uint64_t nt;
@@ -85,6 +122,14 @@ static void plat_timer_set_period(unsigned int p)
 	arch_ei_mtime();
 }
 
+/**
+ * plat_read_time - This function returns time
+ *
+ * @brief This function returns time based on timer events.
+ * The value might not be accurate to wall clock.
+ *
+ * @return time in microseconds
+ */
 static uint64_t plat_read_time(void)
 {
 	uint64_t stamp = clint_read_time();
@@ -92,6 +137,9 @@ static uint64_t plat_read_time(void)
 	return (uint64_t)(stamp / tm->clk);
 }
 
+/**
+ * Driver ops for linking timer
+ */
 static tvisor_timer_t plat_timer_port =
 {
 	.read_ticks = &clint_read_time,
@@ -100,6 +148,10 @@ static tvisor_timer_t plat_timer_port =
 	.reg_cb = &plat_timer_reg_cb,
 };
 
+/**
+ * plat_timer_setup - Timer driver setup function
+ * To be exported to driver table.
+ */
 static status_t plat_timer_setup(void)
 {
 	status_t ret = success;
@@ -118,6 +170,10 @@ static status_t plat_timer_setup(void)
 	return ret;
 }
 
+/**
+ * plat_timer_exit - Timer driver shutdown function
+ * To be exported to driver table.
+ */
 static status_t plat_timer_exit(void)
 {
 	arch_di_mtime();
