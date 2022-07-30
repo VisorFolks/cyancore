@@ -14,13 +14,14 @@
 #include <status.h>
 #include <plat_defines.h>
 
-void plat_panic_handler();
-status_t platform_copy_data();
-status_t platform_bss_clear();
-status_t platform_resources_setup();
-status_t platform_clk_reset();
+void plat_panic_handler(void);
+status_t platform_copy_data(void);
+status_t platform_bss_clear(void);
+status_t platform_resources_setup(void);
+status_t platform_clk_reset(void);
 status_t platform_clk_en(unsigned int);
 status_t platform_clk_dis(unsigned int);
 status_t platform_mcall_update(void *);
-status_t platform_wdt_reset();
-void plat_panic_handler_callback();
+status_t platform_wdt_reset(void);
+void plat_panic_handler_callback(void);
+void platform_memory_layout(void);

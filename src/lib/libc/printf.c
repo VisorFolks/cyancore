@@ -138,13 +138,9 @@ loop:
 					ret += __fputs(dev, en_stdout, str);
 					break;
 				case 'p':
-					unum = (uintptr_t)va_arg(args, void *);
-					if (unum > 0U)
-					{
-						ret += __fputs(dev, en_stdout, "0x");
-						padn -= 2;
-					}
-
+					unum = (uintptr_t) va_arg(args, void *);
+					ret += __fputs(dev, en_stdout, "0x");
+					padn -= 2;
 					ret += unumprint(dev, en_stdout, unum, 16, padc, padn);
 					break;
 				case 'x':

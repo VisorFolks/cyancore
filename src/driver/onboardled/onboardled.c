@@ -104,7 +104,6 @@ static status_t onboardled_exit(void)
 	status_t ret = success;
 	lock_acquire(&obledlock);
 	if(!obled_sp)
-	if(!obled_sp)
 	{
 		ret = error_driver_init_failed;
 		goto exit;

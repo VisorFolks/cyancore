@@ -120,7 +120,7 @@ static void plat_timer_set_period(unsigned int p)
 {
 	uint64_t nt = plat_get_timer_ticks_msec(tm->clk);
 	ticks = (nt * p) - 1;
-	tport.value = ticks;
+	tport.value = (size_t) ticks;
 	timer_setup(&tport, 2, PS);
 }
 
@@ -172,7 +172,7 @@ static status_t plat_timer_setup()
 	tport.clk_id = tm->clk_id;
 	tport.baddr = tm->baddr;
 	tport.stride = tm->stride;
-	tport.tmr_irq = tm->interrupt[0].id;
+	tport.tmr_irq = (size_t) tm->interrupt[0].id;
 	tport.tmr_handler = plat_tmr_isr;
 
 	ret |= timer_setup(&tport, 2, PS);
