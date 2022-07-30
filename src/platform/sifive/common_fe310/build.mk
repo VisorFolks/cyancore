@@ -17,7 +17,7 @@ PLAT_INCLUDE		+= $(FE310_COMMON_DIR)/include
 
 LINT_FLAGS		+= --platform=unix32
 
-LD_FLAGS		+= --no-relax
+#LD_FLAGS		+= --no-relax
 
 USE_DEFAULT_RESOURCES	?= 1
 LOCAL_INTERRUPT_DEVICE	?= 1

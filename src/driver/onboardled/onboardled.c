@@ -28,9 +28,13 @@ status_t onboardled_toggle(void)
 	status_t ret = success;
 	lock_acquire(&obledlock);
 	if(!obled_sp)
-		return error_driver_init_failed;
+	{
+		ret = error_driver_init_failed;
+		goto exit;
+	}
 	for(uint8_t i = 0; i < obled_sp->pmux->npins; i++)
 		ret |= gpio_pin_toggle(&obledPort[i]);
+exit:
 	lock_release(&obledlock);
 	return ret;
 }
@@ -40,9 +44,13 @@ status_t onboardled_on(void)
 	status_t ret = success;
 	lock_acquire(&obledlock);
 	if(!obled_sp)
-		return error_driver_init_failed;
+	{
+		ret = error_driver_init_failed;
+		goto exit;
+	}
 	for(uint8_t i = 0; i < obled_sp->pmux->npins; i++)
 		ret |= gpio_pin_set(&obledPort[i]);
+exit:
 	lock_release(&obledlock);
 	return ret;
 }
@@ -52,9 +60,13 @@ status_t onboardled_off(void)
 	status_t ret = success;
 	lock_acquire(&obledlock);
 	if(!obled_sp)
-		return error_driver_init_failed;
+	{
+		ret = error_driver_init_failed;
+		goto exit;
+	}
 	for(uint8_t i = 0; i < obled_sp->pmux->npins; i++)
 		ret |= gpio_pin_clear(&obledPort[i]);
+exit:
 	lock_release(&obledlock);
 	return ret;
 }
@@ -69,7 +81,8 @@ static status_t onboardled_setup(void)
 	if(mres.status != success)
 	{
 		sysdbg3("%p - sp node could not be found!\n", onboard_led);
-		return mres.status;
+		ret = mres.status;
+		goto exit;
 	}
 	obled_sp = (swdev_t *) mres.p;
 	ret = mres.status;
@@ -81,8 +94,8 @@ static status_t onboardled_setup(void)
 		ret |= gpio_pin_alloc(&obledPort[i], obled_sp->pmux->port, obled_sp->pmux->pins[i]);
 		ret |= gpio_pin_mode(&obledPort[i], out);
 	}
+exit:
 	lock_release(&obledlock);
-
 	return ret;
 }
 
@@ -91,13 +104,18 @@ static status_t onboardled_exit(void)
 	status_t ret = success;
 	lock_acquire(&obledlock);
 	if(!obled_sp)
-		return error_driver_init_failed;
+	if(!obled_sp)
+	{
+		ret = error_driver_init_failed;
+		goto exit;
+	}
 	for(uint8_t i = 0; i < obled_sp->pmux->npins; i++)
 	{
 		ret |= gpio_pin_free(&obledPort[i]);
 		free(&obledPort[i]);
 	}
 	obled_sp = NULL;
+exit:
 	lock_release(&obledlock);
 	return ret;
 }
