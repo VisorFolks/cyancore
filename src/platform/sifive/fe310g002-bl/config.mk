@@ -39,12 +39,10 @@ $(eval $(call add_define,N_EXCEP))
 N_IRQ		:= 12
 $(eval $(call add_define,N_IRQ))
 
-N_PLAT_IRQS	:= 0
+N_PLAT_IRQS	:= 52
 $(eval $(call add_define,N_PLAT_IRQS))
 
-PLAT_INTERRUPT_DEVICE		:= 0
-
-MAX_INTERRUPTS_PER_DEVICE	:= 0
+MAX_INTERRUPTS_PER_DEVICE	:= 1
 $(eval $(call add_define,MAX_INTERRUPTS_PER_DEVICE))
 
 USE_SPINLOCK	?= 1
@@ -76,4 +74,10 @@ $(eval $(call add_define,ERRATA_CIP578))
 #======================================================================
 SYSCLK_ENABLE	:= 1
 PRCI_CLK	:= 1
+#======================================================================
+
+#======================================================================
+# Bootload Configuration
+#======================================================================
+$(eval $(call add_define,BOOTLOADER))
 #======================================================================

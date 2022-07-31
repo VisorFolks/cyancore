@@ -31,6 +31,14 @@ memory_t mem =
 	.size = DMEM_LENGTH
 };
 
+module_t plic0 =
+{
+	.id = plic,
+	.baddr = 0x0c000000,
+	.stride = 0x04000000,
+	.interrupt[0] = {int_local, 11, int_rising_edge},
+};
+
 module_t clint0 =
 {
 	.id = clint,
@@ -44,6 +52,16 @@ module_t uart0 =
 	.baddr = 0x10013000,
 	.stride = 0x20,
 	.clk = 115200,
+	.interrupt[0] = {int_plat, 3, int_rising_edge},
+};
+
+module_t uart1 =
+{
+	.id = uart | 1,
+	.baddr = 0x10023000,
+	.stride = 0x20,
+	.clk = 115200,
+	.interrupt[0] = {int_plat, 4, int_rising_edge},
 };
 
 module_t prci0 =
@@ -67,6 +85,13 @@ module_t aon0 =
 	.stride = 0x1000,
 };
 
+module_t timer_core0 =
+{
+	.id = timer | 0,
+	.clk = 32768,
+	.interrupt[0] = {int_local, 7, int_level},
+};
+
 gpio_module_t *port_list[] =
 {
 	&port0,
@@ -74,7 +99,8 @@ gpio_module_t *port_list[] =
 
 module_t *mod_list[] =
 {
-	&uart0, &prci0, &clint0, &aon0,
+	&plic0, &uart0, &prci0, &clint0, &aon0, &uart1,
+	&timer_core0,
 };
 
 dp_t device_prop =
