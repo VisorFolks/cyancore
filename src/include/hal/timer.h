@@ -27,6 +27,14 @@ typedef struct timer_port
 	void (*tmr_handler)(void);
 } timer_port_t;
 
+typedef enum timer_mode
+{
+	__timer_mode_null = 0,
+	oneshot,
+	periodic,
+	timer_mode_other = 0xf000
+} timer_mode_t;
+
 status_t timer_setup(const timer_port_t *port, unsigned int mode, unsigned int ps);
 status_t timer_shutdown(const timer_port_t *port);
 status_t timer_read(const timer_port_t *port, size_t *value);

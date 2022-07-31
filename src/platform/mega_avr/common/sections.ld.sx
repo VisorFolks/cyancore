@@ -52,6 +52,14 @@ SECTIONS
 		*(COMMON)
 	} > vma_dmem
 
+	.heap :
+	{
+		. = ALIGN(8);
+		*(.heap)
+		KEEP(*(.heap))
+		. = . + HEAP_SIZE;
+	} > vma_dmem
+
 	.data :
 	{
 		. = ALIGN(ALIGN_BOUND);
@@ -75,6 +83,10 @@ SECTIONS
 		KEEP(*(.stack))
 	} > vma_dmem AT > lma_mem
 
+	PROVIDE(_text_start = ADDR(.text));
+	PROVIDE(_text_size = SIZEOF(.text));
+	PROVIDE(_text_end = _text_start + _text_size);
+
 	PROVIDE(_data_start = LOADADDR(.data));
 	PROVIDE(_data_size = SIZEOF(.data) + SIZEOF(.driver_table) + SIZEOF(.mcall_table));
 	PROVIDE(_data_vstart = ADDR(.data));
@@ -82,8 +94,18 @@ SECTIONS
 
 	PROVIDE(_bss_start = ADDR(.bss));
 	PROVIDE(_bss_size = SIZEOF(.bss));
+	PROVIDE(_bss_end = _bss_start + _bss_size);
+
+	PROVIDE(_stack_start = ADDR(.stack));
+	PROVIDE(_stack_size = SIZEOF(.stack));
+	PROVIDE(_stack_end = _stack_start - _stack_size);
+
+	PROVIDE(_heap_start = ADDR(.heap));
+	PROVIDE(_heap_size = SIZEOF(.heap));
+	PROVIDE(_heap_end = _heap_start + SIZEOF(.heap));
+
 	PROVIDE(_flash_size = _data_size + SIZEOF(.text));
-	PROVIDE(_ram_size = _bss_size + _data_size + SIZEOF(.stack));
+	PROVIDE(_ram_size = _bss_size + _data_size + SIZEOF(.stack) + SIZEOF(.heap));
 
 	ASSERT((_flash_size < FLASH_SIZE), "< x > Flash size exceeded ...")
 	ASSERT((_ram_size < RAM_SIZE), "< x > RAM size exceeded ...")

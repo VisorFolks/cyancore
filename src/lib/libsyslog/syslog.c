@@ -17,6 +17,7 @@
 #include <lock/lock.h>
 #include <driver/console.h>
 #include <syslog.h>
+#include <time.h>
 
 static lock_t syslog_lock;
 static bool flag_enable_stdout;
@@ -26,9 +27,12 @@ int syslog(logtype_t t, const char *c, ...)
 {
 	int ret;
 	va_list va;
+	uint64_t time;
 	char logsign[] = {'/', 'i', '!', 'x', '$'};
 	va_start(va, c);
-	ret = fprintf(stdlog, flag_enable_stdout,"< %c > ", logsign[t]);
+	get_timestamp(&time);
+	time /= 1000U;
+	ret = fprintf(stdlog, flag_enable_stdout,"[%08llu] < %c > ", time,  logsign[t]);
 	ret += vprintf(stdlog, flag_enable_stdout, c, va);
 	va_end(va);
 	return ret;

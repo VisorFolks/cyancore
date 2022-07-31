@@ -20,7 +20,7 @@ include mk/picotool.mk
 
 P_TARGETS	+= default cyancore check version copy_to_remote clean_remote
 T_ALLOWLIST	+= help list clean all_projects
-PROJECT_LIST	:= $(shell ls projects/ -I *.template)
+PROJECT_LIST	:= $(shell ls projects/ -I *.template -I *.src)
 
 .PHONY: aux_target
 
