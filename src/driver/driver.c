@@ -128,9 +128,9 @@ status_t driver_setup_all()
 status_t driver_exit_all()
 {
 	status_t ret = success;
-	unsigned int order;
+	int order;
 	/* This loop controls the exit order */
-	for(order = 255; order == 0; order--)
+	for(order = 255; order >= 0; order--)
 		ret |= driver_deregister_with_order(&_driver_table_start,
 				&_driver_table_end, order);
 	return ret;
