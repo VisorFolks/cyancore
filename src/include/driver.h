@@ -42,6 +42,7 @@ typedef struct device
 	}
 
 status_t driver_setup_all();
+status_t driver_exit_all();
 status_t driver_setup(const char *);
 status_t driver_exit(const char *);
 status_t driver_register(device_t *);

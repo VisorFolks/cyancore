@@ -87,11 +87,13 @@ static status_t onboardled_setup(void)
 	obled_sp = (swdev_t *) mres.p;
 	ret = mres.status;
 
-	obledPort = (gpio_port_t *)malloc(sizeof(gpio_port_t));
+	obledPort = (gpio_port_t *)malloc(sizeof(gpio_port_t) *
+			obled_sp->pmux->npins);
 
 	for(uint8_t i = 0; i < obled_sp->pmux->npins; i++)
 	{
-		ret |= gpio_pin_alloc(&obledPort[i], obled_sp->pmux->port, obled_sp->pmux->pins[i]);
+		ret |= gpio_pin_alloc(&obledPort[i], obled_sp->pmux->port,
+				obled_sp->pmux->pins[i]);
 		ret |= gpio_pin_mode(&obledPort[i], out);
 	}
 exit:
@@ -109,10 +111,8 @@ static status_t onboardled_exit(void)
 		goto exit;
 	}
 	for(uint8_t i = 0; i < obled_sp->pmux->npins; i++)
-	{
 		ret |= gpio_pin_free(&obledPort[i]);
-		free(&obledPort[i]);
-	}
+	free(obledPort);
 	obled_sp = NULL;
 exit:
 	lock_release(&obledlock);
