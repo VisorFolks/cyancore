@@ -47,6 +47,7 @@ void platform_early_setup()
 	/* Setup platform memories */
 	ret |= platform_copy_data();
 	ret |= platform_bss_clear();
+	ret |= platform_init_heap();
 	ret |= platform_resources_setup();
 
 	/* Setup memory syslogger */
@@ -99,4 +100,31 @@ void _NAKED plat_panic_handler_callback()
 	frame = get_context_frame();
 	syslog(info, "SP=%p\tSREG = %p\n", frame, frame->sreg);
 	exit(EXIT_FAILURE);
+}
+
+void platform_memory_layout()
+{
+	extern uint8_t _text_start, _text_size, _text_end,
+	_data_vstart, _data_size, _data_vend,
+	_stack_start, _stack_end, _stack_size,
+	_bss_start, _bss_size, _bss_end,
+	_heap_start, _heap_size, _heap_end,
+	_flash_size, _ram_size;
+
+	syslog(info, "Memory Info >\n");
+	syslog(info, "Flash Size  : %u\n", &_flash_size);
+	syslog(info, "RAM Size    : %u\n", &_ram_size);
+	syslog(info, "\n");
+	syslog(info, "Program Memory Layout >\n");
+	syslog(info, "text Region\t: %06p - %06p : Size: %u\n",
+			&_text_start, &_text_end, &_text_size);
+	syslog(info, "bss Region\t: %06p - %06p : Size: %u\n",
+			&_bss_start, &_bss_end, &_bss_size);
+	syslog(info, "data Region\t: %06p - %06p : Size: %u\n",
+			&_data_vstart, &_data_vend, &_data_size);
+	syslog(info, "stack Region\t: %06p - %06p : Size: %u\n",
+			&_stack_end, &_stack_start, &_stack_size);
+	syslog(info, "heap Region\t: %06p - %06p : Size: %u\n",
+			&_heap_start, &_heap_end, &_heap_size);
+	syslog(info, "\n");
 }

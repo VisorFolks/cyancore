@@ -22,16 +22,40 @@ swdev_t consoleUart =
 	.pmux = &uart0
 };
 
+swdev_t schedTimer =
+{
+	.swdev_id = sched_timer,
+	.hwdev_id = timer | 0,
+};
+
+static uint8_t led0pins[] = {19, 21};
+static pinmux_t obled0 = addpins(0, led0pins, 0);
+swdev_t onBoardLED0 =
+{
+	.swdev_id = onboard_led | 0,
+	.pmux = &obled0
+};
+
+static uint8_t led1pins[] = {20};
+static pinmux_t obled1 = addpins(0, led1pins, 0);
+swdev_t onBoardLED1 =
+{
+	.swdev_id = onboard_led | 1,
+	.pmux = &obled1
+};
+
 sw_devid_t terra_devs[] =
 {
-	console_uart,
+	console_uart, sched_timer, (onboard_led | 0),
+	(onboard_led | 1),
 };
 
 visor_t terravisor = add_visor_devs(terra_devs);
 
 swdev_t *sw_devs[] =
 {
-	&consoleUart,
+	&consoleUart, &schedTimer, &onBoardLED0,
+	&onBoardLED1,
 };
 
 sp_t software_prop =

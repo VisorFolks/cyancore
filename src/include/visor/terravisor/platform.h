@@ -18,3 +18,4 @@ void platform_reset_handler();
 void platform_early_setup();
 void platform_setup();
 void platform_cpu_setup();
+status_t platform_init_heap();

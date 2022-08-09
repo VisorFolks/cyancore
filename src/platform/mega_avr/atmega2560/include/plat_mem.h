@@ -24,3 +24,5 @@
 #define ALIGN_BOUND	2
 
 #define STACK_SIZE	1024
+
+#define HEAP_SIZE	128

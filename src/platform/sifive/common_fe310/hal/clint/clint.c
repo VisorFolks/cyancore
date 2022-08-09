@@ -79,4 +79,4 @@ uint64_t clint_read_time()
 	return time_stamp;
 }
 
-INCLUDE_DRIVER(plat_clint_pcpu, clint_setup, clint_exit, 1, 0, 0);
+INCLUDE_DRIVER(plat_clint, clint_setup, clint_exit, 0, 0, 0);
