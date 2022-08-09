@@ -13,16 +13,40 @@
 #include <status.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <lock/lock.h>
+#include <arch.h>
+#include <mmio.h>
+#include <plat_mem.h>
+
+extern uint8_t _heap_start, _heap_end;
+static istate_t state;
+static lock_t mlock;
 
 typedef struct chunk
 {
 	size_t size;
-	int free;
+#if HEAP_ALIGN > 1
+	size_t free;
+#else
+	uint8_t free;
+#endif
 	struct chunk *next;
 } chunk_t;
 
-extern uint8_t _heap_start, _heap_end;
 static chunk_t *freeList;
+
+static void heap_lock(void)
+{
+	lock_acquire(&mlock);
+	arch_di_save_state(&state);
+}
+
+static void heap_unlock(void)
+{
+	lock_release(&mlock);
+	arch_ei_restore_state(&state);
+}
 
 static void split(chunk_t *fit_slot, size_t size)
 {
@@ -53,20 +77,31 @@ static void merge()
 
 status_t platform_init_heap()
 {
+	heap_lock();
 	memset(&_heap_start, 0, (size_t)(&_heap_end - &_heap_start));
 	freeList = (void *)&_heap_start;
 	freeList->size = (size_t)(&_heap_end - &_heap_start) - sizeof(chunk_t);
 	freeList->free = 1;
 	freeList->next = NULL;
+	heap_unlock();
 	return success;
 }
 
 void *malloc(size_t n_bytes)
 {
 	chunk_t *cur;
+	void *p = NULL;
 
-	if(!freeList->size)
+	if(!n_bytes)
 		return NULL;
+
+#if HEAP_ALIGN > 1
+	n_bytes += ALIGN_BOUND - (n_bytes % ALIGN_BOUND);
+#endif
+
+	heap_lock();
+	if(!freeList->size)
+		goto exit;
 	cur = freeList;
 	while(cur->size < n_bytes || (!cur->free && cur->next))
 		cur = cur->next;
@@ -75,17 +110,45 @@ void *malloc(size_t n_bytes)
 	else if(cur->size > (n_bytes + sizeof(chunk_t)))
 		split(cur, n_bytes);
 	else
-		return NULL;
-	return (void *)(++cur);
+		goto exit;
+	p = (void *)(++cur);
+exit:
+	heap_unlock();
+	return p;
 }
 
 void free(void *ptr)
 {
-	if((void *)&_heap_start <= ptr && ptr <= (void *)&_heap_end)
+	if(ptr == NULL)
+		return;
+
+	chunk_t *cur = (chunk_t *)ptr - 1;
+	heap_lock();
+	if((void *)&_heap_start <= (void *)cur &&
+		(void *)cur <= (void *)&_heap_end)
 	{
-		chunk_t *cur = ptr;
 		cur->free = 1;
 		merge();
+		merge();
 	}
+	heap_unlock();
 	return;
+}
+
+void heap_dump(void)
+{
+	size_t i;
+	unsigned int cntr;
+	printf("Heap Dump: %p - %p\n", &_heap_start, &_heap_end);
+	for(i = (size_t)&_heap_start; i < (size_t)&_heap_end; i+=32)
+	{
+		printf("[");
+		for(cntr = 0; cntr < 32; cntr++)
+		{
+			printf("%02x", MMIO8(i+cntr));
+			if(cntr && !((cntr + 1) % 4) && cntr != 31)
+				printf(" ");
+		}
+		printf("]\n");
+	}
 }

@@ -30,3 +30,4 @@
 #define STACK_SIZE_PCPU	0xc00
 
 #define HEAP_SIZE	512
+#define HEAP_ALIGN	4
