@@ -176,7 +176,6 @@ loop:
 					}
 				case '%':
 					ret += __fputc(dev, en_stdout, *fmt);
-					fmt++;
 					break;
 				default:
 					return -1;

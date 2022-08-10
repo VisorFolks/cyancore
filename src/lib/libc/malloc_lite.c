@@ -19,7 +19,7 @@
 #include <mmio.h>
 #include <plat_mem.h>
 
-extern uint8_t _heap_start, _heap_end;
+extern uint8_t _heap_start, _heap_end, _heap_size;
 static istate_t state;
 static lock_t mlock;
 
@@ -75,6 +75,11 @@ static void merge()
 	}
 }
 
+static chunk_t *get_header(void *p)
+{
+	return (chunk_t *)p - 1;
+}
+
 status_t platform_init_heap()
 {
 	heap_lock();
@@ -96,7 +101,7 @@ void *malloc(size_t n_bytes)
 		return NULL;
 
 #if HEAP_ALIGN > 1
-	n_bytes += ALIGN_BOUND - (n_bytes % ALIGN_BOUND);
+	ROUNDUP_ALIGN(n_bytes, ALIGN_BOUND);
 #endif
 
 	heap_lock();
@@ -122,7 +127,7 @@ void free(void *ptr)
 	if(ptr == NULL)
 		return;
 
-	chunk_t *cur = (chunk_t *)ptr - 1;
+	chunk_t *cur = get_header(ptr);
 	heap_lock();
 	if((void *)&_heap_start <= (void *)cur &&
 		(void *)cur <= (void *)&_heap_end)
@@ -135,11 +140,57 @@ void free(void *ptr)
 	return;
 }
 
+void *calloc(size_t n_blocks, size_t n_bytes)
+{
+	n_bytes *= n_blocks;
+	void *p = malloc(n_bytes);
+	if(p)
+		memset(p, 0, n_bytes);
+	return p;
+}
+
+void *realloc(void *p, size_t n_bytes)
+{
+	if(!p)
+		return malloc(n_bytes);
+	if(!n_bytes)
+	{
+		free(p);
+		return NULL;
+	}
+
+	chunk_t *header = get_header(p);
+	void *new_p = malloc(n_bytes);
+	if(!new_p)
+		return NULL;
+	memcpy(new_p, p, header->size);
+	free(p);
+	return new_p;
+}
+
+size_t heap_usage(void)
+{
+	unsigned int usage = 0;
+	chunk_t *head = (chunk_t *)&_heap_start;
+	while(head->next != NULL)
+	{
+		if(!head->free)
+			usage += head->size + sizeof(chunk_t);
+		head = head->next;
+	}
+	return usage;
+}
+
 void heap_dump(void)
 {
 	size_t i;
 	unsigned int cntr;
+	unsigned int h_used, h_perc;
+	h_used = heap_usage();
+	h_perc = (h_used * 100)/(unsigned int)&_heap_size;
 	printf("Heap Dump: %p - %p\n", &_heap_start, &_heap_end);
+	printf("Heap Used: %u/%u - %u%%\n", h_used,
+		(unsigned int)&_heap_size, h_perc);
 	for(i = (size_t)&_heap_start; i < (size_t)&_heap_end; i+=32)
 	{
 		printf("[");
@@ -152,3 +203,4 @@ void heap_dump(void)
 		printf("]\n");
 	}
 }
+
