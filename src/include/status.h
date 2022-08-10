@@ -12,6 +12,7 @@
 #define _STATUS_H_
 
 #include <compiler_macros.h>
+#include <utils.h>
 
 typedef enum status
 {

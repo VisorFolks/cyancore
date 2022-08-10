@@ -26,3 +26,4 @@
 #define STACK_SIZE	0x0200
 
 #define HEAP_SIZE	128
+#define HEAP_ALIGN	1

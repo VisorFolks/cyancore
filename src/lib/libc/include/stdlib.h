@@ -23,3 +23,7 @@ int atexit(void (*func)(int));
 void exit(int status) _NORETURN;
 void *malloc(size_t);
 void free(void *);
+void *calloc(size_t, size_t);
+void *realloc(void *, size_t);
+void heap_dump(void);
+size_t heap_usage(void);
