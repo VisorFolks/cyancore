@@ -25,4 +25,4 @@
 
 #define STACK_SIZE	1024
 
-#define HEAP_SIZE	128
+#define HEAP_SIZE	1024

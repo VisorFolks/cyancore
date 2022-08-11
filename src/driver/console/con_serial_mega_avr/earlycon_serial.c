@@ -13,6 +13,7 @@
 #include <stdbool.h>
 #include <status.h>
 #include <syslog.h>
+#include <stdlib.h>
 #include <lock/spinlock.h>
 #include <resource.h>
 #include <machine_call.h>
@@ -22,7 +23,7 @@
 #include <hal/uart.h>
 #include <driver/console.h>
 
-static uart_port_t earlycon_port;
+static uart_port_t *earlycon_port;
 
 static status_t earlycon_serial_setup()
 {
@@ -45,39 +46,44 @@ static status_t earlycon_serial_setup()
 		return mres.status;
 	}
 	dp = (module_t *)mres.p;
-	earlycon_port.port_id = dp->id;
-	earlycon_port.clk_id = dp->clk_id;
-	earlycon_port.baddr = dp->baddr;
-	earlycon_port.stride = dp->stride;
-	earlycon_port.baud = dp->clk;
+	earlycon_port = (uart_port_t *)malloc(sizeof(uart_port_t));
+	if(!earlycon_port)
+		return error_memory_low;
 
-	sysdbg2("UART engine @ %p\n", earlycon_port.baddr);
-	sysdbg2("UART baud @ %lubps\n", earlycon_port.baud);
+	earlycon_port->port_id = dp->id;
+	earlycon_port->clk_id = dp->clk_id;
+	earlycon_port->baddr = dp->baddr;
+	earlycon_port->stride = dp->stride;
+	earlycon_port->baud = dp->clk;
+
+	sysdbg2("UART engine @ %p\n", earlycon_port->baddr);
+	sysdbg2("UART baud @ %lubps\n", earlycon_port->baud);
 	/*
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
 	 */
-	return uart_setup(&earlycon_port, tx, no_parity);
+	return uart_setup(earlycon_port, tx, no_parity);
 }
 
 static status_t earlycon_serial_write(const char c)
 {
 	status_t ret;
-	ret = uart_tx(&earlycon_port, c);
-	uart_tx_wait_till_done(&earlycon_port);
+	ret = uart_tx(earlycon_port, c);
+	uart_tx_wait_till_done(earlycon_port);
 	return ret;
 }
 
-static console_t earlycon_serial_driver =
-{
-	.write = &earlycon_serial_write,
-};
+static console_t *earlycon_serial_driver;
 
 status_t earlycon_serial_driver_setup()
 {
 	status_t ret;
+	earlycon_serial_driver = (console_t *)malloc(sizeof(console_t));
+	if(!earlycon_serial_driver)
+		return error_memory_low;
+	earlycon_serial_driver->write = &earlycon_serial_write;
 	ret = earlycon_serial_setup();
-	ret |= console_attach_device(ret, &earlycon_serial_driver);
+	ret |= console_attach_device(ret, earlycon_serial_driver);
 	return ret;
 }
 
@@ -85,7 +91,9 @@ status_t earlycon_serial_driver_exit()
 {
 	status_t ret;
 	ret = console_release_device();
-	ret |= uart_shutdown(&earlycon_port);
+	ret |= uart_shutdown(earlycon_port);
+	free(earlycon_port);
+	free(earlycon_serial_driver);
 	return ret;
 }
 

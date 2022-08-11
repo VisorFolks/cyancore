@@ -96,6 +96,8 @@ void _NORETURN arch_panic_handler_callback()
 {
 	context_frame_t *frame;
 	frame = get_context_frame();
+	if(!frame)
+		goto panic;
 	syslog_stdout_enable();
 	sysdbg("r0=%p\tr1=%p\tr2=%p\tr3=%p\tr4=%p\tr5=%p\n",
 		frame->r0, frame->r1, frame->r2, frame->r3, frame->r4, frame->r5);
@@ -112,5 +114,6 @@ void _NORETURN arch_panic_handler_callback()
 #if DEBUG==0
 	syslog(info, "SP=%p\tSREG = %p\n", frame, frame->sreg);
 #endif
+panic:
 	while(1) arch_wfi();
 }
