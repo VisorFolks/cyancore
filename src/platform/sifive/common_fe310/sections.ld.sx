@@ -115,7 +115,7 @@ SECTIONS
 		. = . + STACK_SIZE;
 	} > vma_dmem
 
-	.heap : ALIGN(8)
+	.heap : ALIGN(HEAP_ALIGN)
 	{
 		*(.heap)
 		KEEP(*(.heap))

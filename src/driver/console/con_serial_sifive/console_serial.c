@@ -13,6 +13,7 @@
 #include <stdbool.h>
 #include <status.h>
 #include <syslog.h>
+#include <stdlib.h>
 #include <lock/spinlock.h>
 #include <resource.h>
 #include <machine_call.h>
@@ -23,31 +24,34 @@
 #include <driver/sysclk.h>
 #include <driver/console.h>
 
-static uart_port_t console_port;
+static uart_port_t *console_port;
 
 static void console_serial_irq_handler(void);
 
 static status_t console_serial_setup(void)
 {
-	uart_get_properties(&console_port, console_uart);
+	console_port = (uart_port_t *)malloc(sizeof(uart_port_t));
+	if(!console_port)
+		return error_memory_low;
+	uart_get_properties(console_port, console_uart);
 
-	console_port.irq_handler = console_serial_irq_handler;
+	console_port->irq_handler = console_serial_irq_handler;
 
-	sysdbg2("UART engine @ %p\n", console_port.baddr);
-	sysdbg2("UART baud @ %lubps\n", console_port.baud);
-	sysdbg2("UART irqs - %u\n", console_port.irq);
+	sysdbg2("UART engine @ %p\n", console_port->baddr);
+	sysdbg2("UART baud @ %lubps\n", console_port->baud);
+	sysdbg2("UART irqs - %u\n", console_port->irq);
 	/*
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
 	 */
-	return uart_setup(&console_port, trx, no_parity);
+	return uart_setup(console_port, trx, no_parity);
 }
 
 static status_t console_serial_write(const char c)
 {
 	status_t ret;
-	while(!uart_buffer_available(&console_port));
-	ret = uart_tx(&console_port, c);
+	while(!uart_buffer_available(console_port));
+	ret = uart_tx(console_port, c);
 	return ret;
 }
 
@@ -73,24 +77,19 @@ static status_t console_serial_read(char *c)
 
 static void console_serial_irq_handler(void)
 {
-	if(uart_rx_pending(&console_port))
+	if(uart_rx_pending(console_port))
 	{
 		wait_release_on_irq(&con_read_wait);
-		while(uart_rx_pending(&console_port))
+		while(uart_rx_pending(console_port))
 		{
-			uart_rx(&console_port, &con_buff[rp++]);
+			uart_rx(console_port, &con_buff[rp++]);
 			rp = rp % 32;
 			occ++;
 		}
 	}
 }
 
-static console_t console_serial_driver =
-{
-	.write = &console_serial_write,
-	.read = &console_serial_read,
-	.payload_size = (unsigned int *)&occ,
-};
+static console_t *console_serial_driver;
 
 static status_t console_serial_pre_clk_config(void)
 {
@@ -99,23 +98,31 @@ static status_t console_serial_pre_clk_config(void)
 
 static status_t console_serial_post_clk_config(void)
 {
-	uart_update_baud(&console_port);
+	uart_update_baud(console_port);
 	return success;
 }
 
-static sysclk_config_clk_callback_t console_handle =
-{
-	.pre_config = &console_serial_pre_clk_config,
-	.post_config = &console_serial_post_clk_config
-};
+static sysclk_config_clk_callback_t *console_handle;
 
 status_t console_serial_driver_setup(void)
 {
 	status_t ret;
 	driver_exit("earlycon");
+	console_serial_driver = (console_t *)malloc(sizeof(console_t));
+	if(!console_serial_driver)
+		return error_memory_low;
+	console_serial_driver->write = &console_serial_write;
+	console_serial_driver->read = &console_serial_read;
+	console_serial_driver->payload_size = (unsigned int *)&occ;
+
+	console_handle = (sysclk_config_clk_callback_t*)malloc(sizeof(sysclk_config_clk_callback_t));
+	if(!console_handle)
+		return error_memory_low;
+	console_handle->pre_config = &console_serial_pre_clk_config;
+	console_handle->post_config = &console_serial_post_clk_config;
 	ret = console_serial_setup();
-	ret |= sysclk_register_config_clk_callback(&console_handle);
-	ret |= console_attach_device(ret, &console_serial_driver);
+	ret |= sysclk_register_config_clk_callback(console_handle);
+	ret |= console_attach_device(ret, console_serial_driver);
 	return ret;
 }
 
@@ -123,9 +130,12 @@ status_t console_serial_driver_exit(void)
 {
 	status_t ret;
 	ret = console_release_device();
-	ret |= sysclk_deregister_config_clk_callback(&console_handle);
-	ret |= uart_shutdown(&console_port);
-	driver_setup("earlycon");
+	ret |= sysclk_deregister_config_clk_callback(console_handle);
+	ret |= uart_shutdown(console_port);
+	free(console_port);
+	free(console_serial_driver);
+	free(console_handle);
+	ret |= driver_setup("earlycon");
 	return ret;
 }
 

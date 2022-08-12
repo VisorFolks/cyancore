@@ -12,6 +12,7 @@
 #include <status.h>
 #include <stdio.h>
 #include <syslog.h>
+#include <stdlib.h>
 #include <platform.h>
 #include <driver.h>
 #include <resource.h>
@@ -24,7 +25,7 @@
 /**
  * plat_wdt - platform driver instance for wdt
  */
-static wdt_port_t plat_wdt;
+static wdt_port_t *plat_wdt;
 
 /**
  * *callback_on_bark - Callback function pointer which needs
@@ -54,17 +55,20 @@ static status_t platform_wdt_setup()
 		return mres.status;
 	}
 	dp = (module_t *) mres.p;
-	plat_wdt.port_id = dp->id;
-	plat_wdt.clk_id = dp->clk_id;
-	plat_wdt.baddr = dp->baddr;
-	plat_wdt.stride = dp->stride;
-	plat_wdt.timeout = (size_t) dp->clk;
-	plat_wdt.wdt_irq = (unsigned int) dp->interrupt[0].id;
-	plat_wdt.wdt_handler = &platform_wdt_handler;
+	plat_wdt = (wdt_port_t *)malloc(sizeof(wdt_port_t));
+	if(!plat_wdt)
+		return error_memory_low;
+	plat_wdt->port_id = dp->id;
+	plat_wdt->clk_id = dp->clk_id;
+	plat_wdt->baddr = dp->baddr;
+	plat_wdt->stride = dp->stride;
+	plat_wdt->timeout = (size_t) dp->clk;
+	plat_wdt->wdt_irq = (unsigned int) dp->interrupt[0].id;
+	plat_wdt->wdt_handler = &platform_wdt_handler;
 
-	sysdbg2("WDT engine @ %p\n", plat_wdt.baddr);
+	sysdbg2("WDT engine @ %p\n", plat_wdt->baddr);
 
-	return wdt_setup(&plat_wdt);
+	return wdt_setup(plat_wdt);
 }
 
 /**
@@ -84,11 +88,11 @@ static status_t platform_wdt_guard(size_t timeout, bool bite, void *cb_bark)
 {
 	status_t ret;
 	sysdbg3("Configuring WDT timeout to gear %d\n", timeout);
-	plat_wdt.timeout = timeout;
+	plat_wdt->timeout = timeout;
 	callback_on_bark = cb_bark;
-	ret = wdt_set_timeout(&plat_wdt);
+	ret = wdt_set_timeout(plat_wdt);
 	sysdbg3("WDT Bite %s\n", bite ? "enabled" : "disabled");
-	ret |= bite ? wdt_sre(&plat_wdt) : wdt_srd(&plat_wdt);
+	ret |= bite ? wdt_sre(plat_wdt) : wdt_srd(plat_wdt);
 	return ret;
 }
 
@@ -102,11 +106,11 @@ static status_t platform_wdt_guard(size_t timeout, bool bite, void *cb_bark)
 static status_t platform_wdt_hush()
 {
 	status_t ret;
-	wdt_hush(&plat_wdt);
+	wdt_hush(plat_wdt);
 	sysdbg3("WDT Hush!\n");
-	plat_wdt.timeout = 0;
-	ret = wdt_set_timeout(&plat_wdt);
-	ret |= wdt_srd(&plat_wdt);
+	plat_wdt->timeout = 0;
+	ret = wdt_set_timeout(plat_wdt);
+	ret |= wdt_srd(plat_wdt);
 	return ret;
 }
 
@@ -123,11 +127,7 @@ void platform_wdt_handler()
 /**
  * @brief This struct links top level and low level driver apis
  */
-static wdog_t plat_wdt_driver =
-{
-	.guard = &platform_wdt_guard,
-	.hush = &platform_wdt_hush
-};
+static wdog_t *plat_wdt_driver;
 
 /**
  * plat_wdt_driver_setup
@@ -138,8 +138,13 @@ static status_t plat_wdt_driver_setup()
 {
 	status_t ret;
 	sysdbg3("In %s\n", __func__);
+	plat_wdt_driver = (wdog_t *)malloc(sizeof(wdog_t));
+	if(!plat_wdt_driver)
+		return error_memory_low;
+	plat_wdt_driver->guard = &platform_wdt_guard;
+	plat_wdt_driver->hush = &platform_wdt_hush;
 	ret = platform_wdt_setup();
-	ret |= wdog_attach_device(ret, &plat_wdt_driver);
+	ret |= wdog_attach_device(ret, plat_wdt_driver);
 	return ret;
 }
 
@@ -152,7 +157,9 @@ static status_t plat_wdt_driver_exit()
 {
 	status_t ret;
 	ret = wdog_release_device();
-	ret |= wdt_shutdown(&plat_wdt);
+	ret |= wdt_shutdown(plat_wdt);
+	free(plat_wdt_driver);
+	free(plat_wdt);
 	return ret;
 }
 

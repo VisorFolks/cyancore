@@ -106,12 +106,9 @@ void interrupt_handler(unsigned char id, context_frame_t *frame)
 }
 
 
-/* Fixed memory block of 33 bytes on bss */
-context_frame_t snapshot_frame;
-
 context_frame_t *get_context_frame()
 {
 	if(local_frame)
 		return local_frame;
-	return &snapshot_frame;
+	return NULL;
 }

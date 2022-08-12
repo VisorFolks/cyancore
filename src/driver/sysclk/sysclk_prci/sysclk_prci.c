@@ -11,6 +11,7 @@
 
 #include <stdint.h>
 #include <status.h>
+#include <stdlib.h>
 #include <string.h>
 #include <syslog.h>
 #include <assert.h>
@@ -23,7 +24,7 @@
 #include <driver/sysclk.h>
 #include <hal/prci.h>
 
-static sysclk_port_t sysclk;
+static sysclk_port_t *sysclk;
 static clock_type_t clk_type;
 static lock_t sysclk_key;
 
@@ -31,8 +32,13 @@ static status_t sysclk_setup()
 {
 	mret_t mres;
 	module_t *dp;
-	sysclk_port_t *port = &sysclk;
+	sysclk_port_t *port;
 	istate_t ist;
+
+	sysclk = (sysclk_port_t *)malloc(sizeof(sysclk_port_t));
+	if(!sysclk)
+		return error_memory_low;
+	port = sysclk;
 
 	arch_machine_call(fetch_dp, clock, 0, 0, &mres);
 
@@ -70,7 +76,7 @@ static status_t sysclk_disable()
 {
 	status_t ret;
 	istate_t ist;
-	sysclk_port_t *port = &sysclk;
+	sysclk_port_t *port = sysclk;
 
 	assert(port->baddr && port->base_clk);
 
@@ -82,6 +88,7 @@ static status_t sysclk_disable()
 	prci_pll_deselect_pll(port);
 	prci_pll_inline(port);
 	memset(port, 0, sizeof(sysclk_port_t));
+	free(sysclk);
 
 	arch_ei_restore_state(&ist);
 	lock_release(&sysclk_key);
@@ -93,7 +100,7 @@ INCLUDE_DRIVER(sysclk_prci, sysclk_setup, sysclk_disable, 0, 1, 1);
 status_t sysclk_reset()
 {
 	status_t ret;
-	sysclk_port_t *port = &sysclk;
+	sysclk_port_t *port = sysclk;
 	istate_t ist;
 
 	assert(arch_core_index() == BOOT_CORE_ID);
@@ -118,7 +125,7 @@ status_t sysclk_reset()
 static inline void sysclk_set_internal(unsigned int clk _UNUSED)
 {
 	status_t ret;
-	sysclk_port_t *port = &sysclk;
+	sysclk_port_t *port = sysclk;
 	ret = prci_hfxocs_enable(port);
 	prci_pll_bypass(port);
 	ret |= prci_hfosc_enable(port);
@@ -135,7 +142,7 @@ static inline void sysclk_set_internal(unsigned int clk _UNUSED)
 static inline void sysclk_set_external(void)
 {
 	status_t ret;
-	sysclk_port_t *port = &sysclk;
+	sysclk_port_t *port = sysclk;
 	ret = prci_hfosc_enable(port);
 	ret |= prci_hfxocs_enable(port);
 	prci_pll_select_xosc(port);
@@ -150,7 +157,7 @@ static inline void sysclk_set_external(void)
 static inline void sysclk_set_pll(unsigned int clk)
 {
 	status_t ret;
-	sysclk_port_t *port = &sysclk;
+	sysclk_port_t *port = sysclk;
 	ret = prci_hfosc_enable(port);
 	ret |= prci_hfxocs_enable(port);
 	prci_pll_bypass(port);
@@ -166,7 +173,7 @@ static inline void sysclk_set_pll(unsigned int clk)
 
 static void sysclk_configure_clk(call_arg_t a0, call_arg_t a1, call_arg_t a2 _UNUSED, mret_t *ret)
 {
-	sysclk_port_t *port = &sysclk;
+	sysclk_port_t *port = sysclk;
 	istate_t ist;
 	clock_type_t type = (clock_type_t) a0;
 	unsigned int clk = (unsigned int) a1;
@@ -212,7 +219,7 @@ INCLUDE_MCALL(sysclk_set, config_clk, sysclk_configure_clk);
 static void sysclk_get_freq(call_arg_t a0 _UNUSED, call_arg_t a1 _UNUSED, 
 		call_arg_t a2 _UNUSED, mret_t *ret)
 {
-	sysclk_port_t *port = &sysclk;
+	sysclk_port_t *port = sysclk;
 	istate_t ist;
 	unsigned int getclk;
 

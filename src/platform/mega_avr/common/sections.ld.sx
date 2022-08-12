@@ -54,7 +54,7 @@ SECTIONS
 
 	.heap :
 	{
-		. = ALIGN(8);
+		. = ALIGN(HEAP_ALIGN);
 		*(.heap)
 		KEEP(*(.heap))
 		. = . + HEAP_SIZE;

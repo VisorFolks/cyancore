@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <status.h>
 #include <syslog.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <assert.h>
 #include <arch.h>
@@ -28,7 +29,7 @@
 
 #include "plic_private.h"
 
-static plic_port_t port;
+static plic_port_t *port;
 
 static status_t plic_setup()
 {
@@ -40,38 +41,41 @@ static status_t plic_setup()
 	if(mres.status != success)
 		return mres.status;
 	dp = (module_t *)mres.p;
-	port.baddr = dp->baddr;
-	port.stride = dp->stride;
-	port.port_id = plic;
-	port.irq = &dp->interrupt[0];
-	syslog(info, "PLIC @ 0x%x found.\n", (unsigned int)port.baddr);
+	port = (plic_port_t *)malloc(sizeof(plic_port_t));
+	if(!port)
+		return error_memory_low;
+	port->baddr = dp->baddr;
+	port->stride = dp->stride;
+	port->port_id = plic;
+	port->irq = &dp->interrupt[0];
+	syslog(info, "PLIC @ 0x%x found.\n", (unsigned int)port->baddr);
 	return success;
 }
 
 static uint32_t plic_get_priority(uint32_t irq_id)
 {
-	assert(port.baddr);
-	return MMIO32(port.baddr + PLIC_IPRIORITY_OFFSET(irq_id));
+	assert(port->baddr);
+	return MMIO32(port->baddr + PLIC_IPRIORITY_OFFSET(irq_id));
 }
 
 static status_t plic_set_priority(uint32_t irq_id, uint32_t priority)
 {
-	assert(port.baddr);
-	MMIO32(port.baddr + PLIC_IPRIORITY_OFFSET(irq_id)) = priority;
+	assert(port->baddr);
+	MMIO32(port->baddr + PLIC_IPRIORITY_OFFSET(irq_id)) = priority;
 	arch_dmb();
 	return success;
 }
 
 static uint32_t plic_get_threshold(uint32_t core_id)
 {
-	assert(port.baddr);
-	return MMIO32(port.baddr + PLIC_ITHRESHOLD_OFFSET(core_id));
+	assert(port->baddr);
+	return MMIO32(port->baddr + PLIC_ITHRESHOLD_OFFSET(core_id));
 }
 
 static status_t plic_set_threshold(uint32_t core_id, uint32_t threshold)
 {
-	assert(port.baddr);
-	MMIO32(port.baddr + PLIC_ITHRESHOLD_OFFSET(core_id)) = threshold;
+	assert(port->baddr);
+	MMIO32(port->baddr + PLIC_ITHRESHOLD_OFFSET(core_id)) = threshold;
 	arch_dmb();
 	return success;
 }
@@ -80,9 +84,9 @@ static uint32_t plic_get_interrupt()
 {
 	unsigned int irq;
 	uint32_t core_id;
-	assert(port.baddr);
+	assert(port->baddr);
 	core_id = arch_core_index();
-	irq = MMIO32(port.baddr + PLIC_ICLAIM_OFFSET(core_id));
+	irq = MMIO32(port->baddr + PLIC_ICLAIM_OFFSET(core_id));
 	arch_dmb();
 	return irq;
 }
@@ -91,10 +95,10 @@ static uint32_t plic_get_interrupt()
 static void plic_clr_interrupt(uint32_t irq_id)
 {
 	uint32_t core_id;
-	assert(port.baddr);
+	assert(port->baddr);
 	core_id = arch_core_index();
 	sysdbg3("Clearing IRQ#%u on Core-%u\n", irq_id, core_id);
-	MMIO32(port.baddr + PLIC_ICLAIM_OFFSET(core_id)) = irq_id;
+	MMIO32(port->baddr + PLIC_ICLAIM_OFFSET(core_id)) = irq_id;
 	arch_dmb();
 	return;
 }
@@ -102,11 +106,11 @@ static void plic_clr_interrupt(uint32_t irq_id)
 static status_t plic_int_en(uint32_t irq_id)
 {
 	uint32_t core_id, irq_shift;
-	assert(port.baddr);
+	assert(port->baddr);
 	core_id = arch_core_index();
 	sysdbg3("Enabling IRQ#%u on Core-%u\n", irq_id, core_id);
 	irq_shift = irq_id % 32;
-	MMIO32(port.baddr + PLIC_IENABLE_OFFSET(core_id, irq_id)) |= (1 << irq_shift);
+	MMIO32(port->baddr + PLIC_IENABLE_OFFSET(core_id, irq_id)) |= (1 << irq_shift);
 	arch_dmb();
 	return success;
 }
@@ -114,11 +118,11 @@ static status_t plic_int_en(uint32_t irq_id)
 static status_t plic_int_dis(uint32_t irq_id)
 {
 	uint32_t core_id, irq_shift;
-	assert(port.baddr);
+	assert(port->baddr);
 	core_id = arch_core_index();
 	sysdbg3("Disabling IRQ#%u on Core-%u\n", irq_id, core_id);
 	irq_shift = irq_id % 32;
-	MMIO32(port.baddr + PLIC_IENABLE_OFFSET(core_id, irq_id)) &= ~(1 << irq_shift);
+	MMIO32(port->baddr + PLIC_IENABLE_OFFSET(core_id, irq_id)) &= ~(1 << irq_shift);
 	arch_dmb();
 	return success;
 }
@@ -134,8 +138,8 @@ static void plic_irqhandler()
 static bool plic_get_pending(uint32_t irq_id)
 {
 	uint32_t pending;
-	assert(port.baddr);
-	pending = MMIO32(port.baddr + PLIC_IPENDING_OFFSET(irq_id));
+	assert(port->baddr);
+	pending = MMIO32(port->baddr + PLIC_IPENDING_OFFSET(irq_id));
 	return (pending & (1 << (irq_id % 32))) ? true : false;
 }
 
@@ -178,9 +182,9 @@ static status_t plic_driver_setup_pcpu()
 {
 	status_t ret;
 	unsigned int irq;
-	sysdbg3("Linking local IRQ#%u on Core-%u\n", port.irq->id, arch_core_index());
+	sysdbg3("Linking local IRQ#%u on Core-%u\n", port->irq->id, arch_core_index());
 	plic_set_threshold(arch_core_index(), 0);
-	ret = link_interrupt(port.irq->module, port.irq->id, &plic_irqhandler);
+	ret = link_interrupt(port->irq->module, port->irq->id, &plic_irqhandler);
 	do
 	{
 		irq = plic_get_interrupt();
@@ -193,13 +197,14 @@ static status_t plic_driver_setup_pcpu()
 
 static status_t plic_driver_exit()
 {
+	free(port);
 	return ic_release_device();
 }
 
 static status_t plic_driver_exit_pcpu()
 {
 	arch_di_mei();
-	return unlink_interrupt(port.irq->module, port.irq->id);
+	return unlink_interrupt(port->irq->module, port->irq->id);
 }
 
 INCLUDE_DRIVER(riscv_plic, plic_driver_setup, plic_driver_exit, 0, 0, 0);
