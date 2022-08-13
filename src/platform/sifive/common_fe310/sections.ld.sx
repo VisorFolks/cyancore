@@ -59,18 +59,18 @@ SECTIONS
 		*(.itim.*)
 	} > vma_itmem AT > lma_mem
 
-	.bss : ALIGN(8)
+	.bss : ALIGN(4)
 	{
-		. = ALIGN(8);
+		. = ALIGN(4);
 		*(.bss)
 		*(.bss.*)
 		KEEP(*(.bss))
 		*(COMMON)
 	} > vma_dmem
 
-	.static_bss_global : ALIGN(8)
+	.static_bss_global : ALIGN(4)
 	{
-		. = ALIGN(8);
+		. = ALIGN(4);
 		*(.sbss)
 		*(.sbss.*)
 		KEEP(*(.sbss))
@@ -80,32 +80,32 @@ SECTIONS
 	{
 	} > vma_dmem
 
-	.static_data_global : ALIGN(8)
+	.static_data_global : ALIGN(4)
 	{
-		. = ALIGN(8);
+		. = ALIGN(4);
 		*(.sdata)
 		*(.sdata.*)
 		KEEP(*(.sdata))
 	} > vma_dmem AT > lma_mem
 
-	.data : ALIGN(8)
+	.data : ALIGN(4)
 	{
-		. = ALIGN(8);
+		. = ALIGN(4);
 		*(.data)
 		*(.data.*)
 		KEEP(*(.data))
 	} > vma_dmem AT > lma_mem
 
-	.tdata : ALIGN(8)
+	.tdata : ALIGN(4)
 	{
-		. = ALIGN(8);
+		. = ALIGN(4);
 		*(.tdata)
 		*(.tdata.*)
 		KEEP(*(.tdata))
 	} > vma_dmem AT > lma_mem
 
-	.driver_table : ALIGN(8) {} > vma_dmem AT > lma_mem
-	.mcall_table : ALIGN(8) {} > vma_dmem AT > lma_mem
+	.driver_table : ALIGN(4) {} > vma_dmem AT > lma_mem
+	.mcall_table : ALIGN(4) {} > vma_dmem AT > lma_mem
 
 	.stack : ALIGN(16)
 	{
