@@ -191,7 +191,7 @@ loop:
 	return ret;
 }
 
-int printf(const char *fmt, ...)
+int __printf(const char *fmt, ...)
 {
 	int ret;
 	va_list va;
@@ -201,7 +201,7 @@ int printf(const char *fmt, ...)
 	return ret;
 }
 
-int eprintf(const char *fmt, ...)
+int __eprintf(const char *fmt, ...)
 {
 	int ret;
 	va_list va;

@@ -23,7 +23,7 @@ static lock_t syslog_lock;
 static bool flag_enable_stdout;
 
 
-int syslog(logtype_t t, const char *c, ...)
+int __syslog(logtype_t t, const char *c, ...)
 {
 	int ret;
 	va_list va;
@@ -45,6 +45,8 @@ status_t syslog_print()
 
 void syslog_stdout_enable()
 {
+	if(NOLOGS)
+		return;
 	lock_acquire(&syslog_lock);
 	flag_enable_stdout = true;
 	lock_release(&syslog_lock);
@@ -52,6 +54,8 @@ void syslog_stdout_enable()
 
 void syslog_stdout_disable()
 {
+	if(NOLOGS)
+		return;
 	lock_acquire(&syslog_lock);
 	flag_enable_stdout = false;
 	lock_release(&syslog_lock);
