@@ -37,7 +37,7 @@ module_t uart0 =
 	.baddr = 0xc0,
 	.clk_id = 0x01,
 	.stride = 0x06,
-	.clk = 19200,
+	.clk = 115200,
 	.interrupt[0] = {int_arch, 25, int_level},
 	.interrupt[1] = {int_arch, 27, int_level},
 };
@@ -136,6 +136,7 @@ module_t timer0 =
 	.interrupt[0] = {int_arch, 21, int_level},
 	.interrupt[1] = {int_arch, 22, int_level},
 	.clk_id = 5,
+	.clk = 16000000,
 };
 
 module_t timer1 =

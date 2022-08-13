@@ -5,8 +5,8 @@
  * File Name		: platform_sp.c
  * Description		: This file contains sources for platform
  *			  software properties
- * Primary Author	: Rahul Goyal [rhgoyal01@gmail.com]
- * Organisation		: Cyancore Contributor
+ * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+ * Organisation		: Cyancore Core-Team
  */
 
 #include <status.h>
@@ -18,20 +18,30 @@ swdev_t consoleUart =
 	.hwdev_id = uart
 };
 
-sw_devid_t terra_devs[] =
+swdev_t schedTimer =
 {
-	console_uart,
+	.swdev_id = sched_timer,
+	.hwdev_id = timer | 0x00,
 };
 
-visor_t terravisor =
+static uint8_t led0pins[] = {7};
+static pinmux_t obled0 = addpins(1, led0pins, 0);
+swdev_t onBoardLED0 =
 {
-	.devids = terra_devs,
-	.n_dev = sizeof(terra_devs)/sizeof(sw_devid_t),
+	.swdev_id = onboard_led | 0,
+	.pmux = &obled0
 };
+
+sw_devid_t terra_devs[] =
+{
+	console_uart, sched_timer, (onboard_led | 0),
+};
+
+visor_t terravisor = add_visor_devs(terra_devs);
 
 swdev_t *sw_devs[] =
 {
-	&consoleUart,
+	&consoleUart, &schedTimer, &onBoardLED0,
 };
 
 sp_t software_prop =
