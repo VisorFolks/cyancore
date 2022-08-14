@@ -19,11 +19,9 @@
 #include <machine_call.h>
 #include <driver.h>
 #include <arch.h>
-#include <mmio.h>
 #include <platform.h>
 #include <driver/sysclk.h>
 #include <hal/prci.h>
-#include <stdio.h>
 
 static sysclk_port_t *sysclk;
 static clock_type_t clk_type;
