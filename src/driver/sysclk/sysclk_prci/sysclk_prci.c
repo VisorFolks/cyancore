@@ -19,7 +19,6 @@
 #include <machine_call.h>
 #include <driver.h>
 #include <arch.h>
-#include <mmio.h>
 #include <platform.h>
 #include <driver/sysclk.h>
 #include <hal/prci.h>
@@ -180,14 +179,12 @@ static void sysclk_configure_clk(call_arg_t a0, call_arg_t a1, call_arg_t a2 _UN
 
 	assert(port->baddr && port->base_clk);
 
-	ret->status = error_func_inval_arg;
 	ret->p = 0;
 	ret->size = 0;
-	ret->status |= sysclk_execute_pre_config_clk_callback();
+	ret->status = sysclk_execute_pre_config_clk_callback();
 
 	lock_acquire(&sysclk_key);
 	arch_di_save_state(&ist);
-
 	switch(type)
 	{
 		case internal:
@@ -204,6 +201,7 @@ static void sysclk_configure_clk(call_arg_t a0, call_arg_t a1, call_arg_t a2 _UN
 			clk_type = pll;
 			break;
 		default:
+			ret->status = error_func_inval_arg;
 			break;
 	}
 

@@ -64,7 +64,7 @@ typedef enum status
 	error_system			= -0x0b00,
 	error_system_irq_link_fail	= -0x0b01,
 	error_system_irq_unlink_fail	= -0x0b02,
-	error_system_clk_caliberation	= -0xb003,
+	error_system_clk_caliberation	= -0x0b03,
 /* Network related error */
 	error_net			= -0x0c00,
 	error_net_con_timeout		= -0x0c01,

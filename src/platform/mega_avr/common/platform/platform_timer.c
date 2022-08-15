@@ -172,6 +172,8 @@ static status_t plat_timer_setup()
 	tport = (timer_port_t *)malloc(sizeof(timer_port_t));
 	if(!tport)
 		return error_memory_low;
+	if(!tm->clk)
+		return error_system_clk_caliberation;
 
 	tport->port_id = tm->id;
 	tport->clk_id = tm->clk_id;

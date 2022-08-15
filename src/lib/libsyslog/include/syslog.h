@@ -20,10 +20,18 @@ typedef enum logtype
 	dbug = 4
 } logtype_t;
 
-int syslog(logtype_t, const char *, ...);
+int __syslog(logtype_t, const char *, ...);
 status_t syslog_print();
 void syslog_stdout_enable();
 void syslog_stdout_disable();
+
+
+#if !NOLOGS
+#define syslog(lt, fmt, ...)	__syslog(lt, fmt, ##__VA_ARGS__)
+#else
+static void _UNUSED __dummylog(logtype_t lt _UNUSED, const char *a _UNUSED, ...){}
+#define syslog(lt, fmt, ...)	__dummylog(lt, fmt, ##__VA_ARGS__)
+#endif
 
 /* General Debug */
 #define sysdbg(fmt, ...)	if(DEBUG) syslog(dbug, fmt, ##__VA_ARGS__)
