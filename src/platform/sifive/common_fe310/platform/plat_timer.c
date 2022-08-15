@@ -150,7 +150,7 @@ static tvisor_timer_t *plat_timer_port;
 static status_t plat_timer_setup(void)
 {
 	status_t ret = success;
-	irqs_t *irq;
+	const irqs_t *irq;
 	arch_di_mtime();
 
 	plat_timer_port = (tvisor_timer_t *)malloc(sizeof(tvisor_timer_t));

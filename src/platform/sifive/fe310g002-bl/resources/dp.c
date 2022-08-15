@@ -92,12 +92,12 @@ module_t timer_core0 =
 	.interrupt[0] = {int_local, 7, int_level},
 };
 
-gpio_module_t *port_list[] =
+gpio_module_t * const port_list[] =
 {
 	&port0,
 };
 
-module_t *mod_list[] =
+module_t * const mod_list[] =
 {
 	&plic0, &uart0, &prci0, &clint0, &aon0, &uart1,
 	&timer_core0,

@@ -15,16 +15,16 @@
 #include <dp/dp_module.h>
 #include <dp/dp_gpio.h>
 
-typedef struct device_properties
+typedef const struct device_properties
 {
-	cpu_t *core[N_CORES];
+	cpu_t * const core[N_CORES];
 	unsigned long base_clock;
 	memory_t *memory;
 
-	gpio_module_t **ports;
+	gpio_module_t * const *ports;
 	size_t n_ports;
 
-	module_t **modules;
+	module_t * const *modules;
 	size_t n_mods;
 } dp_t;
 

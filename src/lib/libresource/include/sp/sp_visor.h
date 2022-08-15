@@ -16,16 +16,16 @@
 #include <dp/dp_device.h>
 #include <dp/dp_gpio.h>
 
-typedef struct swdev
+typedef const struct swdev
 {
 	sw_devid_t swdev_id;
 	hw_devid_t hwdev_id;
 	pinmux_t *pmux;
 } swdev_t;
 
-typedef struct visor
+typedef const struct visor
 {
-	sw_devid_t *devids;
+	sw_devid_t const *devids;
 	size_t n_dev;
 } visor_t;
 

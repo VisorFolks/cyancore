@@ -17,7 +17,7 @@
  * |  \- ...
  * \- n_swdev <- n(swdev)
  */
-typedef struct sp
+typedef const struct sp
 {
 	visor_t *terravisor;
 
@@ -30,16 +30,16 @@ typedef struct sp
 #endif
 
 #if NSEC_SUP >= 1
-	visor_t **nsec_supervisor;
+	visor_t * const *nsec_supervisor;
 	size_t n_nsec_supervisor;
 #endif
 
 #if SEC_SUP >= 1
-	visor_t **sec_supervisor;
+	visor_t * const *sec_supervisor;
 	size_t n_sec_supervisor;
 #endif
 
-	swdev_t **swdev;
+	swdev_t * const *swdev;
 	size_t n_swdev;
 } sp_t;
 

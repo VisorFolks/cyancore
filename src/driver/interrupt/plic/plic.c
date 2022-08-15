@@ -151,25 +151,26 @@ static void plic_register_irq_handler(uint32_t id, void (* handler)(void))
 	arch_dsb();
 }
 
-static ic_t plic_port =
-{
-	.get_priority		= &plic_get_priority,
-	.set_priority		= &plic_set_priority,
-	.get_affinity		= &plic_get_threshold,
-	.set_affinity		= &plic_set_threshold,
-	.get_irq		= &plic_get_interrupt,
-	.en_irq			= &plic_int_en,
-	.dis_irq		= &plic_int_dis,
-	.pending		= &plic_get_pending,
-	.register_handler	= &plic_register_irq_handler,
-};
+static ic_t *plic_port;
 
 static status_t plic_driver_setup()
 {
 	status_t ret;
 	arch_di_mei();
 	ret = plic_setup();
-	ret |= ic_attach_device(ret, &plic_port);
+	plic_port = (ic_t *)malloc(sizeof(ic_t));
+	if(!plic_port)
+		return error_memory_low;
+	plic_port->get_priority = &plic_get_priority;
+	plic_port-> set_priority = &plic_set_priority;
+	plic_port->get_affinity = &plic_get_threshold;
+	plic_port->set_affinity = &plic_set_threshold;
+	plic_port->get_irq = &plic_get_interrupt;
+	plic_port->en_irq = &plic_int_en;
+	plic_port->dis_irq = &plic_int_dis;
+	plic_port->pending = &plic_get_pending;
+	plic_port->register_handler = &plic_register_irq_handler;
+	ret |= ic_attach_device(ret, plic_port);
 	for(uint32_t i = 1; i <= N_PLAT_IRQS; i++)
 	{
 		plic_int_dis(i);
@@ -197,6 +198,7 @@ static status_t plic_driver_setup_pcpu()
 
 static status_t plic_driver_exit()
 {
+	free(plic_port);
 	free(port);
 	return ic_release_device();
 }
