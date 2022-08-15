@@ -39,13 +39,6 @@ void arch_wait_till_boot_done();
 void arch_signal_boot_done();
 
 /**
- * arch_machine_call - Performs machine call
- *
- * Refer arch.c for more details.
- */
-void arch_machine_call(unsigned int, unsigned int, unsigned  int, unsigned  int, mret_t *);
-
-/**
  * arch_register_interrupt_handler - Registers interrtup handler
  * for arch specific exception vectors
  */
@@ -65,6 +58,36 @@ static inline unsigned int arch_core_index()
 	unsigned int id;
 	asm volatile("csrr %0, mhartid" : "=r" (id));
 	return id;
+}
+
+/**
+ * arch_machine_call - perform machine call
+ *
+ * @brief This function performs environment call
+ * in m mode
+ *
+ * @param[in] code: machine call code
+ * @param[in] a0: first argument
+ * @param[in] a1: second argument
+ * @param[in] a2: third argument
+ * @param[in] *ret: return struct
+ */
+static inline void arch_machine_call(unsigned int code, unsigned int arg0, unsigned int arg1, unsigned int arg2, mret_t *ret)
+{
+	if(ret == NULL)
+		return;
+	register uint32_t a0 asm("a0") = code;
+	register uint32_t a1 asm("a1") = arg0;
+	register uint32_t a2 asm("a2") = arg1;
+	register uint32_t a3 asm("a3") = arg2;
+	asm volatile("ecall"
+				: "+r" (a0), "+r" (a1), "+r"(a2)
+				: "r" (a0), "r" (a1), "r" (a2), "r" (a3)
+				: "memory");
+	ret->p = a0;
+	ret->size = a1;
+	ret->status = a2;
+	return;
 }
 
 /**
