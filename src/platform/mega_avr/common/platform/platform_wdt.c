@@ -128,6 +128,7 @@ void platform_wdt_handler()
  * @brief This struct links top level and low level driver apis
  */
 static wdog_t *plat_wdt_driver;
+static status_t plat_wdt_driver_exit();
 
 /**
  * plat_wdt_driver_setup
@@ -144,7 +145,14 @@ static status_t plat_wdt_driver_setup()
 	plat_wdt_driver->guard = &platform_wdt_guard;
 	plat_wdt_driver->hush = &platform_wdt_hush;
 	ret = platform_wdt_setup();
-	ret |= wdog_attach_device(ret, plat_wdt_driver);
+	if(ret)
+		goto cleanup_exit;
+	ret = wdog_attach_device(ret, plat_wdt_driver);
+	if(!ret)
+		goto exit;
+cleanup_exit:
+	plat_wdt_driver_exit();
+exit:
 	return ret;
 }
 
@@ -157,7 +165,8 @@ static status_t plat_wdt_driver_exit()
 {
 	status_t ret;
 	ret = wdog_release_device();
-	ret |= wdt_shutdown(plat_wdt);
+	if(plat_wdt)
+		ret |= wdt_shutdown(plat_wdt);
 	free(plat_wdt_driver);
 	free(plat_wdt);
 	return ret;

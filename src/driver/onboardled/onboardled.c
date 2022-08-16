@@ -90,6 +90,12 @@ static status_t onboardled_setup(void)
 	obledPort = (gpio_port_t *)malloc(sizeof(gpio_port_t) *
 			obled_sp->pmux->npins);
 
+	if(!obledPort)
+	{
+		ret = error_memory_low;
+		goto exit;
+	}
+
 	for(uint8_t i = 0; i < obled_sp->pmux->npins; i++)
 	{
 		ret |= gpio_pin_alloc(&obledPort[i], obled_sp->pmux->port,

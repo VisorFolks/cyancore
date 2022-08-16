@@ -39,12 +39,21 @@ status_t sysclk_register_config_clk_callback(sysclk_config_clk_callback_t *node)
 		{
 			temp = root;
 			while(temp->next)
+			{
 				temp = temp->next;
+				if(temp == node)
+				{
+					sysdbg3("sysclk: Found duplicate node %p, failed to register!\n", temp);
+					ret = error_list_node_exists;
+					goto exit;
+				}
+			}
 			sysdbg3("sysclk: Adding node to list %p\n", node);
 			temp->next = node;
 		}
 	}
 
+exit:
 	lock_release(&sysclk_cb_key);
 	return ret;
 }
@@ -66,18 +75,24 @@ status_t sysclk_deregister_config_clk_callback(sysclk_config_clk_callback_t *nod
 		{
 			sysdbg3("sysclk: Removing root node %p\n", node);
 			root = temp->next;
-			goto end;
+			goto exit;
 		}
 
 		while(temp != node)
 		{
 			prev = temp;
 			temp = temp->next;
+			if(!temp)
+			{
+				sysdbg3("sysclk: Node %p not found!. Failed to deregister!", node);
+				ret = error_list_node_not_found;
+				goto exit;
+			}
 		}
 		sysdbg3("sysclk: Removing node from list %p\n", node);
 		prev->next = temp->next;
 	}
-end:
+exit:
 	lock_release(&sysclk_cb_key);
 	return ret;
 }

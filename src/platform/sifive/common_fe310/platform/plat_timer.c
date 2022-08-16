@@ -179,9 +179,12 @@ static status_t plat_timer_setup(void)
  */
 static status_t plat_timer_exit(void)
 {
+	const irqs_t *irq;
 	arch_di_mtime();
 	tmr_cb = (void *) 0;
 	ticks = 0;
+	irq = &tm->interrupt[0];
+	unlink_interrupt(irq->module, irq->id);
 	free(plat_timer_port);
 	return timer_release_device();
 }

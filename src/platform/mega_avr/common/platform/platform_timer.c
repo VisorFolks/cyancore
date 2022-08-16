@@ -160,6 +160,8 @@ static tvisor_timer_t plat_timer_port =
 	.reg_cb = &plat_timer_reg_cb,
 };
 
+static status_t plat_timer_exit(void);
+
 /**
  * plat_timer_setup - Timer driver setup function
  * To be exported to driver table.
@@ -173,7 +175,10 @@ static status_t plat_timer_setup()
 	if(!tport)
 		return error_memory_low;
 	if(!tm->clk)
-		return error_system_clk_caliberation;
+	{
+		ret = error_system_clk_caliberation;
+		goto cleanup_exit1;
+	}
 
 	tport->port_id = tm->id;
 	tport->clk_id = tm->clk_id;
@@ -182,10 +187,19 @@ static status_t plat_timer_setup()
 	tport->tmr_irq = (size_t) tm->interrupt[0].id;
 	tport->tmr_handler = plat_tmr_isr;
 
-	ret |= timer_setup(tport, 2, PS);
+	ret = timer_setup(tport, 2, PS);
+	if(ret)
+		goto cleanup_exit2;
 	plat_timer_set_period(1);
-	ret |= timer_attach_device(ret, &plat_timer_port);
-
+	ret = timer_attach_device(ret, &plat_timer_port);
+	if(!ret)
+		goto exit;
+cleanup_exit2:
+	plat_timer_exit();
+cleanup_exit1:
+	if(tport)
+		free(tport);
+exit:
 	return ret;
 }
 

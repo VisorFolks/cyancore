@@ -153,49 +153,6 @@ static void plic_register_irq_handler(uint32_t id, void (* handler)(void))
 
 static ic_t *plic_port;
 
-static status_t plic_driver_setup()
-{
-	status_t ret;
-	arch_di_mei();
-	ret = plic_setup();
-	plic_port = (ic_t *)malloc(sizeof(ic_t));
-	if(!plic_port)
-		return error_memory_low;
-	plic_port->get_priority = &plic_get_priority;
-	plic_port-> set_priority = &plic_set_priority;
-	plic_port->get_affinity = &plic_get_threshold;
-	plic_port->set_affinity = &plic_set_threshold;
-	plic_port->get_irq = &plic_get_interrupt;
-	plic_port->en_irq = &plic_int_en;
-	plic_port->dis_irq = &plic_int_dis;
-	plic_port->pending = &plic_get_pending;
-	plic_port->register_handler = &plic_register_irq_handler;
-	ret |= ic_attach_device(ret, plic_port);
-	for(uint32_t i = 1; i <= N_PLAT_IRQS; i++)
-	{
-		plic_int_dis(i);
-		plic_set_priority(i, 1);
-	}
-	return ret;
-}
-
-static status_t plic_driver_setup_pcpu()
-{
-	status_t ret;
-	unsigned int irq;
-	sysdbg3("Linking local IRQ#%u on Core-%u\n", port->irq->id, arch_core_index());
-	plic_set_threshold(arch_core_index(), 0);
-	ret = link_interrupt(port->irq->module, port->irq->id, &plic_irqhandler);
-	do
-	{
-		irq = plic_get_interrupt();
-		if(irq)
-			plic_clr_interrupt(irq);
-	} while(irq);
-	arch_ei_mei();
-	return ret;
-}
-
 static status_t plic_driver_exit()
 {
 	free(plic_port);
@@ -207,6 +164,68 @@ static status_t plic_driver_exit_pcpu()
 {
 	arch_di_mei();
 	return unlink_interrupt(port->irq->module, port->irq->id);
+}
+
+static status_t plic_driver_setup()
+{
+	status_t ret;
+	arch_di_mei();
+	ret = plic_setup();
+	if(ret)
+		goto cleanup_exit;
+	plic_port = (ic_t *)malloc(sizeof(ic_t));
+	if(!plic_port)
+	{
+		ret = error_memory_low;
+		goto cleanup_exit;
+	}
+	plic_port->get_priority = &plic_get_priority;
+	plic_port-> set_priority = &plic_set_priority;
+	plic_port->get_affinity = &plic_get_threshold;
+	plic_port->set_affinity = &plic_set_threshold;
+	plic_port->get_irq = &plic_get_interrupt;
+	plic_port->en_irq = &plic_int_en;
+	plic_port->dis_irq = &plic_int_dis;
+	plic_port->pending = &plic_get_pending;
+	plic_port->register_handler = &plic_register_irq_handler;
+	ret = ic_attach_device(ret, plic_port);
+	if(ret)
+		goto cleanup_exit;
+	for(uint32_t i = 1; i <= N_PLAT_IRQS; i++)
+	{
+		plic_int_dis(i);
+		plic_set_priority(i, 1);
+	}
+	goto exit;
+cleanup_exit:
+	plic_driver_exit();
+exit:
+	return ret;
+}
+
+static status_t plic_driver_setup_pcpu()
+{
+	status_t ret;
+	unsigned int irq;
+	if(!port)
+		return error_driver_init_failed;
+	sysdbg3("Linking local IRQ#%u on Core-%u\n", port->irq->id, arch_core_index());
+	plic_set_threshold(arch_core_index(), 0);
+	ret = link_interrupt(port->irq->module, port->irq->id, &plic_irqhandler);
+	if(ret)
+		goto cleanup_exit;
+	do
+	{
+		irq = plic_get_interrupt();
+		if(irq)
+			plic_clr_interrupt(irq);
+	} while(irq);
+	arch_ei_mei();
+	goto exit;
+cleanup_exit:
+	plic_driver_exit_pcpu();
+exit:
+	return ret;
 }
 
 INCLUDE_DRIVER(riscv_plic, plic_driver_setup, plic_driver_exit, 0, 0, 0);

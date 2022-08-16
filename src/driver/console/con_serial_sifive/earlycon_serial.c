@@ -28,9 +28,6 @@ static uart_port_t *earlycon_port;
 
 static status_t earlycon_serial_setup()
 {
-	earlycon_port = (uart_port_t *)malloc(sizeof(uart_port_t));
-	if(!earlycon_port)
-		return error_memory_low;
 	uart_get_properties(earlycon_port, console_uart);
 
 	sysdbg2("UART engine @ %p\n", earlycon_port->baddr);
@@ -65,35 +62,59 @@ static sysclk_config_clk_callback_t *earlycon_handle;
 
 static console_t *earlycon_serial_driver;
 
-status_t earlycon_serial_driver_setup()
-{
-	status_t ret;
-
-	earlycon_serial_driver = (console_t *)malloc(sizeof(console_t));
-	if(!earlycon_serial_driver)
-		return error_memory_low;
-	earlycon_serial_driver->write = &earlycon_serial_write;
-
-	earlycon_handle = (sysclk_config_clk_callback_t *)malloc(sizeof(sysclk_config_clk_callback_t));
-	if(!earlycon_handle)
-		return error_memory_low;
-	earlycon_handle->pre_config = &earlycon_serial_pre_clk_config;
-	earlycon_handle->post_config = &earlycon_serial_post_clk_config;
-
-	ret = earlycon_serial_setup();
-	ret |= sysclk_register_config_clk_callback(earlycon_handle);
-	ret |= console_attach_device(ret, earlycon_serial_driver);
-	return ret;
-}
-
 status_t earlycon_serial_driver_exit()
 {
 	status_t ret;
 	ret = console_release_device();
-	ret |= sysclk_deregister_config_clk_callback(earlycon_handle);
-	ret |= uart_shutdown(earlycon_port);
+	if(earlycon_handle)
+		ret |= sysclk_deregister_config_clk_callback(earlycon_handle);
+	if(earlycon_port)
+		ret |= uart_shutdown(earlycon_port);
 	free(earlycon_serial_driver);
 	free(earlycon_handle);
+	return ret;
+}
+
+status_t earlycon_serial_driver_setup()
+{
+	status_t ret;
+
+	earlycon_port = (uart_port_t *)malloc(sizeof(uart_port_t));
+	if(!earlycon_port)
+	{
+		ret = error_memory_low;
+		goto cleanup_1;
+	}
+
+	earlycon_serial_driver = (console_t *)malloc(sizeof(console_t));
+	if(!earlycon_serial_driver)
+	{
+		ret = error_memory_low;
+		goto cleanup_1;
+	}
+	earlycon_serial_driver->write = &earlycon_serial_write;
+
+	earlycon_handle = (sysclk_config_clk_callback_t *)malloc(sizeof(sysclk_config_clk_callback_t));
+	if(!earlycon_handle)
+	{
+		ret = error_memory_low;
+		goto cleanup_1;
+	}
+	earlycon_handle->pre_config = &earlycon_serial_pre_clk_config;
+	earlycon_handle->post_config = &earlycon_serial_post_clk_config;
+
+	ret = earlycon_serial_setup();
+	if(ret)
+		goto cleanup_1;
+	ret = sysclk_register_config_clk_callback(earlycon_handle);
+	if(ret && ret != error_list_node_exists)
+		goto cleanup_1;
+	ret = console_attach_device(ret, earlycon_serial_driver);
+	if(!ret)
+		goto exit;
+cleanup_1:
+	earlycon_serial_driver_exit();
+exit:
 	return ret;
 }
 

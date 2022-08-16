@@ -75,6 +75,16 @@ static status_t earlycon_serial_write(const char c)
 
 static console_t *earlycon_serial_driver;
 
+status_t earlycon_serial_driver_exit()
+{
+	status_t ret;
+	ret = console_release_device();
+	ret |= uart_shutdown(earlycon_port);
+	free(earlycon_port);
+	free(earlycon_serial_driver);
+	return ret;
+}
+
 status_t earlycon_serial_driver_setup()
 {
 	status_t ret;
@@ -83,17 +93,14 @@ status_t earlycon_serial_driver_setup()
 		return error_memory_low;
 	earlycon_serial_driver->write = &earlycon_serial_write;
 	ret = earlycon_serial_setup();
-	ret |= console_attach_device(ret, earlycon_serial_driver);
-	return ret;
-}
-
-status_t earlycon_serial_driver_exit()
-{
-	status_t ret;
-	ret = console_release_device();
-	ret |= uart_shutdown(earlycon_port);
-	free(earlycon_port);
-	free(earlycon_serial_driver);
+	if(ret)
+		goto cleanup_exit;
+	ret = console_attach_device(ret, earlycon_serial_driver);
+	if(!ret)
+		goto exit;
+cleanup_exit:
+	earlycon_serial_driver_exit();
+exit:
 	return ret;
 }
 

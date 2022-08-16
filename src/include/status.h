@@ -79,4 +79,8 @@ typedef enum status
 /* Mesg related error */
 	error_mesg			= -0x1000,
 	error_mesg_long			= -0x1001,
+/* List related error */
+	error_list			= -0x1100,
+	error_list_node_exists		= -0x1101,
+	error_list_node_not_found	= -0x1102,
 } status_t;

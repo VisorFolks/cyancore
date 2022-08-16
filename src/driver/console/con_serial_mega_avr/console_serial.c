@@ -69,7 +69,7 @@ static status_t console_serial_setup()
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
 	 */
-	return uart_setup(console_port, trx, no_parity); //
+	return uart_setup(console_port, trx, no_parity);
 }
 
 static int_wait_t con_write_wait;
@@ -108,6 +108,17 @@ static status_t console_serial_read(char *c)
 
 static console_t *console_serial_driver;
 
+status_t console_serial_driver_exit()
+{
+	status_t ret;
+	ret = console_release_device();
+	ret |= uart_shutdown(console_port);
+	free(console_serial_driver);
+	free(console_port);
+	ret |= driver_setup("earlycon");
+	return ret;
+}
+
 status_t console_serial_driver_setup()
 {
 	status_t ret;
@@ -118,18 +129,14 @@ status_t console_serial_driver_setup()
 	console_serial_driver->write = &console_serial_write;
 	console_serial_driver->read = &console_serial_read;
 	ret = console_serial_setup();
-	ret |= console_attach_device(ret, console_serial_driver);
-	return ret;
-}
-
-status_t console_serial_driver_exit()
-{
-	status_t ret;
-	ret = console_release_device();
-	ret |= uart_shutdown(console_port);
-	free(console_serial_driver);
-	free(console_port);
-	ret |= driver_setup("earlycon");
+	if(ret)
+		goto cleanup_exit;
+	ret = console_attach_device(ret, console_serial_driver);
+	if(!ret)
+		goto exit;
+cleanup_exit:
+	console_serial_driver_exit();
+exit:
 	return ret;
 }
 
