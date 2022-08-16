@@ -12,6 +12,7 @@
 #pragma once
 #define _STDLIB_H_
 #include <stdint.h>
+#include <stdbool.h>
 #include <status.h>
 
 #define EXIT_FAILURE		1
@@ -25,5 +26,15 @@ void *malloc(size_t);
 void free(void *);
 void *calloc(size_t, size_t);
 void *realloc(void *, size_t);
-void heap_dump(void);
+void __heap_status(bool);
 size_t heap_usage(void);
+
+static inline void heap_status(void)
+{
+	__heap_status(false);
+}
+
+static inline void heap_dump(void)
+{
+	__heap_status(true);
+}
