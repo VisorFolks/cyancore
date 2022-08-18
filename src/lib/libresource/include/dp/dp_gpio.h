@@ -13,15 +13,15 @@
 
 #include <stdint.h>
 
-typedef struct pinmux
+typedef const struct pinmux
 {
 	uint8_t port;
 	uint8_t function;
 	uint8_t npins;
-	uint8_t *pins;
+	const uint8_t *pins;
 } pinmux_t;
 
-typedef struct gpio_module
+typedef const struct gpio_module
 {
 	hw_devid_t id;
 	uintptr_t baddr;

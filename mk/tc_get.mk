@@ -14,6 +14,7 @@ T_ALLOWLIST	+= get_all_tc get_avr_tc get_arm_tc get_riscv_tc
 
 # GIT REPO RECOMMENDED
 # Provide git repo path for toolchains for better experience
+ESIZE_REPO	:= https://github.com/VisorFolks/cc_elf_size.git
 AVR_TC_REPO	?=
 RISC_V_TC_REPO	?=
 ARM_TC_REPO	?=
@@ -22,6 +23,13 @@ get_all_tc: --tc_clear get_avr_tc get_arm_tc get_riscv_tc
 
 --tc_clear:
 	rm -rf $(TOOLS_ROOT)
+
+SIZE	:= $(TOOLS_ROOT)/cc_elf_size/size
+$(SIZE):
+	$(info < ! > Fetching ELF-Size utility ...)
+	cd $(TOOLS_ROOT); git clone $(ESIZE_REPO) --quiet;
+	$(MAKE) -C $(@D)
+	echo "< / > Done !"
 
 get_arm_tc: $(TOOLS_ROOT)/arm-toolchain/bin/arm-none-eabi-gcc
 $(TOOLS_ROOT)/arm-toolchain/bin/arm-none-eabi-gcc:

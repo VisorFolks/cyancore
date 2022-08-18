@@ -35,7 +35,6 @@ SECTIONS
 		KEEP(*(.text.entry))
 		*(.text)
 		*(.text.*)
-		KEEP(*(.text))
 		. = ALIGN(4);
 	} > vma_imem AT > lma_mem
 

@@ -40,14 +40,14 @@ typedef enum int_module
 	int_plat = 3
 } int_module_t;
 
-typedef struct irqs
+typedef const struct irqs
 {
 	uint32_t module : 4;
 	uint32_t id	: 24;
 	uint32_t trigger: 4;
 } irqs_t;
 
-typedef struct cpu
+typedef const struct cpu
 {
 	char name[10];
 	uint16_t id;
@@ -56,7 +56,7 @@ typedef struct cpu
 
 } cpu_t;
 
-typedef struct memory_info
+typedef const struct memory_info
 {
 	uintptr_t start;
 	uintptr_t size;
@@ -70,5 +70,5 @@ typedef enum clock_type
 } clock_type_t;
 
 cpu_t *dp_get_cpu_info(uint8_t);
-unsigned long *dp_get_base_clock();
+const unsigned long *dp_get_base_clock();
 memory_t *dp_get_memory_info();

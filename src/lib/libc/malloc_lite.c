@@ -181,7 +181,7 @@ size_t heap_usage(void)
 	return usage;
 }
 
-void heap_dump(void)
+void __heap_status(bool dump)
 {
 	size_t i;
 	unsigned int cntr;
@@ -191,6 +191,10 @@ void heap_dump(void)
 	printf("Heap Dump: %p - %p\n", &_heap_start, &_heap_end);
 	printf("Heap Used: %u/%u - %u%%\n", h_used,
 		(unsigned int)&_heap_size, h_perc);
+
+	if(!dump)
+		return;
+
 	for(i = (size_t)&_heap_start; i < (size_t)&_heap_end; i+=32)
 	{
 		printf("[");

@@ -13,7 +13,7 @@
 
 #include <stdint.h>
 
-typedef struct module
+typedef const struct module
 {
 	hw_devid_t id;
 	uintptr_t baddr;

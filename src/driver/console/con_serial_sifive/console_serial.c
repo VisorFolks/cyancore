@@ -30,10 +30,11 @@ static void console_serial_irq_handler(void);
 
 static status_t console_serial_setup(void)
 {
-	console_port = (uart_port_t *)malloc(sizeof(uart_port_t));
-	if(!console_port)
-		return error_memory_low;
-	uart_get_properties(console_port, console_uart);
+	status_t ret;
+
+	ret = uart_get_properties(console_port, console_uart);
+	if(ret)
+		goto exit;
 
 	console_port->irq_handler = console_serial_irq_handler;
 
@@ -44,7 +45,9 @@ static status_t console_serial_setup(void)
 	 * If memory mapping is applicable,
 	 * put it in mmu supported guide.
 	 */
-	return uart_setup(console_port, trx, no_parity);
+	ret = uart_setup(console_port, trx, no_parity);
+exit:
+	return ret;
 }
 
 static status_t console_serial_write(const char c)
@@ -104,38 +107,68 @@ static status_t console_serial_post_clk_config(void)
 
 static sysclk_config_clk_callback_t *console_handle;
 
+status_t console_serial_driver_exit(void)
+{
+	status_t ret;
+	ret = console_release_device();
+	if(console_handle)
+		ret |= sysclk_deregister_config_clk_callback(console_handle);
+	if(console_port)
+		ret |= uart_shutdown(console_port);
+	free(console_port);
+	free(console_serial_driver);
+	free(console_handle);
+	ret |= driver_setup("earlycon");
+	return ret;
+}
+
 status_t console_serial_driver_setup(void)
 {
 	status_t ret;
 	driver_exit("earlycon");
+
+	console_port = (uart_port_t *)malloc(sizeof(uart_port_t));
+	if(!console_port)
+	{
+		ret = error_memory_low;
+		goto cleanup_1;
+	}
+
 	console_serial_driver = (console_t *)malloc(sizeof(console_t));
 	if(!console_serial_driver)
-		return error_memory_low;
+	{
+		ret = error_memory_low;
+		goto cleanup_1;
+	}
+
 	console_serial_driver->write = &console_serial_write;
 	console_serial_driver->read = &console_serial_read;
 	console_serial_driver->payload_size = (unsigned int *)&occ;
 
 	console_handle = (sysclk_config_clk_callback_t*)malloc(sizeof(sysclk_config_clk_callback_t));
 	if(!console_handle)
-		return error_memory_low;
+	{
+		ret = error_memory_low;
+		goto cleanup_1;
+	}
+
 	console_handle->pre_config = &console_serial_pre_clk_config;
 	console_handle->post_config = &console_serial_post_clk_config;
-	ret = console_serial_setup();
-	ret |= sysclk_register_config_clk_callback(console_handle);
-	ret |= console_attach_device(ret, console_serial_driver);
-	return ret;
-}
 
-status_t console_serial_driver_exit(void)
-{
-	status_t ret;
-	ret = console_release_device();
-	ret |= sysclk_deregister_config_clk_callback(console_handle);
-	ret |= uart_shutdown(console_port);
-	free(console_port);
-	free(console_serial_driver);
-	free(console_handle);
-	ret |= driver_setup("earlycon");
+	ret = console_serial_setup();
+	if(ret)
+		goto cleanup_1;
+
+	ret = sysclk_register_config_clk_callback(console_handle);
+	if(ret && ret != error_list_node_exists)
+		goto cleanup_1;
+	ret = console_attach_device(ret, console_serial_driver);
+	if(!ret)
+		goto exit;
+
+cleanup_1:
+	console_serial_driver_exit();
+exit:
 	return ret;
 }
 

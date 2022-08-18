@@ -70,24 +70,23 @@ void platform_memory_layout()
 	_itim_vstart, _itim_size, _itim_vend,
 	_flash_size, _ram_size;
 
-	syslog(info, "Memory Info >\n");
-	syslog(info, "Flash Size  : %u\n", &_flash_size);
-	syslog(info, "RAM Size    : %u\n", &_ram_size);
 	syslog(info, "\n");
 	syslog(info, "Program Memory Layout >\n");
-	syslog(info, "text Region\t: %08p - %08p  \t: Size: %u\n",
+	syslog(info, "Flash Size\t: %u\n", &_flash_size);
+	syslog(info, "RAM Size\t: %u\n", &_ram_size);
+	syslog(info, "text Region\t: %010p - %010p : Size: %u\n",
 			&_text_start, &_text_end, &_text_size);
-	syslog(info, "rodata Region\t: %08p - %08p  \t: Size: %u\n",
+	syslog(info, "rodata Region\t: %010p - %010p : Size: %u\n",
 			&_rodata_start, &_rodata_end, &_rodata_size);
-	syslog(info, "ITIM Region\t: %08p - %08p  \t: Size: %u\n",
+	syslog(info, "ITIM Region\t: %010p - %010p : Size: %u\n",
 			&_itim_vstart, &_itim_vend, &_itim_size);
-	syslog(info, "bss Region\t: %08p - %08p  \t: Size: %u\n",
+	syslog(info, "bss Region\t: %010p - %010p : Size: %u\n",
 			&_bss_start, &_bss_end, &_bss_size);
-	syslog(info, "data Region\t: %08p - %08p  \t: Size: %u\n",
+	syslog(info, "data Region\t: %010p - %010p : Size: %u\n",
 			&_data_vstart, &_data_vend, &_data_size);
-	syslog(info, "stack Region\t: %08p - %08p  \t: Size: %u\n",
+	syslog(info, "stack Region\t: %010p - %010p : Size: %u\n",
 			&_stack_end, &_stack_start, &_stack_size);
-	syslog(info, "heap Region\t: %08p - %08p  \t: Size: %u\n",
+	syslog(info, "heap Region\t: %010p - %010p : Size: %u\n",
 			&_heap_start, &_heap_end, &_heap_size);
 	syslog(info, "\n");
 }
