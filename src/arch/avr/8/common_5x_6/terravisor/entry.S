@@ -30,10 +30,10 @@
  */
 function entry
 	cli
-	ldi	r18, lo8(stack_start)
+	ldi	r18, lo8(_stack_end)
 	ldi	r30, SPL
 	st	Z, r18
-	ldi	r18, hi8(stack_start)
+	ldi	r18, hi8(_stack_end)
 	ldi	r30, SPH
 	st	Z, r18
 	eor	r18, r18
