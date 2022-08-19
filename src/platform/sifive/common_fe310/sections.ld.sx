@@ -10,6 +10,7 @@
  */
 
 #include <plat_mem.h>
+#include <linker_macros.h>
 
 #ifndef L_MEM_START
 #define L_MEM_START	0
@@ -93,6 +94,8 @@ SECTIONS
 		*(.data)
 		*(.data.*)
 		KEEP(*(.data))
+		DRIVER_TABLE
+		ECALL_TABLE
 	} > vma_dmem AT > lma_mem
 
 	.tdata : ALIGN(4)
@@ -103,17 +106,6 @@ SECTIONS
 		KEEP(*(.tdata))
 	} > vma_dmem AT > lma_mem
 
-	.driver_table : ALIGN(4) {} > vma_dmem AT > lma_mem
-	.mcall_table : ALIGN(4) {} > vma_dmem AT > lma_mem
-
-	.stack : ALIGN(16)
-	{
-		. = ALIGN(16);
-		*(.stack)
-		KEEP(*(.stack))
-		. = . + STACK_SIZE;
-	} > vma_dmem
-
 	.heap : ALIGN(HEAP_ALIGN)
 	{
 		*(.heap)
@@ -121,38 +113,44 @@ SECTIONS
 		. = . + HEAP_SIZE;
 	} > vma_dmem
 
+	.stack : ALIGN(16)
+	{
+		*(.stack)
+		KEEP(*(.stack))
+		. = . + STACK_SIZE;
+	} > vma_dmem
+
 	PROVIDE(_text_start = ADDR(.text));
 	PROVIDE(_text_size = SIZEOF(.text));
-	PROVIDE(_text_end = _text_start + _text_size);
+	PROVIDE(_text_end = _text_start + _text_size - 1);
 
 	PROVIDE(_rodata_start = ADDR(.rodata));
 	PROVIDE(_rodata_size = SIZEOF(.rodata));
-	PROVIDE(_rodata_end = _rodata_start + _rodata_size);
+	PROVIDE(_rodata_end = _rodata_start + _rodata_size - 1);
 
 	PROVIDE(_data_start = LOADADDR(.static_data_global));
-	PROVIDE(_data_size = SIZEOF(.data) + SIZEOF(.tdata) + SIZEOF(.static_data_global) +\
-	SIZEOF(.driver_table) + SIZEOF(.mcall_table));
+	PROVIDE(_data_size = SIZEOF(.data) + SIZEOF(.tdata) + SIZEOF(.static_data_global));
 	PROVIDE(_data_vstart = ADDR(.static_data_global));
-	PROVIDE(_data_vend = _data_vstart + _data_size);
+	PROVIDE(_data_vend = _data_vstart + _data_size - 1);
 
 	PROVIDE(_tls_start = ADDR(.tdata));
 	PROVIDE(_global_start = ADDR(.static_global_var) + 0x800);
-	PROVIDE(_stack_start = ADDR(.stack) + STACK_SIZE);
 	PROVIDE(_stack_size = SIZEOF(.stack));
 	PROVIDE(_stack_end = ADDR(.stack));
+	PROVIDE(_stack_start = _stack_end + _stack_size);
 
 	PROVIDE(_bss_start = ADDR(.bss));
-	PROVIDE(_bss_size = SIZEOF(.bss) + SIZEOF(.static_bss_global) + 4);
-	PROVIDE(_bss_end = _bss_start + _bss_size);
+	PROVIDE(_bss_size = SIZEOF(.bss) + SIZEOF(.static_bss_global));
+	PROVIDE(_bss_end = _bss_start + _bss_size - 1);
 
 	PROVIDE(_heap_start = ADDR(.heap));
 	PROVIDE(_heap_size = SIZEOF(.heap));
-	PROVIDE(_heap_end = _heap_start + _heap_size);
+	PROVIDE(_heap_end = _heap_start + _heap_size - 1);
 
 	PROVIDE(_itim_start = LOADADDR(.itim));
 	PROVIDE(_itim_size = SIZEOF(.itim));
 	PROVIDE(_itim_vstart = ADDR(.itim));
-	PROVIDE(_itim_vend = _itim_vstart + _itim_size);
+	PROVIDE(_itim_vend = _itim_vstart + _itim_size - (_itim_size ? 1 : 0));
 
 	PROVIDE(_flash_size = _data_size + SIZEOF(.text) + _itim_size + SIZEOF(.rodata));
 	PROVIDE(_ram_size = _bss_size + _data_size + SIZEOF(.stack) + SIZEOF(.heap));

@@ -10,6 +10,7 @@
  */
 
 #include <plat_mem.h>
+#include <linker_macros.h>
 
 #ifndef L_MEM_START
 #define L_MEM_START	0
@@ -18,8 +19,8 @@
 MEMORY
 {
 	/* VM Addresses */
-	vma_imem	: ORIGIN = V_IMEM_START, LENGTH = IMEM_LENGTH
-	vma_dmem	: ORIGIN = V_DMEM_START, LENGTH = DMEM_LENGTH
+	vma_imem (airwx)	: ORIGIN = V_IMEM_START, LENGTH = IMEM_LENGTH
+	vma_dmem (arw!xi)	: ORIGIN = V_DMEM_START, LENGTH = DMEM_LENGTH
 
 	/* LM Addresses */
 	lma_mem		: ORIGIN = L_MEM_START, LENGTH = IMEM_LENGTH
@@ -52,14 +53,6 @@ SECTIONS
 		*(COMMON)
 	} > vma_dmem
 
-	.heap :
-	{
-		. = ALIGN(HEAP_ALIGN);
-		*(.heap)
-		KEEP(*(.heap))
-		. = . + HEAP_SIZE;
-	} > vma_dmem
-
 	.data :
 	{
 		. = ALIGN(ALIGN_BOUND);
@@ -71,38 +64,46 @@ SECTIONS
 		*(.data)
 		*(.data.*)
 		KEEP(*(.data))
+		DRIVER_TABLE
+		ECALL_TABLE
 	} > vma_dmem AT > lma_mem
 
-	.driver_table : {} > vma_dmem AT > lma_mem
-	.mcall_table : {} > vma_dmem AT > lma_mem
+	.heap :
+	{
+		. = ALIGN(HEAP_ALIGN);
+		*(.heap)
+		KEEP(*(.heap))
+		. = . + HEAP_SIZE;
+	} > vma_dmem
 
 	.stack :
 	{
 		. = ALIGN(ALIGN_BOUND);
 		*(.stack)
 		KEEP(*(.stack))
-	} > vma_dmem AT > lma_mem
+		. = . + STACK_SIZE;
+	} > vma_dmem
 
 	PROVIDE(_text_start = ADDR(.text));
 	PROVIDE(_text_size = SIZEOF(.text));
-	PROVIDE(_text_end = _text_start + _text_size);
+	PROVIDE(_text_end = _text_start + _text_size - 1);
 
 	PROVIDE(_data_start = LOADADDR(.data));
-	PROVIDE(_data_size = SIZEOF(.data) + SIZEOF(.driver_table) + SIZEOF(.mcall_table));
+	PROVIDE(_data_size = SIZEOF(.data));
 	PROVIDE(_data_vstart = ADDR(.data));
-	PROVIDE(_data_vend = _data_vstart + _data_size);
+	PROVIDE(_data_vend = _data_vstart + _data_size - 1);
 
 	PROVIDE(_bss_start = ADDR(.bss));
 	PROVIDE(_bss_size = SIZEOF(.bss));
-	PROVIDE(_bss_end = _bss_start + _bss_size);
+	PROVIDE(_bss_end = _bss_start + _bss_size - 1);
 
 	PROVIDE(_stack_start = ADDR(.stack));
 	PROVIDE(_stack_size = SIZEOF(.stack));
-	PROVIDE(_stack_end = _stack_start - _stack_size);
+	PROVIDE(_stack_end = _stack_start + _stack_size - 1);
 
 	PROVIDE(_heap_start = ADDR(.heap));
 	PROVIDE(_heap_size = SIZEOF(.heap));
-	PROVIDE(_heap_end = _heap_start + SIZEOF(.heap));
+	PROVIDE(_heap_end = _heap_start + _heap_size - 1);
 
 	PROVIDE(_flash_size = _data_size + SIZEOF(.text));
 	PROVIDE(_ram_size = _bss_size + _data_size + SIZEOF(.stack) + SIZEOF(.heap));
