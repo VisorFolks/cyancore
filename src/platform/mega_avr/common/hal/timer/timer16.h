@@ -72,6 +72,7 @@ static void timer16_config_op_mode(const timer_port_t *port, bool en, bool inv)
 		reg &= ~(3 << ((3 - id) << 1));
 	
 	MMIO8(port->baddr + TCCRA_16B_OFFSET) = reg;
+	MMIO16(port->baddr + TCNTL_16B_OFFSET) = 0;
 }
 
 static void timer16_set(const timer_port_t *port, uint16_t value)
