@@ -40,7 +40,7 @@ typedef struct mcall
 } mcall_t;
 
 #define INCLUDE_MCALL(_name, _id , _callback)		\
-	const mcall_t _name _SECTION(".mcall") =	\
+	const mcall_t _name _SECTION(".ecall") =	\
 	{						\
 		.id		= _id,			\
 		.callback	= _callback		\
