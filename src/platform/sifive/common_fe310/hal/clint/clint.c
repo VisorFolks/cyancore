@@ -46,6 +46,7 @@ static status_t clint_setup()
 	port->baddr = dp->baddr;
 	port->stride = dp->stride;
 	port->port_id = clint;
+	MMIO64(port->baddr + MTIME_OFFSET) = 0;
 	return success;
 }
 
