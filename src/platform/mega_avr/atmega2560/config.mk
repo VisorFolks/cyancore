@@ -24,6 +24,11 @@ $(eval $(call add_define,BIT))
 BOOT_CORE_ID:= 0
 $(eval $(call add_define,BOOT_CORE_ID))
 
+FLASH_START	:= 0x0000
+FLASH_SIZE	:= 0x40000	# 256K
+RAM_START	:= 0x00800200
+RAM_SIZE	:= 0x2000	# 2K
+
 # Call this FLAG from Project config file if needed
 FCLK		?= 16000000
 $(eval $(call add_define,FCLK))
