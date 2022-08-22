@@ -29,7 +29,8 @@ $(ELF): $(DEP_LIBS) $(DEP_OBJS) $(LD_SCRIPT) $(LD_SUPPLEMENT) | $$(SIZE)
 	$(OD) -Dx -h --wide $@ > $(@:.elf=.lst)
 	$(OC) -O binary $@ $(@:.elf=.bin)
 	$(OC) -O ihex $@ $(@:.elf=.hex)
-	@cd $(@D); $(SIZE) $(@F)
+	@cd $(@D); $(SIZE) -f $(@F) -m Flash $(FLASH_START) $(FLASH_SIZE)	\
+	-m RAM $(RAM_START) $(RAM_SIZE) $(MEMSIZE_ARGS)
 	@echo ""
 
 $(OUT)/%.ld: %.ld.sx

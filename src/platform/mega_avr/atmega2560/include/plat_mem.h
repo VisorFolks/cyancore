@@ -18,8 +18,8 @@
 
 #define L_MEM_START	0x00000000
 
-#define IMEM_LENGTH	0x20000
-#define DMEM_LENGTH	0x1fff
+#define IMEM_LENGTH	0x40000
+#define DMEM_LENGTH	0x2000
 
 #define ALIGN_BOUND	2
 
