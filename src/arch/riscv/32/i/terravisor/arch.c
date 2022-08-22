@@ -95,33 +95,6 @@ void arch_ei_restore_state(istate_t *istate)
 	asm volatile("csrs mie, %0" : : "r" (*istate));
 }
 
-/**
- * arch_machine_call - perform machine call
- *
- * @brief This function performs environment call
- * in m mode
- *
- * @param[in] code: machine call code
- * @param[in] a0: first argument
- * @param[in] a1: second argument
- * @param[in] a2: third argument
- * @param[in] *ret: return struct
- */
-void arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsigned int a2, mret_t *ret)
-{
-	if(ret == NULL)
-		return;
-	asm volatile("mv a0, %0" : : "r" (code));
-	asm volatile("mv a1, %0" : : "r" (a0));
-	asm volatile("mv a2, %0" : : "r" (a1));
-	asm volatile("mv a3, %0" : : "r" (a2));
-	asm volatile("ecall");
-	asm volatile("mv %0, a0" : "=r" (ret->p));
-	asm volatile("mv %0, a1" : "=r" (ret->size));
-	asm volatile("mv %0, a2" : "=r" (ret->status));
-	return;
-}
-
 _WEAK void arch_panic_handler()
 {
 	const context_frame_t *frame = get_context_frame();
