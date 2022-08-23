@@ -1,6 +1,6 @@
 #
 # CYANCORE LICENSE
-# Copyrights (C) 2019, Cyancore Team
+# Copyrights (C) 2019-2022, Cyancore Team
 #
 # File Name		: banner.mk
 # Description		: This script prints banner while starting build
@@ -9,8 +9,8 @@
 #
 
 .PHONY:	version
-NAME		= Helium
-VERSION		= 0x01000202
+NAME		= Lithium
+VERSION		= 0x01000300
 
 $(eval $(call add_define,VERSION))
 
