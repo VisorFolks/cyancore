@@ -5,7 +5,12 @@
 #include <terravisor/cc_os/cc_shed.h>
 
 extern cc_shed_tcb_t * g_list_head;
+
+#if CC_DYNAMIC == 0
 extern cc_shed_tcb_t g_cc_os_tcb_list[];
+#else
+extern cc_shed_tcb_t *g_cc_os_tcb_list;
+#endif
 extern cc_shed_tcb_t * g_curr_task;
 
 cc_os_err_t cc_os_add_task (cc_os_task_t * cc_os_task)
@@ -18,6 +23,9 @@ cc_os_err_t cc_os_add_task (cc_os_task_t * cc_os_task)
 
 	cc_shed_tcb_t * ptr = g_list_head;
 
+#if CC_DYNAMIC == 0
+
+	/* Static Task Allocation */
 	if ((ptr->next_shed_tcb == NULL )&& (ptr->prev_shed_tcb == NULL))
 	{
 		ptr->next_shed_tcb = ptr->prev_shed_tcb = g_list_head;
@@ -25,7 +33,7 @@ cc_os_err_t cc_os_add_task (cc_os_task_t * cc_os_task)
 
 	else
 	{
-		for (size_t i = 0; i < CC_OS_MAX_THREAD; i++)
+		for (size_t i = 0; i < ccosconfig_CC_OS_MAX_THREAD; i++)
 		{
 			/* Get an available node from global tcb list */
 			if (g_cc_os_tcb_list[i].task_status == cc_shed_task_terminated)
@@ -48,18 +56,23 @@ cc_os_err_t cc_os_add_task (cc_os_task_t * cc_os_task)
 		}
 
 	}
+#else
+	/* Dynamic Task Declaration */
+#endif
 	/* Fill tcb details */
-	memcpy(ptr->name, cc_os_task->name, CC_OS_TASK_NAME_LEN);
+	memcpy(ptr->name, cc_os_task->name, ccosconfig_CC_OS_TASK_NAME_LEN);
 	ptr->stack_ptr 	 = cc_os_task->stack_ptr;
 	ptr->priority 	 = cc_os_task->priority;
 	ptr->task_status = cc_shed_task_ready;
-
 	return success;
 }
 
 cc_os_err_t cc_os_del_task (const char * name)
 {
 	cc_shed_tcb_t * ptr = g_curr_task;
+
+#if !CC_DYNAMIC
+
 	int name_found = 0;
 	if (name != NULL)
 	{
@@ -96,7 +109,9 @@ cc_os_err_t cc_os_del_task (const char * name)
 		}
 
 	}
-
+#else
+	/* Dynamic Task Deletion */
+#endif
 	ptr->next_shed_tcb->prev_shed_tcb = ptr->prev_shed_tcb;
 	ptr->prev_shed_tcb->next_shed_tcb = ptr->next_shed_tcb;
 	ptr->task_status   = cc_shed_task_terminated;
@@ -128,7 +143,7 @@ cc_os_err_t cc_os_pause_task (const char * name)
 		}
 	}
 
-	ptr->task_status = cc_shed_task_paused;
+	ptr->task_status = cc_shed_task_wait;
 
 	return success;
 }
@@ -159,8 +174,17 @@ cc_os_err_t cc_os_resume_task (const char * name)
 	return success;
 }
 
-cc_os_err_t cc_os_wait_task (const size_t ticks _UNUSED)
+cc_os_err_t cc_os_wait_task (const size_t ticks)
 {
+	ASSERT_IF_FALSE(ticks > 0);
+
+	cc_shed_tcb_t * ptr = g_list_head;
+
+	ptr->task_delay_ticks = ticks;
+	ptr->task_status = cc_shed_task_wait;
+
+	// Yield
+
 	return success;
 }
 
