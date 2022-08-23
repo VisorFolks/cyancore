@@ -1,3 +1,13 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2022, Cyancore Team
+ *
+ * File Name		: cc_shed.h
+ * Description		: CC OS Kernel scheduler declaration
+ * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
 #pragma once
 
 #include "stdint.h"
@@ -6,18 +16,19 @@ typedef struct cc_shed_tcb cc_shed_tcb_t;
 
 typedef enum
 {
-	cc_shed_task_terminated,
-	cc_shed_task_ready,
-	cc_shed_task_running,
-	cc_shed_task_paused,
+	cc_shed_task_terminated,				///> Initial State
+	cc_shed_task_ready,					///> Task Ready to despatch
+	cc_shed_task_running,					///> Task currently running
+	cc_shed_task_wait,					///> Task in wait state
 } cc_shed_task_status_t;
 
 struct cc_shed_tcb
 {
-	char 	  name [CC_OS_TASK_NAME_LEN];
-	size_t    priority;
-	void    * stack_ptr;
-	cc_shed_tcb_t * prev_shed_tcb;
-	cc_shed_tcb_t * next_shed_tcb;
-	cc_shed_task_status_t task_status;
+	char 	  name [ccosconfig_CC_OS_TASK_NAME_LEN];	///> Name of the Current Task
+	size_t    priority;					///> Priority of the task
+	void    * stack_ptr;					///> Stack Pointer
+	size_t 	  task_delay_ticks;				///> Time delay in ticks
+	cc_shed_tcb_t * prev_shed_tcb;				///> Previous task pointer
+	cc_shed_tcb_t * next_shed_tcb;				///> Next task pointer
+	cc_shed_task_status_t task_status;			///> Current state of the task
 };
