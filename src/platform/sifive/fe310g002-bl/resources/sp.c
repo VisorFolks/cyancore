@@ -13,7 +13,7 @@
 #include <plat_defines.h>
 #include <resource.h>
 
-static uint8_t uart0pins[] = {16, 17};
+static const uint8_t uart0pins[] = {16, 17};
 static pinmux_t uart0 = addpins(0, uart0pins, serial);
 swdev_t consoleUart =
 {
@@ -28,7 +28,7 @@ swdev_t schedTimer =
 	.hwdev_id = timer | 0,
 };
 
-static uint8_t led0pins[] = {19, 21};
+static const uint8_t led0pins[] = {19, 21};
 static pinmux_t obled0 = addpins(0, led0pins, 0);
 swdev_t onBoardLED0 =
 {
@@ -36,7 +36,7 @@ swdev_t onBoardLED0 =
 	.pmux = &obled0
 };
 
-static uint8_t led1pins[] = {20};
+static const uint8_t led1pins[] = {20};
 static pinmux_t obled1 = addpins(0, led1pins, 0);
 swdev_t onBoardLED1 =
 {
@@ -44,7 +44,7 @@ swdev_t onBoardLED1 =
 	.pmux = &obled1
 };
 
-sw_devid_t terra_devs[] =
+const sw_devid_t terra_devs[] =
 {
 	console_uart, sched_timer, (onboard_led | 0),
 	(onboard_led | 1),
@@ -52,7 +52,7 @@ sw_devid_t terra_devs[] =
 
 visor_t terravisor = add_visor_devs(terra_devs);
 
-swdev_t *sw_devs[] =
+swdev_t * const sw_devs[] =
 {
 	&consoleUart, &schedTimer, &onBoardLED0,
 	&onBoardLED1,

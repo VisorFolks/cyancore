@@ -28,8 +28,8 @@ extern FILE stddev[];
 #define stderr		&stddev[2]
 #define stdlog		&stddev[3]
 
-int printf(const char *fmt, ...);
-int eprintf(const char *fmt, ...);
+int __printf(const char *fmt, ...);
+int __eprintf(const char *fmt, ...);
 int fputs(const FILE *, const char *);
 int fputc(const FILE *, const char);
 int fgetc(const FILE *, char *);
@@ -42,3 +42,6 @@ int fprintf(const FILE *, bool, const char *fmt, ...);
 int vprintf(const FILE *, bool, const char *fmt, va_list args);
 #endif
 #endif
+
+#define printf(fmt, ...)	if(!NOLOGS) __printf(fmt, ##__VA_ARGS__)
+#define eprintf(fmt, ...)	if(!NOLOGS) __eprintf(fmt, ##__VA_ARGS__))

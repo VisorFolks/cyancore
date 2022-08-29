@@ -22,18 +22,18 @@ LD_SUPPLEMENT	:= $(addprefix $(OUT)/,$(LD_SUPPLEMENT:.ld.sx=.ld))
 
 elf: $(ELF)
 
-$(ELF): $(DEP_LIBS) $(DEP_OBJS) $(LD_SCRIPT) $(LD_SUPPLEMENT)
+.SECONDEXPANSION:
+$(ELF): $(DEP_LIBS) $(DEP_OBJS) $(LD_SCRIPT) $(LD_SUPPLEMENT) | $$(SIZE)
 	@echo "Elf: Generating $(@F) ..."
-	$(LD) -dT $(LD_SCRIPT) $(addprefix -T , $(LD_SUPPLEMENT)) $(LD_FLAGS) -Map=$(@:.elf=.map) -o $@ $(filter %.o, $^) $(DEP_LIB_PATH) $(DEP_LIBS_ARG) -L $(TL) -lgcc
+	$(LD) -dT $(LD_SCRIPT) $(addprefix -T , $(LD_SUPPLEMENT)) $(LD_FLAGS)	\
+	-Map=$(@:.elf=.map) -o $@ $(filter %.o, $^) $(DEP_LIB_PATH) $(DEP_LIBS_ARG) -L $(TL) -lgcc
 	$(OD) -Dx -h --wide $@ > $(@:.elf=.lst)
 	$(OC) -O binary $@ $(@:.elf=.bin)
 	$(OC) -O ihex $@ $(@:.elf=.hex)
-	@echo "=================================================="
-	@echo "Size of Executable:"
-	@cd $(@D); $(SIZE) $(@F)
+	@cd $(@D); $(SIZE) -f $(@F) -m Flash $(FLASH_START) $(FLASH_SIZE)	\
+	-m RAM $(RAM_START) $(RAM_SIZE) $(MEMSIZE_ARGS)
 	@echo ""
 
-.SECONDEXPANSION:
 $(OUT)/%.ld: %.ld.sx
 	mkdir -p $(@D)
 	@echo "Elf: Preprocessing $(@F) ..."

@@ -10,7 +10,7 @@
 
 #pragma once
 
-#define FLASH_SIZE	128K
+#define FLASH_SIZE	256K
 #define RAM_SIZE	8K
 
 #define V_IMEM_START	0x00000000
@@ -18,11 +18,12 @@
 
 #define L_MEM_START	0x00000000
 
-#define IMEM_LENGTH	0x20000
-#define DMEM_LENGTH	0x1fff
+#define IMEM_LENGTH	0x40000
+#define DMEM_LENGTH	0x2000
 
 #define ALIGN_BOUND	2
 
-#define STACK_SIZE	1024
+#define STACK_SIZE	2048
 
-#define HEAP_SIZE	128
+#define HEAP_SIZE	2048
+#define HEAP_ALIGN	1

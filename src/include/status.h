@@ -12,6 +12,7 @@
 #define _STATUS_H_
 
 #include <compiler_macros.h>
+#include <utils.h>
 
 typedef enum status
 {
@@ -63,7 +64,7 @@ typedef enum status
 	error_system			= -0x0b00,
 	error_system_irq_link_fail	= -0x0b01,
 	error_system_irq_unlink_fail	= -0x0b02,
-	error_system_clk_caliberation	= -0xb003,
+	error_system_clk_caliberation	= -0x0b03,
 /* Network related error */
 	error_net			= -0x0c00,
 	error_net_con_timeout		= -0x0c01,
@@ -78,4 +79,8 @@ typedef enum status
 /* Mesg related error */
 	error_mesg			= -0x1000,
 	error_mesg_long			= -0x1001,
+/* List related error */
+	error_list			= -0x1100,
+	error_list_node_exists		= -0x1101,
+	error_list_node_not_found	= -0x1102,
 } status_t;

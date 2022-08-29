@@ -123,7 +123,7 @@ void platform_memory_layout()
 	syslog(info, "data Region\t: %06p - %06p : Size: %u\n",
 			&_data_vstart, &_data_vend, &_data_size);
 	syslog(info, "stack Region\t: %06p - %06p : Size: %u\n",
-			&_stack_end, &_stack_start, &_stack_size);
+			&_stack_start, &_stack_end, &_stack_size);
 	syslog(info, "heap Region\t: %06p - %06p : Size: %u\n",
 			&_heap_start, &_heap_end, &_heap_size);
 	syslog(info, "\n");

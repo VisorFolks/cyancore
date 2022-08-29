@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <status.h>
 #include <syslog.h>
+#include <stdlib.h>
 #include <string.h>
 #include <driver.h>
 #include <resource.h>
@@ -30,7 +31,7 @@ static void (*tmr_cb)(void);
 /**
  * tport - Timer HAL device instance
  */
-static timer_port_t tport;
+static timer_port_t *tport;
 
 /**
  * ticks - Driver variable for keeping track of timer ticks
@@ -120,8 +121,8 @@ static void plat_timer_set_period(unsigned int p)
 {
 	uint64_t nt = plat_get_timer_ticks_msec(tm->clk);
 	ticks = (nt * p) - 1;
-	tport.value = (size_t) ticks;
-	timer_setup(&tport, 2, PS);
+	tport->value = (size_t) ticks;
+	timer_setup(tport, 2, PS);
 }
 
 /**
@@ -144,7 +145,7 @@ static uint64_t plat_read_time(void)
 {
 	uint64_t stamp = cntr;
 	stamp <<= 10U;
-	stamp /= ((tport.value + 1) << 1);
+	stamp /= ((tport->value + 1) << 1);
 	return stamp;
 }
 
@@ -159,6 +160,8 @@ static tvisor_timer_t plat_timer_port =
 	.reg_cb = &plat_timer_reg_cb,
 };
 
+static status_t plat_timer_exit(void);
+
 /**
  * plat_timer_setup - Timer driver setup function
  * To be exported to driver table.
@@ -168,17 +171,35 @@ static status_t plat_timer_setup()
 	status_t ret = success;
 	ret |= plat_get_timer_prop();
 
-	tport.port_id = tm->id;
-	tport.clk_id = tm->clk_id;
-	tport.baddr = tm->baddr;
-	tport.stride = tm->stride;
-	tport.tmr_irq = (size_t) tm->interrupt[0].id;
-	tport.tmr_handler = plat_tmr_isr;
+	tport = (timer_port_t *)malloc(sizeof(timer_port_t));
+	if(!tport)
+		return error_memory_low;
+	if(!tm->clk)
+	{
+		ret = error_system_clk_caliberation;
+		goto cleanup_exit1;
+	}
 
-	ret |= timer_setup(&tport, 2, PS);
+	tport->port_id = tm->id;
+	tport->clk_id = tm->clk_id;
+	tport->baddr = tm->baddr;
+	tport->stride = tm->stride;
+	tport->tmr_irq = (size_t) tm->interrupt[0].id;
+	tport->tmr_handler = plat_tmr_isr;
+
+	ret = timer_setup(tport, 2, PS);
+	if(ret)
+		goto cleanup_exit2;
 	plat_timer_set_period(1);
-	ret |= timer_attach_device(ret, &plat_timer_port);
-
+	ret = timer_attach_device(ret, &plat_timer_port);
+	if(!ret)
+		goto exit;
+cleanup_exit2:
+	plat_timer_exit();
+cleanup_exit1:
+	if(tport)
+		free(tport);
+exit:
 	return ret;
 }
 
@@ -188,11 +209,12 @@ static status_t plat_timer_setup()
  */
 static status_t plat_timer_exit(void)
 {
-	status_t ret = timer_shutdown(&tport);
+	status_t ret = timer_shutdown(tport);
 	ticks = 0;
 	tmr_cb = (void *) 0;
-	memset(&tport, 0, sizeof(timer_port_t));
+	memset(tport, 0, sizeof(timer_port_t));
 	ret |= timer_release_device();
+	free(tport);
 	return ret;
 }
 

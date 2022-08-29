@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include <status.h>
 #include <syslog.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <arch.h>
 #include <driver.h>
@@ -140,13 +141,7 @@ static uint64_t plat_read_time(void)
 /**
  * Driver ops for linking timer
  */
-static tvisor_timer_t plat_timer_port =
-{
-	.read_ticks = &clint_read_time,
-	.read_time = &plat_read_time,
-	.set_period = &plat_timer_set_period,
-	.reg_cb = &plat_timer_reg_cb,
-};
+static tvisor_timer_t *plat_timer_port;
 
 /**
  * plat_timer_setup - Timer driver setup function
@@ -155,8 +150,16 @@ static tvisor_timer_t plat_timer_port =
 static status_t plat_timer_setup(void)
 {
 	status_t ret = success;
-	irqs_t *irq;
+	const irqs_t *irq;
 	arch_di_mtime();
+
+	plat_timer_port = (tvisor_timer_t *)malloc(sizeof(tvisor_timer_t));
+	if(!plat_timer_port)
+		return error_memory_low;
+	plat_timer_port->read_ticks = &clint_read_time;
+	plat_timer_port->read_time = &plat_read_time;
+	plat_timer_port->set_period = &plat_timer_set_period;
+	plat_timer_port->reg_cb = &plat_timer_reg_cb;
 
 	/* This funcition fetches device properties */
 	ret |= plat_get_timer_prop();
@@ -165,7 +168,7 @@ static status_t plat_timer_setup(void)
 
 	/* Link timer isr handle */
 	ret |= link_interrupt(irq->module, irq->id, &plat_tmr_isr);
-	ret |= timer_attach_device(ret, &plat_timer_port);
+	ret |= timer_attach_device(ret, plat_timer_port);
 	plat_timer_set_period(1);
 	return ret;
 }
@@ -176,9 +179,13 @@ static status_t plat_timer_setup(void)
  */
 static status_t plat_timer_exit(void)
 {
+	const irqs_t *irq;
 	arch_di_mtime();
 	tmr_cb = (void *) 0;
 	ticks = 0;
+	irq = &tm->interrupt[0];
+	unlink_interrupt(irq->module, irq->id);
+	free(plat_timer_port);
 	return timer_release_device();
 }
 

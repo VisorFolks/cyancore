@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 #include <status.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <arch.h>
 #include <machine_call.h>
@@ -25,7 +26,7 @@
 
 #include "clint_private.h"
 
-static clint_port_t port;
+static clint_port_t *port;
 
 static status_t clint_setup()
 {
@@ -36,46 +37,50 @@ static status_t clint_setup()
 
 	if(mres.status != success)
 		return mres.status;
+
+	port = (clint_port_t *)malloc(sizeof(clint_port_t));
+	if(!port)
+		return error_memory_low;
+
 	dp = (module_t *)mres.p;
-	port.baddr = dp->baddr;
-	port.stride = dp->stride;
-	port.port_id = clint;
+	port->baddr = dp->baddr;
+	port->stride = dp->stride;
+	port->port_id = clint;
+	MMIO64(port->baddr + MTIME_OFFSET) = 0;
 	return success;
 }
 
 static status_t clint_exit()
 {
-	port.baddr = 0;
-	port.stride = 0;
-	port.port_id = 0;
+	free(port);
 	return success;
 }
 
 status_t clint_send_softirq(size_t core_id)
 {
-	assert(port.baddr);
+	assert(port->baddr);
 	if(core_id >= N_CORES)
 		return error_func_inval_arg;
-	MMIO32(port.baddr + MSIP_OFFSET(core_id)) = 1;
+	MMIO32(port->baddr + MSIP_OFFSET(core_id)) = 1;
 	arch_dsb();
 	return success;
 }
 
 status_t clint_config_tcmp(size_t core_id, uint64_t value)
 {
-	assert(port.baddr);
+	assert(port->baddr);
 	if(core_id >= N_CORES)
 		return error_func_inval_arg;
-	MMIO64(port.baddr + MTCMP_OFFSET(core_id)) = value;
+	MMIO64(port->baddr + MTCMP_OFFSET(core_id)) = value;
 	arch_dsb();
 	return success;
 }
 
 uint64_t clint_read_time()
 {
-	assert(port.baddr);
+	assert(port->baddr);
 	uint64_t time_stamp;
-	time_stamp = MMIO64(port.baddr + MTIME_OFFSET);
+	time_stamp = MMIO64(port->baddr + MTIME_OFFSET);
 	return time_stamp;
 }
 

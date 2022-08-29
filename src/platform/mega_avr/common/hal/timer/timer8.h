@@ -54,6 +54,7 @@ static void timer8_config_ps(const timer_port_t *port, unsigned int ps)
 	}
 
 	MMIO8(port->baddr + TCCRB_8B_OFFSET) = reg;
+	MMIO8(port->baddr + TCNT_8B_OFFSET) = 0;
 }
 
 static void timer8_config_op_mode(const timer_port_t *port, bool en, bool inv)

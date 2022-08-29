@@ -15,6 +15,7 @@
 #include <plat_arch.h>
 #include <avr.h>
 #include <mmio.h>
+#include <machine_call.h>
 
 /**
  * arch_early_setup - This needs to be called in early stages of boot
@@ -38,15 +39,6 @@ void arch_ei_restore_state(istate_t *);
  */
 void arch_panic_handler();
 
-#ifdef _MACHINE_CALL_H_
-/**
- * arch_machine_call - Performs machine call
- *
- * Refer arch.c for more details.
- */
-void arch_machine_call(call_arg_t, call_arg_t, call_arg_t, call_arg_t, mret_t *);
-#endif
-
 /**
  * arch_register_interrupt_handler - Registers interrtup handler
  * for arch specific interrupt vectors
@@ -60,6 +52,27 @@ static inline unsigned int arch_core_index()
 {
 	/* AVR only support uni core architecture */
 	return 0;
+}
+
+/**
+ * arch_machine_call - perform machine call
+ *
+ * @brief This function emulates the machine
+ * call to maintain consistency.
+ *
+ * @param[in] code: machine call code
+ * @param[in] a0: first argument
+ * @param[in] a1: second argument
+ * @param[in] a2: third argument
+ * @param[in] *ret: return value
+ */
+static inline void arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsigned int a2, mret_t *ret)
+{
+	extern void (*const p_mcall)(unsigned int, unsigned int, unsigned int, unsigned int, mret_t*);
+	if(ret == NULL)
+		return;
+	p_mcall(code, a0, a1, a2, ret);
+	return;
 }
 
 /**

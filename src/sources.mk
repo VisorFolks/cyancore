@@ -34,6 +34,8 @@ CFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 
 ifneq ($(DEBUG),0)
 CFLAGS		+= -g
+else
+LD_FLAGS	+= -S
 endif
 
 $(eval $(call add_define,DEBUG))
@@ -45,7 +47,8 @@ ASFLAGS		+= $(foreach i,$(INCLUDE),-I$(i))	\
 LD_FLAGS	+= --error-unresolved-symbols		\
 		   --warn-common --fatal-warnings	\
 		   --check-sections -nostdlib		\
-		   --gc-sections -b $(OUTPUT_FORMAT)
+		   --gc-sections -b $(OUTPUT_FORMAT)	\
+		   --strip-discarded
 
 LINT_FLAGS	+= $(foreach i,$(INCLUDE),-I $(i))	\
 		   $(filter -D%,$(CFLAGS))

@@ -12,11 +12,10 @@
 #include <stdint.h>
 #include <status.h>
 #include <syslog.h>
-#include <machine_call.h>
-#include <terravisor/workers.h>
 #include <plat_arch.h>
 #include <mmio.h>
 #include <arch.h>
+#include <terravisor/workers.h>
 
 /**
  * arch_early_setup - This function is called in the early stages of boot
@@ -24,6 +23,7 @@
  * @brief This function is responsible to clean reset cpu status/control registers.
  *
  */
+void (* const p_mcall)(unsigned int, unsigned int, unsigned int, unsigned int, mret_t *) = &machine_call;
 void arch_early_setup()
 {
 	arch_di();
@@ -72,30 +72,12 @@ void arch_wfi()
 	asm volatile("sleep");
 }
 
-/**
- * arch_machine_call - perform machine call
- *
- * @brief This function emulates the machine
- * call to maintain consistency.
- *
- * @param[in] code: machine call code
- * @param[in] a0: first argument
- * @param[in] a1: second argument
- * @param[in] a2: third argument
- * @param[in] *ret: return value
- */
-void arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsigned int a2, mret_t *ret)
-{
-	if(ret == NULL)
-		return;
-	machine_call(code, a0, a1, a2, ret);
-	return;
-}
-
 void _NORETURN arch_panic_handler_callback()
 {
 	context_frame_t *frame;
 	frame = get_context_frame();
+	if(!frame)
+		goto panic;
 	syslog_stdout_enable();
 	sysdbg("r0=%p\tr1=%p\tr2=%p\tr3=%p\tr4=%p\tr5=%p\n",
 		frame->r0, frame->r1, frame->r2, frame->r3, frame->r4, frame->r5);
@@ -112,5 +94,6 @@ void _NORETURN arch_panic_handler_callback()
 #if DEBUG==0
 	syslog(info, "SP=%p\tSREG = %p\n", frame, frame->sreg);
 #endif
+panic:
 	while(1) arch_wfi();
 }
