@@ -14,7 +14,7 @@
   </div>
 </body>
 
-> **Version (arch:2 | major:4 | minor:2): 1.3.0**
+> **Version (arch:2 | major:4 | minor:2): 1.3.1**
 
 [![GitHub CI](https://github.com/VisorFolks/cyancore/actions/workflows/github_ci.yml/badge.svg)](https://github.com/VisorFolks/cyancore/actions/workflows/github_ci.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=VisorFolks_cyancore&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=VisorFolks_cyancore)
