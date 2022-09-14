@@ -11,4 +11,7 @@
 
 DIR	:= $(GET_PATH)
 
+PRINT_MEMORY_LAYOUT	?= 0
+$(eval $(call add_define,PRINT_MEMORY_LAYOUT))
+
 include mk/obj.mk

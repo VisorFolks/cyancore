@@ -24,4 +24,3 @@ status_t platform_clk_dis(unsigned int);
 status_t platform_mcall_update(void *);
 status_t platform_wdt_reset(void);
 void plat_panic_handler_callback(void);
-void platform_memory_layout(void);
