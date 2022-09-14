@@ -20,7 +20,6 @@ status_t platform_copy_data(void);
 status_t platform_bss_clear(void);
 status_t platform_resources_setup(void);
 status_t platform_sysclk_reset(void);
-void platform_memory_layout(void);
 
 #ifdef BOOTLOADER
 void platform_jump_to_user_code(void);

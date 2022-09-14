@@ -64,45 +64,8 @@ void platform_early_setup()
 	return;
 }
 
-/**
- * platform_setup - Executes function to make platform read to init
- *
- * @brief This function performs calls to function which make the
- * framework ready to execute. In this case (MegaAVR), it is dp_setup.
- * < ! > This function should be made to run on boot core only!
- */
-void platform_setup()
-{
-	sysdbg3("In %s\n", __func__);
-	driver_setup("earlycon");
-	bootmsgs_enable();
-	cyancore_insignia_lite();
-	return;
-}
-
-/**
- * platform_cpu_setup - Perform platform setup calls on all cpus
- *
- * @brief This function perform calls to functions that must be executed
- * on all corea to make the cpu ready for the platform drivers.
- */
-void platform_cpu_setup()
-{
-	sysdbg3("In %s\n", __func__);
-	arch_ei();
-	return;
-}
-
-void _NAKED plat_panic_handler_callback()
-{
-	context_frame_t *frame;
-	sysdbg3("In %s\n", __func__);
-	frame = get_context_frame();
-	syslog(info, "SP=%p\tSREG = %p\n", frame, frame->sreg);
-	exit(EXIT_FAILURE);
-}
-
-void platform_memory_layout()
+#if PRINT_MEMORY_LAYOUT
+static void platform_memory_layout()
 {
 	extern uint8_t _text_start, _text_size, _text_end,
 	_data_vstart, _data_size, _data_vend,
@@ -128,3 +91,46 @@ void platform_memory_layout()
 			&_heap_start, &_heap_end, &_heap_size);
 	syslog(info, "\n");
 }
+#endif
+
+/**
+ * platform_setup - Executes function to make platform read to init
+ *
+ * @brief This function performs calls to function which make the
+ * framework ready to execute. In this case (MegaAVR), it is dp_setup.
+ * < ! > This function should be made to run on boot core only!
+ */
+void platform_setup()
+{
+	sysdbg3("In %s\n", __func__);
+	driver_setup("earlycon");
+	bootmsgs_enable();
+	cyancore_insignia_lite();
+#if PRINT_MEMORY_LAYOUT
+	platform_memory_layout();
+#endif
+	return;
+}
+
+/**
+ * platform_cpu_setup - Perform platform setup calls on all cpus
+ *
+ * @brief This function perform calls to functions that must be executed
+ * on all corea to make the cpu ready for the platform drivers.
+ */
+void platform_cpu_setup()
+{
+	sysdbg3("In %s\n", __func__);
+	arch_ei();
+	return;
+}
+
+void _NAKED plat_panic_handler_callback()
+{
+	context_frame_t *frame;
+	sysdbg3("In %s\n", __func__);
+	frame = get_context_frame();
+	syslog(info, "SP=%p\tSREG = %p\n", frame, frame->sreg);
+	exit(EXIT_FAILURE);
+}
+
