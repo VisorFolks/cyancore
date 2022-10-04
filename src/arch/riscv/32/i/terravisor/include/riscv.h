@@ -56,6 +56,11 @@ static inline unsigned int arch_core_impid()
 	return ret;
 }
 
+static inline void arch_update_sp(uint32_t *p)
+{
+	asm volatile("mov sp, %0" : : "r"(p));
+}
+
 void riscv_update_vector();
 context_frame_t *get_context_frame();
 bool in_isr(void);

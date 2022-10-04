@@ -15,6 +15,7 @@
 #include <plat_arch.h>
 #include <avr.h>
 #include <mmio.h>
+#include <resource.h>
 #include <machine_call.h>
 
 /**
@@ -112,3 +113,9 @@ static inline void arch_nop()
 #define arch_isb()	arch_nop()
 #define arch_dsb()	arch_nop()
 #define arch_dmb()	arch_nop()
+
+#ifdef _STDBOOL_H_
+bool arch_suspended_state_was(cpu_sleep_t);
+void arch_signal_suspend(cpu_sleep_t);
+void arch_signal_resume(void);
+#endif
