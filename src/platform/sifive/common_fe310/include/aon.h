@@ -17,4 +17,8 @@ typedef struct aon_port
 
 } aon_port_t;
 
-status_t aon_pmucause(aon_port_t *, uint32_t *);
+status_t aon_pmucause(const aon_port_t *, uint32_t *);
+status_t aon_pmusleep_program(const aon_port_t *, const uint16_t *);
+status_t aon_pmuwake_program(const aon_port_t *, const uint16_t *);
+status_t aon_pmu_ie(const aon_port_t *, uint32_t);
+status_t aon_pmusleep_trigger(const aon_port_t *);
