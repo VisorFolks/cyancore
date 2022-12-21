@@ -14,9 +14,7 @@
 #include "status.h"
 #include "stdint.h"
 
-#if ccosconfig_CC_OS_USE_DYNAMIC == 0
-#define	CC_DYNAMIC 0
-#endif
+#define	CC_DYNAMIC ccosconfig_CC_OS_USE_DYNAMIC
 
 #define ASSERT_IF_FALSE(con)	if(!(con)) return error_func_inval_arg
 
@@ -71,33 +69,63 @@ static const cc_os_task_t _NAME##_task = {		\
  * @param cc_os_task	 pointer to the TASK_instance; use CC_GET_TASK_INST(Name) to get the Defined Task
  * @return cc_os_err_t
  */
-cc_os_err_t cc_os_add_task	(cc_os_task_t * cc_os_task);
+cc_os_err_t cc_os_add_task(cc_os_task_t * cc_os_task);
 
 /**
- * @brief A function to delete a task from the scheduler
+ * @brief A function to delete a task from the scheduler by instance
+ *
+ * @param cc_os_task	pointer to the TASK_instance; use CC_GET_TASK_INST(Name) to get the Defined Task;
+ * 			Pass NULL to point to current task
+ * @return cc_os_err_t
+ */
+cc_os_err_t cc_os_del_task(cc_os_task_t * cc_os_task);
+
+/**
+ * @brief A Function to pause the task until call resume explicitly using its instance
+ *
+ * @param cc_os_task	pointer to the TASK_instance; use CC_GET_TASK_INST(Name) to get the Defined Task;
+ * 			Pass NULL to point to current task
+ * @return cc_os_err_t
+ */
+cc_os_err_t cc_os_pause_task (cc_os_task_t * cc_os_task);
+
+/**
+ *
+ * @brief A Function to resume paused task using its instance
+ * @note  Calling this function for already non-waiting task has no effect.
+ *
+ * @param cc_os_task	pointer to the TASK_instance; use CC_GET_TASK_INST(Name) to get the Defined Task;
+ * 			Pass NULL to point to current task
+ * @return cc_os_err_t
+ */
+cc_os_err_t cc_os_resume_task (cc_os_task_t * cc_os_task);
+
+/**
+ * @brief A function to delete a task from the scheduler by its name
+ *
+ * @param name		Name of the task to be terminated; Pass NULL to point to current task
+ * @return cc_os_err_t
+ */
+cc_os_err_t cc_os_del_task_by_name(const char * name);
+
+
+/**
+ * @brief A Function to pause the task until call resume explicitly  by its name
  *
  * @param name
  * @return cc_os_err_t
  */
-cc_os_err_t cc_os_del_task	(const char *name);
-
-/**
- * @brief A Function to pause the task until call resume explicitly
- *
- * @param name
- * @return cc_os_err_t
- */
-cc_os_err_t cc_os_pause_task	(const char *name);
+cc_os_err_t cc_os_pause_task_by_name(const char *name);
 
 /**
  *
- * @brief A Function to resume paused task.
+ * @brief A Function to resume paused task by its name
  * @note  Calling this function for already non-waiting task has no effect.
  *
  * @param name
  * @return cc_os_err_t
  */
-cc_os_err_t cc_os_resume_task	(const char *name);
+cc_os_err_t cc_os_resume_task_by_name(const char *name);
 
 /**
  * @brief A Function to put the task to a waiting state and yield
@@ -105,13 +133,13 @@ cc_os_err_t cc_os_resume_task	(const char *name);
  * @param ticks			Number of CC_OS Ticks
  * @return cc_os_err_t
  */
-cc_os_err_t cc_os_wait_task	(const size_t ticks);
+cc_os_err_t cc_os_wait_task(const size_t ticks);
 
 /**
  * @brief A Function to invoke the kernel
  *
  * @return cc_os_err_t
  */
-cc_os_err_t cc_os_run		(void);
+cc_os_err_t cc_os_run(void);
 
 #endif	/* __CC_OS__ */

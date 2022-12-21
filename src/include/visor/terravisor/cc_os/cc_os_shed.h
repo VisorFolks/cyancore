@@ -28,7 +28,7 @@ struct cc_shed_tcb
 	size_t    priority;					///> Priority of the task
 	void    * stack_ptr;					///> Stack Pointer
 	size_t 	  task_delay_ticks;				///> Time delay in ticks
-	cc_shed_tcb_t * prev_shed_tcb;				///> Previous task pointer
-	cc_shed_tcb_t * next_shed_tcb;				///> Next task pointer
+	cc_shed_tcb_t * prev_ready_tcb;				///> Previous task pointer
+	cc_shed_tcb_t * next_ready_tcb;				///> Next task pointer
 	cc_shed_task_status_t task_status;			///> Current state of the task
 };
