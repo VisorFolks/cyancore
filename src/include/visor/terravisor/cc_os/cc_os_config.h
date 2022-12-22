@@ -11,3 +11,11 @@
 #ifndef ccosconfig_CC_OS_TASK_NAME_LEN
 #define ccosconfig_CC_OS_TASK_NAME_LEN	16
 #endif
+
+#ifndef ccosconfig_CC_OS_TASK_PRIORITY
+#define ccosconfig_CC_OS_TASK_PRIORITY	1
+#endif
+
+#ifndef ccosconfig_CC_OS_TASK_STACK_LEN
+#define ccosconfig_CC_OS_TASK_STACK_LEN	255
+#endif

@@ -12,7 +12,10 @@ extern cc_shed_tcb_t g_cc_os_tcb_list[];
 #else
 extern cc_shed_tcb_t *g_cc_os_tcb_list;
 #endif
+extern cc_shed_tcb_t * g_task_max_prio;
 extern cc_shed_tcb_t * g_curr_task;
+
+extern void CC_OS_IDLE_TASK(void * args);
 
 cc_os_err_t cc_os_add_task (cc_os_task_t * cc_os_task)
 {
@@ -76,6 +79,19 @@ cc_os_err_t cc_os_add_task (cc_os_task_t * cc_os_task)
 	memcpy(ptr->name, cc_os_task->name, ccosconfig_CC_OS_TASK_NAME_LEN);
 	ptr->stack_ptr 	 = cc_os_task->stack_ptr;
 	ptr->priority 	 = cc_os_task->priority;
+	if (g_task_max_prio == NULL)
+	{
+		g_task_max_prio = ptr;
+	}
+	else
+	{
+		if(g_task_max_prio->priority < ptr->priority)
+		{
+			g_task_max_prio = ptr;
+		}
+	}
+
+	cc_os_task->task_tcb_ptr = ptr;
 	ptr->task_status = cc_shed_task_ready;
 	return success;
 }
@@ -83,9 +99,12 @@ cc_os_err_t cc_os_add_task (cc_os_task_t * cc_os_task)
 cc_os_err_t cc_os_del_task (cc_os_task_t * cc_os_task)
 {
 	cc_shed_tcb_t * ptr = g_curr_task;
+
+	ASSERT_IF_FALSE(cc_os_task->task_fn != CC_OS_IDLE_TASK);
+
 	if (cc_os_task != NULL)
 	{
-		ptr = cc_os_task;
+		ptr = cc_os_task->task_tcb_ptr;
 	}
 	/* Code to handle first node */
 	if (ptr == g_ready_list_head)
@@ -99,23 +118,33 @@ cc_os_err_t cc_os_del_task (cc_os_task_t * cc_os_task)
 		{
 			/* code for only one node */
 			memset(g_ready_list_head, 0, sizeof(cc_shed_tcb_t));
+			g_task_max_prio = NULL;
+#if CC_DYNAMIC == 0
 			g_ready_list_head = &(g_cc_os_tcb_list[0]);
+#else
+			g_ready_list_head = NULL;
+#endif
 			return success;
 		}
 
 	}
+	ptr->task_status   = cc_shed_task_terminated;
+
+/** TODO: By the scheduler for safe termination of current task
 	ptr->next_ready_tcb->prev_ready_tcb = ptr->prev_ready_tcb;
 	ptr->prev_ready_tcb->next_ready_tcb = ptr->next_ready_tcb;
 
 #if CC_DYNAMIC == 0
-	/* Static task Reset */
-	ptr->task_status   = cc_shed_task_terminated;
 	ptr->next_ready_tcb = NULL;
 	ptr->prev_ready_tcb = NULL;
 #else
-	/* Dynamic Task Deletion */
-	/* TODO: Need to push to Terminated Queue so that the scheduler can free the task when not running */
+	free(ptr);
 #endif
+*/
+	if (ptr == g_curr_task)
+	{
+		/* Yeild */
+	}
 
 	return success;
 }
@@ -125,7 +154,7 @@ cc_os_err_t cc_os_pause_task (cc_os_task_t * cc_os_task)
 	cc_shed_tcb_t * ptr = g_curr_task;
 	if (cc_os_task != NULL)
 	{
-		ptr = cc_os_task;
+		ptr = cc_os_task->task_tcb_ptr;
 	}
 	ptr->task_status = cc_shed_task_wait;
 
@@ -136,7 +165,7 @@ cc_os_err_t cc_os_resume_task (cc_os_task_t * cc_os_task)
 {
 	ASSERT_IF_FALSE(cc_os_task != NULL);
 
-	cc_os_task->task_status = cc_shed_task_ready;
+	cc_os_task->task_tcb_ptr->task_status = cc_shed_task_ready;
 
 	return success;
 }
@@ -252,7 +281,7 @@ cc_os_err_t cc_os_resume_task_by_name (const char * name)
 	return success;
 }
 
-cc_os_err_t cc_os_wait_task (const size_t ticks)
+cc_os_err_t cc_os_task_wait (const size_t ticks)
 {
 	ASSERT_IF_FALSE(ticks > 0);
 
@@ -266,13 +295,20 @@ cc_os_err_t cc_os_wait_task (const size_t ticks)
 	return success;
 }
 
+
 cc_os_err_t cc_os_run (void)
 {
 	/* OS Init code */
-	while (1)
-	{
-		/* code to process OS */
-	}
+	/* Initialise scheduler */
+
+	/* Initialise IDLE Task */
+	CC_TASK_DEF(
+		cc_os_idle,				/* Name of the instance */
+		CC_OS_IDLE_TASK,			/* Function pointer */
+		ccosconfig_CC_OS_TASK_PRIORITY,		/* Task Priority */
+		ccosconfig_CC_OS_TASK_STACK_LEN		/* Stack Length of IDLE Task */
+		);
+	cc_os_add_task(&CC_GET_TASK_INST(cc_os_idle));
 
 	return success;
 }

@@ -6,9 +6,10 @@
                 "${workspaceFolder}/src/**"
             ],
             "intelliSenseMode": "${default}",
-            "compilerPath": "",
+            "compilerPath": "/usr/bin/gcc",
             "cStandard": "gnu17",
-            "cppStandard": "gnu++14"
+            "cppStandard": "gnu++14",
+            "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],
     "version": 4
