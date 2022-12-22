@@ -13,6 +13,8 @@
 
 #include "status.h"
 #include "stdint.h"
+#include <terravisor/cc_os/cc_os_config.h>
+#include <terravisor/cc_os/cc_os_shed.h>
 
 #define	CC_DYNAMIC ccosconfig_CC_OS_USE_DYNAMIC
 
@@ -31,9 +33,10 @@ typedef struct cc_os_task
 {
 	task_fn   task_fn;
 	c_char	* name;
-	size_t    priority;		//>> For waited tasks
+	size_t    priority;		///>> For waited tasks
 	size_t 	* stack_ptr;
 	size_t    stack_len;
+	cc_shed_tcb_t * task_tcb_ptr;	///>> For internal use only
 }cc_os_task_t;
 
 /**
@@ -43,16 +46,15 @@ typedef struct cc_os_task
  * @note  DO NOT use space in place of TASK_Name as it would result build errors.
  *
  */
-#define CC_TASK_DEF(_NAME, _fn,  _PRI, STACK_LEN){	\
+#define CC_TASK_DEF(_NAME, _fn,  _PRI, STACK_LEN)	\
 static size_t _NAME##_stack[STACK_LEN];			\
-static const cc_os_task_t _NAME##_task = {		\
+static cc_os_task_t _NAME##_task = {			\
 		.task_fn = _fn,				\
 		.name = #_NAME,				\
 		.priority = _PRI,			\
 		.stack_ptr = _NAME##_stack,		\
 		.stack_len = STACK_LEN			\
-	};						\
-}
+	}						\
 
 /**
  * @brief Function to get the instance using its name of already declared task.
@@ -133,7 +135,7 @@ cc_os_err_t cc_os_resume_task_by_name(const char *name);
  * @param ticks			Number of CC_OS Ticks
  * @return cc_os_err_t
  */
-cc_os_err_t cc_os_wait_task(const size_t ticks);
+cc_os_err_t cc_os_task_wait(const size_t ticks);
 
 /**
  * @brief A Function to invoke the kernel
