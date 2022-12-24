@@ -12,9 +12,10 @@
 #define __CC_OS__
 
 #include "status.h"
+#include "stdlib.h"
 #include "stdint.h"
 #include <terravisor/cc_os/cc_os_config.h>
-#include <terravisor/cc_os/cc_os_shed.h>
+#include <terravisor/cc_os/cc_os_sched.h>
 
 #define	CC_DYNAMIC ccosconfig_CC_OS_USE_DYNAMIC
 
@@ -32,11 +33,12 @@ typedef const char c_char;
 typedef struct cc_os_task
 {
 	task_fn   task_fn;
+	void 	* args;			///>> Task Args ptr
 	c_char	* name;
 	size_t    priority;		///>> For waited tasks
 	size_t 	* stack_ptr;
 	size_t    stack_len;
-	cc_shed_tcb_t * task_tcb_ptr;	///>> For internal use only
+	cc_sched_tcb_t * task_tcb_ptr;	///>> For internal use only
 }cc_os_task_t;
 
 /**
@@ -46,15 +48,16 @@ typedef struct cc_os_task
  * @note  DO NOT use space in place of TASK_Name as it would result build errors.
  *
  */
-#define CC_TASK_DEF(_NAME, _fn,  _PRI, STACK_LEN)	\
-static size_t _NAME##_stack[STACK_LEN];			\
-static cc_os_task_t _NAME##_task = {			\
-		.task_fn = _fn,				\
-		.name = #_NAME,				\
-		.priority = _PRI,			\
-		.stack_ptr = _NAME##_stack,		\
-		.stack_len = STACK_LEN			\
-	}						\
+#define CC_TASK_DEF(_NAME, _fn,  _args, _PRI, STACK_LEN)	\
+static size_t _NAME##_stack[STACK_LEN];				\
+static cc_os_task_t _NAME##_task = {				\
+		.args = _args,					\
+		.task_fn = _fn,					\
+		.name = #_NAME,					\
+		.priority = _PRI,				\
+		.stack_ptr = _NAME##_stack,			\
+		.stack_len = STACK_LEN				\
+	}							\
 
 /**
  * @brief Function to get the instance using its name of already declared task.
@@ -130,7 +133,7 @@ cc_os_err_t cc_os_pause_task_by_name(const char *name);
 cc_os_err_t cc_os_resume_task_by_name(const char *name);
 
 /**
- * @brief A Function to put the task to a waiting state and yield
+ * @brief A Function to put the current task to a waiting state and yield
  *
  * @param ticks			Number of CC_OS Ticks
  * @return cc_os_err_t
@@ -143,5 +146,12 @@ cc_os_err_t cc_os_task_wait(const size_t ticks);
  * @return cc_os_err_t
  */
 cc_os_err_t cc_os_run(void);
+
+/**
+ * @brief A function to set CC OS scheduler algorithm
+ *
+ * @return cc_os_err_t
+ */
+cc_os_err_t set_cc_os_sched_algo(cc_sched_algo_t sched_algo);
 
 #endif	/* __CC_OS__ */
