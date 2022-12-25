@@ -18,9 +18,9 @@ typedef struct cc_sched cc_sched_t;
 typedef enum
 {
 	cc_sched_task_status_exit	= 0x00,			///> Initial State
-	cc_sched_task_status_running,				///> Task currently running
-	cc_sched_task_status_ready,				///> Task Ready to despatch
-	cc_sched_task_status_wait,				///> Task in wait state
+	cc_sched_task_status_running	= 0x01,			///> Task currently running
+	cc_sched_task_status_ready	= 0x02,			///> Task Ready to despatch
+	cc_sched_task_status_wait	= 0x03,			///> Task in wait state
 	cc_sched_task_status_max 	= 0xff,			///> Do Nt Use
 } cc_sched_task_status_t;
 
@@ -32,7 +32,7 @@ typedef struct link
 
 struct cc_sched_tcb
 {
-	char 	  name [ccosconfig_CC_OS_TASK_NAME_LEN];	///> Name of the Current Task
+	char 	  name [ccosconfig_CC_OS_TASK_NAME_LEN + 1];	///> Name of the Current Task
 	size_t    priority;					///> Priority of the task
 	void    * stack_ptr;					///> Stack Pointer
 	size_t 	  task_delay_ticks;				///> Time delay in ticks
@@ -58,7 +58,7 @@ typedef void (* algo_fn)(cc_sched_ctrl_t * sched_ctrl);
 typedef enum
 {
 	cc_sched_algo_round_robin	= 0x00,			///> Round Robin scheduling algorithm
-	cc_sched_algo_priority_driven,				///> Priority driven Scheduling
+	cc_sched_algo_priority_driven	= 0x01,			///> Priority driven Scheduling
 	cc_sched_algo_max		= 0xff
 }cc_sched_algo_t;
 

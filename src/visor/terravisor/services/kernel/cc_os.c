@@ -37,8 +37,8 @@ extern cc_sched_tcb_t *g_cc_os_tcb_list;
  *	INTERNAL EXTERNS FUNCTIONS
  *****************************************************/
 extern void _cc_os_idle_task_fn		(void * args);
-extern void _insert_after		(cc_sched_tcb_t * ptr, cc_sched_tcb_t * new_node, uint8_t link_type);
-extern void _insert_before		(cc_sched_tcb_t * ptr, cc_sched_tcb_t * new_node, uint8_t link_type);
+extern void _insert_after		(cc_sched_tcb_t ** ptr, cc_sched_tcb_t * new_node, uint8_t link_type);
+extern void _insert_before		(cc_sched_tcb_t ** ptr, cc_sched_tcb_t * new_node, uint8_t link_type);
 extern void _cc_sched_send_to_wait	(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr, const size_t ticks);
 extern void _cc_sched_send_to_resume	(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr);
 
@@ -52,7 +52,10 @@ extern cc_sched_ctrl_t g_sched_ctrl;
 /*****************************************************
  *	STATIC FUNCTION DEFINATIONS
  *****************************************************/
-
+void __cc_init_scheduler()
+{
+	return;
+}
 /*****************************************************
  *	USER FUNCTION DEFINATIONS
  *****************************************************/
@@ -104,12 +107,12 @@ cc_os_err_t cc_os_add_task (cc_os_task_t * cc_os_task)
 		{
 #else
 		/* Dynamic Task Declaration */
-		ptr = (cc_sched_tcb_t *)cc_os_malloc(sizeof(cc_sched_tcb_t));
 		if (ptr != NULL)
+		ptr = (cc_sched_tcb_t *)cc_os_malloc(sizeof(cc_sched_tcb_t));
 		{
 #endif
 			/* Fill tcb details */
-			memcpy(ptr->name,  cc_os_task->name, ccosconfig_CC_OS_TASK_NAME_LEN);
+			strlcpy(ptr->name, cc_os_task->name, ccosconfig_CC_OS_TASK_NAME_LEN);
 			ptr->stack_ptr 	 = cc_os_task->stack_ptr;
 			ptr->priority 	 = cc_os_task->priority;
 		}
@@ -126,7 +129,7 @@ cc_os_err_t cc_os_add_task (cc_os_task_t * cc_os_task)
 	}
 	else if(g_sched_ctrl.task_max_prio->priority <= ptr->priority)
 	{
-		_insert_after(g_sched_ctrl.task_max_prio, ptr, CC_OS_FALSE);
+		_insert_after(&(g_sched_ctrl.task_max_prio), ptr, CC_OS_FALSE);
 		g_sched_ctrl.task_max_prio = ptr;
 	}
 	else
@@ -136,7 +139,7 @@ cc_os_err_t cc_os_add_task (cc_os_task_t * cc_os_task)
 		{
 			if (comp_ptr->priority <= ptr->priority)
 			{
-				_insert_after(comp_ptr, ptr, CC_OS_FALSE);
+				_insert_after(&comp_ptr, ptr, CC_OS_FALSE);
 				break;
 			}
 			else
@@ -192,7 +195,7 @@ cc_os_err_t cc_os_pause_task (cc_os_task_t * cc_os_task)
 	return success;
 }
 
-cc_os_err_t cc_os_pause_all_task ()
+cc_os_err_t cc_os_pause_all_task (void)
 {
 	cc_sched_tcb_t * ptr = g_sched_ctrl.ready_list_head->ready_link.next;
 
@@ -210,19 +213,24 @@ cc_os_err_t cc_os_pause_all_task ()
 	return success;
 }
 
-cc_os_err_t cc_os_resume_all_task ()
+cc_os_err_t cc_os_resume_all_task (void)
 {
 	cc_sched_tcb_t * ptr = g_sched_ctrl.ready_list_head->ready_link.next;
-
-	while (ptr != g_sched_ctrl.ready_list_head)
+	if (ptr != NULL)
 	{
-		if (ptr == g_sched_ctrl.curr_task)
+		while (ptr != g_sched_ctrl.ready_list_head)
 		{
-			continue;
+			if (ptr == g_sched_ctrl.curr_task)
+			{
+				continue;
+			}
+			_cc_sched_send_to_resume(&g_sched_ctrl, ptr);
+			ptr = ptr->ready_link.next;
 		}
-
-		_cc_sched_send_to_resume(&g_sched_ctrl, ptr);
-		ptr = ptr->ready_link.next;
+	}
+	else
+	{
+		return error_os_invalid_op;
 	}
 
 	return success;
@@ -262,7 +270,6 @@ void cc_os_task_wait (const size_t ticks)
 
 void cc_os_task_yield()
 {
-	TODO("cc_os_task_yield");
 	return;
 }
 
@@ -281,6 +288,7 @@ void cc_os_run (void)
 	cc_os_add_task(&CC_GET_TASK_INST(cc_os_idle));
 
 	/* Initialise scheduler */
+	__cc_init_scheduler();
 	cc_os_task_yield(); /* Yeild */
 	while (1)
 	{
