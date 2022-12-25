@@ -76,6 +76,7 @@ typedef enum status
 	error_os			= -0x0f00,
 	error_os_task_overfow		= -0x0f01,
 	error_os_deadlock		= -0x0f02,
+	error_os_invalid_op		= -0x0f03,
 /* Mesg related error */
 	error_mesg			= -0x1000,
 	error_mesg_long			= -0x1001,

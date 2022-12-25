@@ -19,6 +19,14 @@
 #endif
 
 /**
+ * @brief	Heap size to be allocated to CC_OS
+ * @note	Possible values : Depends on available RAM
+ */
+#ifndef ccosconfig_CC_OS_HEAP_SIZE
+#define ccosconfig_CC_OS_HEAP_SIZE		1024
+#endif
+
+/**
  * @brief	Maximum number of threads allowed in static resource allocation
  * @note	The number of allowed threads are dependent of available RAM space.
  * 		User may have to keep it optimised so as to use as low BSS section
@@ -39,8 +47,8 @@
  * @brief	Task priority of IDLE task
  * @note	Possible values : 1 -> 255
  */
-#ifndef ccosconfig_CC_OS_TASK_PRIORITY
-#define ccosconfig_CC_OS_TASK_PRIORITY		1
+#ifndef ccosconfig_CC_OS_IDLE_TASK_PRIORITY
+#define ccosconfig_CC_OS_IDLE_TASK_PRIORITY	0x01
 #endif
 
 /**
