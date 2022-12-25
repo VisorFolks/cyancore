@@ -37,29 +37,8 @@ void platform_early_setup()
 	return;
 }
 
-void platform_setup()
-{
-	status_t ret = success;
-
-	driver_setup("sysclk_prci");
-	ret |= sysclk_reset();
-
-	driver_setup("earlycon");
-	bootmsgs_enable();
-	cyancore_insignia();
-
-	if(ret != success)
-		exit(EXIT_FAILURE);
-	return;
-}
-
-void platform_cpu_setup()
-{
-	arch_ei();
-	return;
-}
-
-void platform_memory_layout()
+#if PRINT_MEMORY_LAYOUT
+static void platform_memory_layout()
 {
 	extern uint32_t _text_start, _text_size, _text_end,
 	_rodata_start, _rodata_size, _rodata_end,
@@ -90,3 +69,30 @@ void platform_memory_layout()
 			&_heap_start, &_heap_end, &_heap_size);
 	syslog(info, "\n");
 }
+#endif
+
+void platform_setup()
+{
+	status_t ret = success;
+
+	driver_setup("sysclk_prci");
+	ret |= sysclk_reset();
+
+	driver_setup("earlycon");
+	bootmsgs_enable();
+	cyancore_insignia();
+#if PRINT_MEMORY_LAYOUT
+	platform_memory_layout();
+#endif
+
+	if(ret != success)
+		exit(EXIT_FAILURE);
+	return;
+}
+
+void platform_cpu_setup()
+{
+	arch_ei();
+	return;
+}
+

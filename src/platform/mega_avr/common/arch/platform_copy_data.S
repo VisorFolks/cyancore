@@ -24,7 +24,8 @@ function platform_copy_data
 1:
 	cpi	r26, lo8(_data_vend)
 	cpc	r27, r17
-	brne	2b
+	brmi	2b
+	breq	2b
 	ldi	r24, 0
 	ldi	r25, 0
 	ret

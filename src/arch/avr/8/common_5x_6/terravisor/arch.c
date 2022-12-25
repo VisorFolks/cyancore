@@ -10,6 +10,8 @@
  */
 
 #include <stdint.h>
+#include <stdbool.h>
+#include <assert.h>
 #include <status.h>
 #include <syslog.h>
 #include <plat_arch.h>
@@ -96,4 +98,48 @@ void _NORETURN arch_panic_handler_callback()
 #endif
 panic:
 	while(1) arch_wfi();
+}
+
+static cpu_sleep_t sleep_flag;
+
+/**
+ * arch_suspended_state_was
+ *
+ * @brief This function checks for the suspended state
+ * and returns true or false based on arg.
+ *
+ * @param[in] state: suspended state
+ * @return bool: True/False
+ */
+bool arch_suspended_state_was(cpu_sleep_t state)
+{
+	assert(state != resume);
+	if(!sleep_flag)
+		return false;
+	return (sleep_flag == state);
+}
+
+/**
+ * arch_signal_suspend
+ *
+ * @brief This function is intended to be called before
+ * cpu enters suspend state. By passing the state, we store
+ * and use to check while exiting resume routine
+ *
+ * @param[in] state: Suspend state of cpu
+ */
+void arch_signal_suspend(cpu_sleep_t state)
+{
+	sleep_flag = state;
+}
+
+/**
+ * arch_signal_resume
+ *
+ * @brief This function signals resume of cpu. It is intended
+ * to be called after exiting resume routine.
+ */
+void arch_signal_resume(void)
+{
+	sleep_flag = resume;
 }
