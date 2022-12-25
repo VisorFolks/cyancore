@@ -1,7 +1,20 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2022, Cyancore Team
+ *
+ * File Name		: cc_os_idle.c
+ * Description		: CC OS IDLE Task definitions
+ * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
+/*****************************************************
+ *	INCLUDES
+ *****************************************************/
 #include <terravisor/cc_os/cc_os.h>
 
 /*****************************************************
- *	GLOBAL EXTERNS VARIABLES
+ *	STATIC FUNCTION DECLARATION
  *****************************************************/
 /**
  * @brief	This function cleans up the terminated task form the TCB list
@@ -28,7 +41,10 @@ static cc_sched_tcb_t * __free_terminated_task(cc_sched_tcb_t * ptr)
 	return next_ptr;
 }
 
-void CC_OS_IDLE_TASK(void * args)
+/*****************************************************
+ *	USER FUNCTION DEFINATION
+ *****************************************************/
+void _cc_os_idle_task_fn(os_args args)
 {
 	cc_sched_ctrl_t * g_sched_ctrl = (cc_sched_ctrl_t *) args;
 	static cc_sched_tcb_t * ptr = NULL;
@@ -40,7 +56,7 @@ void CC_OS_IDLE_TASK(void * args)
 
 		/* Power Save code */
 
-		/* Yield for nect available task */
-		cc_os_task_wait(0);
+		/* Yield for next available task */
+		cc_os_task_yield();
 	}
 }

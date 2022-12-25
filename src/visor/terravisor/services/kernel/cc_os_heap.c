@@ -14,8 +14,9 @@
 #include <terravisor/cc_os/utils/cc_os_heap.h>
 
 /*****************************************************
- *	GLOBAL DECLARATIONS
+ *	GLOBAL/STATIC VARIABLE DECLARATIONS
  *****************************************************/
+// static unsigned char g_cc_os_heap[ccosconfig_CC_OS_HEAP_SIZE];
 
 /*****************************************************
  *	GLOBAL EXTERNS
