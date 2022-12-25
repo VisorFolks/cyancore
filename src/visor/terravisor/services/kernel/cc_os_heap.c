@@ -16,7 +16,6 @@
 /*****************************************************
  *	GLOBAL/STATIC VARIABLE DECLARATIONS
  *****************************************************/
-// static unsigned char g_cc_os_heap[ccosconfig_CC_OS_HEAP_SIZE];
 
 /*****************************************************
  *	GLOBAL EXTERNS
@@ -33,7 +32,7 @@ void * cc_os_malloc(size_t size _UNUSED)
 {
 	return NULL;
 }
-void * cc_os_free(void *addr _UNUSED )
+void * cc_os_free(const void *addr _UNUSED )
 {
 	return NULL;
 }

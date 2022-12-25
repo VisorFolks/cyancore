@@ -60,76 +60,79 @@ cc_sched_ctrl_t g_sched_ctrl =
 /*****************************************************
  *	INTERNAL USED FUNCTIONS (NON-STATIC)
  *****************************************************/
-void _insert_after(cc_sched_tcb_t * ptr, cc_sched_tcb_t * new_node, uint8_t link_type)
+void _insert_after(cc_sched_tcb_t ** ptr, cc_sched_tcb_t * new_node, uint8_t link_type)
 {
 	switch (link_type)
 	{
 		case 0:
 			/* Ready Link */
-			if (ptr == NULL)
+			if (*ptr == NULL)
 			{
-				ptr = new_node;
+				*ptr = new_node;
 				new_node->ready_link.next = new_node;
 				new_node->ready_link.prev = new_node;
 			}
 			else
 			{
-				new_node->ready_link.next = ptr->ready_link.next;
-				new_node->ready_link.prev = ptr;
+				new_node->ready_link.next = (*ptr)->ready_link.next;
+				new_node->ready_link.prev = *ptr;
 				new_node->ready_link.next->ready_link.prev = new_node;
-				ptr->ready_link.next = new_node;
+				(*ptr)->ready_link.next = new_node;
 			}
 			break;
 		case 1:
 			/* Wait Link */
-			if (ptr == NULL)
+			if (*ptr == NULL)
 			{
-				ptr = new_node;
+				*ptr = new_node;
 				new_node->wait_link.next = new_node;
 				new_node->wait_link.prev = new_node;
 			}
+			else
 			{
-				new_node->wait_link.next = ptr->wait_link.next;
-				new_node->wait_link.prev = ptr;
+				new_node->wait_link.next = (*ptr)->wait_link.next;
+				new_node->wait_link.prev = *ptr;
 				new_node->wait_link.next->wait_link.prev = new_node;
-				ptr->wait_link.next = new_node;
+				(*ptr)->wait_link.next = new_node;
 			}
 			break;
 		default:
 			return;
 	}
 }
-void _insert_before(cc_sched_tcb_t * ptr, cc_sched_tcb_t * new_node, uint8_t link_type)
+void _insert_before(cc_sched_tcb_t ** ptr, cc_sched_tcb_t * new_node, uint8_t link_type)
 {
 	switch (link_type)
 	{
 		case 0:
 			/* Ready Link */
-			if (ptr == NULL)
+			if (*ptr == NULL)
 			{
-				ptr = new_node;
+				*ptr = new_node;
 				new_node->ready_link.next = new_node;
 				new_node->ready_link.prev = new_node;
 			}
+			else
 			{
-				new_node->ready_link.next = ptr;
-				new_node->ready_link.prev = ptr->ready_link.prev;
-				ptr->ready_link.prev = new_node;
+				new_node->ready_link.next = *ptr;
+				new_node->ready_link.prev = (*ptr)->ready_link.prev;
+				(*ptr)->ready_link.prev = new_node;
 				new_node->ready_link.prev->ready_link.next = new_node;
 			}
 			break;
 		case 1:
 			/* Wait Link */
-			if (ptr == NULL)
+			if (*ptr == NULL)
 			{
-				ptr = new_node;
+				*ptr = new_node;
 				new_node->wait_link.next = new_node;
 				new_node->wait_link.prev = new_node;
 			}
+			else
 			{
-				new_node->wait_link.next = ptr;
-				new_node->wait_link.prev = ptr->wait_link.prev;
-				ptr->wait_link.prev = new_node;
+				new_node->wait_link.next = *ptr;
+				new_node->wait_link.prev = (*ptr)->wait_link.prev;
+				(*ptr)->wait_link.prev = new_node;
 				new_node->wait_link.prev->wait_link.next = new_node;
 			}
 			break;
@@ -144,7 +147,7 @@ void _cc_sched_send_to_wait(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr, 
 	{
 		return;
 	}
-	_insert_before(sched_ctrl->wait_list_head, ptr, 1);
+	_insert_before(&(sched_ctrl->wait_list_head), ptr, 1);
 
 	ptr->task_delay_ticks = ticks;
 	ptr->task_status = cc_sched_task_status_wait;
@@ -185,26 +188,22 @@ static void __cc_sched_context_switch(cc_sched_tcb_t * next_task)
 
 static void __cc_sched_wait_list_adjustment(cc_sched_ctrl_t * sched_ctrl)
 {
-	cc_sched_tcb_t * ptr;
-	if(sched_ctrl->wait_list_head != NULL)
+	cc_sched_tcb_t * ptr = sched_ctrl->wait_list_head;
+
+	while(ptr != NULL)
 	{
-		ptr = sched_ctrl->wait_list_head;
-		/* Tasks present in wait list */
-		while(1)
+		ptr->task_delay_ticks--;	/* Tick caliberations required */
+		if(ptr->task_delay_ticks == 0)
 		{
-			ptr->task_delay_ticks--;	/* Tick caliberations required */
-			if(ptr->task_delay_ticks == 0)
-			{
-				_cc_sched_send_to_resume(sched_ctrl, ptr);
-			}
-			if (ptr->wait_link.next == sched_ctrl->wait_list_head)
-			{
-				break;
-			}
-			else
-			{
-				ptr = ptr->wait_link.next;
-			}
+			_cc_sched_send_to_resume(sched_ctrl, ptr);
+		}
+		if (ptr->wait_link.next == sched_ctrl->wait_list_head)
+		{
+			break;
+		}
+		else
+		{
+			ptr = ptr->wait_link.next;
 		}
 	}
 }
@@ -234,26 +233,21 @@ static void __cc_sched_algo_round_robin_fn(cc_sched_ctrl_t * sched_ctrl)
 static void __cc_sched_algo_priority_driven_fn(cc_sched_ctrl_t * sched_ctrl)
 {
 	/* do waitlist adjustment */
-	cc_sched_tcb_t * ptr = sched_ctrl->ready_list_head->ready_link.prev;
-
 	__cc_sched_wait_list_adjustment(sched_ctrl);
-	while (1)
+
+	cc_sched_tcb_t * ptr = sched_ctrl->ready_list_head->ready_link.prev;
+	if(ptr != NULL)
 	{
-		if (ptr->task_status == cc_sched_task_status_ready)
+		while (ptr->task_status != cc_sched_task_status_ready)
 		{
-			break;
-		}
-		else
-		{
-			/* Iterate Backwards */
 			ptr = ptr->wait_link.prev;
+			if (ptr == sched_ctrl->ready_list_head)
+			{
+				/* IDLE Task */
+				_cc_sched_send_to_resume(&g_sched_ctrl, ptr);
+				break;
+			}
 		}
-		if (ptr == sched_ctrl->ready_list_head)
-		{
-			/* IDLE Task */
-			_cc_sched_send_to_resume(&g_sched_ctrl, ptr);
-			break;
-		}
+		__cc_sched_context_switch(ptr);
 	}
-	__cc_sched_context_switch(ptr);
 }
