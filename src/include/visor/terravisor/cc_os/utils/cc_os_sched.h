@@ -10,8 +10,28 @@
 
 #pragma once
 
-#include "stdint.h"
+/*****************************************************
+ *	INCLUDES
+ *****************************************************/
+#include <stdint.h>
+#include <stdlib.h>
+#include <status.h>
 
+/*****************************************************
+ *	DEFINES
+ *****************************************************/
+#define CC_OS_FALSE			0
+#define CC_OS_TRUE			1
+#define CC_OS_NULL_PTR			NULL
+#define CC_OS_DELAY_MAX			((size_t) -1)
+
+#define	CC_OS_DYNAMIC 			ccosconfig_CC_OS_USE_DYNAMIC
+
+#define CC_OS_ASSERT_IF_FALSE(con)	if(!(con)) return error_func_inval_arg
+
+/*****************************************************
+ *	TYPEDEFS
+ *****************************************************/
 typedef struct cc_sched_tcb cc_sched_tcb_t;
 typedef struct cc_sched cc_sched_t;
 

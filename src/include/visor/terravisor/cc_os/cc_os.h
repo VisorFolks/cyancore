@@ -18,18 +18,7 @@
 #include "stdlib.h"
 #include "stdint.h"
 #include <terravisor/cc_os/cc_os_config.h>
-#include <terravisor/cc_os/cc_os_sched.h>
-
-/*****************************************************
- *	DEFINES
- *****************************************************/
-#define CC_OS_FALSE			0
-#define CC_OS_TRUE			1
-#define CC_OS_DELAY_MAX			((size_t) -1)
-
-#define	CC_OS_DYNAMIC 			ccosconfig_CC_OS_USE_DYNAMIC
-
-#define CC_OS_ASSERT_IF_FALSE(con)	if(!(con)) return error_func_inval_arg
+#include <terravisor/cc_os/utils/cc_os_sched.h>
 
 /*****************************************************
  *	TYPEDEFS
