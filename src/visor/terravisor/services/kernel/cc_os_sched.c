@@ -11,9 +11,8 @@
 /*****************************************************
  *	INCLUDES
  *****************************************************/
-#include <stdlib.h>
 #include <terravisor/cc_os/cc_os_config.h>
-#include <terravisor/cc_os/cc_os_sched.h>
+#include <terravisor/cc_os/utils/cc_os_sched.h>
 
 /*****************************************************
  *	DEFINES
@@ -34,7 +33,7 @@ static void __cc_sched_algo_priority_driven_fn(cc_sched_ctrl_t * sched_ctrl);
 #if !ccosconfig_CC_OS_USE_DYNAMIC
 cc_sched_tcb_t g_cc_os_tcb_list [ccosconfig_CC_OS_MAX_THREAD];
 #else
-cc_sched_tcb_t * g_cc_os_tcb_list	= NULL;
+cc_sched_tcb_t * g_cc_os_tcb_list	= CC_OS_NULL_PTR;
 #endif
 
 cc_sched_t g_cc_sched_list [] =
@@ -46,27 +45,28 @@ cc_sched_t g_cc_sched_list [] =
 cc_sched_ctrl_t g_sched_ctrl =
 {
 #if !ccosconfig_CC_OS_USE_DYNAMIC
-	.ready_list_head 	= &(g_cc_os_tcb_list[0]),
-	.curr_task 		= &(g_cc_os_tcb_list[0]),
+	.ready_list_head 	= &(g_cc_os_tcb_list[CC_OS_FALSE]),
+	.curr_task 		= &(g_cc_os_tcb_list[CC_OS_FALSE]),
 #else
-	.ready_list_head 	= NULL,
-	.curr_task 		= NULL,
+	.ready_list_head 	= CC_OS_NULL_PTR,
+	.curr_task 		= CC_OS_NULL_PTR,
 #endif
-	.wait_list_head		= NULL,
-	.task_max_prio		= NULL,
+	.wait_list_head		= CC_OS_NULL_PTR,
+	.task_max_prio		= CC_OS_NULL_PTR,
 	.selected_sched		= &(g_cc_sched_list[cc_sched_algo_round_robin])
 };
 
 /*****************************************************
  *	INTERNAL USED FUNCTIONS (NON-STATIC)
  *****************************************************/
-void _insert_after(cc_sched_tcb_t ** ptr, cc_sched_tcb_t * new_node, uint8_t link_type)
+status_t _insert_after(cc_sched_tcb_t ** ptr, cc_sched_tcb_t * new_node, uint8_t link_type)
 {
+	CC_OS_ASSERT_IF_FALSE(new_node != CC_OS_NULL_PTR);
 	switch (link_type)
 	{
-		case 0:
+		case CC_OS_FALSE:
 			/* Ready Link */
-			if (*ptr == NULL)
+			if (*ptr == CC_OS_NULL_PTR)
 			{
 				*ptr = new_node;
 				new_node->ready_link.next = new_node;
@@ -80,9 +80,9 @@ void _insert_after(cc_sched_tcb_t ** ptr, cc_sched_tcb_t * new_node, uint8_t lin
 				(*ptr)->ready_link.next = new_node;
 			}
 			break;
-		case 1:
+		case CC_OS_TRUE:
 			/* Wait Link */
-			if (*ptr == NULL)
+			if (*ptr == CC_OS_NULL_PTR)
 			{
 				*ptr = new_node;
 				new_node->wait_link.next = new_node;
@@ -97,16 +97,18 @@ void _insert_after(cc_sched_tcb_t ** ptr, cc_sched_tcb_t * new_node, uint8_t lin
 			}
 			break;
 		default:
-			return;
+			return error_os_invalid_op;
 	}
+	return success;
 }
-void _insert_before(cc_sched_tcb_t ** ptr, cc_sched_tcb_t * new_node, uint8_t link_type)
+status_t _insert_before(cc_sched_tcb_t ** ptr, cc_sched_tcb_t * new_node, uint8_t link_type)
 {
+	CC_OS_ASSERT_IF_FALSE(new_node != CC_OS_NULL_PTR);
 	switch (link_type)
 	{
-		case 0:
+		case CC_OS_FALSE:
 			/* Ready Link */
-			if (*ptr == NULL)
+			if (*ptr == CC_OS_NULL_PTR)
 			{
 				*ptr = new_node;
 				new_node->ready_link.next = new_node;
@@ -120,9 +122,9 @@ void _insert_before(cc_sched_tcb_t ** ptr, cc_sched_tcb_t * new_node, uint8_t li
 				new_node->ready_link.prev->ready_link.next = new_node;
 			}
 			break;
-		case 1:
+		case CC_OS_TRUE:
 			/* Wait Link */
-			if (*ptr == NULL)
+			if (*ptr == CC_OS_NULL_PTR)
 			{
 				*ptr = new_node;
 				new_node->wait_link.next = new_node;
@@ -137,8 +139,9 @@ void _insert_before(cc_sched_tcb_t ** ptr, cc_sched_tcb_t * new_node, uint8_t li
 			}
 			break;
 		default:
-			return;
+			return error_os_invalid_op;
 	}
+	return success;
 }
 
 void _cc_sched_send_to_wait(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr, const size_t ticks)
@@ -147,10 +150,11 @@ void _cc_sched_send_to_wait(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr, 
 	{
 		return;
 	}
-	_insert_before(&(sched_ctrl->wait_list_head), ptr, 1);
-
-	ptr->task_delay_ticks = ticks;
-	ptr->task_status = cc_sched_task_status_wait;
+	if(_insert_before(&(sched_ctrl->wait_list_head), ptr, CC_OS_TRUE) == success)
+	{
+		ptr->task_delay_ticks = ticks;
+		ptr->task_status = cc_sched_task_status_wait;
+	}
 }
 
 void _cc_sched_send_to_resume(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr)
@@ -167,14 +171,14 @@ void _cc_sched_send_to_resume(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr
 		if (ptr->wait_link.next == ptr && ptr->wait_link.prev == ptr)
 		{
 			/* Last Wait task left */
-			sched_ctrl->wait_list_head = NULL;
+			sched_ctrl->wait_list_head = CC_OS_NULL_PTR;
 		}
 	}
 	ptr->wait_link.prev->wait_link.next = ptr->wait_link.next;
 	ptr->wait_link.next->wait_link.prev = ptr->wait_link.prev;
-	ptr->wait_link.prev = NULL;
-	ptr->wait_link.next = NULL;
-	ptr->task_delay_ticks = 0;
+	ptr->wait_link.prev = CC_OS_NULL_PTR;
+	ptr->wait_link.next = CC_OS_NULL_PTR;
+	ptr->task_delay_ticks = CC_OS_FALSE;
 	ptr->task_status = cc_sched_task_status_ready;
 }
 
@@ -190,10 +194,10 @@ static void __cc_sched_wait_list_adjustment(cc_sched_ctrl_t * sched_ctrl)
 {
 	cc_sched_tcb_t * ptr = sched_ctrl->wait_list_head;
 
-	while(ptr != NULL)
+	while(ptr != CC_OS_NULL_PTR)
 	{
 		ptr->task_delay_ticks--;	/* Tick caliberations required */
-		if(ptr->task_delay_ticks == 0)
+		if(ptr->task_delay_ticks == CC_OS_FALSE)
 		{
 			_cc_sched_send_to_resume(sched_ctrl, ptr);
 		}
@@ -236,7 +240,7 @@ static void __cc_sched_algo_priority_driven_fn(cc_sched_ctrl_t * sched_ctrl)
 	__cc_sched_wait_list_adjustment(sched_ctrl);
 
 	cc_sched_tcb_t * ptr = sched_ctrl->ready_list_head->ready_link.prev;
-	if(ptr != NULL)
+	if(ptr != CC_OS_NULL_PTR)
 	{
 		while (ptr->task_status != cc_sched_task_status_ready)
 		{

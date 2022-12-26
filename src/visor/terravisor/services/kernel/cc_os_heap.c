@@ -30,9 +30,9 @@
  *****************************************************/
 void * cc_os_malloc(size_t size _UNUSED)
 {
-	return NULL;
+	return CC_OS_NULL_PTR;
 }
 void * cc_os_free(const void *addr _UNUSED )
 {
-	return NULL;
+	return CC_OS_NULL_PTR;
 }

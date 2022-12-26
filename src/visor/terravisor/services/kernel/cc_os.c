@@ -17,7 +17,6 @@
 #include <arch.h>
 #include <terravisor/cc_os/cc_os_config.h>
 #include <terravisor/cc_os/cc_os.h>
-#include <terravisor/cc_os/cc_os_sched.h>
 
 /*****************************************************
  *	DEFINES
@@ -37,8 +36,8 @@ extern cc_sched_tcb_t *g_cc_os_tcb_list;
  *	INTERNAL EXTERNS FUNCTIONS
  *****************************************************/
 extern void _cc_os_idle_task_fn		(void * args);
-extern void _insert_after		(cc_sched_tcb_t ** ptr, cc_sched_tcb_t * new_node, uint8_t link_type);
-extern void _insert_before		(cc_sched_tcb_t ** ptr, cc_sched_tcb_t * new_node, uint8_t link_type);
+extern status_t _insert_after		(cc_sched_tcb_t ** ptr, cc_sched_tcb_t * new_node, uint8_t link_type);
+extern status_t _insert_before		(cc_sched_tcb_t ** ptr, cc_sched_tcb_t * new_node, uint8_t link_type);
 extern void _cc_sched_send_to_wait	(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr, const size_t ticks);
 extern void _cc_sched_send_to_resume	(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr);
 
@@ -61,10 +60,10 @@ void __cc_init_scheduler()
  *****************************************************/
 cc_os_err_t cc_os_add_task (cc_os_task_t * cc_os_task)
 {
-	CC_OS_ASSERT_IF_FALSE(cc_os_task != NULL);
-	CC_OS_ASSERT_IF_FALSE(cc_os_task->name != NULL);
-	CC_OS_ASSERT_IF_FALSE(cc_os_task->stack_ptr != NULL);
-	CC_OS_ASSERT_IF_FALSE(cc_os_task->task_fn != NULL);
+	CC_OS_ASSERT_IF_FALSE(cc_os_task != CC_OS_NULL_PTR);
+	CC_OS_ASSERT_IF_FALSE(cc_os_task->name != CC_OS_NULL_PTR);
+	CC_OS_ASSERT_IF_FALSE(cc_os_task->stack_ptr != CC_OS_NULL_PTR);
+	CC_OS_ASSERT_IF_FALSE(cc_os_task->task_fn != CC_OS_NULL_PTR);
 	CC_OS_ASSERT_IF_FALSE(cc_os_task->stack_len != CC_OS_FALSE);
 	CC_OS_ASSERT_IF_FALSE(cc_os_task->priority >= ccosconfig_CC_OS_IDLE_TASK_PRIORITY);
 	CC_OS_ASSERT_IF_FALSE(cc_os_task->priority < CC_OS_PRIORITY_MAX);
@@ -74,18 +73,18 @@ cc_os_err_t cc_os_add_task (cc_os_task_t * cc_os_task)
 	cc_sched_tcb_t * ptr = g_sched_ctrl.ready_list_head;
 
 #if CC_OS_DYNAMIC == CC_OS_TRUE
-	if (ptr == NULL)
+	if (ptr == CC_OS_NULL_PTR)
 	{
 		/* First Dynamic task */
 		ptr = (cc_sched_tcb_t *)cc_os_malloc(sizeof(cc_sched_tcb_t));
-		if (ptr == NULL)
+		if (ptr == CC_OS_NULL_PTR)
 		{
 			cc_os_resume_all_task();
 			return error_os_task_overfow;
 		}
 	}
 #endif
-	if ((ptr->ready_link.next == NULL )&& (ptr->ready_link.prev == NULL))
+	if ((ptr->ready_link.next == CC_OS_NULL_PTR )&& (ptr->ready_link.prev == CC_OS_NULL_PTR))
 	{
 		ptr->ready_link.next = ptr->ready_link.prev = g_sched_ctrl.ready_list_head;
 	}
@@ -107,7 +106,7 @@ cc_os_err_t cc_os_add_task (cc_os_task_t * cc_os_task)
 		{
 #else
 		/* Dynamic Task Declaration */
-		if (ptr != NULL)
+		if (ptr != CC_OS_NULL_PTR)
 		ptr = (cc_sched_tcb_t *)cc_os_malloc(sizeof(cc_sched_tcb_t));
 		{
 #endif
@@ -123,23 +122,29 @@ cc_os_err_t cc_os_add_task (cc_os_task_t * cc_os_task)
 		}
 	}
 	/* Insert Tasks in assending order of its priority */
-	if (g_sched_ctrl.task_max_prio == NULL)
+	if (g_sched_ctrl.task_max_prio == CC_OS_NULL_PTR)
 	{
 		g_sched_ctrl.task_max_prio = ptr;
 	}
 	else if(g_sched_ctrl.task_max_prio->priority <= ptr->priority)
 	{
-		_insert_after(&(g_sched_ctrl.task_max_prio), ptr, CC_OS_FALSE);
-		g_sched_ctrl.task_max_prio = ptr;
+		if(_insert_after(&(g_sched_ctrl.task_max_prio), ptr, CC_OS_FALSE) == success)
+		{
+			g_sched_ctrl.task_max_prio = ptr;
+		}
+		else
+		{
+			cc_os_resume_all_task();
+			return error_os_task_overfow;
+		}
 	}
 	else
 	{
 		cc_sched_tcb_t * comp_ptr = g_sched_ctrl.task_max_prio->ready_link.next;
 		while (1)
 		{
-			if (comp_ptr->priority <= ptr->priority)
+			if (comp_ptr->priority <= ptr->priority && (_insert_after(&comp_ptr, ptr, CC_OS_FALSE) == success))
 			{
-				_insert_after(&comp_ptr, ptr, CC_OS_FALSE);
 				break;
 			}
 			else
@@ -162,7 +167,7 @@ cc_os_err_t cc_os_del_task (cc_os_task_t * cc_os_task)
 
 	cc_sched_tcb_t * ptr = g_sched_ctrl.curr_task;
 
-	if (cc_os_task != NULL)
+	if (cc_os_task != CC_OS_NULL_PTR)
 	{
 		ptr = cc_os_task->task_tcb_ptr;
 	}
@@ -185,7 +190,7 @@ cc_os_err_t cc_os_del_task (cc_os_task_t * cc_os_task)
 cc_os_err_t cc_os_pause_task (cc_os_task_t * cc_os_task)
 {
 	cc_sched_tcb_t * ptr = g_sched_ctrl.curr_task;
-	if (cc_os_task != NULL)
+	if (cc_os_task != CC_OS_NULL_PTR)
 	{
 		ptr = cc_os_task->task_tcb_ptr;
 	}
@@ -216,7 +221,7 @@ cc_os_err_t cc_os_pause_all_task (void)
 cc_os_err_t cc_os_resume_all_task (void)
 {
 	cc_sched_tcb_t * ptr = g_sched_ctrl.ready_list_head->ready_link.next;
-	if (ptr != NULL)
+	if (ptr != CC_OS_NULL_PTR)
 	{
 		while (ptr != g_sched_ctrl.ready_list_head)
 		{
@@ -238,7 +243,7 @@ cc_os_err_t cc_os_resume_all_task (void)
 
 cc_os_err_t cc_os_resume_task (cc_os_task_t * cc_os_task)
 {
-	CC_OS_ASSERT_IF_FALSE(cc_os_task != NULL);
+	CC_OS_ASSERT_IF_FALSE(cc_os_task != CC_OS_NULL_PTR);
 
 	cc_sched_tcb_t * ptr = cc_os_task->task_tcb_ptr;
 

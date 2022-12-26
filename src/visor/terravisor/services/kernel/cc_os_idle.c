@@ -30,9 +30,9 @@ static cc_sched_tcb_t * __free_terminated_task(cc_sched_tcb_t * ptr)
 		ptr->ready_link.prev->ready_link.next = ptr->ready_link.next;
 		ptr->ready_link.next->ready_link.prev = ptr->ready_link.prev;
 
-#if ccosconfig_CC_OS_USE_DYNAMIC == 0
-		ptr->ready_link.next = NULL;
-		ptr->ready_link.prev = NULL;
+#if CC_OS_DYNAMIC == CC_OS_FALSE
+		ptr->ready_link.next = CC_OS_NULL_PTR;
+		ptr->ready_link.prev = CC_OS_NULL_PTR;
 #else
 		cc_os_free(ptr);
 #endif
@@ -47,9 +47,9 @@ static cc_sched_tcb_t * __free_terminated_task(cc_sched_tcb_t * ptr)
 void _cc_os_idle_task_fn(os_args args)
 {
 	cc_sched_ctrl_t * g_sched_ctrl = (cc_sched_ctrl_t *) args;
-	static cc_sched_tcb_t * ptr = NULL;
+	static cc_sched_tcb_t * ptr = CC_OS_NULL_PTR;
 	ptr = g_sched_ctrl->ready_list_head;
-	while (1)
+	while (CC_OS_TRUE)
 	{
 		/* Clean up task if terminated */
 		ptr = __free_terminated_task(ptr);
