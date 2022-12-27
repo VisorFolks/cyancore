@@ -46,16 +46,18 @@ static cc_sched_tcb_t * __free_terminated_task(cc_sched_tcb_t * ptr)
  *****************************************************/
 void _cc_os_idle_task_fn(os_args args)
 {
-	cc_sched_ctrl_t * g_sched_ctrl = (cc_sched_ctrl_t *) args;
+	cc_sched_ctrl_t * sched_ctrl = (cc_sched_ctrl_t *) args;
 	static cc_sched_tcb_t * ptr = CC_OS_NULL_PTR;
-	ptr = g_sched_ctrl->ready_list_head;
+	ptr = sched_ctrl->ready_list_head;
 	while (CC_OS_TRUE)
 	{
 		/* Clean up task if terminated */
 		ptr = __free_terminated_task(ptr);
 
+#if ccosconfig_CC_OS_POWER_SAVE_EN
 		/* Power Save code */
 
+#endif
 		/* Yield for next available task */
 		cc_os_task_yield();
 	}

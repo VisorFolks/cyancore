@@ -59,3 +59,11 @@
 #ifndef ccosconfig_CC_OS_TASK_STACK_LEN
 #define ccosconfig_CC_OS_TASK_STACK_LEN		255
 #endif
+
+/**
+ * @brief	If the Kernel shall enter poer save mode during IDLE
+ * 
+ */
+#ifndef ccosconfig_CC_OS_POWER_SAVE_EN
+#define ccosconfig_CC_OS_POWER_SAVE_EN		0
+#endif
