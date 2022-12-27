@@ -2,12 +2,13 @@
  * CYANCORE LICENSE
  * Copyrights (C) 2019, Cyancore Team
  *
- * File Name		: nmath.c
+ * File Name		: arithmetic.c
  * Description		: This file contains sources of neo-math function
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 
+#include <stdbool.h>
 #include <nmath.h>
 
 /**
@@ -132,7 +133,39 @@ long multiplicative_inverse(long base, long subject)
 	return mod(t1, base);
 }
 
+/**
+ * abs
+ *
+ * @brief This function returns absolute of input.
+ *
+ * @param[in] x: Input number
+ * @return ABS: returns absolute value
+ */
 int abs(int x)
 {
 	return (x < 0) ? -x : x;
+}
+
+/**
+ * isPrime
+ *
+ * @brief This function checks if the input number is prime or not
+ *
+ * @param [in] x: Input number
+ *
+ * @return : True/False
+ */
+bool isPrime(long x)
+{
+	if(x < 2)
+		return false;
+	else if(x <= 3)
+		return true;
+	else if((x % 2) || (x % 3))
+		return false;
+	else
+		for(long i = 5; (i * i) <= x; i += 2)
+			if(!(x % i))
+				return false;
+	return true;
 }

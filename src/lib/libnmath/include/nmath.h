@@ -9,7 +9,7 @@
  */
 
 #pragma once
-
+#include <stdbool.h>
 unsigned int clog2(unsigned long num);
 double ceiling(double num);
 double floor(double num);
@@ -18,3 +18,4 @@ unsigned long lcd(unsigned int *a, unsigned int n);
 long mod(long a, long b);
 long multiplicative_inverse(long base, long subject);
 int abs(int x);
+bool isPrime(long);
