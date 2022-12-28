@@ -6,5 +6,5 @@ Home directory for CPU architecture specific sources.
 
 #### Supported Architectures
 * AVR
-* ARM
 * RISCV
+* ARM [Coming Soon]
