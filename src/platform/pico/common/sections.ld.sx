@@ -1,0 +1,97 @@
+/*
+ * CYANCORE LICENSE
+ * Copyrights (C) 2022, Cyancore Team
+ *
+ * File Name		: sections.ld.sx
+ * Description		: This file contains memory layout for the
+ *			  cyancore framework
+ * Primary Author	: Mayuri Lokhande [mayurilokhande01@gmail.com]
+ * Organisation		: Cyancore Core-Team
+ */
+
+ #include <plat_mem.h>
+
+
+ #ifndef L_MEM_START
+ #define L_MEM_START
+ #endif
+
+ MEMORY
+ {
+	/* VM Addresses */
+	vma_mem		: ORIGIN = V_DMEM_START, LENGTH = DMEM_LENGTH
+
+	/* LM Addresses */
+	lma_mem		: ORIGIN = L_MEM_START, LENGTH = IMEM_LENGTH
+
+	/* Stack Addresses */
+	v_smem		: ORIGIN = V_SMEM_START, LENGTH = SMEM_LENGTH
+
+ }
+
+ SECTIONS
+ {
+	.text :
+	{
+		. = ALIGN(ALIGN_BOUND);
+		*(.archvectors)
+		KEEP(*(.archvectors))
+		*(.platvectors)
+		KEEP(*(.platvectors))
+		. = ALIGN(ALIGN_BOUND);
+		(*.text)
+		(*.text.*)
+		KEEP(*(.text))
+	} > vma_mem AT > lma_mem
+
+	.bss	:
+	{
+		. = ALIGN(ALIGN_BOUND)
+		*(.bss)
+		*(.bss.*)
+		KEEP(*(.bss))
+		*(COMMON)
+	} > vma_mem
+
+	.data	:
+	{
+		. = ALIGN(ALIGN_BOUND)
+		*(.version)
+		KEEP(*(.version))
+		*(.rodata)
+		*(.rodata.*)
+		KEEP(*(.rodata))
+		*(.data)
+		*(.data.*)
+		KEEP(*(.data))
+	} > vma_mem
+
+	.driver_table : {} > vma_mem AT > lma_mem
+	.mcall_table : {} > vma_mem AT > lma_mem
+
+	.stack :
+	{
+		. = ALIGN(ALIGN_BOUND);
+		*(.stack)
+		KEEP(*(.stack))
+		. = . + STACK_SIZE;
+	} > vma_mem
+
+	PROVIDE(_data_start = LOADADDR(.data));
+	PROVIDE(_data_size = SIZEOF(.data) + SIZEOF(.driver_table) + SIZEOF(.mcall_table));
+	PROVIDE(_data_vstart = ADDR(.data));
+	PROVIDE(_data_vend = _data_vstart + _data_size);
+
+	PROVIDE(_bss_start = ADDR(.bss));
+	PROVIDE(_bss_size = SIZEOF(.bss));
+	PROVIDE(_flash_size = _data_size + SIZEOF(.text));
+	PROVIDE(_ram_size = _bss_size + _data_size + SIZEOF(.stack));
+
+	ASSERT((_flash_size < FLASH_SIZE), "< x > Flash size exceeded ...")
+	ASSERT((_ram_size < RAM_SIZE), "< x > RAM size exceeded ...")
+
+	/DISCARD/ : { *(.comment .trampolines) }
+}
+
+
+ }
