@@ -2,7 +2,7 @@
  * CYANCORE LICENSE
  * Copyrights (C) 2022, Cyancore Team
  *
- * File Name		: cc_sched.c
+ * File Name		: cc_os_sched.c
  * Description		: CC OS Kernel scheduler definations
  * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
  * Organisation		: Cyancore Core-Team

@@ -2,7 +2,7 @@
  * CYANCORE LICENSE
  * Copyrights (C) 2022, Cyancore Team
  *
- * File Name		: cc_os.h
+ * File Name		: cc_os_heap.c
  * Description		: CC OS Kernel definations
  * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
  * Organisation		: Cyancore Core-Team

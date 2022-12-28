@@ -2,7 +2,7 @@
  * CYANCORE LICENSE
  * Copyrights (C) 2022, Cyancore Team
  *
- * File Name		: cc_os_idle.c
+ * File Name		: cc_os_task_idle.c
  * Description		: CC OS IDLE Task definitions
  * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
  * Organisation		: Cyancore Core-Team

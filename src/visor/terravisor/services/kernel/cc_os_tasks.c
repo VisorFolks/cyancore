@@ -2,8 +2,8 @@
  * CYANCORE LICENSE
  * Copyrights (C) 2022, Cyancore Team
  *
- * File Name		: cc_os.h
- * Description		: CC OS Kernel definations
+ * File Name		: cc_os_tasks.c
+ * Description		: CC OS Kernel tasks related definations definations
  * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
@@ -58,7 +58,7 @@ void __cc_init_scheduler()
 /*****************************************************
  *	USER FUNCTION DEFINATIONS
  *****************************************************/
-cc_os_err_t cc_os_add_task (cc_os_task_t * cc_os_task)
+status_t cc_os_add_task (cc_os_task_t * cc_os_task)
 {
 	CC_OS_ASSERT_IF_FALSE(cc_os_task != CC_OS_NULL_PTR);
 	CC_OS_ASSERT_IF_FALSE(cc_os_task->name != CC_OS_NULL_PTR);
@@ -161,7 +161,7 @@ cc_os_err_t cc_os_add_task (cc_os_task_t * cc_os_task)
 	return success;
 }
 
-cc_os_err_t cc_os_del_task (cc_os_task_t * cc_os_task)
+status_t cc_os_del_task (cc_os_task_t * cc_os_task)
 {
 	CC_OS_ASSERT_IF_FALSE(cc_os_task->task_fn != _cc_os_idle_task_fn);
 
@@ -187,7 +187,7 @@ cc_os_err_t cc_os_del_task (cc_os_task_t * cc_os_task)
 	return success;
 }
 
-cc_os_err_t cc_os_pause_task (cc_os_task_t * cc_os_task)
+status_t cc_os_pause_task (cc_os_task_t * cc_os_task)
 {
 	cc_sched_tcb_t * ptr = g_sched_ctrl.curr_task;
 	if (cc_os_task != CC_OS_NULL_PTR)
@@ -200,7 +200,7 @@ cc_os_err_t cc_os_pause_task (cc_os_task_t * cc_os_task)
 	return success;
 }
 
-cc_os_err_t cc_os_pause_all_task (void)
+status_t cc_os_pause_all_task (void)
 {
 	cc_sched_tcb_t * ptr = g_sched_ctrl.ready_list_head->ready_link.next;
 
@@ -218,7 +218,7 @@ cc_os_err_t cc_os_pause_all_task (void)
 	return success;
 }
 
-cc_os_err_t cc_os_resume_all_task (void)
+status_t cc_os_resume_all_task (void)
 {
 	cc_sched_tcb_t * ptr = g_sched_ctrl.ready_list_head->ready_link.next;
 	if (ptr != CC_OS_NULL_PTR)
@@ -241,7 +241,7 @@ cc_os_err_t cc_os_resume_all_task (void)
 	return success;
 }
 
-cc_os_err_t cc_os_resume_task (cc_os_task_t * cc_os_task)
+status_t cc_os_resume_task (cc_os_task_t * cc_os_task)
 {
 	CC_OS_ASSERT_IF_FALSE(cc_os_task != CC_OS_NULL_PTR);
 
@@ -252,7 +252,7 @@ cc_os_err_t cc_os_resume_task (cc_os_task_t * cc_os_task)
 	return success;
 }
 
-cc_os_err_t set_cc_os_sched_algo(cc_sched_algo_t sched_algo)
+status_t set_cc_os_sched_algo(cc_sched_algo_t sched_algo)
 {
 	CC_OS_ASSERT_IF_FALSE(sched_algo != cc_sched_algo_max);
 

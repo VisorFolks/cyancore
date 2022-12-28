@@ -30,7 +30,7 @@
  *	USER FUNCTION DEFINATIONS
  *****************************************************/
 
-cc_os_err_t cc_os_sem_create	(sem_t ** sem_ptr, size_t init_val)
+status_t cc_os_sem_create	(sem_t ** sem_ptr, size_t init_val)
 {
 #if CC_OS_DYNAMIC == CC_OS_FALSE
 	CC_OS_ASSERT_IF_FALSE((*sem_ptr != CC_OS_NULL_PTR && (*sem_ptr)->sem_init == CC_OS_FALSE));
@@ -53,7 +53,7 @@ cc_os_err_t cc_os_sem_create	(sem_t ** sem_ptr, size_t init_val)
 #endif
 	return success;
 }
-cc_os_err_t cc_os_sem_take 	(sem_t * sem_ptr, size_t wait_ticks)
+status_t cc_os_sem_take 	(sem_t * sem_ptr, size_t wait_ticks)
 {
 	CC_OS_ASSERT_IF_FALSE((sem_ptr != CC_OS_NULL_PTR && sem_ptr->sem_init != CC_OS_FALSE));
 
@@ -74,7 +74,7 @@ cc_os_err_t cc_os_sem_take 	(sem_t * sem_ptr, size_t wait_ticks)
 	}
 	return success;
 }
-cc_os_err_t cc_os_sem_give (sem_t * sem_ptr)
+status_t cc_os_sem_give (sem_t * sem_ptr)
 {
 	CC_OS_ASSERT_IF_FALSE((sem_ptr != CC_OS_NULL_PTR && sem_ptr->sem_init != CC_OS_FALSE));
 
@@ -82,7 +82,7 @@ cc_os_err_t cc_os_sem_give (sem_t * sem_ptr)
 
 	return success;
 }
-cc_os_err_t cc_os_sem_delete (sem_t ** sem_ptr)
+status_t cc_os_sem_delete (sem_t ** sem_ptr)
 {
 	CC_OS_ASSERT_IF_FALSE((*sem_ptr != CC_OS_NULL_PTR && (*sem_ptr)->sem_init != CC_OS_FALSE));
 
@@ -94,7 +94,7 @@ cc_os_err_t cc_os_sem_delete (sem_t ** sem_ptr)
 
 	return success;
 }
-cc_os_err_t cc_os_sem_get_val 	(const sem_t * sem_ptr, size_t * val)
+status_t cc_os_sem_get_val 	(const sem_t * sem_ptr, size_t * val)
 {
 	CC_OS_ASSERT_IF_FALSE((sem_ptr != CC_OS_NULL_PTR && sem_ptr->sem_init != CC_OS_FALSE));
 	CC_OS_ASSERT_IF_FALSE(val != CC_OS_NULL_PTR);
