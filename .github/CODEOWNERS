@@ -1,0 +1,22 @@
+# Cyancore root
+/*				@visorfolks/cc-arch-board
+
+# Akash Kollipara owns
+/mk/*				@akashkollipara
+/src/arch/avr/*			@akashkollipara
+/src/arch/riscv/*		@akashkollipara
+/src/platform/mega_avr/*	@akashkollipara
+/src/platform/sifive/*		@akashkollipara
+/src/driver/*			@akashkollipara
+/src/lib/*			@akashkollipara
+/src/inlcude/*			@akashkollipara
+/src/visor/*			@akashkollipara
+
+# Mayuri Lokhande owns
+/src/arch/arm/*			@MayuriLokhande
+/src/platform/pico/*		@MayuriLokhande
+/src/visor/supervisor/*		@MayuriLokhande
+
+# Pranjal Chanda owns
+/src/visor/*			@pranjalchanda08
+/src/lib/libposix/*		@pranjalchanda08
