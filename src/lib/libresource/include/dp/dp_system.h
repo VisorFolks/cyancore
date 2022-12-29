@@ -22,6 +22,7 @@ typedef enum cpu_sleep
 	sleep_cluster_fclock	= 0x201,
 	sleep_cluster_off	= 0x2f0,
 	sleep_power_off		= 0xaaa,
+	resume			= 0xffff,
 } cpu_sleep_t;
 
 /* === Intrrupts structures === */

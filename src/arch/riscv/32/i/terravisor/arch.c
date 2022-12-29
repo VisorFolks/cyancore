@@ -95,6 +95,51 @@ void arch_ei_restore_state(istate_t *istate)
 	asm volatile("csrs mie, %0" : : "r" (*istate));
 }
 
+static cpu_sleep_t sleep_flag[N_CORES];
+
+/**
+ * arch_suspended_state_was
+ *
+ * @brief This function checks per core suspend state
+ * and returns true/false based arg.
+ *
+ * @param[in] state: suspended state
+ * @return bool: True/False
+ */
+bool arch_suspended_state_was(cpu_sleep_t state)
+{
+	cpu_sleep_t temp = sleep_flag[arch_core_index()];
+	if(!temp)
+		return false;
+	return (temp == state);
+}
+
+/**
+ * arch_signal_suspend
+ *
+ * @brief This function is intended to be called before
+ * cpu enters suspend state. By passing the state, we store
+ * and use the value to check while executing resume routine.
+ *
+ * @param[in] state: Suspend state of cpu
+ */
+void arch_signal_suspend(cpu_sleep_t state)
+{
+	sleep_flag[arch_core_index()] = state;
+}
+
+/**
+ * arch_signal_resume
+ *
+ * @brief This function is intended ot be called after
+ * execution of resume routine so that state of cpu is
+ * updated to resume.
+ */
+void arch_signal_resume(void)
+{
+	sleep_flag[arch_core_index()] = resume;
+}
+
 _WEAK void arch_panic_handler()
 {
 	const context_frame_t *frame = get_context_frame();

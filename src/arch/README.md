@@ -2,7 +2,9 @@
 
 Home directory for CPU architecture specific sources.
 
+> Note : The folder structure is intentionally kept with the current resolution. **Do not modify it!**
+
 #### Supported Architectures
 * AVR
-* ARM [Coming soon]
-* RISCV [Coming soon]
+* RISCV
+* ARM [Coming Soon]

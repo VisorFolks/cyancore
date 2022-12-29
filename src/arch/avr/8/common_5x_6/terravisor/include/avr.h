@@ -30,3 +30,10 @@ typedef uint8_t istate_t;
 context_frame_t *get_context_frame();
 void arch_panic_handler_callback();
 bool in_isr(void);
+
+static inline void arch_update_sp(uint16_t *p)
+{
+	uint16_t temp = (uint16_t) p;
+	MMIO8(SPL) = (uint8_t)(temp & 0xff);
+	MMIO8(SPH) = (uint8_t)((temp >> 8) & 0xff);
+}

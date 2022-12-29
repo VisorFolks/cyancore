@@ -10,4 +10,5 @@
 
 #pragma once
 
+#define RET_ON_FAIL(condition, status)	if(!(condition)) return status
 #define ROUNDUP_ALIGN(x, align)		x += align - (x % align)

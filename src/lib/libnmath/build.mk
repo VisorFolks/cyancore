@@ -16,6 +16,7 @@ LIB		:= libnmath.a
 LIB_INCLUDE	+= $(NMATH_PATH)/include/
 DEP_LIBS_ARG	+= -lnmath
 
+include $(NMATH_PATH)/arithmetic/build.mk
 include $(NMATH_PATH)/dsp/build.mk
 
 DIR		:= $(NMATH_PATH)

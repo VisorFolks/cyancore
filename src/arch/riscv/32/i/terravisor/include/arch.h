@@ -11,6 +11,8 @@
 
 #pragma once
 #define _ARCH_H_
+#include <stdbool.h>
+#include <resource.h>
 #include <riscv.h>
 #include <machine_call.h>
 
@@ -175,3 +177,7 @@ static inline void arch_dmb()
 {
 	fence(rw, rw);
 }
+
+bool arch_suspended_state_was(cpu_sleep_t);
+void arch_signal_suspend(cpu_sleep_t);
+void arch_signal_resume(void);

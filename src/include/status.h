@@ -65,6 +65,7 @@ typedef enum status
 	error_system_irq_link_fail	= -0x0b01,
 	error_system_irq_unlink_fail	= -0x0b02,
 	error_system_clk_caliberation	= -0x0b03,
+	error_system_prog_fail		= -0x0b04,
 /* Network related error */
 	error_net			= -0x0c00,
 	error_net_con_timeout		= -0x0c01,
@@ -76,6 +77,8 @@ typedef enum status
 	error_os			= -0x0f00,
 	error_os_task_overfow		= -0x0f01,
 	error_os_deadlock		= -0x0f02,
+	error_os_invalid_op		= -0x0f03,
+	error_os_sem_get		= -0x0f04,
 /* Mesg related error */
 	error_mesg			= -0x1000,
 	error_mesg_long			= -0x1001,
