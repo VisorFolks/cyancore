@@ -14,6 +14,7 @@
 /*****************************************************
  *	INCLUDES
  *****************************************************/
+#include <terravisor/cc_os/utils/cc_os_heap.h>
 #include <terravisor/cc_os/cc_os_tasks.h>
 #include <terravisor/cc_os/cc_os_sem.h>
 

@@ -18,8 +18,8 @@
  *****************************************************/
 typedef struct sem
 {
-	uint8_t	sem_init;
 	size_t	sem_val;
+	uint8_t	sem_init;
 }sem_t;
 /*****************************************************
  *	USER MACROS

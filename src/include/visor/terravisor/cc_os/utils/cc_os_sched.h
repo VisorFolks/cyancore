@@ -27,7 +27,7 @@
 
 #define	CC_OS_DYNAMIC 			ccosconfig_CC_OS_USE_DYNAMIC
 
-#define CC_OS_ASSERT_IF_FALSE(con)	if(!(con)) return error_func_inval_arg
+#define CC_OS_ASSERT_IF_FALSE(con)	RET_ON_FAIL(con, error_func_inval_arg)
 
 /*****************************************************
  *	TYPEDEFS
@@ -50,12 +50,18 @@ typedef struct link
 	cc_sched_tcb_t * next;
 }link_t;
 
+typedef struct wres
+{
+	uintptr_t wait_on_resource;				///> Resource on hich the task is waiting on
+	size_t 	  task_delay_ticks;				///> Time delay in ticks
+}wres_t;
+
 struct cc_sched_tcb
 {
 	char 	  name [ccosconfig_CC_OS_TASK_NAME_LEN + 1];	///> Name of the Current Task
 	size_t    priority;					///> Priority of the task
 	void    * stack_ptr;					///> Stack Pointer
-	size_t 	  task_delay_ticks;				///> Time delay in ticks
+	wres_t	  wait_res;					///> Wait Task resource
 	link_t	  ready_link;					///> Ready Linked List Pointers
 	link_t    wait_link;					///> Wait Linked List Pointers
 	cc_sched_task_status_t task_status;			///> Current state of the task
