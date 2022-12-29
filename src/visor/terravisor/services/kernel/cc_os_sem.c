@@ -11,8 +11,7 @@
 /*****************************************************
  *	INCLUDES
  *****************************************************/
-#include <terravisor/cc_os/cc_os_sem.h>
-#include <terravisor/cc_os/utils/cc_os_heap.h>
+#include <terravisor/cc_os/cc_os.h>
 
 /*****************************************************
  *	GLOBAL/STATIC VARIABLE DECLARATIONS
@@ -21,7 +20,7 @@
 /*****************************************************
  *	GLOBAL EXTERNS
  *****************************************************/
-
+extern cc_sched_ctrl_t g_sched_ctrl;
 /*****************************************************
  *	STATIC FUNCTION DEFINATIONS
  *****************************************************/
@@ -64,7 +63,7 @@ status_t cc_os_sem_take 	(sem_t * sem_ptr, size_t wait_ticks)
 			return error_os_sem_get;
 		}
 		else
-		{
+		{	g_sched_ctrl.curr_task->wait_res.wait_on_resource = (uintptr_t) sem_ptr;
 			cc_os_task_wait(wait_ticks);
 		}
 	}

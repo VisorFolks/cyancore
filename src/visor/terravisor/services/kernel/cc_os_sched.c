@@ -152,7 +152,7 @@ void _cc_sched_send_to_wait(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr, 
 	}
 	if(_insert_before(&(sched_ctrl->wait_list_head), ptr, CC_OS_TRUE) == success)
 	{
-		ptr->task_delay_ticks = ticks;
+		ptr->wait_res.task_delay_ticks = ticks;
 		ptr->task_status = cc_sched_task_status_wait;
 	}
 }
@@ -178,7 +178,7 @@ void _cc_sched_send_to_resume(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr
 	ptr->wait_link.next->wait_link.prev = ptr->wait_link.prev;
 	ptr->wait_link.prev = CC_OS_NULL_PTR;
 	ptr->wait_link.next = CC_OS_NULL_PTR;
-	ptr->task_delay_ticks = CC_OS_FALSE;
+	ptr->wait_res.task_delay_ticks = CC_OS_FALSE;
 	ptr->task_status = cc_sched_task_status_ready;
 }
 
@@ -193,11 +193,18 @@ static void __cc_sched_context_switch(cc_sched_tcb_t * next_task)
 static void __cc_sched_wait_list_adjustment(cc_sched_ctrl_t * sched_ctrl)
 {
 	cc_sched_tcb_t * ptr = sched_ctrl->wait_list_head;
-
+	size_t * wait_res = ptr->wait_res.wait_on_resource;
 	while(ptr != CC_OS_NULL_PTR)
 	{
-		ptr->task_delay_ticks--;	/* Tick caliberations required */
-		if(ptr->task_delay_ticks == CC_OS_FALSE)
+		ptr->wait_res.task_delay_ticks--;	/* Tick caliberations required */
+
+		if ((wait_res != CC_OS_NULL_PTR) && (*wait_res == CC_OS_FALSE))
+		{
+			/* The resource is available can can go to ready state */
+			ptr->wait_res.task_delay_ticks = CC_OS_FALSE;
+			ptr->wait_res.wait_on_resource = CC_OS_NULL_PTR;
+		}
+		if(ptr->wait_res.task_delay_ticks == CC_OS_FALSE)
 		{
 			_cc_sched_send_to_resume(sched_ctrl, ptr);
 		}
