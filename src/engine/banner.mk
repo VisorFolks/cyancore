@@ -9,7 +9,7 @@
 #
 
 .PHONY:	version
-NAME		= Lithium
+NAME		= Beryllium
 VERSION		= 0x01000302
 
 $(eval $(call add_define,VERSION))
