@@ -1,8 +1,8 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2CC_OS_FALSE22, Cyancore Team
+ * Copyrights (C) 2022, Cyancore Team
  *
- * File Name		: cc_os_sem.h
+ * File Name		: cc_os_sem.c
  * Description		: CC OS Semaphore function definations
  * Primary Author	: Pranjal Chanda [pranjalchandaCC_OS_FALSE8@gmail.com]
  * Organisation		: Cyancore Core-Team

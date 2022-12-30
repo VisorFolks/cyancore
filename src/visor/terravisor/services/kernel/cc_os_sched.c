@@ -198,7 +198,7 @@ static void __cc_sched_wait_list_adjustment(cc_sched_ctrl_t * sched_ctrl)
 	{
 		ptr->wait_res.task_delay_ticks--;	/* Tick caliberations required */
 
-		if ((wait_res != CC_OS_NULL_PTR) && (*wait_res == CC_OS_FALSE))
+		if ((wait_res != CC_OS_NULL_PTR) && *wait_res)
 		{
 			/* The resource is available can can go to ready state */
 			ptr->wait_res.task_delay_ticks = CC_OS_FALSE;
