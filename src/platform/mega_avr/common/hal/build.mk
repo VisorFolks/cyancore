@@ -1,6 +1,6 @@
 #
 # CYANCORE LICENSE
-# Copyrights (C) 2019, Cyancore Team
+# Copyrights (C) 2019-2022, Cyancore Team
 #
 # File Name		: build.mk
 # Description		: This file accumulates HAL sources from mega-avr
@@ -25,3 +25,4 @@ include $(HAL_DIR)/spi/build.mk
 include $(HAL_DIR)/timer/build.mk
 include $(HAL_DIR)/uart/build.mk
 include $(HAL_DIR)/wdt/build.mk
+include $(HAL_DIR)/pwm/build.mk
