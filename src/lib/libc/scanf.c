@@ -30,13 +30,15 @@ char getch()
 
 char getchar()
 {
-    char c;
+    char c = '0', temp;
     do
     {
-        c = getch();
-        fputc(stdout, c);
-        if(c == '\r')
+        temp = getch();
+        fputc(stdout, temp);
+        if(temp == '\r')
         	fputc(stdout, '\n');
-    } while(c != '\r');
+	else
+		c = temp;
+    } while(temp != '\r');
     return c;
 }
