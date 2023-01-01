@@ -15,7 +15,7 @@
  * @note	Possible values : 1/0
  */
 #ifndef ccosconfig_CC_OS_USE_DYNAMIC
-#define ccosconfig_CC_OS_USE_DYNAMIC		0
+#define ccosconfig_CC_OS_USE_DYNAMIC		1
 #endif
 
 /**
@@ -33,7 +33,7 @@
  * 		to be used as possible for the application being created.
  */
 #ifndef ccosconfig_CC_OS_MAX_THREAD
-#define ccosconfig_CC_OS_MAX_THREAD		10
+#define ccosconfig_CC_OS_MAX_THREAD		2
 #endif
 
 /**
@@ -62,7 +62,7 @@
 
 /**
  * @brief	If the Kernel shall enter poer save mode during IDLE
- * 
+ *
  */
 #ifndef ccosconfig_CC_OS_POWER_SAVE_EN
 #define ccosconfig_CC_OS_POWER_SAVE_EN		0
