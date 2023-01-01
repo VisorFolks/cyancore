@@ -28,11 +28,11 @@
 /*****************************************************
  *	USER FUNCTION DEFINATIONS
  *****************************************************/
-void * cc_os_malloc(size_t size _UNUSED)
+void * cc_os_malloc(size_t size)
 {
-	return CC_OS_NULL_PTR;
+	return malloc(size);
 }
-void * cc_os_free(const void *addr _UNUSED )
+void cc_os_free(void *addr )
 {
-	return CC_OS_NULL_PTR;
+	free(addr);
 }
