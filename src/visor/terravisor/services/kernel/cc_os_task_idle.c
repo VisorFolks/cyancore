@@ -34,6 +34,7 @@ static cc_sched_tcb_t * __free_terminated_task(cc_sched_tcb_t * ptr)
 		ptr->ready_link.next = CC_OS_NULL_PTR;
 		ptr->ready_link.prev = CC_OS_NULL_PTR;
 #else
+		cc_os_free(ptr->stack_ptr);
 		cc_os_free(ptr);
 #endif
 	}

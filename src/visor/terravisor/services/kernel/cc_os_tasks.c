@@ -106,13 +106,13 @@ status_t cc_os_add_task (cc_os_task_t * cc_os_task)
 		{
 #else
 		/* Dynamic Task Declaration */
-		if (ptr != CC_OS_NULL_PTR)
 		ptr = (cc_sched_tcb_t *)cc_os_malloc(sizeof(cc_sched_tcb_t));
+		if (ptr != CC_OS_NULL_PTR)
 		{
 #endif
 			/* Fill tcb details */
-			strlcpy(ptr->name, cc_os_task->name, ccosconfig_CC_OS_TASK_NAME_LEN);
-			ptr->stack_ptr 	 = cc_os_task->stack_ptr;
+			ptr->name	 = cc_os_task->name;
+			ptr->stack_ptr 	 = (uint8_t *) malloc(cc_os_task->stack_len);
 			ptr->priority 	 = cc_os_task->priority;
 		}
 		else
@@ -252,13 +252,18 @@ status_t cc_os_resume_task (cc_os_task_t * cc_os_task)
 	return success;
 }
 
-status_t set_cc_os_sched_algo(cc_sched_algo_t sched_algo)
+status_t cc_os_set_sched_algo(cc_sched_algo_t sched_algo)
 {
 	CC_OS_ASSERT_IF_FALSE(sched_algo != cc_sched_algo_max);
 
 	g_sched_ctrl.selected_sched = &(g_cc_sched_list[sched_algo]);
 
 	return success;
+}
+
+const char * cc_os_get_curr_task_name(void)
+{
+	return g_sched_ctrl.curr_task->name;
 }
 
 void cc_os_task_wait (const size_t ticks)
