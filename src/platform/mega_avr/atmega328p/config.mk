@@ -28,11 +28,6 @@ FLASH_START	:= 0x0000
 FLASH_SIZE	:= 0x8000	# 32K
 RAM_START	:= 0x00800100
 RAM_SIZE	:= 0x800	# 2K
-HEAP_SIZE	?= 256
-STACK_SIZE	?= 256
-
-$(eval $(call add_define,HEAP_SIZE))
-$(eval $(call add_define,STACK_SIZE))
 
 # Call this FLAG from Project config file if needed
 FCLK		?= 16000000

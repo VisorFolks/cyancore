@@ -22,4 +22,8 @@
 #define DMEM_LENGTH	0x2000
 
 #define ALIGN_BOUND	2
+
+#define STACK_SIZE	2048
+
+#define HEAP_SIZE	2048
 #define HEAP_ALIGN	1

@@ -33,13 +33,6 @@ RAM_START	:= 0x80000000
 RAM_SIZE	:= 0x4000	# 16K
 ITIM_START	:= 0x08000000
 ITIM_SIZE	:= 0x2000	# 8K
-HEAP_SIZE	?= 512
-STACK_SIZE	?= 0xc00
-STACK_SIZE_PCPU	?= 0xc00
-
-$(eval $(call add_define,HEAP_SIZE))
-$(eval $(call add_define,STACK_SIZE))
-$(eval $(call add_define,STACK_SIZE_PCPU))
 
 # Call this FLAG from Project config file if needed
 XCLK		?= 16000000
