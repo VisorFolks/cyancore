@@ -34,6 +34,7 @@
  *****************************************************/
 typedef struct cc_sched_tcb cc_sched_tcb_t;
 typedef struct cc_sched cc_sched_t;
+typedef const char c_char;
 
 typedef enum
 {
@@ -58,8 +59,8 @@ typedef struct wres
 
 struct cc_sched_tcb
 {
-	char 	  name [ccosconfig_CC_OS_TASK_NAME_LEN + 1];	///> Name of the Current Task
-	size_t    priority;					///> Priority of the task
+	c_char  * name;						///> Name of the Current Task
+	uint8_t   priority;					///> Priority of the task
 	void    * stack_ptr;					///> Stack Pointer
 	wres_t	  wait_res;					///> Wait Task resource
 	link_t	  ready_link;					///> Ready Linked List Pointers

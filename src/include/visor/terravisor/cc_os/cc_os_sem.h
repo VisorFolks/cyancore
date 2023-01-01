@@ -34,6 +34,7 @@ static sem_t _Name##_sem = {	\
 };				\
 static sem_t * _Name##_sem_inst = &_Name##_sem
 #else
+#define CC_SEM_DEF(_Name)	\
 static sem_t * _Name##_sem_inst = CC_OS_NULL_PTR
 #endif
 /*****************************************************
