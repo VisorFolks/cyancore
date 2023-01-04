@@ -1,17 +1,19 @@
 #
 # CYANCORE LICENSE
-# Copyrights (C) 2019, Cyancore Team
+# Copyrights (C) 2019-2023, Cyancore Team
 #
 # File Name		: config.mk
 # Description		: This file consists of project config
-# Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+# Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
 # Organisation		: Cyancore Core-Team
 #
 
 COMPILER	:= gcc
-TC_VER		:= 5.4.0
-FAMILY		:= mega_avr
-PLATFORM	:= atmega328p
+TC_VER		:= 10.2.0
+FAMILY		:= sifive
+PLATFORM	:= fe310g002
+HEAP_SIZE 	:= 256
+STACK_SIZE 	:= 256
 STDLOG_MEMBUF	:= 0
 BOOTMSGS	:= 0
 EARLYCON_SERIAL	:= 0
@@ -19,4 +21,4 @@ CONSOLE_SERIAL	:= 0
 OBRDLED_ENABLE	:= 1
 TERRAKERN	:= 1
 
-include $(PROJECT_DIR)/config/cc_os_config.mk
+include $(PROJECT_DIR)/cc_os_config.mk
