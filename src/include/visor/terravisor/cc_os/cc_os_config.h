@@ -33,7 +33,7 @@
  * 		to be used as possible for the application being created.
  */
 #ifndef ccosconfig_CC_OS_MAX_THREAD
-#define ccosconfig_CC_OS_MAX_THREAD		2
+#define ccosconfig_CC_OS_MAX_THREAD		10
 #endif
 
 /**
