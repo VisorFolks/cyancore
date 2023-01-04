@@ -24,18 +24,8 @@
 #define CC_OS_PRIORITY_MAX		255
 
 /*****************************************************
- *	GLOBAL DECLARATIONS
- *****************************************************/
-#if CC_OS_DYNAMIC == CC_OS_FALSE
-extern cc_sched_tcb_t g_cc_os_tcb_list[];
-#else
-extern cc_sched_tcb_t *g_cc_os_tcb_list;
-#endif
-
-/*****************************************************
  *	INTERNAL EXTERNS FUNCTIONS
  *****************************************************/
-extern void _cc_os_idle_task_fn		(void * args);
 extern status_t _insert_after		(cc_sched_tcb_t ** ptr, cc_sched_tcb_t * new_node, uint8_t link_type);
 extern status_t _insert_before		(cc_sched_tcb_t ** ptr, cc_sched_tcb_t * new_node, uint8_t link_type);
 extern void _cc_sched_send_to_wait	(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr, const size_t ticks);
@@ -48,6 +38,22 @@ extern cc_sched_t *g_cc_sched;
 extern cc_sched_t g_cc_sched_list [];
 extern cc_sched_ctrl_t g_sched_ctrl;
 
+/*****************************************************
+ *	GLOBAL DECLARATIONS
+ *****************************************************/
+#if CC_OS_DYNAMIC == CC_OS_FALSE
+extern cc_sched_tcb_t g_cc_os_tcb_list[];
+#else
+extern cc_sched_tcb_t *g_cc_os_tcb_list;
+#endif
+
+CC_TASK_DEF(
+	cc_os_idle,				/* Name of the instance */
+	_cc_os_idle_task_fn,			/* Function pointer */
+	&g_sched_ctrl,				/* Task Args*/
+	ccosconfig_CC_OS_IDLE_TASK_PRIORITY,	/* Task Priority */
+	ccosconfig_CC_OS_TASK_STACK_LEN		/* Stack Length of IDLE Task */
+);
 /*****************************************************
  *	STATIC FUNCTION DEFINATIONS
  *****************************************************/
@@ -288,13 +294,6 @@ void cc_os_run (void)
 	/* OS Init code */
 
 	/* Initialise IDLE Task */
-	CC_TASK_DEF(
-		cc_os_idle,				/* Name of the instance */
-		_cc_os_idle_task_fn,			/* Function pointer */
-		&g_sched_ctrl,				/* Task Args*/
-		ccosconfig_CC_OS_IDLE_TASK_PRIORITY,	/* Task Priority */
-		ccosconfig_CC_OS_TASK_STACK_LEN		/* Stack Length of IDLE Task */
-	);
 	cc_os_add_task(&CC_GET_TASK_INST(cc_os_idle));
 
 	/* Initialise scheduler */
