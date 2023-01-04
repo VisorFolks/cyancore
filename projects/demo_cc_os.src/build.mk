@@ -1,11 +1,11 @@
 #
 # CYANCORE LICENSE
-# Copyrights (C) 2019, Cyancore Team
+# Copyrights (C) 2019-2023, Cyancore Team
 #
 # File Name		: build.mk
 # Description		: This file build project sources and specifies
 #			  project properties
-# Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
+# Primary Author	: Pranjal Chdanda [pranjalchanda08@gmail.com]
 # Organisation		: Cyancore Core-Team
 #
 
