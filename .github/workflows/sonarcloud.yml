@@ -5,10 +5,12 @@ on:
     branches:
     - stable
     - development
+    - cc_os_stage
   pull_request:
     branches:
     - stable
     - development
+    - cc_os_stage
 
 jobs:
   build:
