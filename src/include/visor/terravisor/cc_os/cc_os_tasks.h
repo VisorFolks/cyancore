@@ -22,7 +22,7 @@
 /*****************************************************
  *	TYPEDEFS
  *****************************************************/
-typedef void *os_args;
+typedef const void * os_args;
 typedef void (*task_fn)(os_args args);
 
 /**
