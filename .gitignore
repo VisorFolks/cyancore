@@ -5,7 +5,6 @@ out/
 tools/
 backup/
 bkp/
-projects/
 *.elf
 *.bin
 *.d
