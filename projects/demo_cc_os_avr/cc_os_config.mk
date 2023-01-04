@@ -2,7 +2,7 @@
 # CYANCORE LICENSE
 # Copyrights (C) 2019-2023, Cyancore Team
 #
-# File Name		: kern_config.mk
+# File Name		: cc_os_config.mk
 # Description		: This file consists of CC_OS kernal configuration
 # Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
 # Organisation		: Cyancore Core-Team

@@ -193,7 +193,7 @@ static void __cc_sched_context_switch(cc_sched_tcb_t * next_task)
 static void __cc_sched_wait_list_adjustment(cc_sched_ctrl_t * sched_ctrl)
 {
 	cc_sched_tcb_t * ptr = sched_ctrl->wait_list_head;
-	size_t * wait_res = (size_t *)ptr->wait_res.wait_on_resource;
+	const size_t * wait_res = (size_t *)ptr->wait_res.wait_on_resource;
 	while(ptr != CC_OS_NULL_PTR)
 	{
 		ptr->wait_res.task_delay_ticks--;	/* Tick caliberations required */
