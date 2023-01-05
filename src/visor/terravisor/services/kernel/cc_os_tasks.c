@@ -71,6 +71,9 @@ status_t cc_os_add_task (
 	uint8_t priority,
 	size_t stack_len,
 	uintptr_t stack_ptr
+#if CC_OS_DYNAMIC == CC_OS_TRUE
+	_UNUSED
+#endif
 	)
 {
 	CC_OS_ASSERT_IF_FALSE(cc_os_task == CC_OS_NULL_PTR);
@@ -119,20 +122,21 @@ status_t cc_os_add_task (
 		}
 		if (ptr != g_sched_ctrl.ready_list_head)
 		{
+			ptr->stack_ptr = stack_ptr;
 #else
 		/* Dynamic Task Declaration */
 		ptr = (cc_sched_tcb_t *)cc_os_malloc(sizeof(cc_sched_tcb_t));
 		if (ptr != CC_OS_NULL_PTR)
 		{
-#endif
-			/* Fill tcb details */
-			ptr->name	 = name;
 			ptr->stack_ptr 	 = (uintptr_t) malloc(stack_len);
-			if(ptr->stack_ptr == CC_OS_NULL_PTR)
+			if(ptr->stack_ptr == (uintptr_t) CC_OS_NULL_PTR)
 			{
 				cc_os_resume_all_task();
 				return error_memory_low;
 			}
+#endif
+			/* Fill tcb details */
+			ptr->name	 = name;
 			ptr->priority 	 = priority;
 			ptr->task_func	 = task_func;
 			ptr->args_ptr	 = (uintptr_t) args;
