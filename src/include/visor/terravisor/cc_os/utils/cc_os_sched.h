@@ -25,7 +25,7 @@
 #define CC_OS_NULL_PTR			NULL
 #define CC_OS_DELAY_MAX			((size_t) -1)
 
-#define	CC_OS_DYNAMIC 			ccosconfig_CC_OS_USE_DYNAMIC
+#define	CC_OS_DYNAMIC 			CC_OS_USE_DYNAMIC
 
 #define CC_OS_ASSERT_IF_FALSE(con)	RET_ON_FAIL(con, error_func_inval_arg)
 
@@ -61,7 +61,7 @@ struct cc_sched_tcb
 {
 	c_char  * name;						///> Name of the Current Task
 	uint8_t   priority;					///> Priority of the task
-	void    * stack_ptr;					///> Stack Pointer
+	uintptr_t stack_ptr;					///> Stack Pointer
 	wres_t	  wait_res;					///> Wait Task resource
 	link_t	  ready_link;					///> Ready Linked List Pointers
 	link_t    wait_link;					///> Wait Linked List Pointers
