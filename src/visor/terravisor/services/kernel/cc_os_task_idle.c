@@ -45,7 +45,7 @@ static cc_sched_tcb_t * __free_terminated_task(cc_sched_tcb_t * ptr)
 /*****************************************************
  *	USER FUNCTION DEFINATION
  *****************************************************/
-void _cc_os_idle_task_fn(os_args args)
+void _cc_os_idle_task_fn(cc_os_args args)
 {
 	const cc_sched_ctrl_t * sched_ctrl = (const cc_sched_ctrl_t *) args;
 	static cc_sched_tcb_t * ptr = CC_OS_NULL_PTR;

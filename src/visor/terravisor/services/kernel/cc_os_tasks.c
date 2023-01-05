@@ -34,7 +34,7 @@ extern void _cc_sched_send_to_resume	(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb
 /*****************************************************
  *	GLOBAL EXTERNS VARIABLES
  *****************************************************/
-extern cc_sched_t *g_cc_sched;
+extern void _cc_os_idle_task_fn(cc_os_args args);
 extern cc_sched_t g_cc_sched_list [];
 extern cc_sched_ctrl_t g_sched_ctrl;
 
@@ -47,13 +47,12 @@ extern cc_sched_tcb_t g_cc_os_tcb_list[];
 extern cc_sched_tcb_t *g_cc_os_tcb_list;
 #endif
 
-CC_TASK_DEF(
-	cc_os_idle,				/* Name of the instance */
-	_cc_os_idle_task_fn,			/* Function pointer */
-	&g_sched_ctrl,				/* Task Args*/
-	CC_OS_IDLE_TASK_PRIORITY,	/* Task Priority */
-	CC_OS_TASK_STACK_LEN		/* Stack Length of IDLE Task */
-);
+#if CC_OS_DYNAMIC == CC_OS_FALSE
+uint8_t _cc_os_stack[CC_OS_IDLE_STACK_LEN];
+#else
+uint8_t * _cc_os_stack = CC_OS_NULL_PTR;
+#endif
+cc_os_task_t * cc_os_idle_task;
 /*****************************************************
  *	STATIC FUNCTION DEFINATIONS
  *****************************************************/
@@ -64,15 +63,25 @@ void __cc_init_scheduler()
 /*****************************************************
  *	USER FUNCTION DEFINATIONS
  *****************************************************/
-status_t cc_os_add_task (cc_os_task_t * cc_os_task)
+status_t cc_os_add_task (
+	cc_os_task_t * cc_os_task,
+	const char* name,
+	task_fn task_func,
+	cc_os_args args,
+	uint8_t priority,
+	size_t stack_len,
+	uintptr_t stack_ptr
+	)
 {
-	CC_OS_ASSERT_IF_FALSE(cc_os_task != CC_OS_NULL_PTR);
-	CC_OS_ASSERT_IF_FALSE(cc_os_task->name != CC_OS_NULL_PTR);
-	CC_OS_ASSERT_IF_FALSE(cc_os_task->stack_ptr != (uintptr_t) CC_OS_NULL_PTR);
-	CC_OS_ASSERT_IF_FALSE(cc_os_task->task_fn != CC_OS_NULL_PTR);
-	CC_OS_ASSERT_IF_FALSE(cc_os_task->stack_len != CC_OS_FALSE);
-	CC_OS_ASSERT_IF_FALSE(cc_os_task->priority >= CC_OS_IDLE_TASK_PRIORITY);
-	CC_OS_ASSERT_IF_FALSE(cc_os_task->priority < CC_OS_PRIORITY_MAX);
+	CC_OS_ASSERT_IF_FALSE(cc_os_task == CC_OS_NULL_PTR);
+	CC_OS_ASSERT_IF_FALSE(name != CC_OS_NULL_PTR);
+#if CC_OS_DYNAMIC == CC_OS_FALSE
+	CC_OS_ASSERT_IF_FALSE(stack_ptr != (uintptr_t) CC_OS_NULL_PTR);
+#endif
+	CC_OS_ASSERT_IF_FALSE(task_func != CC_OS_NULL_PTR);
+	CC_OS_ASSERT_IF_FALSE(stack_len != CC_OS_FALSE);
+	CC_OS_ASSERT_IF_FALSE(priority >= CC_OS_IDLE_TASK_PRIORITY);
+	CC_OS_ASSERT_IF_FALSE(priority < CC_OS_PRIORITY_MAX);
 
 	cc_os_pause_all_task();
 
@@ -86,7 +95,7 @@ status_t cc_os_add_task (cc_os_task_t * cc_os_task)
 		if (ptr == CC_OS_NULL_PTR)
 		{
 			cc_os_resume_all_task();
-			return error_os_task_overfow;
+			return error_memory_low;
 		}
 	}
 #endif
@@ -117,14 +126,21 @@ status_t cc_os_add_task (cc_os_task_t * cc_os_task)
 		{
 #endif
 			/* Fill tcb details */
-			ptr->name	 = cc_os_task->name;
-			ptr->stack_ptr 	 = (uintptr_t) malloc(cc_os_task->stack_len);
-			ptr->priority 	 = cc_os_task->priority;
+			ptr->name	 = name;
+			ptr->stack_ptr 	 = (uintptr_t) malloc(stack_len);
+			if(ptr->stack_ptr == CC_OS_NULL_PTR)
+			{
+				cc_os_resume_all_task();
+				return error_memory_low;
+			}
+			ptr->priority 	 = priority;
+			ptr->task_func	 = task_func;
+			ptr->args_ptr	 = (uintptr_t) args;
 		}
 		else
 		{
 			cc_os_resume_all_task();
-			return error_os_task_overfow;
+			return error_memory_low;
 		}
 	}
 	/* Insert Tasks in assending order of its priority */
@@ -160,22 +176,22 @@ status_t cc_os_add_task (cc_os_task_t * cc_os_task)
 		}
 	}
 
-	cc_os_task->task_tcb_ptr = ptr;
+	*cc_os_task = ptr;
 	ptr->task_status = cc_sched_task_status_ready;
 
 	cc_os_resume_all_task();
 	return success;
 }
 
-status_t cc_os_del_task (cc_os_task_t * cc_os_task)
+status_t cc_os_del_task (cc_os_task_t cc_os_task)
 {
-	CC_OS_ASSERT_IF_FALSE(cc_os_task->task_fn != _cc_os_idle_task_fn);
+	CC_OS_ASSERT_IF_FALSE(cc_os_task->task_func != &_cc_os_idle_task_fn);
 
 	cc_sched_tcb_t * ptr = g_sched_ctrl.curr_task;
 
 	if (cc_os_task != CC_OS_NULL_PTR)
 	{
-		ptr = cc_os_task->task_tcb_ptr;
+		ptr = cc_os_task;
 	}
 	/* Code to handle first node */
 	if (ptr == g_sched_ctrl.ready_list_head)
@@ -193,12 +209,12 @@ status_t cc_os_del_task (cc_os_task_t * cc_os_task)
 	return success;
 }
 
-status_t cc_os_pause_task (cc_os_task_t * cc_os_task)
+status_t cc_os_pause_task (cc_os_task_t cc_os_task)
 {
 	cc_sched_tcb_t * ptr = g_sched_ctrl.curr_task;
 	if (cc_os_task != CC_OS_NULL_PTR)
 	{
-		ptr = cc_os_task->task_tcb_ptr;
+		ptr = cc_os_task;
 	}
 
 	_cc_sched_send_to_wait(&g_sched_ctrl, ptr, CC_OS_DELAY_MAX);
@@ -247,11 +263,11 @@ status_t cc_os_resume_all_task (void)
 	return success;
 }
 
-status_t cc_os_resume_task (cc_os_task_t * cc_os_task)
+status_t cc_os_resume_task (cc_os_task_t cc_os_task)
 {
 	CC_OS_ASSERT_IF_FALSE(cc_os_task != CC_OS_NULL_PTR);
 
-	cc_sched_tcb_t * ptr = cc_os_task->task_tcb_ptr;
+	cc_sched_tcb_t * ptr = cc_os_task;
 
 	_cc_sched_send_to_resume(&g_sched_ctrl, ptr);
 
@@ -292,9 +308,14 @@ void cc_os_task_yield()
 void cc_os_run (void)
 {
 	/* OS Init code */
-
 	/* Initialise IDLE Task */
-	cc_os_add_task(&CC_GET_TASK_INST(cc_os_idle));
+	cc_os_add_task(cc_os_idle_task,
+		CC_OS_IDLE_TASK_NAME,
+		&_cc_os_idle_task_fn,
+		&g_sched_ctrl,
+		CC_OS_IDLE_TASK_PRIORITY,
+		CC_OS_IDLE_STACK_LEN,
+		(uintptr_t) _cc_os_stack);
 
 	/* Initialise scheduler */
 	__cc_init_scheduler();
