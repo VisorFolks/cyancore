@@ -15,10 +15,11 @@
 
 #define TASK_WAIT_TICKS		10
 
-/* Define the Tasks */
-CC_TASK_DEF( TASK_A, task_handler, NULL, 10, 100);
-CC_TASK_DEF( TASK_B, task_handler, NULL, 10, 100);
-CC_TASK_DEF( TASK_C, task_handler, NULL, 10, 100);
+extern void task_handler(cc_os_args args);
+
+cc_os_task_t * Task_A;
+cc_os_task_t * Task_B;
+cc_os_task_t * Task_C;
 
 /* Define Plug */
 void plug()
@@ -27,9 +28,9 @@ void plug()
 	driver_setup_all();
 
 	printf("Demo CC OS Program!\n");
-	cc_os_add_task(&CC_GET_TASK_INST(TASK_A));
-	cc_os_add_task(&CC_GET_TASK_INST(TASK_B));
-	cc_os_add_task(&CC_GET_TASK_INST(TASK_C));
+	cc_os_add_task(Task_A, "Task A", &task_handler, NULL, 10, 255, (uintptr_t) NULL);
+	cc_os_add_task(Task_B, "Task B", &task_handler, NULL, 10, 255, (uintptr_t) NULL);
+	cc_os_add_task(Task_B, "Task B", &task_handler, NULL, 10, 255, (uintptr_t) NULL);
 	cc_os_run();
 }
 
@@ -41,7 +42,7 @@ void play()
 }
 
 /* Define the Task Handler */
-void task_handler(os_args args _UNUSED)
+void task_handler(cc_os_args args _UNUSED)
 {
 	while(CC_OS_TRUE)
 	{

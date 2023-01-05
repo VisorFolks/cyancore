@@ -35,6 +35,8 @@
 typedef struct cc_sched_tcb cc_sched_tcb_t;
 typedef struct cc_sched cc_sched_t;
 typedef const char c_char;
+typedef const void * cc_os_args;
+typedef void (*task_fn)(cc_os_args args);
 
 typedef enum
 {
@@ -62,6 +64,8 @@ struct cc_sched_tcb
 	c_char  * name;						///> Name of the Current Task
 	uint8_t   priority;					///> Priority of the task
 	uintptr_t stack_ptr;					///> Stack Pointer
+	task_fn   task_func;					///> Task Call Function
+	uintptr_t args_ptr;					///> Task Call argument ptr
 	wres_t	  wait_res;					///> Wait Task resource
 	link_t	  ready_link;					///> Ready Linked List Pointers
 	link_t    wait_link;					///> Wait Linked List Pointers
