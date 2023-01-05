@@ -36,6 +36,14 @@
 #define CC_OS_MAX_THREAD		10
 #endif
 
+#ifndef CC_OS_IDLE_TASK_NAME
+#define CC_OS_IDLE_TASK_NAME		"CC_OS_IDLE"
+#endif
+
+#ifndef CC_OS_IDLE_STACK_LEN
+#define CC_OS_IDLE_STACK_LEN		255
+#endif
+
 /**
  * @brief	Task priority of IDLE task
  * @note	Possible values : 1 -> 255
