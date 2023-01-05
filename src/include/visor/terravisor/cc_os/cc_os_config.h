@@ -57,8 +57,8 @@
  * @note	The stack size is either allocated statically or dynamically as
  * 		per the setting of CC_OS_USE_DYNAMIC
  */
-#ifndef CC_OS_TASK_STACK_LEN
-#define CC_OS_TASK_STACK_LEN		255
+#ifndef CC_OS_IDLE_TASK_STACK_LEN
+#define CC_OS_IDLE_TASK_STACK_LEN	255
 #endif
 
 /**
