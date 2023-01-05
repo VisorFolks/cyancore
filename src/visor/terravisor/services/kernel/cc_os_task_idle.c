@@ -34,7 +34,7 @@ static cc_sched_tcb_t * __free_terminated_task(cc_sched_tcb_t * ptr)
 		ptr->ready_link.next = CC_OS_NULL_PTR;
 		ptr->ready_link.prev = CC_OS_NULL_PTR;
 #else
-		cc_os_free(ptr->stack_ptr);
+		cc_os_free((void *)ptr->stack_ptr);
 		cc_os_free(ptr);
 #endif
 	}
@@ -55,7 +55,7 @@ void _cc_os_idle_task_fn(os_args args)
 		/* Clean up task if terminated */
 		ptr = __free_terminated_task(ptr);
 
-#if ccosconfig_CC_OS_POWER_SAVE_EN
+#if CC_OS_POWER_SAVE_EN
 		/* Power Save code */
 
 #endif

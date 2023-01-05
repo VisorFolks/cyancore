@@ -51,8 +51,8 @@ CC_TASK_DEF(
 	cc_os_idle,				/* Name of the instance */
 	_cc_os_idle_task_fn,			/* Function pointer */
 	&g_sched_ctrl,				/* Task Args*/
-	ccosconfig_CC_OS_IDLE_TASK_PRIORITY,	/* Task Priority */
-	ccosconfig_CC_OS_TASK_STACK_LEN		/* Stack Length of IDLE Task */
+	CC_OS_IDLE_TASK_PRIORITY,	/* Task Priority */
+	CC_OS_TASK_STACK_LEN		/* Stack Length of IDLE Task */
 );
 /*****************************************************
  *	STATIC FUNCTION DEFINATIONS
@@ -68,10 +68,10 @@ status_t cc_os_add_task (cc_os_task_t * cc_os_task)
 {
 	CC_OS_ASSERT_IF_FALSE(cc_os_task != CC_OS_NULL_PTR);
 	CC_OS_ASSERT_IF_FALSE(cc_os_task->name != CC_OS_NULL_PTR);
-	CC_OS_ASSERT_IF_FALSE(cc_os_task->stack_ptr != CC_OS_NULL_PTR);
+	CC_OS_ASSERT_IF_FALSE(cc_os_task->stack_ptr != (uintptr_t) CC_OS_NULL_PTR);
 	CC_OS_ASSERT_IF_FALSE(cc_os_task->task_fn != CC_OS_NULL_PTR);
 	CC_OS_ASSERT_IF_FALSE(cc_os_task->stack_len != CC_OS_FALSE);
-	CC_OS_ASSERT_IF_FALSE(cc_os_task->priority >= ccosconfig_CC_OS_IDLE_TASK_PRIORITY);
+	CC_OS_ASSERT_IF_FALSE(cc_os_task->priority >= CC_OS_IDLE_TASK_PRIORITY);
 	CC_OS_ASSERT_IF_FALSE(cc_os_task->priority < CC_OS_PRIORITY_MAX);
 
 	cc_os_pause_all_task();
@@ -99,7 +99,7 @@ status_t cc_os_add_task (cc_os_task_t * cc_os_task)
 	{
 #if CC_OS_DYNAMIC == CC_OS_FALSE
 		/* Static Task Allocation */
-		for (size_t i = CC_OS_FALSE; i < ccosconfig_CC_OS_MAX_THREAD; i++)
+		for (size_t i = CC_OS_FALSE; i < CC_OS_MAX_THREAD; i++)
 		{
 			/* Get an available node from global tcb list */
 			if (g_cc_os_tcb_list[i].task_status == cc_sched_task_status_exit)
@@ -118,7 +118,7 @@ status_t cc_os_add_task (cc_os_task_t * cc_os_task)
 #endif
 			/* Fill tcb details */
 			ptr->name	 = cc_os_task->name;
-			ptr->stack_ptr 	 = (uint8_t *) malloc(cc_os_task->stack_len);
+			ptr->stack_ptr 	 = (uintptr_t) malloc(cc_os_task->stack_len);
 			ptr->priority 	 = cc_os_task->priority;
 		}
 		else
