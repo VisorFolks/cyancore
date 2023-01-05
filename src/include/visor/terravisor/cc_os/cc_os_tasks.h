@@ -34,7 +34,7 @@ typedef struct cc_os_task
 	task_fn task_fn;	      ///>> Task funcion
 	os_args args;		      ///>> Task Args ptr
 	c_char *name;		      ///>> String name of the task
-	uint8_t *stack_ptr;	      ///>> Stack pointer of the task
+	uintptr_t stack_ptr;	      ///>> Stack pointer of the task
 	uint8_t priority;	      ///>> For waited tasks
 	size_t stack_len;	      ///>> Stack lengths of the task
 	cc_sched_tcb_t *task_tcb_ptr; ///>> For internal use only
@@ -59,7 +59,7 @@ typedef struct cc_os_task
 	    .task_fn = _fn,                             \
 	    .name = #_NAME,                             \
 	    .priority = _PRI,                           \
-	    .stack_ptr = _NAME##_stack,                 \
+	    .stack_ptr = (uintptr_t) _NAME##_stack,	\
 	    .stack_len = STACK_LEN}
 #else
 #define CC_TASK_DEF(_NAME, _fn, _args, _PRI, STACK_LEN) \
@@ -69,7 +69,7 @@ typedef struct cc_os_task
 	    .task_fn = _fn,                             \
 	    .name = #_NAME,                             \
 	    .priority = _PRI,                           \
-	    .stack_ptr = CC_OS_NULL_PTR,                \
+	    .stack_ptr = (uintptr_t) CC_OS_NULL_PTR,    \
 	    .stack_len = STACK_LEN}
 #endif
 /**

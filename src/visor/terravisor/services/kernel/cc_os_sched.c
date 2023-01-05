@@ -30,8 +30,8 @@ static void __cc_sched_algo_priority_driven_fn(cc_sched_ctrl_t * sched_ctrl);
 /*****************************************************
  *	GLOBAL DECLARATIONS
  *****************************************************/
-#if !ccosconfig_CC_OS_USE_DYNAMIC
-cc_sched_tcb_t g_cc_os_tcb_list [ccosconfig_CC_OS_MAX_THREAD];
+#if !CC_OS_USE_DYNAMIC
+cc_sched_tcb_t g_cc_os_tcb_list [CC_OS_MAX_THREAD];
 #else
 cc_sched_tcb_t * g_cc_os_tcb_list	= CC_OS_NULL_PTR;
 #endif
@@ -44,7 +44,7 @@ cc_sched_t g_cc_sched_list [] =
 
 cc_sched_ctrl_t g_sched_ctrl =
 {
-#if !ccosconfig_CC_OS_USE_DYNAMIC
+#if !CC_OS_USE_DYNAMIC
 	.ready_list_head 	= &(g_cc_os_tcb_list[CC_OS_FALSE]),
 	.curr_task 		= &(g_cc_os_tcb_list[CC_OS_FALSE]),
 #else
