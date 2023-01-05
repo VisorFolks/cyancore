@@ -40,7 +40,3 @@ bkp/
 *.mod*
 *.cmd
 *.todo
-
-.vscode/compile_commands.json
-
-.vscode/settings.json
