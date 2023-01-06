@@ -32,10 +32,10 @@ static sem_t _Name##_sem = {	\
 	.sem_init = 0,		\
 	.sem_val = 0		\
 };				\
-static sem_t * _Name##_sem_inst = &_Name##_sem
+sem_t * _Name##_sem_inst = &_Name##_sem
 #else
 #define CC_SEM_DEF(_Name)	\
-static sem_t * _Name##_sem_inst = CC_OS_NULL_PTR
+sem_t * _Name##_sem_inst = CC_OS_NULL_PTR
 #endif
 /*****************************************************
  *	USER FUNCTION DECLARATIONS
