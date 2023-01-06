@@ -33,9 +33,6 @@ status_t cc_os_sem_create	(sem_t ** sem_ptr, size_t init_val)
 {
 #if CC_OS_DYNAMIC == CC_OS_FALSE
 	CC_OS_ASSERT_IF_FALSE((*sem_ptr != CC_OS_NULL_PTR && (*sem_ptr)->sem_init == CC_OS_FALSE));
-
-	(*sem_ptr)->sem_init = CC_OS_TRUE;
-	(*sem_ptr)->sem_val = init_val;
 #else
 	CC_OS_ASSERT_IF_FALSE(*sem_ptr == CC_OS_NULL_PTR);
 	*sem_ptr = cc_os_malloc(sizeof(sem_t));
@@ -43,13 +40,10 @@ status_t cc_os_sem_create	(sem_t ** sem_ptr, size_t init_val)
 	{
 		return error_memory_low;
 	}
-	else
-	{
-		(*sem_ptr)->sem_val = init_val;
-		(*sem_ptr)->sem_init = CC_OS_TRUE;
-	}
-
 #endif
+	(*sem_ptr)->sem_val = init_val;
+	(*sem_ptr)->sem_init = CC_OS_TRUE;
+
 	return success;
 }
 status_t cc_os_sem_take 	(sem_t * sem_ptr, size_t wait_ticks)
