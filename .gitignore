@@ -5,6 +5,7 @@ out/
 tools/
 backup/
 bkp/
+.vscode/
 *.elf
 *.bin
 *.d
