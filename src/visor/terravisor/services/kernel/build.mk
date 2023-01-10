@@ -10,4 +10,5 @@
 
 DIR		:= $(GET_PATH)
 
+include $(DIR)/cc_os_config.mk
 include mk/obj.mk
