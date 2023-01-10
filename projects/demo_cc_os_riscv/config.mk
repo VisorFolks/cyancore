@@ -20,5 +20,3 @@ EARLYCON_SERIAL	:= 0
 CONSOLE_SERIAL	:= 0
 OBRDLED_ENABLE	:= 1
 TERRAKERN	:= 1
-
-include $(PROJECT_DIR)/cc_os_config.mk

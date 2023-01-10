@@ -30,7 +30,7 @@ static cc_sched_tcb_t * __free_terminated_task(cc_sched_tcb_t * ptr)
 		ptr->ready_link.prev->ready_link.next = ptr->ready_link.next;
 		ptr->ready_link.next->ready_link.prev = ptr->ready_link.prev;
 
-#if CC_OS_DYNAMIC == CC_OS_FALSE
+#if CC_OS_DYNAMIC == false
 		ptr->ready_link.next = CC_OS_NULL_PTR;
 		ptr->ready_link.prev = CC_OS_NULL_PTR;
 #else
@@ -50,7 +50,7 @@ void _cc_os_idle_task_fn(cc_os_args args)
 	const cc_sched_ctrl_t * sched_ctrl = (const cc_sched_ctrl_t *) args;
 	static cc_sched_tcb_t * ptr = CC_OS_NULL_PTR;
 	ptr = sched_ctrl->ready_list_head;
-	while (CC_OS_TRUE)
+	while (true)
 	{
 		/* Clean up task if terminated */
 		ptr = __free_terminated_task(ptr);
