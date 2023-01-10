@@ -18,7 +18,6 @@ TOOLS_ROOT	?= $(abspath $(CC_ROOT))/tools
 MISC_TOOLS	:= $(TOOLS_ROOT)/misc_bins
 
 SRC		:= $(CC_ROOT)/src
-CC_OS_ROOT	:= $(SRC)/include/visor/terravisor/cc_os
 OUT_PATH	?= $(CC_ROOT)/out
 OUT		?= $(OUT_PATH)/$(PROJECT)
 
