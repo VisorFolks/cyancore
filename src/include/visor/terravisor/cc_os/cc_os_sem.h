@@ -26,7 +26,7 @@ typedef struct sem
  *****************************************************/
 #define CC_SEM_INST(_Name)	_Name##_sem_inst
 
-#if CC_OS_DYNAMIC == CC_OS_FALSE
+#if CC_OS_DYNAMIC == false
 #define CC_SEM_DEF(_Name)	\
 static sem_t _Name##_sem = {	\
 	.sem_init = 0,		\
