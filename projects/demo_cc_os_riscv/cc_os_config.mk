@@ -13,5 +13,3 @@ CC_OS_HEAP_SIZE 		:= 1024
 CC_OS_MAX_THREAD 		:= 4
 CC_OS_IDLE_TASK_STACK_LEN 	:= 255
 CC_OS_POWER_SAVE_EN 		:= 0
-
-include $(CC_OS_ROOT)/cc_os_config.mk
