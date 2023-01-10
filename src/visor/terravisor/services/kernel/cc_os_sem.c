@@ -31,8 +31,8 @@ extern cc_sched_ctrl_t g_sched_ctrl;
 
 status_t cc_os_sem_create	(sem_t ** sem_ptr, size_t init_val)
 {
-#if CC_OS_DYNAMIC == CC_OS_FALSE
-	CC_OS_ASSERT_IF_FALSE((*sem_ptr != CC_OS_NULL_PTR && (*sem_ptr)->sem_init == CC_OS_FALSE));
+#if CC_OS_DYNAMIC == false
+	CC_OS_ASSERT_IF_FALSE((*sem_ptr != CC_OS_NULL_PTR && (*sem_ptr)->sem_init == false));
 #else
 	CC_OS_ASSERT_IF_FALSE(*sem_ptr == CC_OS_NULL_PTR);
 	*sem_ptr = cc_os_malloc(sizeof(sem_t));
@@ -42,17 +42,17 @@ status_t cc_os_sem_create	(sem_t ** sem_ptr, size_t init_val)
 	}
 #endif
 	(*sem_ptr)->sem_val = init_val;
-	(*sem_ptr)->sem_init = CC_OS_TRUE;
+	(*sem_ptr)->sem_init = true;
 
 	return success;
 }
 status_t cc_os_sem_take 	(sem_t * sem_ptr, size_t wait_ticks)
 {
-	CC_OS_ASSERT_IF_FALSE((sem_ptr != CC_OS_NULL_PTR && sem_ptr->sem_init != CC_OS_FALSE));
+	CC_OS_ASSERT_IF_FALSE((sem_ptr != CC_OS_NULL_PTR && sem_ptr->sem_init != false));
 
-	if (sem_ptr->sem_val == CC_OS_FALSE)
+	if (sem_ptr->sem_val == false)
 	{
-		if (wait_ticks == CC_OS_FALSE) 	/* ||_IS_ISR */
+		if (wait_ticks == false) 	/* ||_IS_ISR */
 		{
 			return error_os_sem_get;
 		}
@@ -69,7 +69,7 @@ status_t cc_os_sem_take 	(sem_t * sem_ptr, size_t wait_ticks)
 }
 status_t cc_os_sem_give (sem_t * sem_ptr)
 {
-	CC_OS_ASSERT_IF_FALSE((sem_ptr != CC_OS_NULL_PTR && sem_ptr->sem_init != CC_OS_FALSE));
+	CC_OS_ASSERT_IF_FALSE((sem_ptr != CC_OS_NULL_PTR && sem_ptr->sem_init != false));
 
 	sem_ptr->sem_val++;
 
@@ -77,11 +77,11 @@ status_t cc_os_sem_give (sem_t * sem_ptr)
 }
 status_t cc_os_sem_delete (sem_t ** sem_ptr)
 {
-	CC_OS_ASSERT_IF_FALSE((*sem_ptr != CC_OS_NULL_PTR && (*sem_ptr)->sem_init != CC_OS_FALSE));
+	CC_OS_ASSERT_IF_FALSE((*sem_ptr != CC_OS_NULL_PTR && (*sem_ptr)->sem_init != false));
 
-	(*sem_ptr)->sem_init = CC_OS_FALSE;
+	(*sem_ptr)->sem_init = false;
 
-#if CC_OS_DYNAMIC == CC_OS_TRUE
+#if CC_OS_DYNAMIC == true
 	cc_os_free(*sem_ptr);
 #endif
 
@@ -89,7 +89,7 @@ status_t cc_os_sem_delete (sem_t ** sem_ptr)
 }
 status_t cc_os_sem_get_val 	(const sem_t * sem_ptr, size_t * val)
 {
-	CC_OS_ASSERT_IF_FALSE((sem_ptr != CC_OS_NULL_PTR && sem_ptr->sem_init != CC_OS_FALSE));
+	CC_OS_ASSERT_IF_FALSE((sem_ptr != CC_OS_NULL_PTR && sem_ptr->sem_init != false));
 	CC_OS_ASSERT_IF_FALSE(val != CC_OS_NULL_PTR);
 
 	*val = sem_ptr->sem_val;
