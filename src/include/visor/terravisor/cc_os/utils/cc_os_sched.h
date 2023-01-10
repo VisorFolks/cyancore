@@ -20,8 +20,6 @@
 /*****************************************************
  *	DEFINES
  *****************************************************/
-#define CC_OS_FALSE			0
-#define CC_OS_TRUE			1
 #define CC_OS_NULL_PTR			NULL
 #define CC_OS_DELAY_MAX			((size_t) -1)
 
