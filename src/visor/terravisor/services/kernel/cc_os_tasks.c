@@ -41,13 +41,13 @@ extern cc_sched_ctrl_t g_sched_ctrl;
 /*****************************************************
  *	GLOBAL DECLARATIONS
  *****************************************************/
-#if CC_OS_DYNAMIC == CC_OS_FALSE
+#if CC_OS_DYNAMIC == false
 extern cc_sched_tcb_t g_cc_os_tcb_list[];
 #else
 extern cc_sched_tcb_t *g_cc_os_tcb_list;
 #endif
 
-#if CC_OS_DYNAMIC == CC_OS_FALSE
+#if CC_OS_DYNAMIC == false
 uint8_t _cc_os_stack[CC_OS_IDLE_STACK_LEN];
 #else
 uint8_t * _cc_os_stack = CC_OS_NULL_PTR;
@@ -71,18 +71,18 @@ status_t cc_os_add_task (
 	uint8_t priority,
 	size_t stack_len,
 	uintptr_t stack_ptr
-#if CC_OS_DYNAMIC == CC_OS_TRUE
+#if CC_OS_DYNAMIC == true
 	_UNUSED
 #endif
 	)
 {
 	CC_OS_ASSERT_IF_FALSE(cc_os_task == CC_OS_NULL_PTR);
 	CC_OS_ASSERT_IF_FALSE(name != CC_OS_NULL_PTR);
-#if CC_OS_DYNAMIC == CC_OS_FALSE
+#if CC_OS_DYNAMIC == false
 	CC_OS_ASSERT_IF_FALSE(stack_ptr != (uintptr_t) CC_OS_NULL_PTR);
 #endif
 	CC_OS_ASSERT_IF_FALSE(task_func != CC_OS_NULL_PTR);
-	CC_OS_ASSERT_IF_FALSE(stack_len != CC_OS_FALSE);
+	CC_OS_ASSERT_IF_FALSE(stack_len != false);
 	CC_OS_ASSERT_IF_FALSE(priority >= CC_OS_IDLE_TASK_PRIORITY);
 	CC_OS_ASSERT_IF_FALSE(priority < CC_OS_PRIORITY_MAX);
 
@@ -90,7 +90,7 @@ status_t cc_os_add_task (
 
 	cc_sched_tcb_t * ptr = g_sched_ctrl.ready_list_head;
 
-#if CC_OS_DYNAMIC == CC_OS_TRUE
+#if CC_OS_DYNAMIC == true
 	if (ptr == CC_OS_NULL_PTR)
 	{
 		/* First Dynamic task */
@@ -109,9 +109,9 @@ status_t cc_os_add_task (
 
 	else
 	{
-#if CC_OS_DYNAMIC == CC_OS_FALSE
+#if CC_OS_DYNAMIC == false
 		/* Static Task Allocation */
-		for (size_t i = CC_OS_FALSE; i < CC_OS_MAX_THREAD; i++)
+		for (size_t i = false; i < CC_OS_MAX_THREAD; i++)
 		{
 			/* Get an available node from global tcb list */
 			if (g_cc_os_tcb_list[i].task_status == cc_sched_task_status_exit)
@@ -154,7 +154,7 @@ status_t cc_os_add_task (
 	}
 	else if(g_sched_ctrl.task_max_prio->priority <= ptr->priority)
 	{
-		if(_insert_after(&(g_sched_ctrl.task_max_prio), ptr, CC_OS_FALSE) == success)
+		if(_insert_after(&(g_sched_ctrl.task_max_prio), ptr, false) == success)
 		{
 			g_sched_ctrl.task_max_prio = ptr;
 		}
@@ -169,7 +169,7 @@ status_t cc_os_add_task (
 		cc_sched_tcb_t * comp_ptr = g_sched_ctrl.task_max_prio->ready_link.next;
 		while (1)
 		{
-			if (comp_ptr->priority <= ptr->priority && (_insert_after(&comp_ptr, ptr, CC_OS_FALSE) == success))
+			if (comp_ptr->priority <= ptr->priority && (_insert_after(&comp_ptr, ptr, false) == success))
 			{
 				break;
 			}
@@ -296,7 +296,7 @@ void cc_os_task_wait (const size_t ticks)
 {
 	cc_sched_tcb_t * ptr = g_sched_ctrl.curr_task;
 
-	if (ticks > CC_OS_FALSE)
+	if (ticks > false)
 	{
 		_cc_sched_send_to_wait(&g_sched_ctrl, ptr, ticks);
 	}

@@ -12,7 +12,7 @@ COMPILER	:= gcc
 TC_VER		:= 5.4.0
 FAMILY		:= mega_avr
 PLATFORM	:= atmega328p
-HEAP_SIZE 	:= 256
+HEAP_SIZE 	:= 500
 STACK_SIZE 	:= 256
 STDLOG_MEMBUF	:= 0
 BOOTMSGS	:= 0
@@ -20,5 +20,3 @@ EARLYCON_SERIAL	:= 0
 CONSOLE_SERIAL	:= 0
 OBRDLED_ENABLE	:= 1
 TERRAKERN	:= 1
-
-include $(PROJECT_DIR)/cc_os_config.mk

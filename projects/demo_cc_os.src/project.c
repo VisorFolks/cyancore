@@ -15,11 +15,11 @@
 
 #define TASK_WAIT_TICKS		10
 
-extern void task_handler(cc_os_args args);
+void task_handler(cc_os_args args);
 
-cc_os_task_t * Task_A;
-cc_os_task_t * Task_B;
-cc_os_task_t * Task_C;
+static cc_os_task_t * Task_A;
+static cc_os_task_t * Task_B;
+static cc_os_task_t * Task_C;
 
 /* Define Plug */
 void plug()
@@ -30,7 +30,7 @@ void plug()
 	printf("Demo CC OS Program!\n");
 	cc_os_add_task(Task_A, "Task A", &task_handler, NULL, 10, 255, (uintptr_t) NULL);
 	cc_os_add_task(Task_B, "Task B", &task_handler, NULL, 10, 255, (uintptr_t) NULL);
-	cc_os_add_task(Task_B, "Task B", &task_handler, NULL, 10, 255, (uintptr_t) NULL);
+	cc_os_add_task(Task_C, "Task C", &task_handler, NULL, 10, 255, (uintptr_t) NULL);
 	cc_os_run();
 }
 
@@ -44,7 +44,7 @@ void play()
 /* Define the Task Handler */
 void task_handler(cc_os_args args _UNUSED)
 {
-	while(CC_OS_TRUE)
+	while(true)
 	{
 		printf("In Task: %s\n", cc_os_get_curr_task_name());
 		cc_os_task_wait(TASK_WAIT_TICKS);
