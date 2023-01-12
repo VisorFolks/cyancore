@@ -5,7 +5,7 @@
 # File Name		: build.mk
 # Description		: This file build project sources and specifies
 #			  project properties
-# Primary Author	: Pranjal Chdanda [pranjalchanda08@gmail.com]
+# Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
 # Organisation		: Cyancore Core-Team
 #
 
