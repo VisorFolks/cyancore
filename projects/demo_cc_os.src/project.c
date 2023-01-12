@@ -1,6 +1,6 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2019 - 2023, Cyancore Team
  *
  * File Name		: project.c
  * Description		: This file consists of project srouces
