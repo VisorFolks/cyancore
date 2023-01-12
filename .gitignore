@@ -1,11 +1,12 @@
 .scannerwork
+.vscode/
 sonar-cfamily-reproducer.zip
 temp
 out/
 tools/
 backup/
 bkp/
-.vscode/
+projects/
 *.elf
 *.bin
 *.d
