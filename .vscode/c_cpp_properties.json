@@ -8,7 +8,8 @@
             "intelliSenseMode": "${default}",
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "gnu17",
-            "cppStandard": "gnu++14"
+            "cppStandard": "gnu++14",
+            "compileCommands": "${workspaceFolder}/.vscode/compile_commands.json"
         }
     ],
     "version": 4
