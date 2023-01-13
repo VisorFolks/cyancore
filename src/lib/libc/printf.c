@@ -19,7 +19,6 @@
 #include <lock/lock.h>
 #include <driver/console.h>
 
-
 #define get_num_va_args(_args, _lcount)			\
 	(((_lcount) >= 2) ? va_arg(_args, int64_t) :	\
 	((_lcount) == 1) ? va_arg(_args, long) :	\
@@ -96,15 +95,42 @@ static int unumprint(const FILE *dev, bool en_stdout, unsigned long unum,
 	return ret;
 }
 
+#if USE_FLOAT == 1
+static int fltprint(const FILE *dev, bool en_stdout, double flt,
+		char padc, int padd, int padf)
+{
+	int ret = 0;
+	long d = (long) flt;
+	double frac = flt - (double) d;
+	ret = unumprint(dev, en_stdout, d, 10, padc, padd);
+	__fputc(dev, en_stdout, '.');
+	ret ++;
+	while(padf != 0)
+	{
+		frac *= 10.0;
+		padf--;
+	}
+	d = (long) frac;
+	ret += unumprint(dev, en_stdout, d,10, '0', 0);
+
+	return ret;
+}
+#endif
+
 int vprintf(const FILE *dev, bool en_stdout, const char *fmt, va_list args)
 {
 	int l_ret;
 	long num;
 	unsigned long unum;
 	char *str;
+	char ch;
 	char padc = '\0';
 	int padn;
 	int ret = 0;
+#if USE_FLOAT == 1
+	double flt;
+	int padf = 5;
+#endif
 
 	while(*fmt != '\0')
 	{
@@ -161,11 +187,22 @@ loop:
 					unum = get_unum_va_args(args, l_ret);
 					ret += unumprint(dev, en_stdout, unum, 10, padc, padn);
 					break;
+#if USE_FLOAT == 1
+				case 'f':
+					flt = va_arg(args, double);
+					if(flt < 0)
+					{
+						__fputc(dev, en_stdout, '-');
+						flt *= -1.0;
+						padn--;
+					}
+					ret += fltprint(dev, en_stdout, flt, padc, padn, padf);
+					break;
+#endif
 				case '0':
 					padc = '0';
 					padn = 0;
 					fmt++;
-					char ch;
 					while(true)
 					{
 						ch = *fmt;
@@ -174,6 +211,19 @@ loop:
 						padn = (padn * 10) + (ch - '0');
 						fmt++;
 					}
+#if USE_FLOAT == 1
+				case '.':
+					padf = 0;
+					fmt++;
+					while(true)
+					{
+						ch = *fmt;
+						if((ch < '0') || (ch > '9'))
+							goto loop;
+						padf = (padf * 10) + (ch - '0');
+						fmt++;
+					}
+#endif
 				case '%':
 					ret += __fputc(dev, en_stdout, *fmt);
 					break;
