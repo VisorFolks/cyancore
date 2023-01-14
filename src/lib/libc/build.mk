@@ -19,5 +19,8 @@ DEP_LIBS_ARG	+= -lc
 N_STDDEV	?= 4
 $(eval $(call add_define,N_STDDEV))
 
+USE_FLOAT	?= 1
+$(eval $(call add_define,USE_FLOAT))
+
 DIR		:= $(LIBC_PATH)
 include mk/lib.mk
