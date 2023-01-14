@@ -51,7 +51,7 @@ typedef cc_sched_tcb_t * cc_os_task_t;
  */
 status_t cc_os_add_task (
 	cc_os_task_t * cc_os_task, const char* name,
-	task_fn task_func, cc_os_args args,
+	task_fn_t task_func, cc_os_args args,
 	uint8_t priority,size_t stack_len,
 	uintptr_t stack_ptr);
 
@@ -107,6 +107,14 @@ status_t cc_os_resume_all_task(void);
  */
 status_t cc_os_set_sched_algo(cc_sched_algo_t sched_algo);
 
+/**
+ * @brief A function to set the functional callback hooks
+ *
+ * @param cb_type[in]	Callback type which user would like to register
+ * @param cb_func[in]	Callback hook function associated to the cb_type
+ * @return status_t
+ */
+status_t cc_os_set_callback(const cc_sched_cb_t cb_type, const cc_cb_hook_t cb_func);
 /**
  * @brief Get name of current running task
  *
