@@ -33,9 +33,9 @@
 typedef struct cc_sched_tcb cc_sched_tcb_t;
 typedef struct cc_sched cc_sched_t;
 typedef const char c_char;
-typedef const void * cc_os_args;
-typedef void (*task_fn)(cc_os_args args);
-
+typedef void * cc_os_args;
+typedef void (*task_fn_t)(cc_os_args args);
+typedef void (*cc_cb_hook_t)(void);
 typedef enum
 {
 	cc_sched_task_status_exit	= 0x00,			///> Initial State
@@ -44,6 +44,13 @@ typedef enum
 	cc_sched_task_status_wait	= 0x03,			///> Task in wait state
 	cc_sched_task_status_max 	= 0xff,			///> Do Nt Use
 } cc_sched_task_status_t;
+
+typedef enum
+{
+	cc_sched_cb_power_pre_sleep	= 0x00,
+	cc_sched_cb_power_post_sleep	= 0x01,
+	cc_sched_cb_power_sleep		= 0x02,
+}cc_sched_cb_t;
 
 typedef struct link
 {
@@ -62,13 +69,22 @@ struct cc_sched_tcb
 	c_char  * name;						///> Name of the Current Task
 	uint8_t   priority;					///> Priority of the task
 	uintptr_t stack_ptr;					///> Stack Pointer
-	task_fn   task_func;					///> Task Call Function
+	task_fn_t task_func;					///> Task Call Function
 	uintptr_t args_ptr;					///> Task Call argument ptr
 	wres_t	  wait_res;					///> Wait Task resource
 	link_t	  ready_link;					///> Ready Linked List Pointers
 	link_t    wait_link;					///> Wait Linked List Pointers
 	cc_sched_task_status_t task_status;			///> Current state of the task
 };
+
+typedef struct cc_sched_func_cb
+{
+#if CC_OS_POWER_SAVE_EN
+	cc_cb_hook_t pre_sleep_cb;
+	cc_cb_hook_t post_sleep_cb;
+	cc_cb_hook_t sleep_cb;
+#endif
+}cc_sched_func_cb_t;
 
 typedef struct cc_sched_ctrl
 {
@@ -77,6 +93,7 @@ typedef struct cc_sched_ctrl
 	cc_sched_tcb_t 	* wait_list_head;
 	cc_sched_tcb_t 	* task_max_prio;
 	cc_sched_t 	* selected_sched;
+	cc_sched_func_cb_t cb_hooks_reg;
 }cc_sched_ctrl_t;
 
 /**
