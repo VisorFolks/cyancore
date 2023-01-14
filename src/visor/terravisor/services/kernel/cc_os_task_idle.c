@@ -12,6 +12,7 @@
  *	INCLUDES
  *****************************************************/
 #include <terravisor/cc_os/cc_os.h>
+#include <arch.h>
 
 /*****************************************************
  *	STATIC FUNCTION DECLARATION
@@ -42,14 +43,26 @@ static cc_sched_tcb_t * __free_terminated_task(cc_sched_tcb_t * ptr)
 	return next_ptr;
 }
 
+#if CC_OS_POWER_SAVE_EN
+static void __cc_power_save_callback(void)
+{
+	arch_wfi();
+}
+#endif
 /*****************************************************
  *	USER FUNCTION DEFINATION
  *****************************************************/
 void _cc_os_idle_task_fn(cc_os_args args)
 {
-	const cc_sched_ctrl_t * sched_ctrl = (const cc_sched_ctrl_t *) args;
-	static cc_sched_tcb_t * ptr = CC_OS_NULL_PTR;
+	static cc_sched_tcb_t * ptr  = CC_OS_NULL_PTR;
+	cc_sched_ctrl_t * sched_ctrl = (cc_sched_ctrl_t *) args;
 	ptr = sched_ctrl->ready_list_head;
+#if CC_OS_POWER_SAVE_EN
+	if (sched_ctrl->cb_hooks_reg.sleep_cb == CC_OS_NULL_PTR)
+	{
+		sched_ctrl->cb_hooks_reg.sleep_cb = __cc_power_save_callback;
+	}
+#endif
 	while (true)
 	{
 		/* Clean up task if terminated */
@@ -57,7 +70,18 @@ void _cc_os_idle_task_fn(cc_os_args args)
 
 #if CC_OS_POWER_SAVE_EN
 		/* Power Save code */
-
+		if (sched_ctrl->cb_hooks_reg.pre_sleep_cb != CC_OS_NULL_PTR)
+		{
+			sched_ctrl->cb_hooks_reg.pre_sleep_cb();
+		}
+		if (sched_ctrl->cb_hooks_reg.sleep_cb != CC_OS_NULL_PTR)
+		{
+			sched_ctrl->cb_hooks_reg.sleep_cb();
+		}
+		if (sched_ctrl->cb_hooks_reg.post_sleep_cb != CC_OS_NULL_PTR)
+		{
+			sched_ctrl->cb_hooks_reg.post_sleep_cb();
+		}
 #endif
 		/* Yield for next available task */
 		cc_os_task_yield();
