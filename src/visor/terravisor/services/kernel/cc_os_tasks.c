@@ -66,7 +66,7 @@ void __cc_init_scheduler()
 status_t cc_os_add_task (
 	cc_os_task_t * cc_os_task,
 	const char* name,
-	task_fn task_func,
+	task_fn_t task_func,
 	cc_os_args args,
 	uint8_t priority,
 	size_t stack_len,
@@ -284,6 +284,35 @@ status_t cc_os_set_sched_algo(cc_sched_algo_t sched_algo)
 
 	g_sched_ctrl.selected_sched = &(g_cc_sched_list[sched_algo]);
 
+	return success;
+}
+
+status_t cc_os_set_callback(const cc_sched_cb_t cb_type, const cc_cb_hook_t cb_func _UNUSED)
+{
+	if (cb_type == cc_sched_cb_power_post_sleep)
+	{
+#if CC_OS_POWER_SAVE_EN
+		g_sched_ctrl.cb_hooks_reg.post_sleep_cb = cb_func;
+#else
+		return error_func_inval_arg;
+#endif
+	}
+	if (cb_type == cc_sched_cb_power_pre_sleep)
+	{
+#if CC_OS_POWER_SAVE_EN
+		g_sched_ctrl.cb_hooks_reg.pre_sleep_cb = cb_func;
+#else
+		return error_func_inval_arg;
+#endif
+	}
+	if (cb_type == cc_sched_cb_power_sleep)
+	{
+#if CC_OS_POWER_SAVE_EN
+		g_sched_ctrl.cb_hooks_reg.sleep_cb = cb_func;
+#else
+		return error_func_inval_arg;
+#endif
+	}
 	return success;
 }
 
