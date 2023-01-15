@@ -20,9 +20,9 @@ extern mcall_t _ecall_table_start;
 extern mcall_t _ecall_table_end;
 
 typedef void (*mcb_t)(call_arg_t, call_arg_t, call_arg_t, mret_t *);
-static mcb_t get_callback_from_table(mcall_t *start, mcall_t *end, mcall_id_t id)
+static mcb_t get_callback_from_table(const mcall_t *start, const mcall_t *end, mcall_id_t id)
 {
-	mcall_t *ptr = start;
+	mcall_t *ptr = (mcall_t *)start;
 	while(ptr < end)
 	{
 		if(ptr->id == id)
