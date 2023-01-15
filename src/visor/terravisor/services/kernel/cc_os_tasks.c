@@ -15,7 +15,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <arch.h>
-#include <terravisor/cc_os/cc_os_config.h>
 #include <terravisor/cc_os/cc_os.h>
 
 /*****************************************************
@@ -347,7 +346,7 @@ void cc_os_run (void)
 		&_cc_os_idle_task_fn,
 		&g_sched_ctrl,
 		CC_OS_IDLE_TASK_PRIORITY,
-		CC_OS_IDLE_STACK_LEN,
+		CC_OS_IDLE_TASK_STACK_LEN,
 		(uintptr_t) _cc_os_stack);
 
 	/* Initialise scheduler */
