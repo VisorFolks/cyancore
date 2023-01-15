@@ -10,4 +10,5 @@
 
 #pragma once
 
-status_t conv(float *a, int size_a, float *b, int size_b, float *c, int size_c);
+status_t conv(const float *a, int size_a, const float *b,
+		int size_b, float *c, int size_c);

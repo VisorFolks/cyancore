@@ -51,7 +51,7 @@ void arch_di_save_state(istate_t *sreg_i_backup)
 	arch_di();
 }
 
-void arch_ei_restore_state(istate_t *sreg_i_backup)
+void arch_ei_restore_state(const istate_t *sreg_i_backup)
 {
 	MMIO8(SREG+0x20) |= *sreg_i_backup;
 }
@@ -113,7 +113,7 @@ static cpu_sleep_t sleep_flag;
  */
 bool arch_suspended_state_was(cpu_sleep_t state)
 {
-	assert(state != resume);
+	assert((unsigned)state != resume);
 	if(!sleep_flag)
 		return false;
 	return (sleep_flag == state);

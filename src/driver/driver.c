@@ -24,10 +24,10 @@
  */
 extern device_t _driver_table_start, _driver_table_end;
 
-static status_t driver_register_with_order(device_t *start, device_t *end, unsigned int order)
+static status_t driver_register_with_order(const device_t *start, const device_t *end, unsigned int order)
 {
 	status_t ret = success;
-	device_t *ptr = start;
+	device_t *ptr = (device_t *)start;
 	/*
 	 * Iterate the whole driver table so that on order
 	 * match execute driver_setup
@@ -41,10 +41,10 @@ static status_t driver_register_with_order(device_t *start, device_t *end, unsig
 	return ret;
 }
 
-static status_t driver_deregister_with_order(device_t *start, device_t *end, unsigned int order)
+static status_t driver_deregister_with_order(const device_t *start, const device_t *end, unsigned int order)
 {
 	status_t ret = success;
-	device_t *ptr = start;
+	device_t *ptr = (device_t *)start;
 	/*
 	 * Iterate the whole driver table so that on order
 	 * match execute driver_exit
@@ -58,9 +58,9 @@ static status_t driver_deregister_with_order(device_t *start, device_t *end, uns
 	return ret;
 }
 
-static status_t driver_setup_with_name(device_t *start, device_t *end, const char *name)
+static status_t driver_setup_with_name(const device_t *start, const device_t *end, const char *name)
 {
-	device_t *ptr = start;
+	device_t *ptr = (device_t *)start;
 	/*
 	 * Iterate over the driver table and compare the names.
 	 * On successful compare, run driver_setup.
@@ -74,9 +74,9 @@ static status_t driver_setup_with_name(device_t *start, device_t *end, const cha
 	return error_func_inval;
 }
 
-static status_t driver_exit_with_name(device_t *start, device_t *end, const char *name)
+static status_t driver_exit_with_name(const device_t *start, const device_t *end, const char *name)
 {
-	device_t *ptr = start;
+	device_t *ptr = (device_t *)start;
 	/*
 	 * Iterate over the driver table and compare the names.
 	 * On successful compare, run driver_setup.
