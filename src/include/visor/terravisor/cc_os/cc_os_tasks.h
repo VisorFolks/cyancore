@@ -16,7 +16,6 @@
 #include "status.h"
 #include "stdlib.h"
 #include "stdint.h"
-#include <terravisor/cc_os/cc_os_config.h>
 #include <terravisor/cc_os/utils/cc_os_sched.h>
 
 /*****************************************************
