@@ -36,12 +36,11 @@ SECTIONS
 		KEEP(*(.text.entry))
 		*(.text)
 		*(.text.*)
-		. = ALIGN(4);
+		. = ALIGN(8);
 	} > vma_imem AT > lma_mem
 
 	.rodata : ALIGN(4)
 	{
-		. = ALIGN(4);
 		*(.version)
 		KEEP(*(.version))
 		KEEP(*(.rdata))
@@ -50,18 +49,18 @@ SECTIONS
 		*(.srodata)
 		*(.srodata.*)
 		KEEP(*(.srodata))
+		. = ALIGN(8);
 	} > vma_imem AT > lma_mem
 
 	.itim : ALIGN(4)
 	{
-		. = ALIGN(4);
 		KEEP(*(.itim))
 		*(.itim.*)
+		. = ALIGN(8);
 	} > vma_itmem AT > lma_mem
 
 	.bss : ALIGN(4)
 	{
-		. = ALIGN(4);
 		*(.bss)
 		*(.bss.*)
 		KEEP(*(.bss))
@@ -70,7 +69,6 @@ SECTIONS
 
 	.static_bss_global : ALIGN(4)
 	{
-		. = ALIGN(4);
 		*(.sbss)
 		*(.sbss.*)
 		KEEP(*(.sbss))
@@ -82,7 +80,6 @@ SECTIONS
 
 	.static_data_global : ALIGN(4)
 	{
-		. = ALIGN(4);
 		*(.sdata)
 		*(.sdata.*)
 		KEEP(*(.sdata))
@@ -90,7 +87,6 @@ SECTIONS
 
 	.data : ALIGN(4)
 	{
-		. = ALIGN(4);
 		*(.data)
 		*(.data.*)
 		KEEP(*(.data))
@@ -100,7 +96,6 @@ SECTIONS
 
 	.tdata : ALIGN(4)
 	{
-		. = ALIGN(4);
 		*(.tdata)
 		*(.tdata.*)
 		KEEP(*(.tdata))
