@@ -57,12 +57,14 @@ function arch_panic_handler
 	push	r26
 	push	r27
 	push	r30
+	push	r31
 .endm
 
 /**
  * CONTEXT_RESTORE - A macro that defines the context restore operation
  */
 .macro CONTEXT_RESTORE
+	pop	r31
 	pop	r30
 	pop	r27
 	pop	r26
@@ -104,17 +106,11 @@ function int_\id
  */
 function isr
 	CONTEXT_SAVE
+	push	r24
 	in	r22, IO_SPL
 	in	r23, IO_SPH
-	/*
-	 * SP at this location needs to be captured
-	 * and passed to interrupt_handler as SP post
-	 * decrements which results in SP pointing to
-	 * incorrect stack frame.
-	 */
-	push	r31
+	pop	r24
 	call	interrupt_handler
-	pop	r31
 	CONTEXT_RESTORE
 	pop	r24
 	reti
