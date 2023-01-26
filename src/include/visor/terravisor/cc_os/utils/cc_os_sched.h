@@ -45,13 +45,23 @@ typedef enum
 	cc_sched_task_status_max 	= 0xff,			///> Do Nt Use
 } cc_sched_task_status_t;
 
+/*
+ * @note	All negative callbacks are internally used by the scheduler
+ */
 typedef enum
 {
+	cc_sched_cb_pre_sched		= -0x01,
 	cc_sched_cb_power_pre_sleep	= 0x00,
 	cc_sched_cb_power_post_sleep	= 0x01,
 	cc_sched_cb_power_sleep		= 0x02,
+	cc_sched_cb_deadlock_notify	= 0x03,
+	cc_sched_cb_max			= 0x04
 }cc_sched_cb_t;
 
+typedef enum
+{
+	cc_task_flag_set_anti_deadlock	= (1 << 0)		///> Enable Antideadlock for the task
+}cc_task_flag_t;
 typedef struct link
 {
 	cc_sched_tcb_t * prev;
@@ -68,21 +78,29 @@ struct cc_sched_tcb
 {
 	c_char  * name;						///> Name of the Current Task
 	uint8_t   priority;					///> Priority of the task
+	uint8_t	  task_flags;					///> Task Flags
 	uintptr_t stack_ptr;					///> Stack Pointer
 	task_fn_t task_func;					///> Task Call Function
 	uintptr_t args_ptr;					///> Task Call argument ptr
 	wres_t	  wait_res;					///> Wait Task resource
 	link_t	  ready_link;					///> Ready Linked List Pointers
 	link_t    wait_link;					///> Wait Linked List Pointers
+#if CC_OS_FEATURE_ANTI_DEADLOCK
+	size_t	  task_wd_ticks;				///> Tick down counter for Anti Deadlock system
+#endif
 	cc_sched_task_status_t task_status;			///> Current state of the task
 };
 
 typedef struct cc_sched_func_cb
 {
+	cc_cb_hook_t pre_sched;
 #if CC_OS_POWER_SAVE_EN
 	cc_cb_hook_t pre_sleep_cb;
 	cc_cb_hook_t post_sleep_cb;
 	cc_cb_hook_t sleep_cb;
+#endif
+#if CC_OS_FEATURE_ANTI_DEADLOCK
+	cc_cb_hook_t deadlock_notify;
 #endif
 }cc_sched_func_cb_t;
 
