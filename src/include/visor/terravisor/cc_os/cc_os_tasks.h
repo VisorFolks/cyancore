@@ -143,3 +143,26 @@ void cc_os_task_yield(void);
  * @return status_t
  */
 void cc_os_run(void);
+
+/**
+ * @brief A function to enable anti-deadlock for the task and feed timer value to scheduler. The same shall be used to reset the task watchdog to keep the task alive.
+ * @note  1. For this feature user needs to enable CC_OS_FEATURE_ANTI_DEADLOCK flag.
+ * @note  2. CC_OS does NOT keep the reference of previously set watchdog tick value.
+ * 	     It is the responsibility of the user to feed the required number of ticks for the tasks to be considered alive.
+ * @note  3. User needs to set an user callback of type cc_sched_cb_deadlock_notify using cc_os_set_callback().
+ * @note  4. This fucntion shall be called from the Task atleast once for the timer to get stared.
+ * @note  5. This function is only allowed to be called from within the task.
+ *
+ * @param task_wd_ticks[in]	Watchdog counter reset val.
+ *
+ * @return status_t
+ */
+status_t cc_os_task_anti_deadlock_enable_and_feed(size_t task_wd_ticks);
+
+/**
+ * @brief A function to disable anti deadlock for the task.
+ * @note  This function shall be called form within the task itself.
+ *
+ * @return status_t
+ */
+status_t cc_os_task_anti_deadlock_disable(void);
