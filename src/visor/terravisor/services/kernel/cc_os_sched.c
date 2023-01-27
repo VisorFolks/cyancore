@@ -12,6 +12,7 @@
  *	INCLUDES
  *****************************************************/
 #include <terravisor/cc_os/utils/cc_os_sched.h>
+#include <arch.h>
 
 /*****************************************************
  *	DEFINES
@@ -23,6 +24,8 @@
 /*****************************************************
  *	STATIC FUNCTION DECLARATION
  *****************************************************/
+static void __cc_sched_deadlock_adjustment_and_detection(const cc_sched_ctrl_t * sched_ctrl);
+static void __cc_sched_wait_list_adjustment(cc_sched_ctrl_t * sched_ctrl);
 static void __cc_sched_algo_round_robin_fn(cc_sched_ctrl_t * sched_ctrl);
 static void __cc_sched_algo_priority_driven_fn(cc_sched_ctrl_t * sched_ctrl);
 
@@ -150,9 +153,22 @@ void _cc_sched_send_to_wait(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr, 
 	}
 }
 
+void _cc_sched_send_to_pause(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr)
+{
+	if (ptr->task_status == cc_sched_task_status_pause)
+	{
+		return;
+	}
+	if(_insert_before(&(sched_ctrl->wait_list_head), ptr, true) == success)
+	{
+		ptr->wait_res.task_delay_ticks = CC_OS_DELAY_MAX;
+		ptr->task_status = cc_sched_task_status_pause;
+	}
+}
+
 void _cc_sched_send_to_resume(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr)
 {
-	if (ptr->task_status == cc_sched_task_status_ready)
+	if (ptr->task_status < cc_sched_task_status_wait)
 	{
 		return;
 	}
@@ -175,6 +191,39 @@ void _cc_sched_send_to_resume(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr
 	ptr->task_status = cc_sched_task_status_ready;
 }
 
+void _cc_os_pre_sched(cc_os_args args)
+{
+	cc_sched_ctrl_t * sched_ctrl = (cc_sched_ctrl_t *) args;
+
+	__cc_sched_wait_list_adjustment(sched_ctrl);
+	__cc_sched_deadlock_adjustment_and_detection(sched_ctrl);
+}
+
+void _cc_os_scheduler_despatch(void)
+{
+	if (g_sched_ctrl.cb_hooks_reg.pre_sched != NULL)
+	{
+		/* Call Pre_sched Function */
+		g_sched_ctrl.cb_hooks_reg.pre_sched((cc_os_args) &g_sched_ctrl);
+	}
+	else
+	{
+		/* A System Error case */
+		arch_panic_handler();
+	}
+
+	if (g_sched_ctrl.selected_sched != NULL)
+	{
+		/* Call the scheduler */
+		g_sched_ctrl.selected_sched->algo_function(&g_sched_ctrl);
+	}
+	else
+	{
+		/* A System Error case */
+		arch_panic_handler();
+	}
+
+}
 /*****************************************************
  *	STATIC FUNCTION DEFINATIONS
  *****************************************************/
@@ -183,31 +232,67 @@ static void __cc_sched_context_switch(cc_sched_tcb_t * next_task)
 	next_task->task_status = cc_sched_task_status_running;
 }
 
+static void __cc_sched_deadlock_adjustment_and_detection(const cc_sched_ctrl_t * sched_ctrl _UNUSED)
+{
+#if CC_OS_ANTI_DEADLOCK
+	cc_sched_tcb_t * ptr = sched_ctrl->ready_list_head;
+	static cc_sched_anti_deadlock_t anti_deadlock_notify;
+	while (ptr != CC_OS_NULL_PTR)
+	{
+		if (ptr->task_status != cc_sched_task_status_pause)
+		{
+			ptr->task_wd_ticks--;
+		}
+		if ((ptr->task_wd_ticks == false) && (sched_ctrl->cb_hooks_reg.deadlock_notify != CC_OS_NULL_PTR))
+		{
+			/* Create notification params */
+			anti_deadlock_notify.name = ptr->name;
+			anti_deadlock_notify.task_func = ptr->task_func;
+
+			if (ptr->task_status != cc_sched_task_status_exit)
+			{
+				ptr->task_status = cc_sched_task_status_exit;
+			}
+			/* Notify the user that the task pointed by ptr is dead and has been terminated */
+			sched_ctrl->cb_hooks_reg.deadlock_notify((cc_os_args) &anti_deadlock_notify);
+		}
+		if (ptr->ready_link.next == sched_ctrl->ready_list_head)
+		{
+			break;
+		}
+	}
+#else
+	return;
+#endif /* CC_OS_ANTI_DEADLOCK */
+}
 static void __cc_sched_wait_list_adjustment(cc_sched_ctrl_t * sched_ctrl)
 {
 	cc_sched_tcb_t * ptr = sched_ctrl->wait_list_head;
 	const int * wait_res = (int *)ptr->wait_res.wait_on_resource;
 	while(ptr != CC_OS_NULL_PTR)
 	{
-		ptr->wait_res.task_delay_ticks--;	/* Tick caliberations required */
+		if (ptr->task_status == cc_sched_task_status_wait)
+		{
+			ptr->wait_res.task_delay_ticks--;	/* Tick caliberations required */
 
-		if ((wait_res != CC_OS_NULL_PTR) && *wait_res > false)
-		{
-			/* The resource is available can can go to ready state */
-			ptr->wait_res.task_delay_ticks = false;
-			ptr->wait_res.wait_on_resource = false;
-		}
-		if(ptr->wait_res.task_delay_ticks == false)
-		{
-			_cc_sched_send_to_resume(sched_ctrl, ptr);
-		}
-		if (ptr->wait_link.next == sched_ctrl->wait_list_head)
-		{
-			break;
-		}
-		else
-		{
-			ptr = ptr->wait_link.next;
+			if ((wait_res != CC_OS_NULL_PTR) && *wait_res > false)
+			{
+				/* The resource is available can can go to ready state */
+				ptr->wait_res.task_delay_ticks = false;
+				ptr->wait_res.wait_on_resource = false;
+			}
+			if(ptr->wait_res.task_delay_ticks == false)
+			{
+				_cc_sched_send_to_resume(sched_ctrl, ptr);
+			}
+			if (ptr->wait_link.next == sched_ctrl->wait_list_head)
+			{
+				break;
+			}
+			else
+			{
+				ptr = ptr->wait_link.next;
+			}
 		}
 	}
 }
