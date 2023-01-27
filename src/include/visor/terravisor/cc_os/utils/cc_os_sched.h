@@ -21,7 +21,7 @@
  *	DEFINES
  *****************************************************/
 #define CC_OS_NULL_PTR			NULL
-#define CC_OS_DELAY_MAX			((size_t) -1)
+#define CC_OS_DELAY_MAX			SIZE_MAX
 
 #define	CC_OS_DYNAMIC 			CC_OS_USE_DYNAMIC
 
@@ -35,13 +35,14 @@ typedef struct cc_sched cc_sched_t;
 typedef const char c_char;
 typedef void * cc_os_args;
 typedef void (*task_fn_t)(cc_os_args args);
-typedef void (*cc_cb_hook_t)(void);
+typedef void (*cc_cb_hook_t)(cc_os_args args);
 typedef enum
 {
 	cc_sched_task_status_exit	= 0x00,			///> Initial State
 	cc_sched_task_status_running	= 0x01,			///> Task currently running
 	cc_sched_task_status_ready	= 0x02,			///> Task Ready to despatch
 	cc_sched_task_status_wait	= 0x03,			///> Task in wait state
+	cc_sched_task_status_pause	= 0x04,			///> Task in pause state
 	cc_sched_task_status_max 	= 0xff,			///> Do Nt Use
 } cc_sched_task_status_t;
 
@@ -50,12 +51,11 @@ typedef enum
  */
 typedef enum
 {
-	cc_sched_cb_pre_sched		= -0x01,
 	cc_sched_cb_power_pre_sleep	= 0x00,
 	cc_sched_cb_power_post_sleep	= 0x01,
 	cc_sched_cb_power_sleep		= 0x02,
 	cc_sched_cb_deadlock_notify	= 0x03,
-	cc_sched_cb_max			= 0x04
+	cc_sched_cb_max			= 0xff
 }cc_sched_cb_t;
 
 typedef enum
@@ -85,9 +85,9 @@ struct cc_sched_tcb
 	wres_t	  wait_res;					///> Wait Task resource
 	link_t	  ready_link;					///> Ready Linked List Pointers
 	link_t    wait_link;					///> Wait Linked List Pointers
-#if CC_OS_FEATURE_ANTI_DEADLOCK
+#if CC_OS_ANTI_DEADLOCK
 	size_t	  task_wd_ticks;				///> Tick down counter for Anti Deadlock system
-#endif
+#endif /* CC_OS_ANTI_DEADLOCK */
 	cc_sched_task_status_t task_status;			///> Current state of the task
 };
 
@@ -98,10 +98,10 @@ typedef struct cc_sched_func_cb
 	cc_cb_hook_t pre_sleep_cb;
 	cc_cb_hook_t post_sleep_cb;
 	cc_cb_hook_t sleep_cb;
-#endif
-#if CC_OS_FEATURE_ANTI_DEADLOCK
+#endif /* CC_OS_POWER_SAVE_EN */
+#if CC_OS_ANTI_DEADLOCK
 	cc_cb_hook_t deadlock_notify;
-#endif
+#endif /* CC_OS_ANTI_DEADLOCK */
 }cc_sched_func_cb_t;
 
 typedef struct cc_sched_ctrl
@@ -131,3 +131,9 @@ typedef struct cc_sched
 	cc_sched_algo_t cc_selected_algo;			///> Selected Algorithm ID
 	algo_fn algo_function;					///> Pointer to algorithm function
 }cc_sched_t;
+
+typedef struct cc_sched_anti_deadlock
+{
+	c_char * name;
+	task_fn_t task_func;
+}cc_sched_anti_deadlock_t;
