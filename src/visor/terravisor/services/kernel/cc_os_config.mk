@@ -15,7 +15,7 @@ CC_OS_MAX_THREAD 		?= 2
 CC_OS_IDLE_TASK_NAME		?= \"CC_OS_IDLE\"
 CC_OS_IDLE_TASK_STACK_LEN 	?= 255
 CC_OS_POWER_SAVE_EN 		?= 0
-CC_OS_FEATURE_ANTI_DEADLOCK	?= 1
+CC_OS_ANTI_DEADLOCK		?= 1
 
 $(eval $(call add_define,CC_OS_USE_DYNAMIC))
 $(eval $(call add_define,CC_OS_HEAP_SIZE))
@@ -24,4 +24,4 @@ $(eval $(call add_define,CC_OS_IDLE_TASK_NAME))
 $(eval $(call add_define,CC_OS_IDLE_TASK_PRIORITY))
 $(eval $(call add_define,CC_OS_IDLE_TASK_STACK_LEN))
 $(eval $(call add_define,CC_OS_POWER_SAVE_EN))
-$(eval $(call add_define,CC_OS_FEATURE_ANTI_DEADLOCK))
+$(eval $(call add_define,CC_OS_ANTI_DEADLOCK))

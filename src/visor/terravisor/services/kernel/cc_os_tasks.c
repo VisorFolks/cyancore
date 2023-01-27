@@ -28,8 +28,9 @@
 extern status_t _insert_after(cc_sched_tcb_t **ptr, cc_sched_tcb_t *new_node, uint8_t link_type);
 extern status_t _insert_before(cc_sched_tcb_t **ptr, cc_sched_tcb_t *new_node, uint8_t link_type);
 extern void _cc_sched_send_to_wait(cc_sched_ctrl_t *sched_ctrl, cc_sched_tcb_t *ptr, const size_t ticks);
+extern void _cc_sched_send_to_pause(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr);
 extern void _cc_sched_send_to_resume(cc_sched_ctrl_t *sched_ctrl, cc_sched_tcb_t *ptr);
-
+extern void _cc_os_pre_sched(cc_os_args args);
 /*****************************************************
  *	GLOBAL EXTERNS VARIABLES
  *****************************************************/
@@ -55,8 +56,9 @@ cc_os_task_t *cc_os_idle_task;
 /*****************************************************
  *	STATIC FUNCTION DEFINATIONS
  *****************************************************/
-static void __cc_init_scheduler()
+static void __cc_init_scheduler(void)
 {
+	g_sched_ctrl.cb_hooks_reg.pre_sched = &_cc_os_pre_sched;
 	return;
 }
 static status_t __cc_os_set_task_flag(cc_os_task_t cc_os_task, cc_task_flag_t task_flag, bool en)
@@ -162,9 +164,9 @@ status_t cc_os_add_task(
 			ptr->priority = priority;
 			ptr->task_func = task_func;
 			ptr->args_ptr = (uintptr_t)args;
-#if CC_OS_FEATURE_ANTI_DEADLOCK
+#if CC_OS_ANTI_DEADLOCK
 			ptr->task_wd_ticks = SIZE_MAX;
-#endif /* CC_OS_FEATURE_ANTI_DEADLOCK */
+#endif /* CC_OS_ANTI_DEADLOCK */
 		}
 		else
 		{
@@ -192,7 +194,7 @@ status_t cc_os_add_task(
 	else
 	{
 		cc_sched_tcb_t *comp_ptr = g_sched_ctrl.task_max_prio->ready_link.next;
-		while (1)
+		while (true)
 		{
 			if (comp_ptr->priority <= ptr->priority && (_insert_after(&comp_ptr, ptr, false) == success))
 			{
@@ -245,7 +247,7 @@ status_t cc_os_pause_task(cc_os_task_t cc_os_task)
 		ptr = cc_os_task;
 	}
 
-	_cc_sched_send_to_wait(&g_sched_ctrl, ptr, CC_OS_DELAY_MAX);
+	_cc_sched_send_to_pause(&g_sched_ctrl, ptr);
 
 	return success;
 }
@@ -258,10 +260,11 @@ status_t cc_os_pause_all_task(void)
 	{
 		if (ptr == g_sched_ctrl.curr_task)
 		{
+			/* Do not pause the current task */
 			continue;
 		}
 
-		_cc_sched_send_to_wait(&g_sched_ctrl, ptr, CC_OS_DELAY_MAX);
+		_cc_sched_send_to_pause(&g_sched_ctrl, ptr);
 		ptr = ptr->ready_link.next;
 	}
 
@@ -275,7 +278,7 @@ status_t cc_os_resume_all_task(void)
 	{
 		while (ptr != g_sched_ctrl.ready_list_head)
 		{
-			if (ptr == g_sched_ctrl.curr_task)
+			if ((ptr == g_sched_ctrl.curr_task) || (ptr->task_status != cc_sched_task_status_pause))
 			{
 				continue;
 			}
@@ -297,8 +300,14 @@ status_t cc_os_resume_task(cc_os_task_t cc_os_task)
 
 	cc_sched_tcb_t *ptr = cc_os_task;
 
-	_cc_sched_send_to_resume(&g_sched_ctrl, ptr);
-
+	if (ptr->task_status != cc_sched_task_status_pause)
+	{
+		_cc_sched_send_to_resume(&g_sched_ctrl, ptr);
+	}
+	else
+	{
+		return error_os_invalid_op;
+	}
 	return success;
 }
 
@@ -313,7 +322,7 @@ status_t cc_os_set_sched_algo(cc_sched_algo_t sched_algo)
 
 status_t cc_os_task_anti_deadlock_enable_and_feed(size_t task_wd_ticks _UNUSED)
 {
-#if CC_OS_FEATURE_ANTI_DEADLOCK
+#if CC_OS_ANTI_DEADLOCK
 	CC_OS_ASSERT_IF_FALSE((task_wd_ticks > false) && (task_wd_ticks < SIZE_MAX));
 
 	cc_sched_tcb_t *ptr = g_sched_ctrl.curr_task;
@@ -331,7 +340,7 @@ status_t cc_os_task_anti_deadlock_enable_and_feed(size_t task_wd_ticks _UNUSED)
 		__cc_os_set_task_flag(ptr, cc_task_flag_set_anti_deadlock, false);
 	}
 	return error_func_inval;
-#endif /* CC_OS_FEATURE_ANTI_DEADLOCK */
+#endif /* CC_OS_ANTI_DEADLOCK */
 }
 
 status_t cc_os_task_anti_deadlock_disable(void)
@@ -343,23 +352,18 @@ status_t cc_os_task_anti_deadlock_disable(void)
 		__cc_os_set_task_flag(ptr, cc_task_flag_set_anti_deadlock, false);
 	}
 
-#if CC_OS_FEATURE_ANTI_DEADLOCK
+#if CC_OS_ANTI_DEADLOCK
 	ptr->task_wd_ticks = SIZE_MAX;
 	return success;
 #else
 	return error_func_inval;
-#endif /* CC_OS_FEATURE_ANTI_DEADLOCK */
+#endif /* CC_OS_ANTI_DEADLOCK */
 }
 status_t cc_os_set_callback(const cc_sched_cb_t cb_type, const cc_cb_hook_t cb_func _UNUSED)
 {
-	CC_OS_ASSERT_IF_FALSE(cb_type >= cc_sched_cb_power_pre_sleep);
-
 	status_t ret = success;
 	switch (cb_type)
 	{
-	case cc_sched_cb_pre_sched:
-		g_sched_ctrl.cb_hooks_reg.pre_sched = cb_func;
-		break;
 	case cc_sched_cb_power_post_sleep:
 #if CC_OS_POWER_SAVE_EN
 		g_sched_ctrl.cb_hooks_reg.post_sleep_cb = cb_func;
@@ -376,7 +380,7 @@ status_t cc_os_set_callback(const cc_sched_cb_t cb_type, const cc_cb_hook_t cb_f
 		break;
 #endif
 	case cc_sched_cb_deadlock_notify:
-#if CC_OS_FEATURE_ANTI_DEADLOCK
+#if CC_OS_ANTI_DEADLOCK
 		g_sched_ctrl.cb_hooks_reg.deadlock_notify = cb_func;
 		break;
 #endif
@@ -424,7 +428,7 @@ void cc_os_run(void)
 	/* Initialise scheduler */
 	__cc_init_scheduler();
 	cc_os_task_yield(); /* Yeild */
-	while (1)
+	while (true)
 	{
 		/* Code shall not reach here */
 		arch_wfi();
