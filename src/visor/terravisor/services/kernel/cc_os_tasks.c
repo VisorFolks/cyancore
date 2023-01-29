@@ -56,7 +56,7 @@ cc_os_task_t *cc_os_idle_task;
 /*****************************************************
  *	STATIC VARIABLES
  *****************************************************/
-static uintptr_t __cc_os_task_id_gen = false;
+static size_t __cc_os_task_id_gen = false;
 /*****************************************************
  *	STATIC FUNCTION DEFINATIONS
  *****************************************************/
@@ -66,7 +66,7 @@ static void __cc_init_scheduler(void)
 	return;
 }
 
-static uintptr_t __cc_os_task_id_generate()
+static size_t __cc_os_task_id_generate()
 {
 	__cc_os_task_id_gen++;
 	return __cc_os_task_id_gen;
