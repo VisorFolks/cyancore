@@ -54,6 +54,10 @@ uint8_t *_cc_os_stack = CC_OS_NULL_PTR;
 #endif
 cc_os_task_t *cc_os_idle_task;
 /*****************************************************
+ *	STATIC VARIABLES
+ *****************************************************/
+static uintptr_t __cc_os_task_id_gen = false;
+/*****************************************************
  *	STATIC FUNCTION DEFINATIONS
  *****************************************************/
 static void __cc_init_scheduler(void)
@@ -61,9 +65,36 @@ static void __cc_init_scheduler(void)
 	g_sched_ctrl.cb_hooks_reg.pre_sched = &_cc_os_pre_sched;
 	return;
 }
-static status_t __cc_os_set_task_flag(cc_os_task_t cc_os_task, cc_task_flag_t task_flag, bool en)
+
+static uintptr_t __cc_os_task_id_generate()
 {
-	CC_OS_ASSERT_IF_FALSE(cc_os_task != CC_OS_NULL_PTR);
+	__cc_os_task_id_gen++;
+	return __cc_os_task_id_gen;
+}
+
+static cc_sched_tcb_t * __cc_os_get_tcb_using_task_id(const uintptr_t task_id)
+{
+	cc_sched_tcb_t * ptr = g_sched_ctrl.ready_list_head;
+	bool _is_id_found = false;
+	while (ptr->ready_link.next != g_sched_ctrl.ready_list_head)
+	{
+		if (ptr->task_id == task_id)
+		{
+			_is_id_found = true;
+			break;
+		}
+		ptr = ptr->ready_link.next;
+	}
+	if (_is_id_found == false)
+	{
+		ptr = CC_OS_NULL_PTR;
+	}
+	return ptr;
+}
+
+static status_t __cc_os_set_task_flag(cc_sched_tcb_t* cc_os_task, cc_task_flag_t task_flag, bool en)
+{
+	CC_OS_ASSERT_IF_FALSE( cc_os_task != CC_OS_NULL_PTR);
 
 	if (en)
 	{
@@ -75,6 +106,7 @@ static status_t __cc_os_set_task_flag(cc_os_task_t cc_os_task, cc_task_flag_t ta
 	}
 	return success;
 }
+
 static bool __cc_os_is_task_flag(const cc_sched_tcb_t *cc_os_task, cc_task_flag_t task_flag)
 {
 	if (cc_os_task != CC_OS_NULL_PTR)
@@ -207,21 +239,20 @@ status_t cc_os_add_task(
 		}
 	}
 
-	*cc_os_task = ptr;
 	ptr->task_status = cc_sched_task_status_ready;
+	*cc_os_task = __cc_os_task_id_generate();
 	cc_os_resume_all_task();
 	return success;
 }
 
 status_t cc_os_del_task(cc_os_task_t cc_os_task)
 {
-	CC_OS_ASSERT_IF_FALSE(cc_os_task->task_func != &_cc_os_idle_task_fn);
+	cc_sched_tcb_t * ptr = __cc_os_get_tcb_using_task_id(cc_os_task);
+	CC_OS_ASSERT_IF_FALSE(ptr->task_func != &_cc_os_idle_task_fn);
 
-	cc_sched_tcb_t *ptr = g_sched_ctrl.curr_task;
-
-	if (cc_os_task != CC_OS_NULL_PTR)
+	if (ptr == CC_OS_NULL_PTR)
 	{
-		ptr = cc_os_task;
+		ptr = g_sched_ctrl.curr_task;
 	}
 	/* Code to handle first node */
 	if (ptr == g_sched_ctrl.ready_list_head)
@@ -241,10 +272,10 @@ status_t cc_os_del_task(cc_os_task_t cc_os_task)
 
 status_t cc_os_pause_task(cc_os_task_t cc_os_task)
 {
-	cc_sched_tcb_t *ptr = g_sched_ctrl.curr_task;
-	if (cc_os_task != CC_OS_NULL_PTR)
+	cc_sched_tcb_t *ptr = __cc_os_get_tcb_using_task_id(cc_os_task);
+	if (ptr == CC_OS_NULL_PTR)
 	{
-		ptr = cc_os_task;
+		ptr = g_sched_ctrl.curr_task;
 	}
 
 	_cc_sched_send_to_pause(&g_sched_ctrl, ptr);
@@ -296,9 +327,8 @@ status_t cc_os_resume_all_task(void)
 
 status_t cc_os_resume_task(cc_os_task_t cc_os_task)
 {
-	CC_OS_ASSERT_IF_FALSE(cc_os_task != CC_OS_NULL_PTR);
-
-	cc_sched_tcb_t *ptr = cc_os_task;
+	cc_sched_tcb_t *ptr = __cc_os_get_tcb_using_task_id(cc_os_task);
+	CC_OS_ASSERT_IF_FALSE(ptr != CC_OS_NULL_PTR);
 
 	if (ptr->task_status != cc_sched_task_status_pause)
 	{
@@ -394,6 +424,16 @@ status_t cc_os_set_callback(const cc_sched_cb_t cb_type, const cc_cb_hook_t cb_f
 const char *cc_os_get_curr_task_name(void)
 {
 	return g_sched_ctrl.curr_task->name;
+}
+
+const char *cc_os_get_task_name(cc_os_task_t cc_os_task)
+{
+	const cc_sched_tcb_t *ptr = __cc_os_get_tcb_using_task_id(cc_os_task);
+	if(ptr != CC_OS_NULL_PTR)
+	{
+		return ptr->name;
+	}
+	return CC_OS_NULL_PTR;
 }
 
 void cc_os_task_wait(const size_t ticks)
