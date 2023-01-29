@@ -25,7 +25,7 @@
  * @brief	TASK infrastructure
  *
  */
-typedef cc_sched_tcb_t * cc_os_task_t;
+typedef uintptr_t cc_os_task_t;
 
 /*****************************************************
  *	MACROS
@@ -114,6 +114,7 @@ status_t cc_os_set_sched_algo(cc_sched_algo_t sched_algo);
  * @return status_t
  */
 status_t cc_os_set_callback(const cc_sched_cb_t cb_type, const cc_cb_hook_t cb_func);
+
 /**
  * @brief Get name of current running task
  *
@@ -121,6 +122,15 @@ status_t cc_os_set_callback(const cc_sched_cb_t cb_type, const cc_cb_hook_t cb_f
  * @return Pointer to the current task name
  */
 const char * cc_os_get_curr_task_name(void);
+
+/**
+ * @brief Get name of any task using task handler
+ *
+ * @param cc_os_task[in]    Task handler
+ * @return Pointer to the task name
+ */
+const char *cc_os_get_task_name(cc_os_task_t cc_os_task);
+
 /**
  * @brief A Function to put the current task to a waiting state and yield
  * @note  To just Yeild set ticks to 0
