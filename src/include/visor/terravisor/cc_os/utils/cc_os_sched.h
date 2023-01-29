@@ -76,9 +76,11 @@ typedef struct wres
 
 struct cc_sched_tcb
 {
+
 	c_char  * name;						///> Name of the Current Task
 	uint8_t   priority;					///> Priority of the task
 	uint8_t	  task_flags;					///> Task Flags
+	uint16_t  task_id;					///> Task ID assigned
 	uintptr_t stack_ptr;					///> Stack Pointer
 	task_fn_t task_func;					///> Task Call Function
 	uintptr_t args_ptr;					///> Task Call argument ptr
