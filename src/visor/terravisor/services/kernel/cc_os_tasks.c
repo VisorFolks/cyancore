@@ -126,9 +126,10 @@ status_t cc_os_add_task(
     cc_os_args args,
     uint8_t priority,
     size_t stack_len,
+#if CC_OS_DYNAMIC
+    uintptr_t stack_ptr _UNUSED
+#else
     uintptr_t stack_ptr
-#if CC_OS_DYNAMIC == true
-	_UNUSED
 #endif /* CC_OS_DYNAMIC */
 )
 {
@@ -240,7 +241,8 @@ status_t cc_os_add_task(
 	}
 
 	ptr->task_status = cc_sched_task_status_ready;
-	*cc_os_task = __cc_os_task_id_generate();
+	ptr->task_id = __cc_os_task_id_generate();
+	*cc_os_task = ptr->task_id;
 	cc_os_resume_all_task();
 	return success;
 }
