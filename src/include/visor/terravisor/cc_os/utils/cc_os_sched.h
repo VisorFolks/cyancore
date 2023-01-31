@@ -86,7 +86,7 @@ struct cc_sched_tcb
 	wres_t	  wait_res;					///> Wait Task resource
 	link_t	  ready_link;					///> Ready Linked List Pointers
 	link_t    wait_link;					///> Wait Linked List Pointers
-	uintptr_t  task_id;					///> Task ID assigned
+	uint16_t  task_id;					///> Task ID assigned
 #if CC_OS_ANTI_DEADLOCK
 	size_t	  task_wd_ticks;				///> Tick down counter for Anti Deadlock system
 #endif /* CC_OS_ANTI_DEADLOCK */

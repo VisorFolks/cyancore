@@ -31,6 +31,7 @@ extern void _cc_sched_send_to_wait(cc_sched_ctrl_t *sched_ctrl, cc_sched_tcb_t *
 extern void _cc_sched_send_to_pause(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr);
 extern void _cc_sched_send_to_resume(cc_sched_ctrl_t *sched_ctrl, cc_sched_tcb_t *ptr);
 extern void _cc_sched_send_back_of_task_prio(cc_sched_tcb_t *node_ptr);
+extern void _cc_os_scheduler_despatch(void);
 extern void _cc_os_pre_sched(cc_os_args args);
 /*****************************************************
  *	GLOBAL EXTERNS VARIABLES
@@ -49,7 +50,7 @@ extern cc_sched_tcb_t *g_cc_os_tcb_list;
 #endif
 
 #if CC_OS_DYNAMIC == false
-uint8_t _cc_os_stack[CC_OS_IDLE_STACK_LEN];
+uint8_t _cc_os_stack[CC_OS_IDLE_TASK_STACK_LEN];
 #else
 uint8_t *_cc_os_stack = CC_OS_NULL_PTR;
 #endif
@@ -57,7 +58,7 @@ cc_os_task_t cc_os_idle_task;
 /*****************************************************
  *	STATIC VARIABLES
  *****************************************************/
-static size_t __cc_os_task_id_gen = false;
+static uint16_t __cc_os_task_id_gen = false;
 /*****************************************************
  *	STATIC FUNCTION DEFINATIONS
  *****************************************************/
@@ -67,7 +68,7 @@ static void __cc_init_scheduler(void)
 	return;
 }
 
-static size_t __cc_os_task_id_generate()
+static uint16_t __cc_os_task_id_generate()
 {
 	__cc_os_task_id_gen++;
 	return __cc_os_task_id_gen;
@@ -205,12 +206,12 @@ status_t cc_os_add_task(
 status_t cc_os_del_task(cc_os_task_t cc_os_task)
 {
 	cc_sched_tcb_t * ptr = __cc_os_get_tcb_using_task_id(cc_os_task);
-	CC_OS_ASSERT_IF_FALSE(ptr->task_func != &_cc_os_idle_task_fn);
 
 	if (ptr == CC_OS_NULL_PTR)
 	{
 		ptr = g_sched_ctrl.curr_task;
 	}
+	CC_OS_ASSERT_IF_FALSE(ptr->task_func != &_cc_os_idle_task_fn);
 	/* Code to handle first node */
 	if (ptr == g_sched_ctrl.ready_list_head)
 	{
@@ -414,6 +415,7 @@ void cc_os_task_wait(const size_t ticks)
 
 void cc_os_task_yield()
 {
+	_cc_os_scheduler_despatch();
 	return;
 }
 

@@ -25,7 +25,7 @@
  * @brief	TASK infrastructure
  *
  */
-typedef uintptr_t cc_os_task_t;
+typedef uint16_t cc_os_task_t;
 
 /*****************************************************
  *	MACROS

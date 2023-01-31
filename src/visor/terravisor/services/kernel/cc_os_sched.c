@@ -282,7 +282,6 @@ status_t _cc_sched_node_detach(cc_sched_tcb_t *node_ptr, uint8_t link_type)
 void _cc_sched_send_back_of_task_prio(cc_sched_tcb_t *node_ptr)
 {
 	cc_sched_tcb_t * ref_ptr = g_sched_ctrl.ready_list_head;
-	bool least_prio = true;
 	if(ref_ptr != CC_OS_NULL_PTR)
 	{
 		if (node_ptr == ref_ptr)
@@ -291,6 +290,7 @@ void _cc_sched_send_back_of_task_prio(cc_sched_tcb_t *node_ptr)
 			return;
 		}
 
+		bool least_prio = true;
 		/* Find an optimal space */
 		while(node_ptr->priority >= ref_ptr->priority)
 		{
@@ -339,9 +339,10 @@ void _cc_sched_send_back_of_task_prio(cc_sched_tcb_t *node_ptr)
 void _cc_os_pre_sched(cc_os_args args)
 {
 	cc_sched_ctrl_t * sched_ctrl = (cc_sched_ctrl_t *) args;
-
+	sched_ctrl->curr_task->task_status = cc_sched_task_status_ready;
 	__cc_sched_wait_list_adjustment(sched_ctrl);
 	__cc_sched_deadlock_adjustment_and_detection(sched_ctrl);
+	_cc_sched_send_back_of_task_prio(sched_ctrl->curr_task);
 }
 
 /**
@@ -455,8 +456,6 @@ static void __cc_sched_algo_round_robin_fn(cc_sched_ctrl_t * sched_ctrl)
 	/* do waitlist adjustment */
 	cc_sched_tcb_t * ptr = sched_ctrl->curr_task->ready_link.next;
 
-	__cc_sched_wait_list_adjustment(sched_ctrl);
-
 	if (ptr == sched_ctrl->ready_list_head)
 	{
 		/* IDLE Task */
@@ -472,8 +471,6 @@ static void __cc_sched_algo_round_robin_fn(cc_sched_ctrl_t * sched_ctrl)
 static void __cc_sched_algo_priority_driven_fn(cc_sched_ctrl_t * sched_ctrl)
 {
 	/* do waitlist adjustment */
-	__cc_sched_wait_list_adjustment(sched_ctrl);
-
 	cc_sched_tcb_t * ptr = sched_ctrl->ready_list_head->ready_link.prev;
 	if(ptr != CC_OS_NULL_PTR)
 	{
