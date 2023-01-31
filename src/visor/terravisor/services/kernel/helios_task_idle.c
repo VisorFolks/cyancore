@@ -2,7 +2,7 @@
  * CYANCORE LICENSE
  * Copyrights (C) 2022, Cyancore Team
  *
- * File Name		: cc_os_task_idle.c
+ * File Name		: helios_task_idle.c
  * Description		: CC OS IDLE Task definitions
  * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
  * Organisation		: Cyancore Core-Team
@@ -11,13 +11,13 @@
 /*****************************************************
  *	INCLUDES
  *****************************************************/
-#include <terravisor/cc_os/cc_os.h>
+#include <terravisor/helios/helios.h>
 #include <arch.h>
 
 /*****************************************************
  *	EXTERN FUNCTION DECLARATION
  *****************************************************/
-extern status_t _cc_sched_node_detach(cc_sched_tcb_t *node_ptr, uint8_t link_type);
+extern status_t _helios_sched_node_detach(helios_sched_tcb_t *node_ptr, uint8_t link_type);
 
 /*****************************************************
  *	STATIC FUNCTION DECLARATION
@@ -26,26 +26,26 @@ extern status_t _cc_sched_node_detach(cc_sched_tcb_t *node_ptr, uint8_t link_typ
  * @brief	This function cleans up the terminated task form the TCB list
  *
  * @param  ptr[in]		Pointer to the TCB being cleaned
- * @return cc_sched_tcb_t *	Pointer to the next TCB
+ * @return helios_sched_tcb_t *	Pointer to the next TCB
  */
-static cc_sched_tcb_t * __free_terminated_task(cc_sched_tcb_t * ptr)
+static helios_sched_tcb_t * __free_terminated_task(helios_sched_tcb_t * ptr)
 {
-	cc_sched_tcb_t * next_ptr = ptr->ready_link.next;
-	if (ptr->ready_link.next->task_status == cc_sched_task_status_exit)
+	helios_sched_tcb_t * next_ptr = ptr->ready_link.next;
+	if (ptr->ready_link.next->task_status == helios_sched_task_status_exit)
 	{
-		_cc_sched_node_detach(ptr, false);
+		_helios_sched_node_detach(ptr, false);
 
-#if CC_OS_DYNAMIC == true
-		cc_os_free((void *)ptr->stack_ptr);
-		cc_os_free(ptr);
+#if HELIOS_DYNAMIC == true
+		helios_free((void *)ptr->stack_ptr);
+		helios_free(ptr);
 #endif
 	}
 
 	return next_ptr;
 }
 
-#if CC_OS_POWER_SAVE_EN
-static void __cc_power_save_callback(void)
+#if HELIOS_POWER_SAVE_EN
+static void __helios_power_save_callback(void)
 {
 	arch_wfi();
 }
@@ -53,15 +53,15 @@ static void __cc_power_save_callback(void)
 /*****************************************************
  *	USER FUNCTION DEFINATION
  *****************************************************/
-void _cc_os_idle_task_fn(cc_os_args args)
+void _helios_idle_task_fn(helios_args args)
 {
-	static cc_sched_tcb_t * ptr  = CC_OS_NULL_PTR;
-	cc_sched_ctrl_t * sched_ctrl = (cc_sched_ctrl_t *) args;
+	static helios_sched_tcb_t * ptr  = HELIOS_NULL_PTR;
+	helios_sched_ctrl_t * sched_ctrl = (helios_sched_ctrl_t *) args;
 	ptr = sched_ctrl->ready_list_head;
-#if CC_OS_POWER_SAVE_EN
-	if (sched_ctrl->cb_hooks_reg.sleep_cb == CC_OS_NULL_PTR)
+#if HELIOS_POWER_SAVE_EN
+	if (sched_ctrl->cb_hooks_reg.sleep_cb == HELIOS_NULL_PTR)
 	{
-		sched_ctrl->cb_hooks_reg.sleep_cb = __cc_power_save_callback;
+		sched_ctrl->cb_hooks_reg.sleep_cb = __helios_power_save_callback;
 	}
 #endif
 	while (true)
@@ -69,22 +69,22 @@ void _cc_os_idle_task_fn(cc_os_args args)
 		/* Clean up task if terminated */
 		ptr = __free_terminated_task(ptr);
 
-#if CC_OS_POWER_SAVE_EN
+#if HELIOS_POWER_SAVE_EN
 		/* Power Save code */
-		if (sched_ctrl->cb_hooks_reg.pre_sleep_cb != CC_OS_NULL_PTR)
+		if (sched_ctrl->cb_hooks_reg.pre_sleep_cb != HELIOS_NULL_PTR)
 		{
 			sched_ctrl->cb_hooks_reg.pre_sleep_cb();
 		}
-		if (sched_ctrl->cb_hooks_reg.sleep_cb != CC_OS_NULL_PTR)
+		if (sched_ctrl->cb_hooks_reg.sleep_cb != HELIOS_NULL_PTR)
 		{
 			sched_ctrl->cb_hooks_reg.sleep_cb();
 		}
-		if (sched_ctrl->cb_hooks_reg.post_sleep_cb != CC_OS_NULL_PTR)
+		if (sched_ctrl->cb_hooks_reg.post_sleep_cb != HELIOS_NULL_PTR)
 		{
 			sched_ctrl->cb_hooks_reg.post_sleep_cb();
 		}
 #endif
 		/* Yield for next available task */
-		cc_os_task_yield();
+		helios_task_yield();
 	}
 }

@@ -2,7 +2,7 @@
  * CYANCORE LICENSE
  * Copyrights (C) 2022, Cyancore Team
  *
- * File Name		: cc_os_heap.c
+ * File Name		: helios_heap.c
  * Description		: CC OS Kernel definations
  * Primary Author	: Pranjal Chanda [pranjalchanda08@gmail.com]
  * Organisation		: Cyancore Core-Team
@@ -11,7 +11,7 @@
 /*****************************************************
  *	INCLUDES
  *****************************************************/
-#include <terravisor/cc_os/utils/cc_os_heap.h>
+#include <terravisor/helios/utils/helios_heap.h>
 
 /*****************************************************
  *	GLOBAL/STATIC VARIABLE DECLARATIONS
@@ -28,11 +28,11 @@
 /*****************************************************
  *	USER FUNCTION DEFINATIONS
  *****************************************************/
-void * cc_os_malloc(size_t size)
+void * helios_malloc(size_t size)
 {
 	return malloc(size);
 }
-void cc_os_free(void *addr )
+void helios_free(void *addr )
 {
 	free(addr);
 }

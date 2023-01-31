@@ -2,10 +2,10 @@ name: GitHub CI
 
 on:
   push:
-    branches: [ stable, development, cc_os_stage]
+    branches: [ stable, development, helios_stage]
 
   pull_request:
-    branches: [ stable, development, cc_os_stage]
+    branches: [ stable, development, helios_stage]
 
 jobs:
   build:
@@ -49,8 +49,8 @@ jobs:
           make demo_avr
           make demo_avr_cpp
           make demo_riscv
-          make demo_cc_os_avr
-          make demo_cc_os_riscv
+          make demo_helios_avr
+          make demo_helios_riscv
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1

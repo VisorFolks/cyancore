@@ -3,25 +3,25 @@
 # Copyrights (C) 2019, Cyancore Team
 #
 # File Name		: cc_os_config.mk
-# Description		: This file consists of CC_OS kernal configuration
+# Description		: This file consists of HELIOS kernal configuration
 # Primary Author	: Pranjal Chanda[pranjalchanda08@gmail.com]
 # Organisation		: Cyancore Core-Team
 #
 
-CC_OS_IDLE_TASK_PRIORITY	:= 1
-CC_OS_USE_DYNAMIC 		?= 1
-CC_OS_HEAP_SIZE 		?= 1024
-CC_OS_MAX_THREAD 		?= 2
-CC_OS_IDLE_TASK_NAME		?= \"CC_OS_IDLE\"
-CC_OS_IDLE_TASK_STACK_LEN 	?= 255
-CC_OS_POWER_SAVE_EN 		?= 0
-CC_OS_ANTI_DEADLOCK		?= 1
+HELIOS_IDLE_TASK_PRIORITY	:= 1
+HELIOS_USE_DYNAMIC 		?= 1
+HELIOS_HEAP_SIZE 		?= 1024
+HELIOS_MAX_THREAD 		?= 2
+HELIOS_IDLE_TASK_NAME		?= \"HELIOS_IDLE\"
+HELIOS_IDLE_TASK_STACK_LEN 	?= 255
+HELIOS_POWER_SAVE_EN 		?= 0
+HELIOS_ANTI_DEADLOCK		?= 1
 
-$(eval $(call add_define,CC_OS_USE_DYNAMIC))
-$(eval $(call add_define,CC_OS_HEAP_SIZE))
-$(eval $(call add_define,CC_OS_MAX_THREAD))
-$(eval $(call add_define,CC_OS_IDLE_TASK_NAME))
-$(eval $(call add_define,CC_OS_IDLE_TASK_PRIORITY))
-$(eval $(call add_define,CC_OS_IDLE_TASK_STACK_LEN))
-$(eval $(call add_define,CC_OS_POWER_SAVE_EN))
-$(eval $(call add_define,CC_OS_ANTI_DEADLOCK))
+$(eval $(call add_define,HELIOS_USE_DYNAMIC))
+$(eval $(call add_define,HELIOS_HEAP_SIZE))
+$(eval $(call add_define,HELIOS_MAX_THREAD))
+$(eval $(call add_define,HELIOS_IDLE_TASK_NAME))
+$(eval $(call add_define,HELIOS_IDLE_TASK_PRIORITY))
+$(eval $(call add_define,HELIOS_IDLE_TASK_STACK_LEN))
+$(eval $(call add_define,HELIOS_POWER_SAVE_EN))
+$(eval $(call add_define,HELIOS_ANTI_DEADLOCK))
