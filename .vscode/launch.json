@@ -48,7 +48,6 @@
 			"svdPath": "",
 			"externalConsole": false,
 			"showDisplayString": true,
-			// "preLaunchTask": "Build",
 			"variables": {
 				"elfPath": "${workspaceFolder}/out/${input:project}/${input:project}.elf"
 			},
@@ -91,7 +90,7 @@
 				"demo_avr",
 				"demo_avr_cpp",
 				"demo_riscv",
-				"demo_cc_os_riscv"
+				"demo_helios_riscv"
 			],
 			"default": "demo_avr"
 		},
