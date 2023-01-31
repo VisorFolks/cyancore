@@ -2,16 +2,16 @@
  * CYANCORE LICENSE
  * Copyrights (C) 2022, Cyancore Team
  *
- * File Name		: cc_os_sem.c
+ * File Name		: helios_sem.c
  * Description		: CC OS Semaphore function definations
- * Primary Author	: Pranjal Chanda [pranjalchandaCC_OS_FALSE8@gmail.com]
+ * Primary Author	: Pranjal Chanda [pranjalchandaHELIOS_FALSE8@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 
 /*****************************************************
  *	INCLUDES
  *****************************************************/
-#include <terravisor/cc_os/cc_os.h>
+#include <terravisor/helios/helios.h>
 
 /*****************************************************
  *	GLOBAL/STATIC VARIABLE DECLARATIONS
@@ -20,7 +20,7 @@
 /*****************************************************
  *	GLOBAL EXTERNS
  *****************************************************/
-extern cc_sched_ctrl_t g_sched_ctrl;
+extern helios_sched_ctrl_t g_sched_ctrl;
 /*****************************************************
  *	STATIC FUNCTION DEFINATIONS
  *****************************************************/
@@ -29,14 +29,14 @@ extern cc_sched_ctrl_t g_sched_ctrl;
  *	USER FUNCTION DEFINATIONS
  *****************************************************/
 
-status_t cc_os_sem_create	(sem_t ** sem_ptr, size_t init_val)
+status_t helios_sem_create	(sem_t ** sem_ptr, size_t init_val)
 {
-#if CC_OS_DYNAMIC == false
-	CC_OS_ASSERT_IF_FALSE((*sem_ptr != CC_OS_NULL_PTR && (*sem_ptr)->sem_init == false));
+#if HELIOS_DYNAMIC == false
+	HELIOS_ASSERT_IF_FALSE((*sem_ptr != HELIOS_NULL_PTR && (*sem_ptr)->sem_init == false));
 #else
-	CC_OS_ASSERT_IF_FALSE(*sem_ptr == CC_OS_NULL_PTR);
-	*sem_ptr = cc_os_malloc(sizeof(sem_t));
-	if (*sem_ptr == CC_OS_NULL_PTR)
+	HELIOS_ASSERT_IF_FALSE(*sem_ptr == HELIOS_NULL_PTR);
+	*sem_ptr = helios_malloc(sizeof(sem_t));
+	if (*sem_ptr == HELIOS_NULL_PTR)
 	{
 		return error_memory_low;
 	}
@@ -46,9 +46,9 @@ status_t cc_os_sem_create	(sem_t ** sem_ptr, size_t init_val)
 
 	return success;
 }
-status_t cc_os_sem_take 	(sem_t * sem_ptr, size_t wait_ticks)
+status_t helios_sem_take 	(sem_t * sem_ptr, size_t wait_ticks)
 {
-	CC_OS_ASSERT_IF_FALSE((sem_ptr != CC_OS_NULL_PTR && sem_ptr->sem_init != false));
+	HELIOS_ASSERT_IF_FALSE((sem_ptr != HELIOS_NULL_PTR && sem_ptr->sem_init != false));
 
 	if (sem_ptr->sem_val == false)
 	{
@@ -58,7 +58,7 @@ status_t cc_os_sem_take 	(sem_t * sem_ptr, size_t wait_ticks)
 		}
 		else
 		{	g_sched_ctrl.curr_task->wait_res.wait_on_resource = (uintptr_t) sem_ptr;
-			cc_os_task_wait(wait_ticks);
+			helios_task_wait(wait_ticks);
 		}
 	}
 	else
@@ -67,30 +67,30 @@ status_t cc_os_sem_take 	(sem_t * sem_ptr, size_t wait_ticks)
 	}
 	return success;
 }
-status_t cc_os_sem_give (sem_t * sem_ptr)
+status_t helios_sem_give (sem_t * sem_ptr)
 {
-	CC_OS_ASSERT_IF_FALSE((sem_ptr != CC_OS_NULL_PTR && sem_ptr->sem_init != false));
+	HELIOS_ASSERT_IF_FALSE((sem_ptr != HELIOS_NULL_PTR && sem_ptr->sem_init != false));
 
 	sem_ptr->sem_val++;
 
 	return success;
 }
-status_t cc_os_sem_delete (sem_t ** sem_ptr)
+status_t helios_sem_delete (sem_t ** sem_ptr)
 {
-	CC_OS_ASSERT_IF_FALSE((*sem_ptr != CC_OS_NULL_PTR && (*sem_ptr)->sem_init != false));
+	HELIOS_ASSERT_IF_FALSE((*sem_ptr != HELIOS_NULL_PTR && (*sem_ptr)->sem_init != false));
 
 	(*sem_ptr)->sem_init = false;
 
-#if CC_OS_DYNAMIC == true
-	cc_os_free(*sem_ptr);
+#if HELIOS_DYNAMIC == true
+	helios_free(*sem_ptr);
 #endif
 
 	return success;
 }
-status_t cc_os_sem_get_val 	(const sem_t * sem_ptr, size_t * val)
+status_t helios_sem_get_val 	(const sem_t * sem_ptr, size_t * val)
 {
-	CC_OS_ASSERT_IF_FALSE((sem_ptr != CC_OS_NULL_PTR && sem_ptr->sem_init != false));
-	CC_OS_ASSERT_IF_FALSE(val != CC_OS_NULL_PTR);
+	HELIOS_ASSERT_IF_FALSE((sem_ptr != HELIOS_NULL_PTR && sem_ptr->sem_init != false));
+	HELIOS_ASSERT_IF_FALSE(val != HELIOS_NULL_PTR);
 
 	*val = sem_ptr->sem_val;
 
