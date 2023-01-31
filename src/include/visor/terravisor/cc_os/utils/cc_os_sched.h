@@ -80,13 +80,13 @@ struct cc_sched_tcb
 	c_char  * name;						///> Name of the Current Task
 	uint8_t   priority;					///> Priority of the task
 	uint8_t	  task_flags;					///> Task Flags
-	uint16_t  task_id;					///> Task ID assigned
 	uintptr_t stack_ptr;					///> Stack Pointer
 	task_fn_t task_func;					///> Task Call Function
 	uintptr_t args_ptr;					///> Task Call argument ptr
 	wres_t	  wait_res;					///> Wait Task resource
 	link_t	  ready_link;					///> Ready Linked List Pointers
 	link_t    wait_link;					///> Wait Linked List Pointers
+	uintptr_t  task_id;					///> Task ID assigned
 #if CC_OS_ANTI_DEADLOCK
 	size_t	  task_wd_ticks;				///> Tick down counter for Anti Deadlock system
 #endif /* CC_OS_ANTI_DEADLOCK */
@@ -111,7 +111,6 @@ typedef struct cc_sched_ctrl
 	cc_sched_tcb_t 	* ready_list_head;
 	cc_sched_tcb_t 	* curr_task;
 	cc_sched_tcb_t 	* wait_list_head;
-	cc_sched_tcb_t 	* task_max_prio;
 	cc_sched_t 	* selected_sched;
 	cc_sched_func_cb_t cb_hooks_reg;
 }cc_sched_ctrl_t;

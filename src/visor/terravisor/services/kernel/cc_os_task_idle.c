@@ -15,6 +15,11 @@
 #include <arch.h>
 
 /*****************************************************
+ *	EXTERN FUNCTION DECLARATION
+ *****************************************************/
+extern status_t _cc_sched_node_detach(cc_sched_tcb_t *node_ptr, uint8_t link_type);
+
+/*****************************************************
  *	STATIC FUNCTION DECLARATION
  *****************************************************/
 /**
@@ -28,13 +33,9 @@ static cc_sched_tcb_t * __free_terminated_task(cc_sched_tcb_t * ptr)
 	cc_sched_tcb_t * next_ptr = ptr->ready_link.next;
 	if (ptr->ready_link.next->task_status == cc_sched_task_status_exit)
 	{
-		ptr->ready_link.prev->ready_link.next = ptr->ready_link.next;
-		ptr->ready_link.next->ready_link.prev = ptr->ready_link.prev;
+		_cc_sched_node_detach(ptr, false);
 
-#if CC_OS_DYNAMIC == false
-		ptr->ready_link.next = CC_OS_NULL_PTR;
-		ptr->ready_link.prev = CC_OS_NULL_PTR;
-#else
+#if CC_OS_DYNAMIC == true
 		cc_os_free((void *)ptr->stack_ptr);
 		cc_os_free(ptr);
 #endif
