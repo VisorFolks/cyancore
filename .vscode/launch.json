@@ -35,8 +35,50 @@
 					"text": "b plug"
 				},
 			],
-
-
+		},
+		{
+			"name": "FE310 Debug (JLink)",
+			"type": "cppdbg",
+			"request": "launch",
+			"miDebuggerServerAddress": ":2331",
+			"program": "${workspaceFolder}/out/${input:project}/${input:project}.elf",
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"MIMode": "gdb",
+			"svdPath": "",
+			"externalConsole": false,
+			"showDisplayString": true,
+			"variables": {
+				"elfPath": "${workspaceFolder}/out/${input:project}/${input:project}.elf"
+			},
+			"miDebuggerPath": "${workspaceFolder}/tools/risc-v-toolchain/bin/riscv64-unknown-elf-gdb",
+			"miDebuggerArgs": "${elfPath}",
+			"setupCommands":
+			[
+				{
+					"text": "b init"
+				},
+				{
+					"text": "b plug"
+				},
+			],
+			"postRemoteConnectCommands": [
+				{
+					"text": "file ${elfPath}"
+				},
+				{
+					"text": "monitor halt"
+				},
+				{
+					"text": "load"
+				},
+				{
+					"text": "monitor reset"
+				},
+				{
+					"text": "monitor go"
+				}
+			]
 		}
 	],
 	"inputs": [
@@ -48,6 +90,7 @@
 				"demo_avr",
 				"demo_avr_cpp",
 				"demo_riscv",
+				"demo_helios_riscv"
 			],
 			"default": "demo_avr"
 		},
