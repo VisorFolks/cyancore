@@ -25,11 +25,12 @@
 /*****************************************************
  *	INTERNAL EXTERNS FUNCTIONS
  *****************************************************/
-extern status_t _insert_after(cc_sched_tcb_t **ptr, cc_sched_tcb_t *new_node, uint8_t link_type);
-extern status_t _insert_before(cc_sched_tcb_t **ptr, cc_sched_tcb_t *new_node, uint8_t link_type);
+extern status_t _cc_os_sched_insert_after(cc_sched_tcb_t **ptr, cc_sched_tcb_t *new_node, uint8_t link_type);
+extern status_t _cc_os_sched_insert_before(cc_sched_tcb_t **ptr, cc_sched_tcb_t *new_node, uint8_t link_type);
 extern void _cc_sched_send_to_wait(cc_sched_ctrl_t *sched_ctrl, cc_sched_tcb_t *ptr, const size_t ticks);
 extern void _cc_sched_send_to_pause(cc_sched_ctrl_t * sched_ctrl, cc_sched_tcb_t * ptr);
 extern void _cc_sched_send_to_resume(cc_sched_ctrl_t *sched_ctrl, cc_sched_tcb_t *ptr);
+extern void _cc_sched_send_back_of_task_prio(cc_sched_tcb_t *node_ptr);
 extern void _cc_os_pre_sched(cc_os_args args);
 /*****************************************************
  *	GLOBAL EXTERNS VARIABLES
@@ -52,7 +53,7 @@ uint8_t _cc_os_stack[CC_OS_IDLE_STACK_LEN];
 #else
 uint8_t *_cc_os_stack = CC_OS_NULL_PTR;
 #endif
-cc_os_task_t *cc_os_idle_task;
+cc_os_task_t cc_os_idle_task;
 /*****************************************************
  *	STATIC VARIABLES
  *****************************************************/
@@ -116,6 +117,7 @@ static bool __cc_os_is_task_flag(const cc_sched_tcb_t *cc_os_task, cc_task_flag_
 
 	return false;
 }
+
 /*****************************************************
  *	USER FUNCTION DEFINATIONS
  *****************************************************/
@@ -133,7 +135,7 @@ status_t cc_os_add_task(
 #endif /* CC_OS_DYNAMIC */
 )
 {
-	CC_OS_ASSERT_IF_FALSE(cc_os_task == CC_OS_NULL_PTR);
+	CC_OS_ASSERT_IF_FALSE(*cc_os_task == (uintptr_t)CC_OS_NULL_PTR);
 	CC_OS_ASSERT_IF_FALSE(name != CC_OS_NULL_PTR);
 #if CC_OS_DYNAMIC == false
 	CC_OS_ASSERT_IF_FALSE(stack_ptr != (uintptr_t)CC_OS_NULL_PTR);
@@ -145,101 +147,54 @@ status_t cc_os_add_task(
 
 	cc_os_pause_all_task();
 
-	cc_sched_tcb_t *ptr = g_sched_ctrl.ready_list_head;
+	cc_sched_tcb_t *ptr = CC_OS_NULL_PTR;
 
-#if CC_OS_DYNAMIC == true
-	if (ptr == CC_OS_NULL_PTR)
+#if CC_OS_DYNAMIC == false
+	/* Static Task Allocation */
+	for (size_t i = false; i < CC_OS_MAX_THREAD; i++)
 	{
-		/* First Dynamic task */
-		ptr = (cc_sched_tcb_t *)cc_os_malloc(sizeof(cc_sched_tcb_t));
-		if (ptr == CC_OS_NULL_PTR)
+		/* Get an available node from global tcb list */
+		if (g_cc_os_tcb_list[i].task_status == cc_sched_task_status_exit)
+		{
+			ptr = &(g_cc_os_tcb_list[i]);
+			break;
+		}
+	}
+	if (ptr != g_sched_ctrl.ready_list_head)
+	{
+		ptr->stack_ptr = stack_ptr;
+#else
+	/* Dynamic Task Declaration */
+	ptr = (cc_sched_tcb_t *)cc_os_malloc(sizeof(cc_sched_tcb_t));
+	if (ptr != CC_OS_NULL_PTR)
+	{
+		ptr->stack_ptr = (uintptr_t)malloc(stack_len);
+		if (ptr->stack_ptr == (uintptr_t)CC_OS_NULL_PTR)
 		{
 			cc_os_resume_all_task();
 			return error_memory_low;
 		}
-	}
 #endif /* CC_OS_DYNAMIC */
-	if ((ptr->ready_link.next == CC_OS_NULL_PTR) && (ptr->ready_link.prev == CC_OS_NULL_PTR))
-	{
-		ptr->ready_link.next = ptr->ready_link.prev = g_sched_ctrl.ready_list_head;
 	}
-
 	else
 	{
-#if CC_OS_DYNAMIC == false
-		/* Static Task Allocation */
-		for (size_t i = false; i < CC_OS_MAX_THREAD; i++)
-		{
-			/* Get an available node from global tcb list */
-			if (g_cc_os_tcb_list[i].task_status == cc_sched_task_status_exit)
-			{
-				ptr = &(g_cc_os_tcb_list[i]);
-				break;
-			}
-		}
-		if (ptr != g_sched_ctrl.ready_list_head)
-		{
-			ptr->stack_ptr = stack_ptr;
-#else
-		/* Dynamic Task Declaration */
-		ptr = (cc_sched_tcb_t *)cc_os_malloc(sizeof(cc_sched_tcb_t));
-		if (ptr != CC_OS_NULL_PTR)
-		{
-			ptr->stack_ptr = (uintptr_t)malloc(stack_len);
-			if (ptr->stack_ptr == (uintptr_t)CC_OS_NULL_PTR)
-			{
-				cc_os_resume_all_task();
-				return error_memory_low;
-			}
-#endif /* CC_OS_DYNAMIC */
-			/* Fill tcb details */
-			ptr->name = name;
-			ptr->priority = priority;
-			ptr->task_func = task_func;
-			ptr->args_ptr = (uintptr_t)args;
+		cc_os_resume_all_task();
+		return error_memory_low;
+	}
+	/* Fill tcb details */
+	ptr->name = name;
+	ptr->priority = priority;
+	ptr->task_func = task_func;
+	ptr->args_ptr = (uintptr_t)args;
 #if CC_OS_ANTI_DEADLOCK
-			ptr->task_wd_ticks = SIZE_MAX;
+	ptr->task_wd_ticks = SIZE_MAX;
 #endif /* CC_OS_ANTI_DEADLOCK */
-		}
-		else
-		{
-			cc_os_resume_all_task();
-			return error_memory_low;
-		}
+	if (g_sched_ctrl.ready_list_head == CC_OS_NULL_PTR)
+	{
+		ptr->ready_link.next = ptr->ready_link.prev = g_sched_ctrl.ready_list_head = ptr;
 	}
 	/* Insert Tasks in assending order of its priority */
-	if (g_sched_ctrl.task_max_prio == CC_OS_NULL_PTR)
-	{
-		g_sched_ctrl.task_max_prio = ptr;
-	}
-	else if (g_sched_ctrl.task_max_prio->priority <= ptr->priority)
-	{
-		if (_insert_after(&(g_sched_ctrl.task_max_prio), ptr, false) == success)
-		{
-			g_sched_ctrl.task_max_prio = ptr;
-		}
-		else
-		{
-			cc_os_resume_all_task();
-			return error_os_task_overfow;
-		}
-	}
-	else
-	{
-		cc_sched_tcb_t *comp_ptr = g_sched_ctrl.task_max_prio->ready_link.next;
-		while (true)
-		{
-			if (comp_ptr->priority <= ptr->priority && (_insert_after(&comp_ptr, ptr, false) == success))
-			{
-				break;
-			}
-			else
-			{
-				comp_ptr = comp_ptr->ready_link.next;
-			}
-		}
-	}
-
+	_cc_sched_send_back_of_task_prio(ptr);
 	ptr->task_status = cc_sched_task_status_ready;
 	ptr->task_id = __cc_os_task_id_generate();
 	*cc_os_task = ptr->task_id;
@@ -287,18 +242,25 @@ status_t cc_os_pause_task(cc_os_task_t cc_os_task)
 
 status_t cc_os_pause_all_task(void)
 {
-	cc_sched_tcb_t *ptr = g_sched_ctrl.ready_list_head->ready_link.next;
-
-	while (ptr != g_sched_ctrl.ready_list_head)
+	cc_sched_tcb_t *ptr = g_sched_ctrl.ready_list_head;
+	if(ptr != CC_OS_NULL_PTR)
 	{
-		if (ptr == g_sched_ctrl.curr_task)
+		while (true)
 		{
-			/* Do not pause the current task */
-			continue;
-		}
+			if (ptr == g_sched_ctrl.curr_task)
+			{
+				/* Do not pause the current task */
+				continue;
+			}
 
-		_cc_sched_send_to_pause(&g_sched_ctrl, ptr);
-		ptr = ptr->ready_link.next;
+			_cc_sched_send_to_pause(&g_sched_ctrl, ptr);
+			ptr = ptr->ready_link.next;
+
+			if(ptr == g_sched_ctrl.ready_list_head)
+			{
+				break;
+			}
+		}
 	}
 
 	return success;
@@ -306,17 +268,17 @@ status_t cc_os_pause_all_task(void)
 
 status_t cc_os_resume_all_task(void)
 {
-	cc_sched_tcb_t *ptr = g_sched_ctrl.ready_list_head->ready_link.next;
+	cc_sched_tcb_t *ptr = g_sched_ctrl.ready_list_head;
 	if (ptr != CC_OS_NULL_PTR)
 	{
-		while (ptr != g_sched_ctrl.ready_list_head)
+		while (true)
 		{
-			if ((ptr == g_sched_ctrl.curr_task) || (ptr->task_status != cc_sched_task_status_pause))
-			{
-				continue;
-			}
-			_cc_sched_send_to_resume(&g_sched_ctrl, ptr);
 			ptr = ptr->ready_link.next;
+			_cc_sched_send_to_resume(&g_sched_ctrl, ptr);
+			if (ptr == g_sched_ctrl.ready_list_head)
+			{
+				break;
+			}
 		}
 	}
 	else
@@ -459,7 +421,7 @@ void cc_os_run(void)
 {
 	/* OS Init code */
 	/* Initialise IDLE Task */
-	cc_os_add_task(cc_os_idle_task,
+	cc_os_add_task(&cc_os_idle_task,
 		       CC_OS_IDLE_TASK_NAME,
 		       &_cc_os_idle_task_fn,
 		       &g_sched_ctrl,
