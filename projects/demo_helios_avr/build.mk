@@ -11,9 +11,9 @@
 
 PROJECT_DIR	:= $(GET_PATH)
 
-include $(PROJECT_DIR)/../demo_cc_os.src/build.mk
+include $(PROJECT_DIR)/../demo_helios.src/build.mk
 include $(PROJECT_DIR)/config.mk
-include $(PROJECT_DIR)/cc_os_config.mk
+include $(PROJECT_DIR)/helios_config.mk
 
 DIR		:= $(PROJECT_DIR)
 include mk/obj.mk
