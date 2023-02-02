@@ -12,7 +12,8 @@
  *	INCLUDES
  *****************************************************/
 #include <terravisor/helios/utils/helios_sched.h>
-#include <arch.h>
+#include <platform.h>
+#include <syslog.h>
 
 /*****************************************************
  *	DEFINES
@@ -20,6 +21,9 @@
 #define CC_SCHED_ALGO(_id, _fn) {	\
 	.helios_selected_algo = _id,	\
 	.algo_function = _fn}
+
+#define HELIOS_LINK_WAIT		true
+#define HELIOS_LINK_READY		false
 
 /*****************************************************
  *	STATIC FUNCTION DECLARATION
@@ -40,8 +44,8 @@ helios_sched_tcb_t * g_helios_tcb_list	= HELIOS_NULL_PTR;
 
 helios_sched_t g_helios_sched_list [] =
 {
-	CC_SCHED_ALGO(helios_sched_algo_round_robin, 	__helios_sched_algo_round_robin_fn),
-	CC_SCHED_ALGO(helios_sched_algo_priority_driven, 	__helios_sched_algo_priority_driven_fn),
+	CC_SCHED_ALGO(helios_sched_algo_round_robin, __helios_sched_algo_round_robin_fn),
+	CC_SCHED_ALGO(helios_sched_algo_priority_driven, __helios_sched_algo_priority_driven_fn),
 };
 
 helios_sched_ctrl_t g_sched_ctrl =
@@ -60,20 +64,19 @@ helios_sched_ctrl_t g_sched_ctrl =
 /*****************************************************
  *	INTERNAL USED FUNCTIONS (NON-STATIC)
  *****************************************************/
-
 /**
  * @brief	Insert a node after a reference pointer
  *
  * @param	ptr[in_out]	Reference pointer address
  * @param	new_node[in]	Node to be inserted
- * @param 	link_type[in]	true -> Wait Link, false -> Ready link
+ * @param 	link_type[in]	HELIOS_LINK_READY / HELIOS_LINK_WAIT
  *
  * @return	None
 */
 status_t _helios_sched_insert_after(helios_sched_tcb_t ** ptr, helios_sched_tcb_t * new_node, uint8_t link_type)
 {
 	HELIOS_ASSERT_IF_FALSE(new_node != HELIOS_NULL_PTR);
-	if (link_type == true)
+	if (link_type == HELIOS_LINK_WAIT)
 	{
 		/* Wait Link */
 		if (*ptr == HELIOS_NULL_PTR)
@@ -115,14 +118,14 @@ status_t _helios_sched_insert_after(helios_sched_tcb_t ** ptr, helios_sched_tcb_
  *
  * @param	ptr[in_out]	Reference pointer address
  * @param	new_node[in]	Node to be inserted
- * @param 	link_type[in]	true -> Wait Link, false -> Ready link
+ * @param 	link_type[in]	HELIOS_LINK_READY / HELIOS_LINK_WAIT
  *
  * @return	None
 */
 status_t _helios_sched_insert_before(helios_sched_tcb_t ** ptr, helios_sched_tcb_t * new_node, uint8_t link_type)
 {
 	HELIOS_ASSERT_IF_FALSE(new_node != HELIOS_NULL_PTR);
-	if (link_type == true)
+	if (link_type == HELIOS_LINK_WAIT)
 	{
 		/* Wait Link */
 		if (*ptr == HELIOS_NULL_PTR)
@@ -158,6 +161,44 @@ status_t _helios_sched_insert_before(helios_sched_tcb_t ** ptr, helios_sched_tcb
 	}
 	return success;
 }
+
+/**
+ * @brief	A function to detach an existing node from a link
+ *
+ * @param	node_ptr[in_out]	Address of the node to be detached
+ * @param	link_type[in]		HELIOS_LINK_READY / HELIOS_LINK_WAIT
+ *
+ * @return	None
+ */
+status_t _helios_sched_node_detach(helios_sched_tcb_t *node_ptr, uint8_t link_type)
+{
+	HELIOS_ASSERT_IF_FALSE(node_ptr != HELIOS_NULL_PTR);
+
+	if (link_type == HELIOS_LINK_WAIT)
+	{
+		/* Wait Link */
+		node_ptr->wait_link.prev->wait_link.next = node_ptr->wait_link.next;
+		node_ptr->wait_link.next->wait_link.prev = node_ptr->wait_link.prev;
+		node_ptr->wait_link.prev = node_ptr->wait_link.next = HELIOS_NULL_PTR;
+		if (node_ptr == g_sched_ctrl.wait_list_head)
+		{
+			g_sched_ctrl.wait_list_head = node_ptr->ready_link.next;
+		}
+	}
+	else
+	{
+		/* Ready Link */
+		node_ptr->ready_link.prev->ready_link.next = node_ptr->ready_link.next;
+		node_ptr->ready_link.next->ready_link.prev = node_ptr->ready_link.prev;
+		node_ptr->ready_link.prev = node_ptr->ready_link.next = HELIOS_NULL_PTR;
+
+		if (node_ptr == g_sched_ctrl.ready_list_head)
+		{
+			g_sched_ctrl.ready_list_head = node_ptr->ready_link.next;
+		}
+	}
+	return success;
+}
 /**
  * @brief	Send a task to wait state
  *
@@ -173,7 +214,7 @@ void _helios_sched_send_to_wait(helios_sched_ctrl_t * sched_ctrl, helios_sched_t
 	{
 		return;
 	}
-	if(_helios_sched_insert_before(&(sched_ctrl->wait_list_head), ptr, true) == success)
+	if(_helios_sched_insert_before(&(sched_ctrl->wait_list_head), ptr, HELIOS_LINK_WAIT) == success)
 	{
 		ptr->wait_res.task_delay_ticks = ticks;
 		ptr->task_status = helios_sched_task_status_wait;
@@ -194,7 +235,7 @@ void _helios_sched_send_to_pause(helios_sched_ctrl_t * sched_ctrl, helios_sched_
 	{
 		return;
 	}
-	if(_helios_sched_insert_before(&(sched_ctrl->wait_list_head), ptr, true) == success)
+	if(_helios_sched_insert_before(&(sched_ctrl->wait_list_head), ptr, HELIOS_LINK_WAIT) == success)
 	{
 		ptr->wait_res.task_delay_ticks = HELIOS_DELAY_MAX;
 		ptr->task_status = helios_sched_task_status_pause;
@@ -226,50 +267,9 @@ void _helios_sched_send_to_resume(helios_sched_ctrl_t * sched_ctrl, helios_sched
 			sched_ctrl->wait_list_head = HELIOS_NULL_PTR;
 		}
 	}
-	ptr->wait_link.prev->wait_link.next = ptr->wait_link.next;
-	ptr->wait_link.next->wait_link.prev = ptr->wait_link.prev;
-	ptr->wait_link.prev = HELIOS_NULL_PTR;
-	ptr->wait_link.next = HELIOS_NULL_PTR;
+	_helios_sched_node_detach(ptr, HELIOS_LINK_WAIT);
 	ptr->wait_res.task_delay_ticks = false;
 	ptr->task_status = helios_sched_task_status_ready;
-}
-
-/**
- * @brief	A function to detach an existing node from a link
- *
- * @param	node_ptr[in_out]	Address of the node to be detached
- * @param	link_type[in]	true -> Wait Link, false -> Ready link
- *
- * @return	None
-*/
-status_t _helios_sched_node_detach(helios_sched_tcb_t *node_ptr, uint8_t link_type)
-{
-	HELIOS_ASSERT_IF_FALSE(node_ptr == HELIOS_NULL_PTR);
-
-	if (link_type == true)
-	{
-		/* Wait Link */
-		node_ptr->wait_link.prev->wait_link.next = node_ptr->wait_link.next;
-		node_ptr->wait_link.next->wait_link.prev = node_ptr->wait_link.prev;
-		node_ptr->wait_link.prev = node_ptr->wait_link.next = HELIOS_NULL_PTR;
-		if (node_ptr == g_sched_ctrl.wait_list_head)
-		{
-			g_sched_ctrl.wait_list_head = node_ptr->ready_link.next;
-		}
-	}
-	else
-	{
-		/* Ready Link */
-		node_ptr->ready_link.prev->ready_link.next = node_ptr->ready_link.next;
-		node_ptr->ready_link.next->ready_link.prev = node_ptr->ready_link.prev;
-		node_ptr->ready_link.prev = node_ptr->ready_link.next = HELIOS_NULL_PTR;
-
-		if (node_ptr == g_sched_ctrl.ready_list_head)
-		{
-			g_sched_ctrl.ready_list_head = node_ptr->ready_link.next;
-		}
-	}
-	return success;
 }
 
 /**
@@ -279,15 +279,17 @@ status_t _helios_sched_node_detach(helios_sched_tcb_t *node_ptr, uint8_t link_ty
  *
  * @return	None
  */
-void _helios_sched_send_back_of_task_prio(helios_sched_tcb_t *node_ptr)
+status_t _helios_sched_send_back_of_task_prio(helios_sched_tcb_t *node_ptr)
 {
+	HELIOS_ASSERT_IF_FALSE(node_ptr != HELIOS_NULL_PTR);
+
 	helios_sched_tcb_t * ref_ptr = g_sched_ctrl.ready_list_head;
 	if(ref_ptr != HELIOS_NULL_PTR)
 	{
 		if (node_ptr == ref_ptr)
 		{
 			/* Very first node */
-			return;
+			return success;
 		}
 
 		bool least_prio = true;
@@ -313,7 +315,7 @@ void _helios_sched_send_back_of_task_prio(helios_sched_tcb_t *node_ptr)
 			 * New Node
 			 * Insert it behind the same priority
 			 */
-			_helios_sched_insert_before(&ref_ptr, node_ptr, false);
+			_helios_sched_insert_before(&ref_ptr, node_ptr, HELIOS_LINK_READY);
 		}
 		else
 		{
@@ -323,10 +325,11 @@ void _helios_sched_send_back_of_task_prio(helios_sched_tcb_t *node_ptr)
 			 * This would help to round robin over the same priority when
 			 * scheduling
 			 */
-			_helios_sched_node_detach(node_ptr, false);
-			_helios_sched_insert_before(&node_ptr, ref_ptr, false);
+			_helios_sched_node_detach(node_ptr, HELIOS_LINK_READY);
+			_helios_sched_insert_before(&node_ptr, ref_ptr, HELIOS_LINK_READY);
 		}
 	}
+	return success;
 }
 
 /**
@@ -360,7 +363,7 @@ void _helios_scheduler_despatch(void)
 	else
 	{
 		/* A System Error case */
-		arch_panic_handler();
+		HELIOS_SCHED_PANIC(error_os_panic_presched_cb_null);
 	}
 
 	if (g_sched_ctrl.selected_sched != NULL)
@@ -371,7 +374,7 @@ void _helios_scheduler_despatch(void)
 	else
 	{
 		/* A System Error case */
-		arch_panic_handler();
+		HELIOS_SCHED_PANIC(error_os_panic_sched_algo_null);
 	}
 
 }
@@ -419,6 +422,11 @@ static void __helios_sched_deadlock_adjustment_and_detection(const helios_sched_
 static void __helios_sched_wait_list_adjustment(helios_sched_ctrl_t * sched_ctrl)
 {
 	helios_sched_tcb_t * ptr = sched_ctrl->wait_list_head;
+	if (ptr == HELIOS_NULL_PTR)
+	{
+		return;
+	}
+
 	const int * wait_res = (int *)ptr->wait_res.wait_on_resource;
 	while(ptr != HELIOS_NULL_PTR)
 	{
