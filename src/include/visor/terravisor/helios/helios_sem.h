@@ -16,26 +16,25 @@
 /*****************************************************
  *	TYPEDEFS
  *****************************************************/
-typedef struct sem
+typedef struct helios_sem
 {
 	size_t	sem_val;
 	uint8_t	sem_init;
-}sem_t;
+}helios_sem_t;
 /*****************************************************
  *	USER MACROS
  *****************************************************/
 #define CC_SEM_INST(_Name)	_Name##_sem_inst
 
 #if HELIOS_DYNAMIC == false
-#define CC_SEM_DEF(_Name)	\
-static sem_t _Name##_sem = {	\
-	.sem_init = 0,		\
-	.sem_val = 0		\
-};				\
-sem_t * _Name##_sem_inst = &_Name##_sem
+#define CC_SEM_DEF(_Name)		\
+static helios_sem_t _Name##_sem = {	\
+	.sem_init = 0,			\
+	.sem_val = 0			\
+};					\
+helios_sem_t * _Name##_sem_inst = &_Name##_sem
 #else
-#define CC_SEM_DEF(_Name)	\
-sem_t * _Name##_sem_inst = HELIOS_NULL_PTR
+#define CC_SEM_DEF(_Name)		helios_sem_t * _Name##_sem_inst = HELIOS_NULL_PTR
 #endif
 /*****************************************************
  *	USER FUNCTION DECLARATIONS
@@ -49,7 +48,7 @@ sem_t * _Name##_sem_inst = HELIOS_NULL_PTR
  *
  * @return status_t
  */
-status_t helios_sem_create	(sem_t ** sem_ptr, size_t init_val);
+status_t helios_sem_create	(helios_sem_t ** sem_ptr, size_t init_val);
 
 /**
  * @brief 	Delete a semaphore and de-initialise it
@@ -58,7 +57,7 @@ status_t helios_sem_create	(sem_t ** sem_ptr, size_t init_val);
  *
  * @return status_t
  */
-status_t helios_sem_delete 	(sem_t ** sem_ptr);
+status_t helios_sem_delete 	(helios_sem_t ** sem_ptr);
 
 /**
  * @brief 	Decrement a semaphore value
@@ -67,7 +66,7 @@ status_t helios_sem_delete 	(sem_t ** sem_ptr);
  *
  * @return status_t
  */
-status_t helios_sem_give 	(sem_t * sem_ptr);
+status_t helios_sem_give 	(helios_sem_t * sem_ptr);
 
 /**
  * @brief 	Increment a semaphore value
@@ -77,7 +76,7 @@ status_t helios_sem_give 	(sem_t * sem_ptr);
  *
  * @return status_t
  */
-status_t helios_sem_take 	(sem_t * sem_ptr, size_t wait_ticks);
+status_t helios_sem_take 	(helios_sem_t * sem_ptr, size_t wait_ticks);
 
 /**
  * @brief 	Get current semaphore value
@@ -88,4 +87,4 @@ status_t helios_sem_take 	(sem_t * sem_ptr, size_t wait_ticks);
  * @return status_t
  */
 
-status_t helios_sem_get_val 	(const sem_t * sem_ptr, size_t * val);
+status_t helios_sem_get_val 	(const helios_sem_t * sem_ptr, size_t * val);
