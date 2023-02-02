@@ -27,7 +27,7 @@ void plug()
 	bootstrap();
 	driver_setup_all();
 
-	printf("Demo CC OS Program!\n");
+	syslog(info, "Demo HELIOS!\n");
 	helios_add_task(&Task_A, "Task A", &task_handler, NULL, 5, 255, (uintptr_t) NULL);
 	helios_add_task(&Task_B, "Task B", &task_handler, NULL, 10, 255, (uintptr_t) NULL);
 	helios_add_task(&Task_C, "Task C", &task_handler, NULL, 4, 255, (uintptr_t) NULL);
