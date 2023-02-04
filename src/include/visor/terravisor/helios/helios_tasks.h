@@ -55,6 +55,12 @@ status_t helios_add_task (
 	uintptr_t stack_ptr);
 
 /**
+ * @brief	Get the argument pointer set for the current task
+ *
+ * @return	Pointer to the argument as set;
+ */
+helios_args helios_get_args(void);
+/**
  * @brief A function to delete a task from the scheduler by instance
  *
  * @param helios_task[in]	pointer to the TASK_instance;

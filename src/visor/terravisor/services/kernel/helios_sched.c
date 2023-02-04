@@ -124,7 +124,9 @@ status_t _helios_sched_insert_after(helios_sched_tcb_t ** ptr, helios_sched_tcb_
 */
 status_t _helios_sched_insert_before(helios_sched_tcb_t ** ptr, helios_sched_tcb_t * new_node, uint8_t link_type)
 {
+	HELIOS_ASSERT_IF_FALSE(ptr != HELIOS_NULL_PTR);
 	HELIOS_ASSERT_IF_FALSE(new_node != HELIOS_NULL_PTR);
+
 	if (link_type == HELIOS_LINK_WAIT)
 	{
 		/* Wait Link */
@@ -177,25 +179,24 @@ status_t _helios_sched_node_detach(helios_sched_tcb_t *node_ptr, uint8_t link_ty
 	if (link_type == HELIOS_LINK_WAIT)
 	{
 		/* Wait Link */
-		node_ptr->wait_link.prev->wait_link.next = node_ptr->wait_link.next;
-		node_ptr->wait_link.next->wait_link.prev = node_ptr->wait_link.prev;
-		node_ptr->wait_link.prev = node_ptr->wait_link.next = HELIOS_NULL_PTR;
 		if (node_ptr == g_sched_ctrl.wait_list_head)
 		{
 			g_sched_ctrl.wait_list_head = node_ptr->ready_link.next;
 		}
+		node_ptr->wait_link.prev->wait_link.next = node_ptr->wait_link.next;
+		node_ptr->wait_link.next->wait_link.prev = node_ptr->wait_link.prev;
+		node_ptr->wait_link.prev = node_ptr->wait_link.next = HELIOS_NULL_PTR;
 	}
 	else
 	{
-		/* Ready Link */
-		node_ptr->ready_link.prev->ready_link.next = node_ptr->ready_link.next;
-		node_ptr->ready_link.next->ready_link.prev = node_ptr->ready_link.prev;
-		node_ptr->ready_link.prev = node_ptr->ready_link.next = HELIOS_NULL_PTR;
-
 		if (node_ptr == g_sched_ctrl.ready_list_head)
 		{
 			g_sched_ctrl.ready_list_head = node_ptr->ready_link.next;
 		}
+		/* Ready Link */
+		node_ptr->ready_link.prev->ready_link.next = node_ptr->ready_link.next;
+		node_ptr->ready_link.next->ready_link.prev = node_ptr->ready_link.prev;
+		node_ptr->ready_link.prev = node_ptr->ready_link.next = HELIOS_NULL_PTR;
 	}
 	return success;
 }
@@ -326,7 +327,7 @@ status_t _helios_sched_send_back_of_task_prio(helios_sched_tcb_t *node_ptr)
 			 * scheduling
 			 */
 			_helios_sched_node_detach(node_ptr, HELIOS_LINK_READY);
-			_helios_sched_insert_before(&node_ptr, ref_ptr, HELIOS_LINK_READY);
+			_helios_sched_insert_before(&ref_ptr, node_ptr, HELIOS_LINK_READY);
 		}
 	}
 	return success;
