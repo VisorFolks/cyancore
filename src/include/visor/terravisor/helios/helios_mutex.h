@@ -20,7 +20,7 @@ typedef struct helios_mutex
 {
 	size_t	mutex_val;
 	uint8_t	mutex_init;
-	helios_sched_ctrl_t * lock_task;
+	helios_sched_tcb_t * lock_task;
 } helios_mutex_t;
 /*****************************************************
  *	USER MACROS
@@ -46,7 +46,6 @@ helios_mutex_t * _Name##_mutex_inst = &_Name##_mutex
  * @note	The instance needs to be provided using CC_MUTEX_DEF macro
  *
  * @param mutex_ptr[in_out]	Instance pointer
- * @param init_val[in]		Initial value
  *
  * @return status_t
  */
