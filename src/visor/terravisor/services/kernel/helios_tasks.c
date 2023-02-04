@@ -36,7 +36,7 @@ extern void _helios_scheduler_despatch(void);
 /*****************************************************
  *	GLOBAL EXTERNS VARIABLES
  *****************************************************/
-extern void _helios_idle_task_fn(helios_args args);
+extern void _helios_idle_task_fn(void);
 extern helios_sched_t g_helios_sched_list[];
 extern helios_sched_ctrl_t g_sched_ctrl;
 
@@ -189,7 +189,7 @@ status_t helios_add_task(
 	ptr->name = name;
 	ptr->priority = priority;
 	ptr->task_func = task_func;
-	ptr->args_ptr = (uintptr_t)args;
+	ptr->args_ptr = args;
 #if HELIOS_ANTI_DEADLOCK
 	ptr->task_wd_ticks = SIZE_MAX;
 #endif /* HELIOS_ANTI_DEADLOCK */
@@ -204,6 +204,11 @@ status_t helios_add_task(
 	*helios_task = ptr->task_id;
 	helios_resume_all_task();
 	return success;
+}
+
+helios_args helios_get_args(void)
+{
+	return g_sched_ctrl.curr_task->args_ptr;
 }
 
 status_t helios_del_task(helios_task_t helios_task)
@@ -451,7 +456,7 @@ void helios_run(void)
 	helios_add_task(&helios_idle_task,
 		       HELIOS_IDLE_TASK_NAME,
 		       &_helios_idle_task_fn,
-		       &g_sched_ctrl,
+		       (helios_args)&g_sched_ctrl,
 		       HELIOS_IDLE_TASK_PRIORITY,
 		       HELIOS_IDLE_TASK_STACK_LEN,
 		       (uintptr_t)_helios_stack);

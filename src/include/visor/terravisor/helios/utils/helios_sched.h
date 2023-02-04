@@ -45,7 +45,7 @@
 
 #define HELIOS_SCHED_PANIC(err)					\
 	do{							\
-		syslog(fail, "[HELIOS EXC]: %s", #err);		\
+		syslog(fail, "[HELIOS EXC]: %s\n", #err);		\
 		plat_panic_handler();				\
 	} while (false)
 /*****************************************************
@@ -54,8 +54,8 @@
 typedef struct helios_sched_tcb helios_sched_tcb_t;
 typedef struct helios_sched helios_sched_t;
 typedef const char c_char;
-typedef void * helios_args;
-typedef void (*task_fn_t)(helios_args args);
+typedef uintptr_t helios_args;
+typedef void (*task_fn_t)(void);
 typedef void (*helios_cb_hook_t)(helios_args args);
 typedef enum
 {
