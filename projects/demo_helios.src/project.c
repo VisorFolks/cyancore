@@ -15,7 +15,7 @@
 
 #define TASK_WAIT_TICKS		10
 
-void task_handler(helios_args args);
+void task_handler(void);
 
 static helios_task_t Task_A;
 static helios_task_t Task_B;
@@ -28,9 +28,9 @@ void plug()
 	driver_setup_all();
 
 	syslog(info, "Demo HELIOS!\n");
-	helios_add_task(&Task_A, "Task A", &task_handler, NULL, 5, 255, (uintptr_t) NULL);
-	helios_add_task(&Task_B, "Task B", &task_handler, NULL, 10, 255, (uintptr_t) NULL);
-	helios_add_task(&Task_C, "Task C", &task_handler, NULL, 4, 255, (uintptr_t) NULL);
+	helios_add_task(&Task_A, "Task A", &task_handler, (helios_args)NULL, 5, 255, (uintptr_t) NULL);
+	helios_add_task(&Task_B, "Task B", &task_handler, (helios_args)NULL, 7, 255, (uintptr_t) NULL);
+	helios_add_task(&Task_C, "Task C", &task_handler, (helios_args)NULL, 4, 255, (uintptr_t) NULL);
 	helios_run();
 }
 
@@ -42,7 +42,7 @@ void play()
 }
 
 /* Define the Task Handler */
-void task_handler(helios_args args _UNUSED)
+void task_handler(void)
 {
 	while(true)
 	{
