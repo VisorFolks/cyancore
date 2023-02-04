@@ -16,25 +16,46 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <status.h>
+#include <syslog.h>
+#include <platform.h>
 
 /*****************************************************
  *	DEFINES
  *****************************************************/
 #define HELIOS_NULL_PTR			NULL
-#define HELIOS_DELAY_MAX			SIZE_MAX
+#define HELIOS_DELAY_MAX		SIZE_MAX
 
 #define	HELIOS_DYNAMIC 			HELIOS_USE_DYNAMIC
 
-#define HELIOS_ASSERT_IF_FALSE(con)	RET_ON_FAIL(con, error_func_inval_arg)
+#ifdef HELIOS_DEBUG
+#define HELIOS_ERR(fmt, ...)		sysdbg2("[HELIOS ERR]: "fmt"\n", ##__VA_ARGS__)
+#define HELIOS_DBG(fmt, ...)		sysdbg3("[HELIOS DBG]: "fmt"\n", ##__VA_ARGS__)
+#else
+#define HELIOS_ERR(fmt,...)
+#define HELIOS_DBG(fmt,...)
+#endif  /* HELIOS_DEBUG */
 
+#define HELIOS_ASSERT_IF_FALSE(con)					\
+	do{								\
+		if(!(con)){						\
+			HELIOS_ERR("(%s) : Invalid ARG\n", __func__);	\
+			return error_func_inval_arg;			\
+		}							\
+	} while (false)
+
+#define HELIOS_SCHED_PANIC(err)					\
+	do{							\
+		syslog(fail, "[HELIOS EXC]: %s\n", #err);		\
+		plat_panic_handler();				\
+	} while (false)
 /*****************************************************
  *	TYPEDEFS
  *****************************************************/
 typedef struct helios_sched_tcb helios_sched_tcb_t;
 typedef struct helios_sched helios_sched_t;
 typedef const char c_char;
-typedef void * helios_args;
-typedef void (*task_fn_t)(helios_args args);
+typedef uintptr_t helios_args;
+typedef void (*task_fn_t)(void);
 typedef void (*helios_cb_hook_t)(helios_args args);
 typedef enum
 {
@@ -51,10 +72,10 @@ typedef enum
  */
 typedef enum
 {
-	helios_sched_cb_power_pre_sleep	= 0x00,
+	helios_sched_cb_power_pre_sleep		= 0x00,
 	helios_sched_cb_power_post_sleep	= 0x01,
 	helios_sched_cb_power_sleep		= 0x02,
-	helios_sched_cb_deadlock_notify	= 0x03,
+	helios_sched_cb_deadlock_notify		= 0x03,
 	helios_sched_cb_max			= 0xff
 }helios_sched_cb_t;
 
@@ -111,7 +132,7 @@ typedef struct helios_sched_ctrl
 	helios_sched_tcb_t 	* ready_list_head;
 	helios_sched_tcb_t 	* curr_task;
 	helios_sched_tcb_t 	* wait_list_head;
-	helios_sched_t 	* selected_sched;
+	helios_sched_t 		* selected_sched;
 	helios_sched_func_cb_t cb_hooks_reg;
 }helios_sched_ctrl_t;
 
@@ -122,15 +143,15 @@ typedef void (* algo_fn)(helios_sched_ctrl_t * sched_ctrl);
 
 typedef enum
 {
-	helios_sched_algo_round_robin	= 0x00,			///> Round Robin scheduling algorithm
+	helios_sched_algo_round_robin		= 0x00,			///> Round Robin scheduling algorithm
 	helios_sched_algo_priority_driven	= 0x01,			///> Priority driven Scheduling
-	helios_sched_algo_max		= 0xff
+	helios_sched_algo_max			= 0xff
 }helios_sched_algo_t;
 
 typedef struct helios_sched
 {
 	helios_sched_algo_t helios_selected_algo;			///> Selected Algorithm ID
-	algo_fn algo_function;					///> Pointer to algorithm function
+	algo_fn algo_function;						///> Pointer to algorithm function
 }helios_sched_t;
 
 typedef struct helios_sched_anti_deadlock

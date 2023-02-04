@@ -31,12 +31,12 @@ extern void _helios_sched_send_to_wait(helios_sched_ctrl_t *sched_ctrl, helios_s
 extern void _helios_sched_send_to_pause(helios_sched_ctrl_t * sched_ctrl, helios_sched_tcb_t * ptr);
 extern void _helios_sched_send_to_resume(helios_sched_ctrl_t *sched_ctrl, helios_sched_tcb_t *ptr);
 extern void _helios_sched_send_back_of_task_prio(helios_sched_tcb_t *node_ptr);
-extern void _helios_scheduler_despatch(void);
 extern void _helios_pre_sched(helios_args args);
+extern void _helios_scheduler_despatch(void);
 /*****************************************************
  *	GLOBAL EXTERNS VARIABLES
  *****************************************************/
-extern void _helios_idle_task_fn(helios_args args);
+extern void _helios_idle_task_fn(void);
 extern helios_sched_t g_helios_sched_list[];
 extern helios_sched_ctrl_t g_sched_ctrl;
 
@@ -65,6 +65,7 @@ static uint16_t __helios_task_id_gen = false;
 static void __helios_init_scheduler(void)
 {
 	g_sched_ctrl.cb_hooks_reg.pre_sched = &_helios_pre_sched;
+	g_sched_ctrl.curr_task = g_sched_ctrl.ready_list_head;
 	return;
 }
 
@@ -169,10 +170,11 @@ status_t helios_add_task(
 	ptr = (helios_sched_tcb_t *)helios_malloc(sizeof(helios_sched_tcb_t));
 	if (ptr != HELIOS_NULL_PTR)
 	{
-		ptr->stack_ptr = (uintptr_t)malloc(stack_len);
+		ptr->stack_ptr = (uintptr_t)helios_malloc(stack_len);
 		if (ptr->stack_ptr == (uintptr_t)HELIOS_NULL_PTR)
 		{
 			helios_resume_all_task();
+			HELIOS_ERR("Memory Low for STACK Pointer");
 			return error_memory_low;
 		}
 #endif /* HELIOS_DYNAMIC */
@@ -180,13 +182,14 @@ status_t helios_add_task(
 	else
 	{
 		helios_resume_all_task();
+		HELIOS_ERR("Memory Low for Task Creation");
 		return error_memory_low;
 	}
 	/* Fill tcb details */
 	ptr->name = name;
 	ptr->priority = priority;
 	ptr->task_func = task_func;
-	ptr->args_ptr = (uintptr_t)args;
+	ptr->args_ptr = args;
 #if HELIOS_ANTI_DEADLOCK
 	ptr->task_wd_ticks = SIZE_MAX;
 #endif /* HELIOS_ANTI_DEADLOCK */
@@ -203,6 +206,11 @@ status_t helios_add_task(
 	return success;
 }
 
+helios_args helios_get_args(void)
+{
+	return g_sched_ctrl.curr_task->args_ptr;
+}
+
 status_t helios_del_task(helios_task_t helios_task)
 {
 	helios_sched_tcb_t * ptr = __helios_get_tcb_using_task_id(helios_task);
@@ -216,6 +224,7 @@ status_t helios_del_task(helios_task_t helios_task)
 	if (ptr == g_sched_ctrl.ready_list_head)
 	{
 		/* IDLE Task can not be deleted */
+		HELIOS_ERR("Trying to delete IDLE TASK");
 		return error_os_invalid_op;
 	}
 	ptr->task_status = helios_sched_task_status_exit;
@@ -284,6 +293,7 @@ status_t helios_resume_all_task(void)
 	}
 	else
 	{
+		HELIOS_ERR("No Task added");
 		return error_os_invalid_op;
 	}
 
@@ -301,6 +311,7 @@ status_t helios_resume_task(helios_task_t helios_task)
 	}
 	else
 	{
+		HELIOS_ERR("Invalid call for non-paused task");
 		return error_os_invalid_op;
 	}
 	return success;
@@ -334,6 +345,7 @@ status_t helios_task_anti_deadlock_enable_and_feed(size_t task_wd_ticks _UNUSED)
 	{
 		__helios_set_task_flag(ptr, helios_task_flag_set_anti_deadlock, false);
 	}
+	HELIOS_ERR("Enable HELIOS_ANTI_DEADLOCK Flag in build");
 	return error_func_inval;
 #endif /* HELIOS_ANTI_DEADLOCK */
 }
@@ -351,6 +363,7 @@ status_t helios_task_anti_deadlock_disable(void)
 	ptr->task_wd_ticks = SIZE_MAX;
 	return success;
 #else
+	HELIOS_ERR("Enable HELIOS_ANTI_DEADLOCK Flag in build");
 	return error_func_inval;
 #endif /* HELIOS_ANTI_DEADLOCK */
 }
@@ -363,23 +376,40 @@ status_t helios_set_callback(const helios_sched_cb_t cb_type, const helios_cb_ho
 #if HELIOS_POWER_SAVE_EN
 		g_sched_ctrl.cb_hooks_reg.post_sleep_cb = cb_func;
 		break;
+#else
+		HELIOS_ERR("Enable HELIOS_POWER_SAVE_EN Flag in build");
+		ret = error_func_inval;
+		break;
 #endif
 	case helios_sched_cb_power_pre_sleep:
 #if HELIOS_POWER_SAVE_EN
 		g_sched_ctrl.cb_hooks_reg.pre_sleep_cb = cb_func;
+		break;
+#else
+		HELIOS_ERR("Enable HELIOS_POWER_SAVE_EN Flag in build");
+		ret = error_func_inval;
 		break;
 #endif
 	case helios_sched_cb_power_sleep:
 #if HELIOS_POWER_SAVE_EN
 		g_sched_ctrl.cb_hooks_reg.power_sleep = cb_func;
 		break;
+#else
+		HELIOS_ERR("Enable HELIOS_POWER_SAVE_EN Flag in build");
+		ret = error_func_inval;
+		break;
 #endif
 	case helios_sched_cb_deadlock_notify:
 #if HELIOS_ANTI_DEADLOCK
 		g_sched_ctrl.cb_hooks_reg.deadlock_notify = cb_func;
 		break;
+#else
+		HELIOS_ERR("Enable HELIOS_ANTI_DEADLOCK Flag in build");
+		ret = error_func_inval;
+		break;
 #endif
 	case helios_sched_cb_max:
+		HELIOS_ERR("Call for invalid callback registration");
 		ret = error_func_inval;
 		break;
 	}
@@ -426,14 +456,16 @@ void helios_run(void)
 	helios_add_task(&helios_idle_task,
 		       HELIOS_IDLE_TASK_NAME,
 		       &_helios_idle_task_fn,
-		       &g_sched_ctrl,
+		       (helios_args)&g_sched_ctrl,
 		       HELIOS_IDLE_TASK_PRIORITY,
 		       HELIOS_IDLE_TASK_STACK_LEN,
 		       (uintptr_t)_helios_stack);
 
 	/* Initialise scheduler */
 	__helios_init_scheduler();
+	HELIOS_DBG("Starting HELIOS");
 	helios_task_yield(); /* Yeild */
+	HELIOS_SCHED_PANIC(error_os_panic_os_start_fail);
 	while (true)
 	{
 		/* Code shall not reach here */

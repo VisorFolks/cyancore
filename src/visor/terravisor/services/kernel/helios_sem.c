@@ -29,15 +29,16 @@ extern helios_sched_ctrl_t g_sched_ctrl;
  *	USER FUNCTION DEFINATIONS
  *****************************************************/
 
-status_t helios_sem_create	(sem_t ** sem_ptr, size_t init_val)
+status_t helios_sem_create (helios_sem_t ** sem_ptr, size_t init_val)
 {
 #if HELIOS_DYNAMIC == false
 	HELIOS_ASSERT_IF_FALSE((*sem_ptr != HELIOS_NULL_PTR && (*sem_ptr)->sem_init == false));
 #else
 	HELIOS_ASSERT_IF_FALSE(*sem_ptr == HELIOS_NULL_PTR);
-	*sem_ptr = helios_malloc(sizeof(sem_t));
+	*sem_ptr = helios_malloc(sizeof(helios_sem_t));
 	if (*sem_ptr == HELIOS_NULL_PTR)
 	{
+		HELIOS_ERR("Memory low for sem create");
 		return error_memory_low;
 	}
 #endif
@@ -46,7 +47,7 @@ status_t helios_sem_create	(sem_t ** sem_ptr, size_t init_val)
 
 	return success;
 }
-status_t helios_sem_take 	(sem_t * sem_ptr, size_t wait_ticks)
+status_t helios_sem_take (helios_sem_t * sem_ptr, size_t wait_ticks)
 {
 	HELIOS_ASSERT_IF_FALSE((sem_ptr != HELIOS_NULL_PTR && sem_ptr->sem_init != false));
 
@@ -54,6 +55,7 @@ status_t helios_sem_take 	(sem_t * sem_ptr, size_t wait_ticks)
 	{
 		if (wait_ticks == false) 	/* ||_IS_ISR */
 		{
+			HELIOS_ERR("Semaphore already locked");
 			return error_os_sem_get;
 		}
 		else
@@ -67,7 +69,7 @@ status_t helios_sem_take 	(sem_t * sem_ptr, size_t wait_ticks)
 	}
 	return success;
 }
-status_t helios_sem_give (sem_t * sem_ptr)
+status_t helios_sem_give (helios_sem_t * sem_ptr)
 {
 	HELIOS_ASSERT_IF_FALSE((sem_ptr != HELIOS_NULL_PTR && sem_ptr->sem_init != false));
 
@@ -75,7 +77,7 @@ status_t helios_sem_give (sem_t * sem_ptr)
 
 	return success;
 }
-status_t helios_sem_delete (sem_t ** sem_ptr)
+status_t helios_sem_delete (helios_sem_t ** sem_ptr)
 {
 	HELIOS_ASSERT_IF_FALSE((*sem_ptr != HELIOS_NULL_PTR && (*sem_ptr)->sem_init != false));
 
@@ -87,7 +89,7 @@ status_t helios_sem_delete (sem_t ** sem_ptr)
 
 	return success;
 }
-status_t helios_sem_get_val 	(const sem_t * sem_ptr, size_t * val)
+status_t helios_sem_get_val (const helios_sem_t * sem_ptr, size_t * val)
 {
 	HELIOS_ASSERT_IF_FALSE((sem_ptr != HELIOS_NULL_PTR && sem_ptr->sem_init != false));
 	HELIOS_ASSERT_IF_FALSE(val != HELIOS_NULL_PTR);
