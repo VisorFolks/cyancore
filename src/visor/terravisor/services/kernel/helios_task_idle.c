@@ -53,10 +53,10 @@ static void __helios_power_save_callback(void)
 /*****************************************************
  *	USER FUNCTION DEFINATION
  *****************************************************/
-void _helios_idle_task_fn(helios_args args)
+void _helios_idle_task_fn(void)
 {
 	static helios_sched_tcb_t * ptr  = HELIOS_NULL_PTR;
-	helios_sched_ctrl_t * sched_ctrl = (helios_sched_ctrl_t *) args;
+	helios_sched_ctrl_t * sched_ctrl = (helios_sched_ctrl_t *) helios_get_args();
 	ptr = sched_ctrl->ready_list_head;
 #if HELIOS_POWER_SAVE_EN
 	if (sched_ctrl->cb_hooks_reg.sleep_cb == HELIOS_NULL_PTR)
