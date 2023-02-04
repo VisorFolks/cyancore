@@ -32,11 +32,11 @@ extern helios_sched_ctrl_t g_sched_ctrl;
 
 status_t helios_mutex_create	(helios_mutex_t ** mutex_ptr)
 {
-#if HELIOS_DYNAMIC == HELIOS_FALSE
-	HELIOS_ASSERT_IF_FALSE((*mutex_ptr != HELIOS_NULL_PTR && (*mutex_ptr)->mutex_init == HELIOS_FALSE));
+#if HELIOS_DYNAMIC == false
+	HELIOS_ASSERT_IF_FALSE((*mutex_ptr != HELIOS_NULL_PTR && (*mutex_ptr)->mutex_init == false));
 
 	(*mutex_ptr)->lock_task = g_sched_ctrl.curr_task;
-	(*mutex_ptr)->mutex_init = HELIOS_TRUE;
+	(*mutex_ptr)->mutex_init = true;
 	(*mutex_ptr)->mutex_val = init_val;
 #else
 	HELIOS_ASSERT_IF_FALSE(*mutex_ptr == HELIOS_NULL_PTR);
@@ -50,7 +50,7 @@ status_t helios_mutex_create	(helios_mutex_t ** mutex_ptr)
 	{
 		(*mutex_ptr)->lock_task = g_sched_ctrl.curr_task;
 		(*mutex_ptr)->mutex_val = init_val;
-		(*mutex_ptr)->mutex_init = HELIOS_TRUE;
+		(*mutex_ptr)->mutex_init = true;
 	}
 
 #endif
@@ -59,11 +59,11 @@ status_t helios_mutex_create	(helios_mutex_t ** mutex_ptr)
 
 status_t helios_mutex_lock 	(helios_mutex_t * mutex_ptr, size_t wait_ticks)
 {
-	HELIOS_ASSERT_IF_FALSE((mutex_ptr != HELIOS_NULL_PTR && mutex_ptr->mutex_init != HELIOS_FALSE));
+	HELIOS_ASSERT_IF_FALSE((mutex_ptr != HELIOS_NULL_PTR && mutex_ptr->mutex_init != false));
 
-	if (mutex_ptr->mutex_val == HELIOS_FALSE)
+	if (mutex_ptr->mutex_val == false)
 	{
-		if (wait_ticks == HELIOS_FALSE) 	/* ||_IS_ISR */
+		if (wait_ticks == false) 	/* ||_IS_ISR */
 		{
 			HELIOS_ERR("Mutex already locked");
 			return error_os_mutex_lock;
@@ -88,7 +88,7 @@ status_t helios_mutex_lock 	(helios_mutex_t * mutex_ptr, size_t wait_ticks)
 
 status_t helios_mutex_unlock (helios_mutex_t * mutex_ptr)
 {
-	HELIOS_ASSERT_IF_FALSE((mutex_ptr != HELIOS_NULL_PTR && mutex_ptr->mutex_init != HELIOS_FALSE));
+	HELIOS_ASSERT_IF_FALSE((mutex_ptr != HELIOS_NULL_PTR && mutex_ptr->mutex_init != false));
 
 	if (mutex_ptr->lock_task != g_sched_ctrl.curr_task) {
 		HELIOS_ERR("Mutex locked by another task");
@@ -102,11 +102,11 @@ status_t helios_mutex_unlock (helios_mutex_t * mutex_ptr)
 
 status_t helios_mutex_delete (helios_mutex_t ** mutex_ptr)
 {
-	HELIOS_ASSERT_IF_FALSE((*mutex_ptr != HELIOS_NULL_PTR && (*mutex_ptr)->mutex_init != HELIOS_FALSE));
+	HELIOS_ASSERT_IF_FALSE((*mutex_ptr != HELIOS_NULL_PTR && (*mutex_ptr)->mutex_init != false));
 
-	(*mutex_ptr)->mutex_init = HELIOS_FALSE;
+	(*mutex_ptr)->mutex_init = false;
 
-#if HELIOS_DYNAMIC == HELIOS_TRUE
+#if HELIOS_DYNAMIC == true
 	helios_free(*mutex_ptr);
 #endif
 
@@ -115,7 +115,7 @@ status_t helios_mutex_delete (helios_mutex_t ** mutex_ptr)
 
 status_t helios_mutex_get_val 	(const helios_mutex_t * mutex_ptr, size_t * val)
 {
-	HELIOS_ASSERT_IF_FALSE((mutex_ptr != HELIOS_NULL_PTR && mutex_ptr->mutex_init != HELIOS_FALSE));
+	HELIOS_ASSERT_IF_FALSE((mutex_ptr != HELIOS_NULL_PTR && mutex_ptr->mutex_init != false));
 	HELIOS_ASSERT_IF_FALSE(val != HELIOS_NULL_PTR);
 
 	*val = mutex_ptr->mutex_val;
