@@ -32,7 +32,8 @@ extern helios_sched_ctrl_t g_sched_ctrl;
 status_t helios_sem_create (helios_sem_t ** sem_ptr, size_t init_val)
 {
 #if HELIOS_DYNAMIC == false
-	HELIOS_ASSERT_IF_FALSE((*sem_ptr != HELIOS_NULL_PTR && (*sem_ptr)->sem_init == false));
+	HELIOS_ASSERT_IF_FALSE((*sem_ptr != HELIOS_NULL_PTR);
+	HELIOS_ASSERT_IF_FALSE((*sem_ptr)->sem_init == false);
 #else
 	HELIOS_ASSERT_IF_FALSE(*sem_ptr == HELIOS_NULL_PTR);
 	*sem_ptr = helios_malloc(sizeof(helios_sem_t));
@@ -49,7 +50,8 @@ status_t helios_sem_create (helios_sem_t ** sem_ptr, size_t init_val)
 }
 status_t helios_sem_take (helios_sem_t * sem_ptr, size_t wait_ticks)
 {
-	HELIOS_ASSERT_IF_FALSE((sem_ptr != HELIOS_NULL_PTR && sem_ptr->sem_init != false));
+	HELIOS_ASSERT_IF_FALSE(sem_ptr != HELIOS_NULL_PTR);
+	HELIOS_ASSERT_IF_FALSE(sem_ptr->sem_init != false);
 
 	if (sem_ptr->sem_val == false)
 	{
@@ -71,7 +73,8 @@ status_t helios_sem_take (helios_sem_t * sem_ptr, size_t wait_ticks)
 }
 status_t helios_sem_give (helios_sem_t * sem_ptr)
 {
-	HELIOS_ASSERT_IF_FALSE((sem_ptr != HELIOS_NULL_PTR && sem_ptr->sem_init != false));
+	HELIOS_ASSERT_IF_FALSE(sem_ptr != HELIOS_NULL_PTR);
+	HELIOS_ASSERT_IF_FALSE(sem_ptr->sem_init != false);
 
 	sem_ptr->sem_val++;
 
@@ -79,7 +82,8 @@ status_t helios_sem_give (helios_sem_t * sem_ptr)
 }
 status_t helios_sem_delete (helios_sem_t ** sem_ptr)
 {
-	HELIOS_ASSERT_IF_FALSE((*sem_ptr != HELIOS_NULL_PTR && (*sem_ptr)->sem_init != false));
+	HELIOS_ASSERT_IF_FALSE(sem_ptr != HELIOS_NULL_PTR);
+	HELIOS_ASSERT_IF_FALSE(sem_ptr->sem_init != false);
 
 	(*sem_ptr)->sem_init = false;
 
@@ -91,7 +95,8 @@ status_t helios_sem_delete (helios_sem_t ** sem_ptr)
 }
 status_t helios_sem_get_val (const helios_sem_t * sem_ptr, size_t * val)
 {
-	HELIOS_ASSERT_IF_FALSE((sem_ptr != HELIOS_NULL_PTR && sem_ptr->sem_init != false));
+	HELIOS_ASSERT_IF_FALSE(sem_ptr != HELIOS_NULL_PTR);
+	HELIOS_ASSERT_IF_FALSE(sem_ptr->sem_init != false);
 	HELIOS_ASSERT_IF_FALSE(val != HELIOS_NULL_PTR);
 
 	*val = sem_ptr->sem_val;
