@@ -28,12 +28,12 @@ typedef struct helios_mutex
 #define CC_MUTEX_INST(_Name)	_Name##_mutex_inst
 
 #if HELIOS_DYNAMIC == HELIOS_FALSE
-#define CC_MUTEX_DEF(_Name)	\
+#define CC_MUTEX_DEF(_Name)		\
 static helios_mutex_t _Name##_mutex = {	\
 	.mutex_init = 0,		\
-	.mutex_val = 0,		\
+	.mutex_val = 0,			\
 	.lock_task = HELIOS_NULL_PTR	\
-};				\
+};					\
 helios_mutex_t * _Name##_mutex_inst = &_Name##_mutex
 #else
 #define CC_MUTEX_DEF(_Name)	helios_mutex_t * _Name##_mutex_inst = HELIOS_NULL_PTR
