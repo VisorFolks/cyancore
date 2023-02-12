@@ -36,6 +36,7 @@ status_t helios_mutex_create	(helios_mutex_t ** mutex_ptr)
 	HELIOS_ASSERT_IF_FALSE(*mutex_ptr != HELIOS_NULL_PTR);
 	HELIOS_ASSERT_IF_FALSE((*mutex_ptr)->mutex_init == false);
 
+	/* Initialize values of the mutex struct */
 	(*mutex_ptr)->lock_task = g_sched_ctrl.curr_task;
 	(*mutex_ptr)->mutex_init = true;
 	(*mutex_ptr)->mutex_val = init_val;
@@ -49,6 +50,7 @@ status_t helios_mutex_create	(helios_mutex_t ** mutex_ptr)
 	}
 	else
 	{
+		/* Initialize values of the mutex struct */
 		(*mutex_ptr)->lock_task = g_sched_ctrl.curr_task;
 		(*mutex_ptr)->mutex_val = init_val;
 		(*mutex_ptr)->mutex_init = true;
@@ -74,19 +76,22 @@ status_t helios_mutex_lock 	(helios_mutex_t * mutex_ptr, size_t wait_ticks)
 		}
 		else
 		{
+			/* If not locked, check if another task has acquired the resource. */
 			if (mutex_ptr->lock_task != g_sched_ctrl.curr_task) {
 				g_sched_ctrl.curr_task->wait_res.wait_on_resource = (uintptr_t) mutex_ptr;
 				helios_task_wait(wait_ticks);
 			}
 			else {
+				/* If current task requests for lock again, allow locking recursively. */
 				lock_flag = true;
 			}
 		}
 	}
 	else
 	{
+		/* If no mutex acquired yet, only let the current task acquire lock. */
 		if (mutex_ptr->lock_task != g_sched_ctrl.curr_task) {
-			HELIOS_ERR("Mutex locked by another task");
+			HELIOS_ERR("Mutex initialized by another task");
 			return error_os_mutex_lock;
 		}
 		else {
@@ -95,6 +100,7 @@ status_t helios_mutex_lock 	(helios_mutex_t * mutex_ptr, size_t wait_ticks)
 	}
 
 	if (lock_flag) {
+		/* Decrement and lock the mutex */
 		mutex_ptr->mutex_val--;
 	}
 	return success;
@@ -110,6 +116,7 @@ status_t helios_mutex_unlock (helios_mutex_t * mutex_ptr)
 		return error_os_mutex_unlock;
 	}
 	else {
+		/* Unlock mutex only if current task requests it. */
 		mutex_ptr->mutex_val++;
 	}
 	return success;
