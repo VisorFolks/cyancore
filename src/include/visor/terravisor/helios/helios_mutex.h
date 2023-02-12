@@ -18,7 +18,7 @@
  *****************************************************/
 typedef struct helios_mutex
 {
-	size_t	mutex_val;
+	int mutex_val;
 	uint8_t	mutex_init;
 	helios_sched_tcb_t * lock_task;
 } helios_mutex_t;
@@ -43,7 +43,7 @@ helios_mutex_t * _Name##_mutex_inst = &_Name##_mutex
  *****************************************************/
 /**
  * @brief 	Create a mutex
- * @note	The instance needs to be provided using CC_MUTEX_DEF macro
+ * @note	The instance needs to be provided using CC_MUTEX_DEF macro. Initialize the mutex struct with current task and initial value. Return error in case memory is low.
  *
  * @param mutex_ptr[in_out]	Instance pointer
  *
@@ -53,6 +53,7 @@ status_t helios_mutex_create	(helios_mutex_t ** mutex_ptr);
 
 /**
  * @brief 	Delete a mutex and de-initialise it
+ * @note	Free the mutex struct and clear the mutex_init to de-initialize the mutex.
  *
  * @param mutex_ptr[in_out]	Instance pointer
  *
@@ -62,6 +63,7 @@ status_t helios_mutex_delete 	(helios_mutex_t ** mutex_ptr);
 
 /**
  * @brief 	Unlock the mutex
+ * @note	Increment the mutex_val to unlock. Unlock only if called by the current task. If any other task tries to unlock the mutex, return an error.
  *
  * @param mutex_ptr[in]		Instance pointer
  *
@@ -71,6 +73,7 @@ status_t helios_mutex_unlock 	(helios_mutex_t * mutex_ptr);
 
 /**
  * @brief 	Lock a mutex
+ * @note	Decrement the mutex_val to lock. If resource already taken by another task, wait for wait_ticks until free. Allow recursive mutex if same task requires the mutex again.
  *
  * @param mutex_ptr[in]		Instance pointer
  * @param wait_ticks[in]	Timeout Wait ticks
@@ -81,11 +84,11 @@ status_t helios_mutex_lock 	(helios_mutex_t * mutex_ptr, size_t wait_ticks);
 
 /**
  * @brief 	Get current mutex value
+ * @note	Read the status and retrieve the value of the current mutex_val.
  *
  * @param mutex_ptr[in]		Instance pointer
  * @param val[out]		Value return
  *
  * @return status_t
  */
-
-status_t helios_mutex_get_val 	(const helios_mutex_t * mutex_ptr, size_t * val);
+status_t helios_mutex_get_val 	(const helios_mutex_t * mutex_ptr, int * val);
