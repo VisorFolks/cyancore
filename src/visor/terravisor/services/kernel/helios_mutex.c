@@ -16,7 +16,7 @@
 /*****************************************************
  *	GLOBAL/STATIC VARIABLE DECLARATIONS
  *****************************************************/
-static const size_t init_val = 0;
+static const int init_val = 1;
 
 /*****************************************************
  *	GLOBAL EXTERNS
@@ -33,7 +33,8 @@ extern helios_sched_ctrl_t g_sched_ctrl;
 status_t helios_mutex_create	(helios_mutex_t ** mutex_ptr)
 {
 #if HELIOS_DYNAMIC == false
-	HELIOS_ASSERT_IF_FALSE((*mutex_ptr != HELIOS_NULL_PTR && (*mutex_ptr)->mutex_init == false));
+	HELIOS_ASSERT_IF_FALSE(*mutex_ptr != HELIOS_NULL_PTR);
+	HELIOS_ASSERT_IF_FALSE((*mutex_ptr)->mutex_init == false);
 
 	(*mutex_ptr)->lock_task = g_sched_ctrl.curr_task;
 	(*mutex_ptr)->mutex_init = true;
@@ -43,7 +44,7 @@ status_t helios_mutex_create	(helios_mutex_t ** mutex_ptr)
 	*mutex_ptr = helios_malloc(sizeof(helios_mutex_t));
 	if (*mutex_ptr == HELIOS_NULL_PTR)
 	{
-		HELIOS_ERR("Memory low for mutex create");
+		HELIOS_ERR("Memory low for mutex creation");
 		return error_memory_low;
 	}
 	else
@@ -59,9 +60,12 @@ status_t helios_mutex_create	(helios_mutex_t ** mutex_ptr)
 
 status_t helios_mutex_lock 	(helios_mutex_t * mutex_ptr, size_t wait_ticks)
 {
-	HELIOS_ASSERT_IF_FALSE((mutex_ptr != HELIOS_NULL_PTR && mutex_ptr->mutex_init != false));
+	HELIOS_ASSERT_IF_FALSE(mutex_ptr != HELIOS_NULL_PTR);
+	HELIOS_ASSERT_IF_FALSE(mutex_ptr->mutex_init != false);
 
-	if (mutex_ptr->mutex_val == false)
+	bool lock_flag = false;
+
+	if (mutex_ptr->mutex_val != init_val)
 	{
 		if (wait_ticks == false) 	/* ||_IS_ISR */
 		{
@@ -75,12 +79,22 @@ status_t helios_mutex_lock 	(helios_mutex_t * mutex_ptr, size_t wait_ticks)
 				helios_task_wait(wait_ticks);
 			}
 			else {
-				mutex_ptr->mutex_val--; /* TODO: Check signage in case of mutex recursion */
+				lock_flag = true;
 			}
 		}
 	}
 	else
 	{
+		if (mutex_ptr->lock_task != g_sched_ctrl.curr_task) {
+			HELIOS_ERR("Mutex locked by another task");
+			return error_os_mutex_lock;
+		}
+		else {
+			lock_flag = true;
+		}
+	}
+
+	if (lock_flag) {
 		mutex_ptr->mutex_val--;
 	}
 	return success;
@@ -88,7 +102,8 @@ status_t helios_mutex_lock 	(helios_mutex_t * mutex_ptr, size_t wait_ticks)
 
 status_t helios_mutex_unlock (helios_mutex_t * mutex_ptr)
 {
-	HELIOS_ASSERT_IF_FALSE((mutex_ptr != HELIOS_NULL_PTR && mutex_ptr->mutex_init != false));
+	HELIOS_ASSERT_IF_FALSE(mutex_ptr != HELIOS_NULL_PTR);
+	HELIOS_ASSERT_IF_FALSE(mutex_ptr->mutex_init != false);
 
 	if (mutex_ptr->lock_task != g_sched_ctrl.curr_task) {
 		HELIOS_ERR("Mutex locked by another task");
@@ -102,7 +117,8 @@ status_t helios_mutex_unlock (helios_mutex_t * mutex_ptr)
 
 status_t helios_mutex_delete (helios_mutex_t ** mutex_ptr)
 {
-	HELIOS_ASSERT_IF_FALSE((*mutex_ptr != HELIOS_NULL_PTR && (*mutex_ptr)->mutex_init != false));
+	HELIOS_ASSERT_IF_FALSE(*mutex_ptr != HELIOS_NULL_PTR);
+	HELIOS_ASSERT_IF_FALSE((*mutex_ptr)->mutex_init != false);
 
 	(*mutex_ptr)->mutex_init = false;
 
@@ -113,9 +129,10 @@ status_t helios_mutex_delete (helios_mutex_t ** mutex_ptr)
 	return success;
 }
 
-status_t helios_mutex_get_val 	(const helios_mutex_t * mutex_ptr, size_t * val)
+status_t helios_mutex_get_val 	(const helios_mutex_t * mutex_ptr, int * val)
 {
-	HELIOS_ASSERT_IF_FALSE((mutex_ptr != HELIOS_NULL_PTR && mutex_ptr->mutex_init != false));
+	HELIOS_ASSERT_IF_FALSE(mutex_ptr != HELIOS_NULL_PTR);
+	HELIOS_ASSERT_IF_FALSE(mutex_ptr->mutex_init != false);
 	HELIOS_ASSERT_IF_FALSE(val != HELIOS_NULL_PTR);
 
 	*val = mutex_ptr->mutex_val;
