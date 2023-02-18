@@ -25,10 +25,10 @@ Connect with us over VisorFolks discord server: < [**JOIN**](https://discord.gg/
 
 ### Supported Platforms
 
-| Atmel      | SiFive      | STMicro     | TI          | Raspberry Pi |
-| ---------- | ----------- | ----------- | ----------- | -------------|
-| ATMega328P | FE310-G002  | Coming soon | Coming soon | Coming soon  |
-| ATMega2560 |             |             |             |              |
+| Atmel      | SiFive        | STMicro     | TI          | Raspberry Pi |
+| ---------- | ------------- | ----------- | ----------- | -------------|
+| ATMega328P | FE310-G002    | Coming soon | Coming soon | Coming soon  |
+| ATMega2560 | QEMU SiFive-E |             |             |              |
 
 ### Programming Languages
 * asm/assembly

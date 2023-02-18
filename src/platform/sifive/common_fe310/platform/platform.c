@@ -75,12 +75,19 @@ void platform_setup()
 {
 	status_t ret = success;
 
+#if PRCI_CLK
 	driver_setup("sysclk_prci");
 	ret |= sysclk_reset();
+#endif
 
 	driver_setup("earlycon");
 	bootmsgs_enable();
+#ifdef BOOTLOADER
+	cyancore_insignia_lite();
+#else
 	cyancore_insignia();
+#endif
+
 #if PRINT_MEMORY_LAYOUT
 	platform_memory_layout();
 #endif
