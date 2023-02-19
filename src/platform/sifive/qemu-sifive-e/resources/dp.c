@@ -88,7 +88,7 @@ module_t aon0 =
 module_t timer_core0 =
 {
 	.id = timer | 0,
-	.clk = 32768,
+	.clk = 1e7,
 	.interrupt[0] = {int_local, 7, int_level},
 };
 
