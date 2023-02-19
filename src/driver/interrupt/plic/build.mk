@@ -11,8 +11,10 @@
 PLIC_PATH	:= $(GET_PATH)
 
 ifeq ($(ARCH), riscv)
+ifneq ($(N_PLAT_IRQS),0)
 
 DIR		:= $(PLIC_PATH)
 include mk/obj.mk
 
+endif
 endif
