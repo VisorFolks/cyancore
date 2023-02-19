@@ -58,7 +58,7 @@ stack_setup:
 1:	/* Start of for loop, assume mul is not supported */
 	beq	t0, a1, 1f
 	li	t1, STACK_SIZE_PCPU
-	add	a0, a0, t1
+	sub	a0, a0, t1
 	addi	t0, t0, 1
 	j	1b
 1:
