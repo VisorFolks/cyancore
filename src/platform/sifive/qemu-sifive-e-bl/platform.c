@@ -1,6 +1,6 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2022, Cyancore Team
+ * Copyrights (C) 2023, Cyancore Team
  *
  * File Name		: platform.c
  * Description		: This file contains sources for platform apis

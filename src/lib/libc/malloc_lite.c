@@ -64,7 +64,7 @@ static void merge()
 {
 	chunk_t *cur;
 	cur = freeList;
-	while(cur && cur->next != NULL)
+	while(cur && cur->next)
 	{
 		if(cur->free && cur->next->free)
 		{

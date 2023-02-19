@@ -1,6 +1,6 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2022, Cyancore Team
+ * Copyrights (C) 2023, Cyancore Team
  *
  * File Name		: project.c
  * Description		: This file consists of project srouces
@@ -15,7 +15,6 @@
 #include <driver.h>
 #include <interrupt.h>
 #include <platform.h>
-#include <time.h>
 
 void no_program(void);
 void plug()

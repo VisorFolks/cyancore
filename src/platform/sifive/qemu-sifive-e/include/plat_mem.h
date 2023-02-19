@@ -1,9 +1,9 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2023, Cyancore Team
  *
  * File Name		: plat_mem.h
- * Description		: This file contains memory config of fe310-g002
+ * Description		: This file contains memory config of sifive_e
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
  * Organisation		: Cyancore Core-Team
  */

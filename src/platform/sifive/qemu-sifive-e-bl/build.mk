@@ -1,10 +1,10 @@
 #
 # CYANCORE LICENSE
-# Copyrights (C) 2019, Cyancore Team
+# Copyrights (C) 2023, Cyancore Team
 #
 # File Name		: build.mk
 # Description		: This file accumulates the build scripts from 
-#			  all other directories that have HiFive 1 Rev B
+#			  all other directories that have sifive-e
 #			  board support sources
 # Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
 # Organisation		: Cyancore Core-Team

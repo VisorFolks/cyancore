@@ -1,6 +1,6 @@
 #
 # CYANCORE LICENSE
-# Copyrights (C) 2019, Cyancore Team
+# Copyrights (C) 2023, Cyancore Team
 #
 # File Name		: config.mk
 # Description		: This file defines configuration for HiFive 1B

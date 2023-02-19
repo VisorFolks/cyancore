@@ -1,6 +1,6 @@
 #
 # CYANCORE LICENSE
-# Copyrights (C) 2022, Cyancore Team
+# Copyrights (C) 2023, Cyancore Team
 #
 # File Name		: build.mk
 # Description		: This file build project sources and specifies
