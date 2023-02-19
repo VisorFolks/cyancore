@@ -10,19 +10,19 @@
 # Organisation		: Cyancore Core-Team
 #
 
-FE310G002_DIR	:= $(GET_PATH)
+QEMU_SIFIVE_E_BL_DIR	:= $(GET_PATH)
 
 ARCH		:= riscv
 BIT		:= 32
 ARCH_VARIANT	:= imac
 ARCH_ABI	:= ilp32
 TARGET_FLAGS	+= -march=rv32imac -mabi=$(ARCH_ABI)
-PLAT_INCLUDE	+= $(FE310G002_DIR)/include
+PLAT_INCLUDE	+= $(QEMU_SIFIVE_E_BL_DIR)/include
 OUTPUT_FORMAT	:= elf32-littleriscv
 
-include $(FE310G002_DIR)/config.mk
-include $(FE310G002_DIR)/../common_fe310/build.mk
-$(eval $(call check_and_include,USE_DEFAULT_RESOURCES,$(FE310G002_DIR)/resources/build.mk))
+include $(QEMU_SIFIVE_E_BL_DIR)/config.mk
+include $(QEMU_SIFIVE_E_BL_DIR)/../common_fe310/build.mk
+$(eval $(call check_and_include,USE_DEFAULT_RESOURCES,$(QEMU_SIFIVE_E_BL_DIR)/resources/build.mk))
 
-DIR		:= $(FE310G002_DIR)
+DIR		:= $(QEMU_SIFIVE_E_BL_DIR)
 include mk/obj.mk
