@@ -67,6 +67,7 @@ status_t helios_mutex_lock 	(helios_mutex_t * mutex_ptr, size_t wait_ticks)
 
 	if ((mutex_ptr->mutex_val != MUTEX_INIT_VAL) && (mutex_ptr->lock_task != HELIOS_NULL_PTR))
 	{
+		/* If mutex is not free and if the lock task is not NULL. */
 		if (wait_ticks == false) 	/* ||_IS_ISR */
 		{
 			HELIOS_ERR("Mutex already locked");
@@ -88,13 +89,12 @@ status_t helios_mutex_lock 	(helios_mutex_t * mutex_ptr, size_t wait_ticks)
 	}
 	else
 	{
-		/* Set locking task as current task and acquire lock. */
-		mutex_ptr->lock_task = g_sched_ctrl.curr_task;
 		lock_flag = true;
 	}
 
 	if (lock_flag) {
-		/* Decrement and lock the mutex */
+		/* Set locking task as current task and acquire lock. */
+		mutex_ptr->lock_task = g_sched_ctrl.curr_task;
 		mutex_ptr->mutex_val--;
 	}
 	return success;
