@@ -50,10 +50,9 @@ void delay(unsigned long d)
 		asm volatile("nop");
 }
 
+static unsigned char i = 0;
 EXPORT_C(void play())
 {
-	static unsigned int i = 0;
-
 	wdog_guard(WDT_64MS, true, NULL);
 
 	/* call the toggle member of led object */

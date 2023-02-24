@@ -73,20 +73,35 @@ static void platform_memory_layout()
 
 void platform_setup()
 {
+/*
 	status_t ret = success;
+*/
 
+#if PRCI_CLK
+	status_t ret = success;
 	driver_setup("sysclk_prci");
 	ret |= sysclk_reset();
+	/* This is a temporary change */
+	if(ret != success)
+		exit(EXIT_FAILURE);
+#endif
 
 	driver_setup("earlycon");
 	bootmsgs_enable();
+#ifdef BOOTLOADER
+	cyancore_insignia_lite();
+#else
 	cyancore_insignia();
+#endif
+
 #if PRINT_MEMORY_LAYOUT
 	platform_memory_layout();
 #endif
-
+/* Uncomment this and remove above check if more conditions
+ * are introduced.
 	if(ret != success)
 		exit(EXIT_FAILURE);
+*/
 	return;
 }
 

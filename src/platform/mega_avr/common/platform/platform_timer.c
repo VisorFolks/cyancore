@@ -187,7 +187,7 @@ static status_t plat_timer_setup()
 	tport->tmr_irq = (size_t) tm->interrupt[0].id;
 	tport->tmr_handler = plat_tmr_isr;
 
-	ret = timer_setup(tport, 2, PS);
+	ret |= timer_setup(tport, 2, PS);
 	if(ret)
 		goto cleanup_exit2;
 	plat_timer_set_period(1);

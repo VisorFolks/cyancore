@@ -147,7 +147,7 @@ static tvisor_timer_t *plat_timer_port;
  * plat_timer_setup - Timer driver setup function
  * To be exported to driver table.
  */
-static status_t plat_timer_setup(void)
+status_t plat_timer_setup(void)
 {
 	status_t ret = success;
 	const irqs_t *irq;
@@ -177,7 +177,7 @@ static status_t plat_timer_setup(void)
  * plat_timer_exit - Timer driver shutdown function
  * To be exported to driver table.
  */
-static status_t plat_timer_exit(void)
+status_t plat_timer_exit(void)
 {
 	const irqs_t *irq;
 	arch_di_mtime();
@@ -189,4 +189,6 @@ static status_t plat_timer_exit(void)
 	return timer_release_device();
 }
 
+#if USE_TIMER
 INCLUDE_DRIVER(plat_timer, plat_timer_setup, plat_timer_exit, 0, 1, 1);
+#endif

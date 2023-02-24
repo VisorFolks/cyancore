@@ -50,7 +50,7 @@ static void heap_unlock(void)
 
 static void split(chunk_t *fit_slot, size_t size)
 {
-	chunk_t *new = (void *)((void *) fit_slot + size + sizeof(chunk_t));
+	chunk_t *new = (chunk_t *)((size_t) fit_slot + size + sizeof(chunk_t));
 	new->size = fit_slot->size - size - sizeof(chunk_t);
 	new->free = 1;
 	new->next = fit_slot->next;
@@ -64,7 +64,7 @@ static void merge()
 {
 	chunk_t *cur;
 	cur = freeList;
-	while(cur->next != NULL)
+	while(cur && cur->next)
 	{
 		if(cur->free && cur->next->free)
 		{
@@ -83,9 +83,11 @@ static chunk_t *get_header(void *p)
 status_t platform_init_heap()
 {
 	heap_lock();
-	memset(&_heap_start, 0, (size_t)(&_heap_end - &_heap_start));
+	size_t sz = (size_t)&_heap_end;
+	sz -= (size_t)&_heap_start;
+	memset(&_heap_start, 0, sz);
 	freeList = (void *)&_heap_start;
-	freeList->size = (size_t)(&_heap_end - &_heap_start) - sizeof(chunk_t);
+	freeList->size = sz - sizeof(chunk_t);
 	freeList->free = 1;
 	freeList->next = NULL;
 	heap_unlock();

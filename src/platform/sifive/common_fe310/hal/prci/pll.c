@@ -88,7 +88,7 @@ static inline void pll_config_for_nearest_freq(unsigned int base, unsigned int c
 status_t _NOINLINE prci_pll_get_clk(sysclk_port_t *port, unsigned int *clk)
 {
 	pllc_t *config = &pllc[arch_core_index()];
-	unsigned int pllref, refr, vco, pllout, plldivd;
+	unsigned int pllref, refr, vco, pllout;
 	pllref = port->base_clk;
 	sysdbg5("PLL: pllref = %u\n", pllref);
 
@@ -108,7 +108,7 @@ status_t _NOINLINE prci_pll_get_clk(sysclk_port_t *port, unsigned int *clk)
 	if(config->diven)
 	{
 		sysdbg5("PLL: Output divider is enabled with div = %u\n", config->n);
-		plldivd = pllout / (2 * (config->n + 1));
+		unsigned int plldivd = pllout / (2 * (config->n + 1));
 		sysdbg5("PLL: plldivd = %u\n", plldivd);
 		*clk = plldivd;
 	}
@@ -120,7 +120,7 @@ static inline void prci_pll_wait_to_lock(sysclk_port_t *port)
 	uint64_t t = clint_read_time();
 	while((uint32_t)(clint_read_time() - t) < 10)
 		asm volatile("");
-	while(MMIO32(port->baddr + PLLCFG_OFFSET) & (1 << PLLLOCK))
+	while(MMIO32(port->baddr + PLLCFG_OFFSET) & (1U << PLLLOCK))
 		arch_dsb();
 }
 

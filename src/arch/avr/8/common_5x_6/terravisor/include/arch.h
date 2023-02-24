@@ -33,7 +33,7 @@ void arch_setup();
  */
 void arch_wfi();
 void arch_di_save_state(istate_t *);
-void arch_ei_restore_state(istate_t *);
+void arch_ei_restore_state(const istate_t *);
 
 /**
  * arch_panic_handler - Executes when arch error occurs

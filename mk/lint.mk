@@ -15,12 +15,10 @@
 
 LT		:= $(shell which cppcheck)
 
-LINT_FLAGS	+= --error-exitcode=1 --std=c11		\
-		   --enable=warning,style,performance	\
-		   --enable=portability,information	\
-		   --enable=missingInclude -q		\
+LINT_FLAGS	+= --error-exitcode=25 --std=c11 	\
 		   --max-ctu-depth=12 --max-configs=12	\
-		   --check-config
+		   --enable=all -q -v			\
+		   --suppress=unusedFunction
 
 --lint: $(DEP_SRCS)
 ifeq ($(LT),)

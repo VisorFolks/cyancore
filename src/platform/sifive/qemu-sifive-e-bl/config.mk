@@ -1,9 +1,9 @@
 #
 # CYANCORE LICENSE
-# Copyrights (C) 2019, Cyancore Team
+# Copyrights (C) 2023, Cyancore Team
 #
 # File Name		: config.mk
-# Description		: This file defines configuration for HiFive 1B
+# Description		: This file defines configuration for SiFive-e
 # Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
 # Organisation		: Cyancore Core-Team
 #
@@ -27,8 +27,8 @@ $(eval $(call add_define,BIT))
 BOOT_CORE_ID:= 0
 $(eval $(call add_define,BOOT_CORE_ID))
 
-FLASH_START	:= 0x20000000
-FLASH_SIZE	:= 0x10000	# 64K
+FLASH_START	:= 0x000001000
+FLASH_SIZE	:= 0x2000	# 8K
 RAM_START	:= 0x80000000
 RAM_SIZE	:= 0x4000	# 16K
 ITIM_START	:= 0x08000000
@@ -53,7 +53,7 @@ $(eval $(call add_define,N_EXCEP))
 N_IRQ		:= 12
 $(eval $(call add_define,N_IRQ))
 
-N_PLAT_IRQS	:= 52
+N_PLAT_IRQS	:= 0
 $(eval $(call add_define,N_PLAT_IRQS))
 
 MAX_INTERRUPTS_PER_DEVICE	:= 1
@@ -87,7 +87,7 @@ $(eval $(call add_define,ERRATA_CIP578))
 # PRCI Sysclk Configuration
 #======================================================================
 SYSCLK_ENABLE	:= 1
-PRCI_CLK	:= 1
+PRCI_CLK	:= 0
 $(eval $(call add_define,SYSCLK_ENABLE))
 $(eval $(call add_define,PRCI_CLK))
 #======================================================================
@@ -95,13 +95,7 @@ $(eval $(call add_define,PRCI_CLK))
 #======================================================================
 # Bootload Configuration
 #======================================================================
-$(eval $(call add_define,BOOTLOADER))
-
-#======================================================================
-# Bootloader
-# \ Timer: Sched timer/wall clock
-#======================================================================
 USE_TIMER	?= 0
 $(eval $(call add_define,USE_TIMER))
-#======================================================================
+$(eval $(call add_define,BOOTLOADER))
 #======================================================================

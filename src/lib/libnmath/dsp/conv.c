@@ -26,7 +26,8 @@
  * @size_c - size of output matrict c
  * #return - Returns function execution status
  */
-status_t conv(float *a, int size_a, float *b, int size_b, float *c, int size_c)
+status_t conv(const float *a, int size_a, const float *b,
+		int size_b, float *c, int size_c)
 {
 	/* As per linear convolution if the size of output 1D matrix
 	 * is not greater than or equal to 1 less than sum of sizes of

@@ -1,6 +1,6 @@
 #
 # CYANCORE LICENSE
-# Copyrights (C) 2019, Cyancore Team
+# Copyrights (C) 2023, Cyancore Team
 #
 # File Name		: build.mk
 # Description		: This file accumulates the build scripts from 
@@ -10,19 +10,16 @@
 # Organisation		: Cyancore Core-Team
 #
 
-FE310G002_BL_DIR	:= $(GET_PATH)
+QEMU_SIFIVE_E_DIR	:= $(GET_PATH)
 
 ARCH		:= riscv
 BIT		:= 32
 ARCH_VARIANT	:= imac
 ARCH_ABI	:= ilp32
 TARGET_FLAGS	+= -march=rv32imac -mabi=$(ARCH_ABI)
-PLAT_INCLUDE	+= $(FE310G002_BL_DIR)/include
+PLAT_INCLUDE	+= $(QEMU_SIFIVE_E_DIR)/include
 OUTPUT_FORMAT	:= elf32-littleriscv
 
-include $(FE310G002_BL_DIR)/config.mk
-include $(FE310G002_BL_DIR)/../common_fe310/build.mk
-$(eval $(call check_and_include,USE_DEFAULT_RESOURCES,$(FE310G002_BL_DIR)/resources/build.mk))
-
-DIR		:= $(FE310G002_BL_DIR)
-include mk/obj.mk
+include $(QEMU_SIFIVE_E_DIR)/config.mk
+include $(QEMU_SIFIVE_E_DIR)/../common_fe310/build.mk
+$(eval $(call check_and_include,USE_DEFAULT_RESOURCES,$(QEMU_SIFIVE_E_DIR)/resources/build.mk))

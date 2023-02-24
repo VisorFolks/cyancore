@@ -18,10 +18,9 @@
 
 typedef struct context_frame
 {
-	uint8_t r31, r30, r29, r28, r27, r26, r25, r23,
-		r22, r21, r20, r19, r18, r17, r16, r15,
-		r14, r13, r12, r11, r10, r9, r8, r7,
-		r6, r5, r4, r3, r2, sreg, r0, r1, r24;
+	uint8_t r31, r30, r27, r26, r25, r23,
+		r22, r21, r20, r19, r18,
+		sreg, r0, r1, r24;
 } context_frame_t;
 
 typedef uint16_t call_arg_t;

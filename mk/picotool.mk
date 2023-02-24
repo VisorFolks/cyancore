@@ -21,7 +21,7 @@ SILENT_LOGS	:= > cbuild.log 2> /dev/null
 endif
 
 P_TARGETS	+= elf2uf2
-T_ALLOWLIST	+= get_picotool pt_clean install_pt_dep
+T_ALLOWLIST	+= get_picotool clean_picotool install_pt_dep
 
 get_picotool: $(PICO_TOOL) $(ELF2UF2)
 
@@ -30,36 +30,46 @@ $(PICO_TOOL): $(PICO_TOOL_BUILD)
 	cp $(PICO_TOOL_PATH)/build/picotool $@
 
 $(PICO_TOOL_BUILD): $(PICO_SDK_PATH) $(PICO_TOOL_PATH)
-	@echo "Building picotool ..."
+	@echo "< ! > Building picotool ..."
 	cd $(PICO_TOOL_PATH) && mkdir -p build && \
 	cd build && export PICO_SDK_PATH=$(PICO_SDK_PATH) && \
 	cmake ../ $(SILENT_LOGS) \
 	&& make $(SILENT_LOGS)
+	@echo "< / > Done!"
 
 $(ELF2UF2): $(PICO_SDK_PATH)
-	@echo "Building elf2uf2 ..."
+	@echo "< ! > Building elf2uf2 ..."
 	mkdir -p $(MISC_TOOLS)/temp
 	cd $(MISC_TOOLS)/temp; \
 	cmake $(PICO_SDK_PATH)/tools/elf2uf2 2>/dev/null >/dev/null; \
 	make >/dev/null 2>/dev/null
 	cp $(MISC_TOOLS)/temp/elf2uf2 $@
 	rm -rf $(MISC_TOOLS)/temp
+	@echo "< ! > Cleaning up build space ..."
+	rm -rf $(PICO_SDK_PATH) $(PICO_TOOL_PATH)
+	@echo "< / > Done!"
 
 elf2uf2: $(ELF2UF2) elf
 	@echo "Generating $(notdir $(ELF:.elf=.uf2)) ..."
 	$(ELF2UF2) $(ELF) $(ELF:.elf=.uf2)
+	@echo "< / > Done!"
 
 $(PICO_SDK_PATH):
-	@echo "Fetching PICO SDK ..."
+	@echo "< ! > Fetching PICO SDK ..."
 	git clone $(PICO_SDK_GIT) --quiet $@
+	@echo "< / > Done!"
 
 $(PICO_TOOL_PATH):
-	@echo "Fetching PICO Tool ..."
+	@echo "< ! > Fetching PICO Tool ..."
 	git clone $(PICO_TOOL_GIT) --quiet $@
+	@echo "< / > Done!"
 
 install_pt_dep:
-	@echo "Installing Dependencies ..."
+	@echo "< ! > Installing Dependencies ..."
 	@sudo apt-get install build-essential pkg-config libusb-1.0-0-dev -y -qq > /dev/null
+	@echo "< / > Done!"
 
-pt_clean:
+clean_picotool:
+	@echo "< ! > Removing picotools ..."
 	rm -rf $(PICO_SDK_PATH) $(PICO_TOOL_PATH) $(PICO_TOOL) $(ELF2UF2)
+	@echo "< / > Done!"

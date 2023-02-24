@@ -1,6 +1,6 @@
 #
 # CYANCORE LICENSE
-# Copyrights (C) 2019, Cyancore Team
+# Copyrights (C) 2023, Cyancore Team
 #
 # File Name		: config.mk
 # Description		: This file defines configuration for HiFive 1B
@@ -28,12 +28,12 @@ BOOT_CORE_ID:= 0
 $(eval $(call add_define,BOOT_CORE_ID))
 
 FLASH_START	:= 0x20000000
-FLASH_SIZE	:= 0x10000	# 64K
+FLASH_SIZE	:= 0x20000000	# 4M
 RAM_START	:= 0x80000000
 RAM_SIZE	:= 0x4000	# 16K
 ITIM_START	:= 0x08000000
 ITIM_SIZE	:= 0x2000	# 8K
-HEAP_SIZE	?= 512
+HEAP_SIZE	?= 4K
 STACK_SIZE	?= 0xc00
 STACK_SIZE_PCPU	?= 0xc00
 
@@ -93,15 +93,8 @@ $(eval $(call add_define,PRCI_CLK))
 #======================================================================
 
 #======================================================================
-# Bootload Configuration
+# Timer: Sched timer/wall clock
 #======================================================================
-$(eval $(call add_define,BOOTLOADER))
-
-#======================================================================
-# Bootloader
-# \ Timer: Sched timer/wall clock
-#======================================================================
-USE_TIMER	?= 0
+USE_TIMER	?= 1
 $(eval $(call add_define,USE_TIMER))
-#======================================================================
 #======================================================================
