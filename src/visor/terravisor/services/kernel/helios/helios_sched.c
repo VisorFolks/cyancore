@@ -466,8 +466,6 @@ static void __helios_sched_algo_round_robin_fn(helios_sched_ctrl_t * sched_ctrl)
 	/* do waitlist adjustment */
 	helios_sched_tcb_t * ptr = sched_ctrl->curr_task->ready_link.next;
 
-	__cc_sched_wait_list_adjustment(sched_ctrl);
-
 	if (ptr == sched_ctrl->ready_list_head)
 	{
 		/* IDLE Task */

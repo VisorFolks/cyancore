@@ -449,7 +449,7 @@ void helios_task_yield()
 	return;
 }
 
-void helios_run(void)
+ _NORETURN void helios_run(void)
 {
 	/* OS Init code */
 	/* Initialise IDLE Task */
