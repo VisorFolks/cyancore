@@ -14,7 +14,7 @@
 #include <terravisor/helios/helios.h>
 
 /*****************************************************
- *	GLOBAL/STATIC VARIABLE DECLARATIONS
+ *	DEFINE
  *****************************************************/
 #define MUTEX_INIT_VAL 1
 
@@ -76,13 +76,15 @@ status_t helios_mutex_lock 	(helios_mutex_t * mutex_ptr, size_t wait_ticks)
 		else
 		{
 			/* If mutex is taken, lock_task must already hold info about the task. */
-			if (mutex_ptr->lock_task != g_sched_ctrl.curr_task) {
+			if (mutex_ptr->lock_task != g_sched_ctrl.curr_task)
+			{
 				/* If locking task is not current task, wait for mutex */
 				g_sched_ctrl.curr_task->wait_res.wait_on_resource = (uintptr_t) mutex_ptr;
 				helios_task_wait(wait_ticks);
 			}
-			else if (mutex_ptr->lock_task == g_sched_ctrl.curr_task) {
-				/* If locking task is current task, allow locking recursively */
+			else
+			{
+				/* If locking task is current task or HELIOS_NULL_PTR, allow locking recursively */
 				lock_flag = true;
 			}
 		}
@@ -92,7 +94,8 @@ status_t helios_mutex_lock 	(helios_mutex_t * mutex_ptr, size_t wait_ticks)
 		lock_flag = true;
 	}
 
-	if (lock_flag) {
+	if (lock_flag)
+	{
 		/* Set locking task as current task and acquire lock. */
 		mutex_ptr->lock_task = g_sched_ctrl.curr_task;
 		mutex_ptr->mutex_val--;
@@ -105,13 +108,21 @@ status_t helios_mutex_unlock (helios_mutex_t * mutex_ptr)
 	HELIOS_ASSERT_IF_FALSE(mutex_ptr != HELIOS_NULL_PTR);
 	HELIOS_ASSERT_IF_FALSE(mutex_ptr->mutex_init != false);
 
-	if (mutex_ptr->lock_task != g_sched_ctrl.curr_task) {
+	if (mutex_ptr->lock_task != g_sched_ctrl.curr_task)
+	{
 		HELIOS_ERR("Mutex locked by another task");
 		return error_os_mutex_unlock;
 	}
-	else {
+	else
+	{
 		/* Unlock mutex only if current task requests it. */
 		mutex_ptr->mutex_val++;
+		if (mutex_ptr->mutex_val == MUTEX_INIT_VAL)
+		{
+			/* When Unlocked set current task to NULL */
+			mutex_ptr->lock_task = HELIOS_NULL_PTR;
+		}
+
 	}
 	return success;
 }
