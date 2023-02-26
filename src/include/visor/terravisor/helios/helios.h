@@ -17,5 +17,6 @@
 #include <terravisor/helios/utils/helios_heap.h>
 #include <terravisor/helios/helios_tasks.h>
 #include <terravisor/helios/helios_sem.h>
+#include <terravisor/helios/helios_mutex.h>
 
 #endif	/* __HELIOS__ */

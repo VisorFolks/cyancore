@@ -45,7 +45,7 @@
 
 #define HELIOS_SCHED_PANIC(err)					\
 	do{							\
-		syslog(fail, "[HELIOS EXC]: %s\n", #err);		\
+		syslog(fail, "[HELIOS EXC]: %s\n", #err);	\
 		plat_panic_handler();				\
 	} while (false)
 /*****************************************************
