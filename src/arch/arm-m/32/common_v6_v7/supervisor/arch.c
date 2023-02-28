@@ -14,12 +14,11 @@
 #include <assert.h>
 #include <status.h>
 #include <syslog.h>
-#include <plat_arch.h>
 #include <mmio.h>
 #include <arch.h>
 #include <terravisor/workers.h>
 
-static void arch_mcall_handler()
+static void arch_ecall_handler()
 {
 	context_frame_t *frame = get_context_frame();
 	mret_t mres;
@@ -69,17 +68,6 @@ void arch_ei_restore_state(istate_t *sreg_i_backup)
 _WEAK unsigned int arch_core_index()
 {
 	return 0;
-}
-
-/**
- * arch_wfi - wait for interrupt
- *
- * @brief This function should be called when the program needs to
- * wait for interrupt. This also ensures low power consumption when compared to busy wait.
- */
-void arch_wfi()
-{
-	asm volatile("wfi");
 }
 
 void _NORETURN arch_panic_handler_callback()

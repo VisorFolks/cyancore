@@ -10,8 +10,9 @@
  */
 
 #include <status.h>
+#include <stdint.h>
 
-extern uint8_t _start_start;
+extern void _stack_start();
 extern void init(void);
 #define proto_irq_func(x)	extern void int_##x(void)
 proto_irq_func(1);
@@ -37,8 +38,8 @@ proto_irq_func(14);
  * deref based on irq id and call respective handler.
  */
 
-const void (*arch_vectors[N_IRQ+1](void)) _SECTION(".archvectors") =
-[
+void (*arch_vectors[N_IRQ+1])(void) _SECTION(".archvectors") =
+{
 	&_stack_start,		// Stack start value has higher address of stack
 				// with as assumption that stack grows towards
 				// lower address
@@ -58,4 +59,4 @@ const void (*arch_vectors[N_IRQ+1](void)) _SECTION(".archvectors") =
 	&int_12,		// IRQ 12 -> N/A 
 	&int_13,		// IRQ 13 -> PendSV
 	&int_14,		// IRQ 14 -> SysTick
-];
+};

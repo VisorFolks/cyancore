@@ -14,13 +14,12 @@ RP2040_DIR	:= $(GET_PATH)
 
 ARCH		:= arm-m
 BIT		:= 32
-ARCH_VARIANT	:= v6
-TARGET_FLAGS	+=
+ARCH_VARIANT	:= m0p
+TL_TYPE		:= thumb/v6-m
+TARGET_FLAGS	+= -mcpu=cortex-m0plus -mfloat-abi=softfp
 PLAT_INCLUDE	+= $(RP2040_DIR)/include
-OUTPUT_FORMAT	:=
+OUTPUT_FORMAT	:= elf32-littlearm
 
-#include $(RP2040_DIR)/config.mk
-#include $(RP2040_DIR)/arch/build.mk
-#include $(RP2040_DIR)/platform/build.mk
+include $(RP2040_DIR)/config.mk
 #include $(RP2040_DIR)/resources/build.mk
-#include $(RP2040_DIR)/../common_fe310/build.mk
+include $(RP2040_DIR)/../common_rp2/build.mk

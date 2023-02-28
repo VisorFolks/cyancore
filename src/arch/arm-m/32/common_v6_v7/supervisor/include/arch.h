@@ -12,10 +12,7 @@
 #pragma once
 #define _ARCH_H_
 
-#include <plat_arch.h>
 #include <arm.h>
-#include <mmio.h>
-#include <resource.h>
 #include <machine_call.h>
 
 /**
@@ -47,34 +44,17 @@ void arch_panic_handler();
 void arch_register_interrupt_handler(unsigned int, void(*)(void));
 
 /**
- * arch_core_index - Returns code index
- */
-static inline unsigned int arch_core_index()
-{
-	unsigned int id;
-	status_t status;
-	status = platform_sio_read(0x000 , &id);
-	if (status == success)
-		return id;
-	else
-		return 0;
-
-}
-
-unsigned int arch_core_index();
-
-/**
- * arch_machine_call - perform machine call
- * @brief This function performs environment call
+ * arch_super_call - perform machine call
+ * @brief This function performs svc call
  *
- * @param[in] code: machine call code
+ * @param[in] code: universal call code
  * @param[in] r0: first argument
  * @param[in] r1: second argument
  * @param[in] r2: third argument
  * @param[in] *ret: return struct
  */
-
-static inline void arch_machine_call(unsigned int code, unsigned int arg0, unsigned int arg1, unsigned int arg2, mret_t *ret)
+#define arch_machine_call	arch_super_call
+static inline void arch_super_call(unsigned int code, unsigned int arg0, unsigned int arg1, unsigned int arg2, mret_t *ret)
 {
 	if(ret == NULL)
 		return;
