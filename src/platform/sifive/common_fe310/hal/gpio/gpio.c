@@ -22,7 +22,7 @@
 
 status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 {
-	mret_t mres;
+	vret_t vres;
 	const gpio_module_t *dp;
 	unsigned char flag;
 
@@ -42,13 +42,13 @@ status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 
 	port->pin = pinID;
 	port->port = portID;
-	arch_machine_call(fetch_dp, gpio, portID, 0, &mres);
-	if(mres.status != success)
+	arch_visor_call(fetch_dp, gpio, portID, 0, &vres);
+	if(vres.status != success)
 	{
 		sysdbg("GPIO Port %d not found in DP\n", portID);
-		return mres.status;
+		return vres.status;
 	}
-	dp = (gpio_module_t *)mres.p;
+	dp = (gpio_module_t *)vres.p;
 	port->pbaddr = dp->baddr;
 	sysdbg("GPIO engine @ %p\n", dp->baddr);
 	sysdbg("Using GPIO Pin %d on Port %d\n", port->pin, port->port);

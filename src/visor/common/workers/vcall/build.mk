@@ -1,6 +1,6 @@
 #
 # CYANCORE LICENSE
-# Copyrights (C) 2019, Cyancore Team
+# Copyrights (C) 2023, Cyancore Team
 #
 # File Name		: build.mk
 # Description		: This file builds worker sources
@@ -8,8 +8,8 @@
 # Organisation		: Cyancore Core-Team
 #
 
-MCALL_DIR	:= $(GET_PATH)
+VCALL_DIR	:= $(GET_PATH)
 
-DIR		:= $(MCALL_DIR)
+DIR		:= $(VCALL_DIR)
 
 include mk/obj.mk

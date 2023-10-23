@@ -16,16 +16,16 @@
 #include <syslog.h>
 #include <mmio.h>
 #include <arch.h>
-#include <terravisor/workers.h>
+#include <visor/workers.h>
 
 static void arch_ecall_handler()
 {
 	context_frame_t *frame = get_context_frame();
-	mret_t mres;
-	machine_call(frame->r0, frame->r1, frame->r3, &mres);
-	frame->r0 = mres.p;
-	frame->r1 = mres.size;
-	frame->r2 = mres.status;
+	vret_t vres;
+	machine_call(frame->r0, frame->r1, frame->r3, &vres);
+	frame->r0 = vres.p;
+	frame->r1 = vres.size;
+	frame->r2 = vres.status;
 	return;
 }
 

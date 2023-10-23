@@ -14,7 +14,7 @@
 #include <status.h>
 #include <syslog.h>
 #include <resource.h>
-#include <machine_call.h>
+#include <visor_call.h>
 #include <platform.h>
 
 /**

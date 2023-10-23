@@ -1,6 +1,6 @@
 #
 # CYANCORE LICENSE
-# Copyrights (C) 2019, Cyancore Team
+# Copyrights (C) 2023, Cyancore Team
 #
 # File Name		: build.mk
 # Description		: This file accumulates the build scripts
@@ -9,9 +9,6 @@
 # Organisation		: Cyancore Core-Team
 #
 
-TERRA_PATH	:= $(GET_PATH)
+V_COM_PATH	:= $(GET_PATH)
 
-TERRAVISOR	:= 1
-$(eval $(call add_define,TERRAVISOR))
-
-include $(TERRA_PATH)/services/build.mk
+include $(V_COM_PATH)/workers/build.mk

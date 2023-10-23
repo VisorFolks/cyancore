@@ -14,7 +14,7 @@
 #include <status.h>
 #include <syslog.h>
 #include <resource.h>
-#include <machine_call.h>
+#include <visor_call.h>
 #include <platform.h>
 
 /**
@@ -38,7 +38,7 @@ status_t platform_resources_setup()
 }
 
 /**
- * platform_fetch_sp - mcall handler for fetch_sp
+ * platform_fetch_sp - vcall handler for fetch_sp
  *
  * @brief This function is a machine call hander for fetch_sp
  * access code. It is responsible to respond with hardware ID
@@ -51,7 +51,7 @@ status_t platform_resources_setup()
  * @return status: return the function execution status
  */
 static void platform_fetch_sp(call_arg_t a0, call_arg_t a1 _UNUSED,
-		call_arg_t a2 _UNUSED, mret_t *ret)
+		call_arg_t a2 _UNUSED, vret_t *ret)
 {
 	sysdbg2("Fetch SP: Got request for %x\n", a0);
 	ret->p = (uintptr_t) sp_terravisor_dev_info(a0);
@@ -60,10 +60,10 @@ static void platform_fetch_sp(call_arg_t a0, call_arg_t a1 _UNUSED,
 	return;
 }
 
-INCLUDE_MCALL(atmega328p_fetch_sp, fetch_sp, platform_fetch_sp);
+INCLUDE_VCALL(atmega328p_fetch_sp, fetch_sp, platform_fetch_sp);
 
 /**
- * platform_fetch_dp - mcall handler for fetch_dp
+ * platform_fetch_dp - vcall handler for fetch_dp
  *
  * @brief This function is a machine call hander for fetch_dp
  * access code. It is responsible to respond with pointer to
@@ -76,7 +76,7 @@ INCLUDE_MCALL(atmega328p_fetch_sp, fetch_sp, platform_fetch_sp);
  * @return status: return the function execution status
  */
 static void platform_fetch_dp(call_arg_t a0, call_arg_t a1 _UNUSED,
-		call_arg_t a2 _UNUSED, mret_t *ret)
+		call_arg_t a2 _UNUSED, vret_t *ret)
 {
 	sysdbg2("Fetch DP: Got request for %x\n", a0);
 	switch(a0)
@@ -98,4 +98,4 @@ static void platform_fetch_dp(call_arg_t a0, call_arg_t a1 _UNUSED,
 	return;
 }
 
-INCLUDE_MCALL(atmega328p_fetch_dp, fetch_dp, platform_fetch_dp);
+INCLUDE_VCALL(atmega328p_fetch_dp, fetch_dp, platform_fetch_dp);

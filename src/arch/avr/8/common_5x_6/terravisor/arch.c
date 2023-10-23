@@ -17,7 +17,7 @@
 #include <plat_arch.h>
 #include <mmio.h>
 #include <arch.h>
-#include <terravisor/workers.h>
+#include <visor/workers.h>
 
 /**
  * arch_early_setup - This function is called in the early stages of boot
@@ -25,7 +25,7 @@
  * @brief This function is responsible to clean reset cpu status/control registers.
  *
  */
-void (* const p_mcall)(unsigned int, unsigned int, unsigned int, unsigned int, mret_t *) = &machine_call;
+void (* const p_vcall)(unsigned int, unsigned int, unsigned int, unsigned int, vret_t *) = &vcall_handler;
 void arch_early_setup()
 {
 	arch_di();

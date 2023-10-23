@@ -16,7 +16,7 @@
 #include <syslog.h>
 #include <lock/spinlock.h>
 #include <resource.h>
-#include <machine_call.h>
+#include <visor_call.h>
 #include <arch.h>
 #include <driver.h>
 #include <interrupt.h>

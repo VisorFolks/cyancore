@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <lock/spinlock.h>
 #include <resource.h>
-#include <machine_call.h>
+#include <visor_call.h>
 #include <arch.h>
 #include <driver.h>
 #include <interrupt.h>
@@ -30,25 +30,25 @@ static void console_serial_read_irq_handler(void);
 
 static status_t console_serial_setup()
 {
-	mret_t mres;
+	vret_t vres;
 	const swdev_t *sp;
 	const module_t *dp;
 	hw_devid_t devid;
-	arch_machine_call(fetch_sp, console_uart, 0, 0, &mres);
-	if(mres.status != success)
+	arch_visor_call(fetch_sp, console_uart, 0, 0, &vres);
+	if(vres.status != success)
 	{
 		sysdbg3("Console could not found!\n");
-		return mres.status;
+		return vres.status;
 	}
-	sp = (swdev_t *) mres.p;
+	sp = (swdev_t *) vres.p;
 	devid = sp->hwdev_id;
-	arch_machine_call(fetch_dp, (devid & 0xff00), (devid & 0x00ff), 0, &mres);
-	if(mres.status != success)
+	arch_visor_call(fetch_dp, (devid & 0xff00), (devid & 0x00ff), 0, &vres);
+	if(vres.status != success)
 	{
 		sysdbg3("UART Device %d not found!\n", devid);
-		return mres.status;
+		return vres.status;
 	}
-	dp = (module_t *)mres.p;
+	dp = (module_t *)vres.p;
 	console_port = (uart_port_t *)malloc(sizeof(uart_port_t));
 	if(!console_port)
 		return error_memory_low;

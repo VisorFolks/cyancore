@@ -18,7 +18,7 @@
 #include <interrupt.h>
 #include <platform.h>
 #include <resource.h>
-#include <machine_call.h>
+#include <visor_call.h>
 #include <arch.h>
 #include <hal/timer.h>
 #include "timer8.h"

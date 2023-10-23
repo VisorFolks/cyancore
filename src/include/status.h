@@ -33,14 +33,9 @@ typedef enum status
 	error_device_id_inval		= -0x0201,
 	error_device_inval		= -0x0202,
 	error_device_busy		= -0x0203,
-/* Machine Call related error */
-	error_mcall			= -0x0300,
-	error_mcall_code_inval		= -0x0301,
-/* hcall related error */
-	error_hcall			= -0x0400,
-/* Syscall related error */
-	error_scall			= -0x0500,
-	error_scall_code_inval		= -0x0501,
+/* Visor Call related error */
+	error_vcall			= -0x0300,
+	error_vcall_code_inval		= -0x0301,
 /* Memory related error */
 	error_memory			= -0x0600,
 	error_memory_low		= -0x0601,

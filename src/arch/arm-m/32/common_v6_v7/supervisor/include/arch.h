@@ -13,7 +13,7 @@
 #define _ARCH_H_
 
 #include <arm.h>
-#include <machine_call.h>
+#include <visor_call.h>
 
 /**
  * arch_early_setup - This needs to be called in early stages of boot
@@ -53,8 +53,8 @@ void arch_register_interrupt_handler(unsigned int, void(*)(void));
  * @param[in] r2: third argument
  * @param[in] *ret: return struct
  */
-#define arch_machine_call	arch_super_call
-static inline void arch_super_call(unsigned int code, unsigned int arg0, unsigned int arg1, unsigned int arg2, mret_t *ret)
+#define arch_visor_call	arch_super_call
+static inline void arch_super_call(unsigned int code, unsigned int arg0, unsigned int arg1, unsigned int arg2, vret_t *ret)
 {
 	if(ret == NULL)
 		return;
