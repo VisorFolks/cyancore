@@ -1,6 +1,6 @@
 #
 # CYANCORE LICENSE
-# Copyrights (C) 2019, Cyancore Team
+# Copyrights (C) 2023, Cyancore Team
 #
 # File Name		: qemu.mk
 # Description		: This file helps fetch and build qemu
@@ -8,7 +8,7 @@
 # Organisation		: Cyancore Core-Team
 #
 
-T_ALLOWLIST	+= get_qemu clean_qemu
+T_ALLOWLIST	+= get_qemu clean_qemu qemu_test
 
 QEMU_CHECKOUT	:= v7.2.0
 QEMU_PATH	:= $(TOOLS_ROOT)/qemu
@@ -43,3 +43,15 @@ clean_qemu:
 	@echo "< ! > Removing cc-qemu installation ..."
 	rm -rf $(QEMU_OUT_PATH) $(QEMU_PATH)
 	@echo "< / > Done!"
+
+qemu_test:
+ifeq ($(realpath $(QEMU_OUT_PATH)/bin/qemu-system-riscv32),)
+	$(info < x > QEMU is not installed...)
+	$(info < ! > Please run `make get_qemu`)
+	$(error < x > Stopping demo simulation!)
+endif
+	make demo_qemu_sifive_e
+	@echo
+	@echo "Press Ctrl+A - X to exit!"
+	@echo
+	$(QEMU_OUT_PATH)/bin/qemu-system-riscv32 -machine sifive_e -device loader,file=out/qemu_sifive_e_bl/qemu_sifive_e_bl.elf -kernel out/demo_qemu_sifive_e/demo_qemu_sifive_e.elf -nographic 
