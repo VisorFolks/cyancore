@@ -17,4 +17,4 @@ DIR		:= $(PROJECT_DIR)
 include mk/obj.mk
 
 aux_target:
-	make qemu_sifive_e_bl
+	make qemu_sifive_e_bl DEBUG=0
