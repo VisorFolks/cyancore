@@ -62,7 +62,5 @@ DOCS REPO: https://github.com/VisorFolks/cc_docs\n\
 ----------------------------------------------------------\
 "
 
-.PHONY: help
-
 help:
 	echo -e $(HELP)

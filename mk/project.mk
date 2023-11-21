@@ -13,7 +13,6 @@
 #------------< Project Search >-------------#
 #*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*#
 
-include mk/path.mk
 include mk/mk_helper.mk
 include mk/qemu.mk
 include mk/picotool.mk
@@ -59,7 +58,6 @@ ifeq ($(CMD),)
 CMD		:= default
 endif
 
-.PHONY: $(PROJECT)
 $(PROJECT): $(CMD)
 
 endif
