@@ -1,5 +1,5 @@
 # Contributing Guidlines
-- Use tabs, width=8, commit of **code** with spaces and whitespaces will be rejected.
+- Use tabs, width=8, commit of **code** with spaces and trailing whitespaces will be rejected.
 - Use Spaces, width=4, for **documentation** that is "<filename>.md"
 - Use the coding format that is set in the current repo as of 3-jul-2021.
 - We recommend going through Cyancore sources by taking help of README in each folder before you start with project. It is our duty to ensure the code is simple and understandable.
