@@ -14,6 +14,13 @@ HELP		:="\
 ==================< Cyancore Make Help >==================\n\
 Usage: make [<project_name>|default|...] (V=|PP=|...)\n\
 \n\
+Examples:\n\
+$$ make demo_avr \# Builds project demo_avr\n\
+$$ make clean \# Cleans the build out folder \n\
+$$ make demo_avr V=1 \# Builds demo_avr with verbose\n\
+$$ make list \# Displays all the available projects\n\
+$$ make get_all_tc \# Fetches all toolchains\n\
+\n\
 ----------\n\
 Variables:\n\
 ----------\n\
