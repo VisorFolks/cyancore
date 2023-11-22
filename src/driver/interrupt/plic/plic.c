@@ -15,7 +15,7 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <arch.h>
-#include <machine_call.h>
+#include <visor_call.h>
 #include <interrupt.h>
 #include <resource.h>
 #include <driver.h>
@@ -33,14 +33,14 @@ static plic_port_t *port;
 
 static status_t plic_setup()
 {
-	mret_t mres;
+	vret_t vres;
 	const module_t *dp;
 
-	arch_machine_call(fetch_dp, plic, 0, 0, &mres);
+	arch_visor_call(fetch_dp, plic, 0, 0, &vres);
 
-	if(mres.status != success)
-		return mres.status;
-	dp = (module_t *)mres.p;
+	if(vres.status != success)
+		return vres.status;
+	dp = (module_t *)vres.p;
 	port = (plic_port_t *)malloc(sizeof(plic_port_t));
 	if(!port)
 		return error_memory_low;

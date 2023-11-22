@@ -13,7 +13,7 @@
 #include <syslog.h>
 #include <stdlib.h>
 #include <resource.h>
-#include <machine_call.h>
+#include <visor_call.h>
 #include <lock/lock.h>
 #include <driver.h>
 #include <driver/onboardled.h>
@@ -73,19 +73,19 @@ exit:
 
 static status_t onboardled_setup(void)
 {
-	mret_t mres;
+	vret_t vres;
 	status_t ret;
 
 	lock_acquire(&obledlock);
-	arch_machine_call(fetch_sp, onboard_led, 0, 0, &mres);
-	if(mres.status != success)
+	arch_visor_call(fetch_sp, onboard_led, 0, 0, &vres);
+	if(vres.status != success)
 	{
 		sysdbg3("%p - sp node could not be found!\n", onboard_led);
-		ret = mres.status;
+		ret = vres.status;
 		goto exit;
 	}
-	obled_sp = (swdev_t *) mres.p;
-	ret = mres.status;
+	obled_sp = (swdev_t *) vres.p;
+	ret = vres.status;
 
 	obledPort = (gpio_port_t *)malloc(sizeof(gpio_port_t) *
 			obled_sp->pmux->npins);

@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 #include <string.h>
-#include <supervisor/workers.h>
+#include <visor/workers.h>
 #include <posix/pthread.h>
 #include <posix/errno.h>
 #include <posix/utils.h>
@@ -132,7 +132,7 @@ int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*startr
 	/* Grab resource access else return EBUSY */
 	RET_ERR_IF_FALSE(s_pthread_acquire_lock() == SUCCESS, -EBUSY, int);
 
-	super_call(scall_id_pthread_create, (call_arg_t) startroutine, (call_arg_t) arg, thread->attr->stacksize, &pthread_sys_ret);
+	super_call(pthread_create, (call_arg_t) startroutine, (call_arg_t) arg, thread->attr->stacksize, &pthread_sys_ret);
 	if (pthread_sys_ret.status != SUCCESS)
 	{
 		err = -EAGAIN;
@@ -166,7 +166,7 @@ void pthread_exit( const void *value_ptr _UNUSED)
 	/* Grab resource access else return EBUSY */
 	s_pthread_acquire_lock();
 
-	super_call(scall_id_pthread_exit, RST_VAL, RST_VAL, RST_VAL, &pthread_sys_ret);
+	super_call(pthread_exit, RST_VAL, RST_VAL, RST_VAL, &pthread_sys_ret);
 
 	/* Release resource access else return EBUSY */
 	s_pthread_release_lock();

@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <arch.h>
-#include <machine_call.h>
+#include <visor_call.h>
 #include <resource.h>
 #include <hal/clint.h>
 #include <driver.h>
@@ -30,19 +30,19 @@ static clint_port_t *port;
 
 static status_t clint_setup()
 {
-	mret_t mres;
+	vret_t vres;
 	const module_t *dp;
 
-	arch_machine_call(fetch_dp, clint, 0, 0, &mres);
+	arch_visor_call(fetch_dp, clint, 0, 0, &vres);
 
-	if(mres.status != success)
-		return mres.status;
+	if(vres.status != success)
+		return vres.status;
 
 	port = (clint_port_t *)malloc(sizeof(clint_port_t));
 	if(!port)
 		return error_memory_low;
 
-	dp = (module_t *)mres.p;
+	dp = (module_t *)vres.p;
 	port->baddr = dp->baddr;
 	port->stride = dp->stride;
 	port->port_id = clint;

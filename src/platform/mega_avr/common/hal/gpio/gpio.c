@@ -16,7 +16,7 @@
 #include <assert.h>
 #include <mmio.h>
 #include <resource.h>
-#include <machine_call.h>
+#include <visor_call.h>
 #include <arch.h>
 #include <lock/lock.h>
 #include <hal/gpio.h>
@@ -24,7 +24,7 @@
 
 status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 {
-	mret_t mres;
+	vret_t vres;
 	gpio_module_t *dp;
 	unsigned char flag;
 
@@ -46,13 +46,13 @@ status_t gpio_pin_alloc(gpio_port_t *port, uint8_t portID, uint8_t pinID)
 
 	port->pin = pinID;
 	port->port = portID;
-	arch_machine_call(fetch_dp, gpio, portID, 0, &mres);
-	if(mres.status != success)
+	arch_visor_call(fetch_dp, gpio, portID, 0, &vres);
+	if(vres.status != success)
 	{
 		sysdbg4("GPIO Port %d not found in DP\n", portID);
-		return mres.status;
+		return vres.status;
 	}
-	dp = (gpio_module_t *)mres.p;
+	dp = (gpio_module_t *)vres.p;
 	port->pbaddr = dp->baddr;
 	sysdbg4("GPIO engine @ %p\n", dp->baddr);
 	sysdbg4("Using GPIO Pin %d on Port %d\n", port->pin, port->port);
@@ -124,7 +124,7 @@ bool gpio_pin_read(const gpio_port_t *port)
 
 status_t gpio_port_alloc(gpio_port_t *port, uint8_t portID)
 {
-	mret_t mres;
+	vret_t vres;
 	gpio_module_t *dp;
 	unsigned char flag = 0;
 
@@ -145,13 +145,13 @@ status_t gpio_port_alloc(gpio_port_t *port, uint8_t portID)
 
 	port->pin = (uint8_t)((uint16_t)(1 << BIT) - 1);
 	port->port = portID;
-	arch_machine_call(fetch_dp, gpio, portID, 0, &mres);
-	if(mres.status != success)
+	arch_visor_call(fetch_dp, gpio, portID, 0, &vres);
+	if(vres.status != success)
 	{
 		sysdbg4("GPIO Port %d not found in DP\n", portID);
-		return mres.status;
+		return vres.status;
 	}
-	dp = (gpio_module_t *)mres.p;
+	dp = (gpio_module_t *)vres.p;
 	port->pbaddr = dp->baddr;
 	sysdbg4("GPIO engine @ %p\n", dp->baddr);
 	return success;

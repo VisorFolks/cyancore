@@ -14,7 +14,7 @@
 #include <stdbool.h>
 #include <resource.h>
 #include <riscv.h>
-#include <machine_call.h>
+#include <visor_call.h>
 
 /**
  * arch_early_setup - This needs to be called in early stages of boot
@@ -63,7 +63,7 @@ static inline unsigned int arch_core_index()
 }
 
 /**
- * arch_machine_call - perform machine call
+ * arch_visor_call - perform machine call
  *
  * @brief This function performs environment call
  * in m mode
@@ -74,7 +74,7 @@ static inline unsigned int arch_core_index()
  * @param[in] a2: third argument
  * @param[in] *ret: return struct
  */
-static inline void arch_machine_call(unsigned int code, unsigned int arg0, unsigned int arg1, unsigned int arg2, mret_t *ret)
+static inline void arch_visor_call(unsigned int code, unsigned int arg0, unsigned int arg1, unsigned int arg2, vret_t *ret)
 {
 	if(ret == NULL)
 		return;

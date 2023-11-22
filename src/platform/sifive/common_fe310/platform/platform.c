@@ -17,7 +17,7 @@
 #include <driver/sysclk.h>
 #include <insignia.h>
 #include <terravisor/platform.h>
-#include <terravisor/workers.h>
+#include <visor/workers.h>
 #include <platform.h>
 
 void platform_early_setup()

@@ -34,6 +34,6 @@
 #define PRR1		0x65
 #define OSCCAL		0x66
 
-#ifdef _MACHINE_CALL_H_
-extern void (*mcall)(unsigned int, unsigned int, unsigned int, unsigned int, mret_t *);
+#ifdef _VISOR_CALL_H_
+extern void (*vcall)(unsigned int, unsigned int, unsigned int, unsigned int, vret_t *);
 #endif

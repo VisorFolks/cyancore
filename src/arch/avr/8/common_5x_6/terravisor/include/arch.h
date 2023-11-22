@@ -16,7 +16,7 @@
 #include <avr.h>
 #include <mmio.h>
 #include <resource.h>
-#include <machine_call.h>
+#include <visor_call.h>
 
 /**
  * arch_early_setup - This needs to be called in early stages of boot
@@ -56,7 +56,7 @@ static inline unsigned int arch_core_index()
 }
 
 /**
- * arch_machine_call - perform machine call
+ * arch_visor_call - perform machine call
  *
  * @brief This function emulates the machine
  * call to maintain consistency.
@@ -67,12 +67,12 @@ static inline unsigned int arch_core_index()
  * @param[in] a2: third argument
  * @param[in] *ret: return value
  */
-static inline void arch_machine_call(unsigned int code, unsigned int a0, unsigned int a1, unsigned int a2, mret_t *ret)
+static inline void arch_visor_call(unsigned int code, unsigned int a0, unsigned int a1, unsigned int a2, vret_t *ret)
 {
-	extern void (*const p_mcall)(unsigned int, unsigned int, unsigned int, unsigned int, mret_t*);
+	extern void (*const p_vcall)(unsigned int, unsigned int, unsigned int, unsigned int, vret_t*);
 	if(ret == NULL)
 		return;
-	p_mcall(code, a0, a1, a2, ret);
+	p_vcall(code, a0, a1, a2, ret);
 	return;
 }
 

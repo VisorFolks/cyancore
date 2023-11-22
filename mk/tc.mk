@@ -10,10 +10,11 @@
 
 include mk/path.mk
 
-ifeq ($(findstring arm-v7,$(ARCH)),arm)
+ifeq ($(findstring arm,$(ARCH)),arm)
 TC	?= $(TOOLS_ROOT)/arm-toolchain/bin/arm-none-eabi
-TI	:= $(TOOLS_ROOT)/arm-toolchain/arm-none-eabi/include
-TL	:= $(TOOLS_ROOT)/arm-toolchain/arm-none-eabi/lib
+TI	:= $(TOOLS_ROOT)/arm-toolchain/lib/gcc/arm-none-eabi/$(TC_VER)/include-fixed/
+TI	+= $(TOOLS_ROOT)/arm-toolchain/arm-none-eabi/include/
+TL	:= $(TOOLS_ROOT)/arm-toolchain/lib/gcc/arm-none-eabi/$(TC_VER)/$(TL_TYPE)/
 endif
 
 ifeq ($(findstring riscv,$(ARCH)),riscv)

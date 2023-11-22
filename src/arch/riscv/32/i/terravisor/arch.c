@@ -14,18 +14,18 @@
 #include <syslog.h>
 #include <arch.h>
 #include <lock/lock.h>
-#include <terravisor/workers.h>
+#include <visor/workers.h>
 #include <interrupt.h>
 
-static void arch_mcall_handler()
+static void arch_vcall_handler()
 {
 	context_frame_t *frame = get_context_frame();
-	mret_t mres;
-	machine_call(frame->a0, frame->a1, frame->a2, frame->a3, &mres);
+	vret_t vres;
+	vcall_handler(frame->a0, frame->a1, frame->a2, frame->a3, &vres);
 	fence(w, w);
-	frame->a0 = mres.p;
-	frame->a1 = mres.size;
-	frame->a2 = mres.status;
+	frame->a0 = vres.p;
+	frame->a1 = vres.size;
+	frame->a2 = vres.status;
 	return;
 }
 
@@ -72,13 +72,13 @@ void arch_early_setup()
  */
 void arch_setup()
 {
-	link_interrupt(int_arch, 11, &arch_mcall_handler);
+	link_interrupt(int_arch, 11, &arch_vcall_handler);
 	return;
 }
 
 void arch_setup2()
 {
-	link_interrupt(int_arch, 11, &arch_mcall_handler);
+	link_interrupt(int_arch, 11, &arch_vcall_handler);
 	return;
 }
 
