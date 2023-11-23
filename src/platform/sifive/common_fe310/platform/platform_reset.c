@@ -31,15 +31,15 @@
  */
 reset_t platform_get_reset_syndrome()
 {
-	mret_t mres;
+	vret_t vres;
 	const module_t *dp;
 	uint32_t pmucause_val;
 	aon_port_t aonport;
 
-	arch_machine_call(fetch_dp, aon, 0, 0, &mres);
-	assert(mres.status == success);
+	arch_visor_call(fetch_dp, aon, 0, 0, &vres);
+	assert(vres.status == success);
 
-	dp = (module_t *)mres.p;
+	dp = (module_t *)vres.p;
 	aonport.baddr = dp->baddr;
 
 	aon_pmucause(&aonport, &pmucause_val);

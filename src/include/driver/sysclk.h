@@ -15,7 +15,7 @@
 #include <stdint.h>
 #include <resource.h>
 #include <arch.h>
-#include <machine_call.h>
+#include <visor_call.h>
 
 typedef struct sysclk_config_clk_callback
 {
@@ -28,17 +28,17 @@ status_t sysclk_reset(void);
 
 static inline status_t sysclk_set_clk(clock_type_t type, unsigned int clk)
 {
-	mret_t mres;
-	arch_machine_call(config_clk, type, clk, 0, &mres);
-	return mres.status;
+	vret_t vres;
+	arch_visor_call(config_clk, type, clk, 0, &vres);
+	return vres.status;
 }
 
 static inline status_t sysclk_get_clk(unsigned int *clk)
 {
-	mret_t mres;
-	arch_machine_call(fetch_clk, 0, 0, 0, &mres);
-	*clk = (mres.status == success) ? (unsigned int) mres.p : 0;
-	return mres.status;
+	vret_t vres;
+	arch_visor_call(fetch_clk, 0, 0, 0, &vres);
+	*clk = (vres.status == success) ? (unsigned int) vres.p : 0;
+	return vres.status;
 }
 
 status_t sysclk_register_config_clk_callback(sysclk_config_clk_callback_t *);

@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 #include <string.h>
-#include <supervisor/workers.h>
+#include <visor/workers.h>
 #include <posix/pthread.h>
 #include <posix/mqueue.h>
 #include <posix/errno.h>
@@ -44,7 +44,7 @@ static int s_queue_write(mqd_t mqdes, const void * buff, size_t size, unsigned m
 
 	memcpy((void *)p_mqd_section->kernel_buff, buff, size);
 
-	super_call(scall_id_mq_send, p_mqd_section->id, size, msg_prio, &mq_sys_ret);
+	super_call(mq_send, p_mqd_section->id, size, msg_prio, &mq_sys_ret);
 	RET_ERR_IF_FALSE(mq_sys_ret.status == SUCCESS, -EBADF, int);
 
 	return SUCCESS;
@@ -57,7 +57,7 @@ static int s_queue_read(mqd_t mqdes, void * buff, size_t size)
 
 	RET_ERR_IF_FALSE((p_mqd_section->attr.mq_flags & O_WRONLY), -ENOTSUP, int);
 
-	super_call(scall_id_mq_receive, p_mqd_section->id, size, RST_VAL, &mq_sys_ret);
+	super_call(mq_receive, p_mqd_section->id, size, RST_VAL, &mq_sys_ret);
 	RET_ERR_IF_FALSE(mq_sys_ret.status == SUCCESS, -EBADF, int);
 
 	memcpy(buff, (void *) (p_mqd_section->kernel_buff), size);
@@ -131,7 +131,7 @@ mqd_t mq_open( 	const char * name,
 	p_mqd_section->attr.mq_flags = oflag;
 
 	/* Perform super_call */
-	super_call(scall_id_mq_open,
+	super_call(mq_open,
 		(p_mqd_section->attr.mq_maxmsg * p_mqd_section->attr.mq_msgsize),
 		RST_VAL,
 		RST_VAL,
@@ -175,7 +175,7 @@ int mq_close( mqd_t mqdes )
 		memset(&((mqd_section_t *) mqdes)->attr, RST_VAL, sizeof(mq_attr_t));
 
 		/* Perform Super Call */
-		super_call(scall_id_mq_close, ((mqd_section_t *) mqdes)->id, RST_VAL, RST_VAL, &mq_sys_ret);
+		super_call(mq_close, ((mqd_section_t *) mqdes)->id, RST_VAL, RST_VAL, &mq_sys_ret);
 		if (mq_sys_ret.status != SUCCESS)
 		{
 			err = -ENOTSUP;

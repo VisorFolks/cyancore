@@ -1,4 +1,5 @@
 .scannerwork
+.vscode/
 sonar-cfamily-reproducer.zip
 temp
 out/

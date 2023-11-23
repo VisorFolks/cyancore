@@ -5,10 +5,12 @@ on:
     branches:
     - stable
     - development
+    - helios_stage
   pull_request:
     branches:
     - stable
     - development
+    - helios_stage
 
 jobs:
   build:

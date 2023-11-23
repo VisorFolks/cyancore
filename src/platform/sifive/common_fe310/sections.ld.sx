@@ -91,7 +91,7 @@ SECTIONS
 		*(.data.*)
 		KEEP(*(.data))
 		DRIVER_TABLE
-		ECALL_TABLE
+		VCALL_TABLE
 	} > vma_dmem AT > lma_mem
 
 	.tdata : ALIGN(4)

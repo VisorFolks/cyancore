@@ -9,7 +9,7 @@
  */
 
 #include <stdint.h>
-#include <supervisor/workers.h>
+#include <visor/workers.h>
 #include <posix/errno.h>
 #include <posix/utils.h>
 #include <posix/time.h>
@@ -336,6 +336,6 @@ void os_delay_ticks( const TickType_t ticks )
 {
 	sret_t sys_ret;
 
-	super_call(scall_id_pthread_delay_ticks, ticks, RST_VAL, RST_VAL, &sys_ret);
+	super_call(pthread_delay_ticks, ticks, RST_VAL, RST_VAL, &sys_ret);
 	RET_ERR_IF_FALSE(sys_ret.status == SUCCESS, EAGAIN, void);
 }

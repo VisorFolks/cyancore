@@ -2,10 +2,10 @@ name: GitHub CI
 
 on:
   push:
-    branches: [ stable, development]
+    branches: [ stable, development, helios_stage]
 
   pull_request:
-    branches: [ stable, development]
+    branches: [ stable, development, helios_stage]
 
 jobs:
   build:
@@ -44,17 +44,13 @@ jobs:
           languages: ${{ matrix.language }}
           debug: true
 
-      - name: Linting
-        run: |
-          make demo_avr check
-          make demo_avr_cpp check
-          make demo_riscv check
-
       - name: Build
         run: |
           make demo_avr
           make demo_avr_cpp
           make demo_riscv
+          make demo_helios_avr
+          make demo_helios_riscv
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1

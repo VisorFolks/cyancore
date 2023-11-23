@@ -13,6 +13,7 @@ VISOR_DIR	:= $(GET_PATH)
 
 INCLUDE		+= $(SRC)/include/visor/
 
+include $(VISOR_DIR)/common/build.mk
 ifneq ($(EXE_MODE),)
 include $(VISOR_DIR)/$(EXE_MODE)/build.mk
 endif

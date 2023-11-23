@@ -39,7 +39,9 @@
         "*.sx": "c",
         "*.{c,c.dev.c.temp,c.tmp,c.old,h,h.dev,h.old,h.temp,h.tmp)": "C",
         "*.{cpp,cpp.dev,cpp.temp,cpp.tmp,cpp.old}": "C++",
-        "*.{S,S.old,S.dev.S.temp,S.tmp,s.old,s.temp,s.tmp,s.dev,asm,asm.old,asm.dev.asm.temp,asm.tmp,inc,inc.old,inc.temp,inc.tmp,ld,ld.old,ld.temp,ld.tmp,ld.sx,ld.sx.old,ld.sx.temp,ld.sx.tmp,lst}": "coffeescript"
+        "*.{S,S.old,S.dev.S.temp,S.tmp,s.old,s.temp,s.tmp,s.dev,asm,asm.old,asm.dev.asm.temp,asm.tmp,inc,inc.old,inc.temp,inc.tmp,ld,ld.old,ld.temp,ld.tmp,ld.sx,ld.sx.old,ld.sx.temp,ld.sx.tmp,lst}": "coffeescript",
+        "cc_os_sched.h": "c",
+        "cc_os.h": "c"
     },
     "files.autoSave": "afterDelay",
     "files.autoSaveDelay": 100,
@@ -57,5 +59,6 @@
     "workbench.settings.openDefaultKeybindings": true,
     "C_Cpp.autocompleteAddParentheses": true,
     "git.alwaysSignOff": true,
-    "files.autoGuessEncoding": true
+    "files.autoGuessEncoding": true,
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}/.vscode/compile_commands.json"
 }

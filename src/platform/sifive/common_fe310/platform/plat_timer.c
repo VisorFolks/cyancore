@@ -17,7 +17,7 @@
 #include <arch.h>
 #include <driver.h>
 #include <interrupt.h>
-#include <machine_call.h>
+#include <visor_call.h>
 #include <resource.h>
 #include <hal/clint.h>
 #include <terravisor/timer.h>
@@ -72,26 +72,26 @@ static void plat_timer_reg_cb(void *cb)
  */
 static status_t plat_get_timer_prop(void)
 {
-	mret_t mres;
+	vret_t vres;
 	swdev_t *sp;
 	hw_devid_t devid;
 
-	arch_machine_call(fetch_sp, sched_timer, 0, 0, &mres);
-	if(mres.status != success)
+	arch_visor_call(fetch_sp, sched_timer, 0, 0, &vres);
+	if(vres.status != success)
 	{
 		sysdbg3("%p - sp node could not be found!\n", sched_timer);
-		return mres.status;
+		return vres.status;
 	}
-	sp = (swdev_t *) mres.p;
+	sp = (swdev_t *) vres.p;
 	devid = sp->hwdev_id;
 
-	arch_machine_call(fetch_dp, (devid & 0xff00), (devid & 0xff), 0, &mres);
-	if(mres.status != success)
+	arch_visor_call(fetch_dp, (devid & 0xff00), (devid & 0xff), 0, &vres);
+	if(vres.status != success)
 	{
 		sysdbg3("Timer Device %d not found!\n", devid);
-		return mres.status;
+		return vres.status;
 	}
-	tm = (module_t *) mres.p;
+	tm = (module_t *) vres.p;
 	return success;
 }
 

@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 #include <string.h>
-#include <supervisor/workers.h>
+#include <visor/workers.h>
 #include <posix/semaphore.h>
 #include <posix/errno.h>
 #include <posix/utils.h>
@@ -29,7 +29,7 @@ static int s_sem_wait( const sem_t * sem )
 	ASSERT_IF_FALSE(sem->id != RST_VAL, int);
 
 	/* Perform super_call */
-	super_call(scall_id_sem_wait, sem->id, RST_VAL, RST_VAL, &sem_sys_ret);
+	super_call(sem_wait, sem->id, RST_VAL, RST_VAL, &sem_sys_ret);
 
 	return sem_sys_ret.status;
 }
@@ -48,7 +48,7 @@ int sem_destroy( sem_t * sem )
 	ASSERT_IF_FALSE(sem->id != RST_VAL, int);
 
 	/* Perform super_call */
-	super_call(scall_id_sem_destroy, sem->id, RST_VAL, RST_VAL, &sem_sys_ret);
+	super_call(sem_destroy, sem->id, RST_VAL, RST_VAL, &sem_sys_ret);
 	RET_ERR_IF_FALSE(sem_sys_ret.status == SUCCESS, sem_sys_ret.status, int);
 
 	/* Reset semaphore ID */
@@ -67,7 +67,7 @@ int sem_getvalue( sem_t * sem, int * sval )
 	ASSERT_IF_FALSE(sem != NULL, int);
 
 	/* Perform super_call */
-	super_call(scall_id_sem_getvalue, sem->id, RST_VAL, RST_VAL, &sem_sys_ret);
+	super_call(sem_getvalue, sem->id, RST_VAL, RST_VAL, &sem_sys_ret);
 	RET_ERR_IF_FALSE(sem_sys_ret.status == SUCCESS, sem_sys_ret.status, int);
 
 	/* Copy sem value */
@@ -88,7 +88,7 @@ int sem_init( sem_t * sem, int pshared _UNUSED, unsigned value )
 	ASSERT_IF_FALSE(sem->id == RST_VAL, int);
 
 	/* Perform super_call */
-	super_call(scall_id_sem_init, value, RST_VAL, RST_VAL, &sem_sys_ret);
+	super_call(sem_init, value, RST_VAL, RST_VAL, &sem_sys_ret);
 	if (sem_sys_ret.status != SUCCESS)
 	{
 		return sem_sys_ret.status;
@@ -111,7 +111,7 @@ int sem_post( const sem_t * sem )
 	ASSERT_IF_FALSE(sem->id != RST_VAL, int);
 
 	/* Perform super_call */
-	super_call(scall_id_sem_post, sem->id, RST_VAL, RST_VAL, &sem_sys_ret);
+	super_call(sem_post, sem->id, RST_VAL, RST_VAL, &sem_sys_ret);
 
 	return sem_sys_ret.status;
 }

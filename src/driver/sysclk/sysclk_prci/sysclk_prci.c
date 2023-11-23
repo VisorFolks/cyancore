@@ -16,7 +16,7 @@
 #include <syslog.h>
 #include <assert.h>
 #include <resource.h>
-#include <machine_call.h>
+#include <visor_call.h>
 #include <driver.h>
 #include <arch.h>
 #include <platform.h>
@@ -31,7 +31,7 @@ static status_t sysclk_disable();
 static status_t sysclk_setup()
 {
 	status_t ret = success;
-	mret_t mres;
+	vret_t vres;
 	module_t *dp;
 	sysclk_port_t *port;
 	istate_t ist;
@@ -41,30 +41,30 @@ static status_t sysclk_setup()
 		return error_memory_low;
 	port = sysclk;
 
-	arch_machine_call(fetch_dp, clock, 0, 0, &mres);
+	arch_visor_call(fetch_dp, clock, 0, 0, &vres);
 
-	if(mres.status != success)
+	if(vres.status != success)
 	{
 		sysdbg2("Clock not found in DP!\n");
 		port->base_clk = 0;
-		ret = mres.status;
+		ret = vres.status;
 		goto cleanup_exit;
 	}
-	port->base_clk = *((unsigned int *)mres.p);
+	port->base_clk = *((unsigned int *)vres.p);
 
-	arch_machine_call(fetch_dp, prci, 0, 0, &mres);
+	arch_visor_call(fetch_dp, prci, 0, 0, &vres);
 
-	if(mres.status != success)
+	if(vres.status != success)
 	{
 		sysdbg2("PRCI not found in DP!\n");
-		ret = mres.status;
+		ret = vres.status;
 		goto cleanup_exit;
 	}
 
 	lock_acquire(&sysclk_key);
 	arch_di_save_state(&ist);
 
-	dp = (module_t *) mres.p;
+	dp = (module_t *) vres.p;
 	port->port_id = dp->id;
 	port->baddr = dp->baddr;
 	port->stride = dp->stride;
@@ -187,7 +187,7 @@ static inline void sysclk_set_pll(unsigned int clk)
 	return;
 }
 
-static void sysclk_configure_clk(call_arg_t a0, call_arg_t a1, call_arg_t a2 _UNUSED, mret_t *ret)
+static void sysclk_configure_clk(call_arg_t a0, call_arg_t a1, call_arg_t a2 _UNUSED, vret_t *ret)
 {
 	sysclk_port_t *port = sysclk;
 	istate_t ist;
@@ -231,10 +231,10 @@ static void sysclk_configure_clk(call_arg_t a0, call_arg_t a1, call_arg_t a2 _UN
 	return;
 }
 
-INCLUDE_MCALL(sysclk_set, config_clk, sysclk_configure_clk);
+INCLUDE_VCALL(sysclk_set, config_clk, sysclk_configure_clk);
 
 static void sysclk_get_freq(call_arg_t a0 _UNUSED, call_arg_t a1 _UNUSED, 
-		call_arg_t a2 _UNUSED, mret_t *ret)
+		call_arg_t a2 _UNUSED, vret_t *ret)
 {
 	sysclk_port_t *port = sysclk;
 	istate_t ist;
@@ -276,4 +276,4 @@ static void sysclk_get_freq(call_arg_t a0 _UNUSED, call_arg_t a1 _UNUSED,
 	return;
 }
 
-INCLUDE_MCALL(sysclk_get, fetch_clk, sysclk_get_freq);
+INCLUDE_VCALL(sysclk_get, fetch_clk, sysclk_get_freq);

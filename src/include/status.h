@@ -33,14 +33,9 @@ typedef enum status
 	error_device_id_inval		= -0x0201,
 	error_device_inval		= -0x0202,
 	error_device_busy		= -0x0203,
-/* Machine Call related error */
-	error_mcall			= -0x0300,
-	error_mcall_code_inval		= -0x0301,
-/* hcall related error */
-	error_hcall			= -0x0400,
-/* Syscall related error */
-	error_scall			= -0x0500,
-	error_scall_code_inval		= -0x0501,
+/* Visor Call related error */
+	error_vcall			= -0x0300,
+	error_vcall_code_inval		= -0x0301,
 /* Memory related error */
 	error_memory			= -0x0600,
 	error_memory_low		= -0x0601,
@@ -79,6 +74,11 @@ typedef enum status
 	error_os_deadlock		= -0x0f02,
 	error_os_invalid_op		= -0x0f03,
 	error_os_sem_get		= -0x0f04,
+	error_os_panic_presched_cb_null = -0x0f05,
+	error_os_panic_sched_algo_null	= -0x0f06,
+	error_os_panic_os_start_fail	= -0x0f07,
+	error_os_mutex_lock		= -0x0f08,
+	error_os_mutex_unlock		= -0x0f09,
 /* Mesg related error */
 	error_mesg			= -0x1000,
 	error_mesg_long			= -0x1001,

@@ -15,7 +15,7 @@
 		KEEP(*(.driver))			\
 		PROVIDE(_driver_table_end = .);
 
-#define ECALL_TABLE					\
-		PROVIDE(_ecall_table_start = .);	\
-		KEEP(*(.ecall))				\
-		PROVIDE(_ecall_table_end = .);
+#define VCALL_TABLE					\
+		PROVIDE(_vcall_table_start = .);	\
+		KEEP(*(.vcall))				\
+		PROVIDE(_vcall_table_end = .);

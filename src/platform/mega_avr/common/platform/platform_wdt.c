@@ -16,7 +16,7 @@
 #include <platform.h>
 #include <driver.h>
 #include <resource.h>
-#include <machine_call.h>
+#include <visor_call.h>
 #include <arch.h>
 #include <hal/wdt.h>
 #include <driver/watchdog.h>
@@ -45,16 +45,16 @@ void platform_wdt_handler();
  */
 static status_t platform_wdt_setup()
 {
-	mret_t mres;
+	vret_t vres;
 	module_t *dp;
-	arch_machine_call(fetch_dp, wdt, 0, 0, &mres);
+	arch_visor_call(fetch_dp, wdt, 0, 0, &vres);
 
-	if(mres.status != success)
+	if(vres.status != success)
 	{
 		sysdbg2("WDT not found in DP\n");
-		return mres.status;
+		return vres.status;
 	}
-	dp = (module_t *) mres.p;
+	dp = (module_t *) vres.p;
 	plat_wdt = (wdt_port_t *)malloc(sizeof(wdt_port_t));
 	if(!plat_wdt)
 		return error_memory_low;

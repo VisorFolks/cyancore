@@ -10,7 +10,7 @@
 <body>
   <div align="center">
     <i>An unified software platform for embedded system projects ...</i><br>
-    <i>From India with Pride!</i><br><br>
+    <i>From Bharat with Pride!</i><br><br>
   </div>
 </body>
 
