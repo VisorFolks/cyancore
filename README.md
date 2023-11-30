@@ -37,4 +37,6 @@ Connect with us over VisorFolks discord server: < [**JOIN**](https://discord.gg/
 * linker script
 
 ### Help
-Please visit [**Github Wiki**](https://github.com/VisorFolks/cyancore/wiki/)
+For more information, please visit [**Github Wiki**](https://github.com/VisorFolks/cyancore/wiki/), here are few more links:
+- [**Getting Started**](https://github.com/VisorFolks/cyancore/wiki/Getting-Started)
+- [**QEMU Test**](https://github.com/VisorFolks/cyancore/wiki/qemu-test)
