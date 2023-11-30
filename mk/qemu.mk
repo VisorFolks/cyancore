@@ -36,12 +36,13 @@ $(QEMU_OUT_PATH): $(QEMU_PATH)
 	rm -rf $(QEMU_PATH)
 	@echo "< ! > Adding load_qemu alias to bashrc ..."
 	@echo "< ! > run 'load_qemu' before trying to launch qemu!"
-	echo "alias load_qemu='export PATH=\"\$$PATH\":$@/bin/'" >> ~/.bashrc
+	echo "alias load_qemu='export PATH=\"\$$PATH\":$@/bin/'" >> ~/.bash_aliases
 	@echo "< / > Done !"
 
 clean_qemu:
 	@echo "< ! > Removing cc-qemu installation ..."
 	rm -rf $(QEMU_OUT_PATH) $(QEMU_PATH)
+	sed "/cc_qemu/d" -i ~/.bash_aliases
 	@echo "< / > Done!"
 
 qemu_test:

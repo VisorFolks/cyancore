@@ -17,7 +17,7 @@ SSH_PATH	?=
 --cpremote: $(ELF)
 	@echo "< ! > Copying to remote ($(SSH_HOST))..."
 	ssh -p $(SSH_PORT) $(R_UNAME)@$(SSH_HOST) "mkdir -p $(SSH_PATH)/$(PROJECT)"
-	scp -r -P $(SSH_PORT) $(^:.elf=.*) $(R_UNAM)@$(SSH_HOST):$(SSH_PATH)/$(PROJECT)
+	scp -r -P $(SSH_PORT) $(^:.elf=.*) $(R_UNAME)@$(SSH_HOST):$(SSH_PATH)/$(PROJECT)
 
 --rmremote:
 	@echo "< ! > Cleaning remote ($(SSH_HOST))..."
