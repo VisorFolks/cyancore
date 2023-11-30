@@ -72,11 +72,9 @@ $(info < ! > Run `make list` to get list of projects)
 $(error < x > Build Failed!)
 endif
 
-ifeq ($(findstring $(MAKECMDGOALS),$(T_ALLOWLIST)),)
 include $(SRC)/sources.mk
 include mk/tc.mk
 include mk/copy_to_remote.mk
-endif
 endif
 
 ifeq ($(findstring $(CMD),$(T_ALLOWLIST) $(P_TARGETS)),)
