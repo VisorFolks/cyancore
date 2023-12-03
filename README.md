@@ -10,6 +10,7 @@
   <div align="center">
     <i>An unified software platform for embedded system projects ...</i><br>
     <i>From Bharat with Pride!</i><br><br>
+    > **Version (arch:2 | major:4 | minor:2): 1.3.2**
   </div>
 </body>
 
@@ -21,7 +22,7 @@ and abilities, we aim to utilize the hardware and software resources better and 
 
 If you'd like to learn and contribute to this project, please follow  below links for full documentation and start your endeavour.
 
-> **Version (arch:2 | major:4 | minor:2): 1.3.2**
+
 
 [![GitHub CI](https://github.com/VisorFolks/cyancore/actions/workflows/github_ci.yml/badge.svg)](https://github.com/VisorFolks/cyancore/actions/workflows/github_ci.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=VisorFolks_cyancore&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=VisorFolks_cyancore)
