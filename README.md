@@ -1,10 +1,9 @@
 <h1>
   <div align="center">
     <a href="https://github.com/VisorFolks/cyancore">
-      <img align="top" src="https://github.com/VisorFolks/vf_artifacts/blob/stable/cyancore/icons/cyancore.png"
-           width=400 height=400 alt="Cyancore"/>
+      <img align="top" src="https://github.com/VisorFolks/vf_artifacts/blob/stable/cyancore/icons/Cyancore%20Git.png"
+           alt="Cyancore"/>
     </a>
-    Cyancore
   </div>
 </h1>
 <body>
