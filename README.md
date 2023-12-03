@@ -15,7 +15,7 @@
 
 End to End Embedded Development platform from developers for developers. Cyancore is an open source unified software platform for embedded system projects.
 Cyancore has a motivation to write a portable projects which can run on any of the hardware platforms. It is designed to be a goto framework 
-for any sort of project be it an Embedded system applications, IoT, firmware, OS, etc. It provides flexibility, tighter integration of features 
+for any sort of project be it an Embedded applications, IoT, firmware, OS, etc. It provides flexibility, tighter integration of features 
 and abilities, we aim to utilize the hardware and software resources better and improve various KPIs of the final product.
 
 > **Version (arch:2 | major:4 | minor:2): 1.3.2**
