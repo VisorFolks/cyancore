@@ -33,6 +33,7 @@ Connect with us over VisorFolks discord server
 ### Help
 - [**Getting Started**](https://github.com/VisorFolks/cyancore/wiki/Getting-Started)
 - [**QEMU Test**](https://github.com/VisorFolks/cyancore/wiki/qemu-test)
+- [**GuideLines on Contribution**](https://github.com/VisorFolks/cyancore/blob/shubhangi47-patch-1/CONTRIBUTING.md).
 
 For more information, please visit [**Github Wiki**](https://github.com/VisorFolks/cyancore/wiki/).
 
