@@ -19,7 +19,7 @@ for any sort of project be it an Embedded applications, IoT, firmware, OS, etc. 
 and abilities, we aim to utilize the hardware and software resources better and improve various KPIs of the final product.
 
 
-If you'd like to learn and contribute to this project, please follow links for full documentation and start the endeavour to be part of this community.
+If you'd like to learn and contribute to this project, please follow  below links for full documentation and start your endeavour.
 
 > **Version (arch:2 | major:4 | minor:2): 1.3.2**
 
