@@ -13,6 +13,7 @@
   </div>
 </body>
 
+End to End Embedded Development platform from developers for developers.
 > **Version (arch:2 | major:4 | minor:2): 1.3.2**
 
 [![GitHub CI](https://github.com/VisorFolks/cyancore/actions/workflows/github_ci.yml/badge.svg)](https://github.com/VisorFolks/cyancore/actions/workflows/github_ci.yml)
