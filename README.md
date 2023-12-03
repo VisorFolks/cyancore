@@ -26,13 +26,11 @@ and abilities, we aim to utilize the hardware and software resources better and 
 
 
 If you'd like to learn and contribute to this project, please follow  below links for full documentation and start your endeavour.
-
-
-
-
-
-### Join VisorFolks Forum
-Connect with us over VisorFolks discord server: < [**JOIN**](https://discord.gg/gxUQr77MT2) >
+### Join VisorFolks Community Forum
+Connect with us over VisorFolks discord server:
+<a href="https://discord.gg/gxUQr77MT2">
+      <img align="left" alt="VisorFolks Discord Server" width="30px" src="https://discord.com/assets/3437c10597c1526c3dbd98c737c2bcae.svg" />
+</a>
 
 ### Supported Platforms
 
