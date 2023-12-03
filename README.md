@@ -18,6 +18,9 @@ Cyancore has a motivation to write a portable projects which can run on any of t
 for any sort of project be it an Embedded applications, IoT, firmware, OS, etc. It provides flexibility, tighter integration of features 
 and abilities, we aim to utilize the hardware and software resources better and improve various KPIs of the final product.
 
+
+If you'd like to learn and contribute to this project, please follow links for full documentation and start your endeavour to be part of embedded.....
+
 > **Version (arch:2 | major:4 | minor:2): 1.3.2**
 
 [![GitHub CI](https://github.com/VisorFolks/cyancore/actions/workflows/github_ci.yml/badge.svg)](https://github.com/VisorFolks/cyancore/actions/workflows/github_ci.yml)
