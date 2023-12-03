@@ -30,6 +30,11 @@ If you'd like to learn and contribute to this project, please follow  below link
 Connect with us over VisorFolks discord server
 <img align="center" alt="VisorFolks Discord Server" width="25px" src="https://discord.com/assets/3437c10597c1526c3dbd98c737c2bcae.svg" />
 
+### Help
+- [**Getting Started**](https://github.com/VisorFolks/cyancore/wiki/Getting-Started)
+- [**QEMU Test**](https://github.com/VisorFolks/cyancore/wiki/qemu-test)
+
+For more information, please visit [**Github Wiki**](https://github.com/VisorFolks/cyancore/wiki/).
 
 ### Supported Platforms
 
@@ -38,13 +43,7 @@ Connect with us over VisorFolks discord server
 | ATMega328P | FE310-G002    | Coming soon | Coming soon | Coming soon  |
 | ATMega2560 | QEMU SiFive-E |             |             |              |
 
-### Programming Languages
-* asm/assembly
-* C/C++
-* makefile
-* linker script
 
-### Help
-For more information, please visit [**Github Wiki**](https://github.com/VisorFolks/cyancore/wiki/), here are few more links:
-- [**Getting Started**](https://github.com/VisorFolks/cyancore/wiki/Getting-Started)
-- [**QEMU Test**](https://github.com/VisorFolks/cyancore/wiki/qemu-test)
+
+
+
