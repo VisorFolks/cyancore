@@ -1,7 +1,7 @@
 <h1>
   <div align="center">
     <a href="https://github.com/VisorFolks/cyancore">
-      <img align="top" src="https://github.com/VisorFolks/vf_artifacts/blob/stable/cyancore/icons/Cyancore%20Git.png"
+      <img align="top" src="https://github.com/VisorFolks/vf_artifacts/blob/stable/cyancore/icons/cyancore.png"
            alt="Cyancore"/>
     </a>
   </div>
