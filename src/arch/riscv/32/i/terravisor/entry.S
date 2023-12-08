@@ -45,8 +45,8 @@
  * from here the framework boots.
  */
 function entry
-.option norvc
 .option push
+.option norvc
 .option norelax
 	la	gp, _global_start
 .option pop

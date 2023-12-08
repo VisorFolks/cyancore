@@ -26,7 +26,7 @@ If you'd like to learn and contribute to this project, please follow below links
 
 ### Join VisorFolks Community Forum
 Connect with us over VisorFolks discord server
-<img align="center" alt="VisorFolks Discord Server" width="30px" src="https://discord.com/assets/3437c10597c1526c3dbd98c737c2bcae.svg" />
+<a href="https://discord.gg/gxUQr77MT2"> <img align="center" alt="VisorFolks Discord Server" width="30px" src="https://discord.com/assets/3437c10597c1526c3dbd98c737c2bcae.svg" /> </a>
 
 ### Help
 - [**Getting Started**](https://github.com/VisorFolks/cyancore/wiki/Getting-Started)
