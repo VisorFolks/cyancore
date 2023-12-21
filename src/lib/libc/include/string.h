@@ -129,4 +129,4 @@ char *strchr_rev(const char *i, int r);
  * i = destination address
  * j = source address
  */
-size_t strcpy(char *i, const char *j);
+#define strcpy(i, j)	strlcpy(i, j, strlen(j));

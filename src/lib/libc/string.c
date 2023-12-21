@@ -205,7 +205,3 @@ char *strchr_rev(const char *i, int r)
 	return ret;
 }
 
-size_t strcpy(char *i, const char *j)
-{
-	return strlcpy(i, j, strlen(j));
-}
