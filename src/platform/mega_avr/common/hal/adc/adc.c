@@ -117,7 +117,7 @@ static inline status_t _adc_config_vref(adc_port_t *port, adc_ref_t vref)
 status_t adc_setup(adc_port_t *port)
 {
 	status_t ret = success;
-	assert(port);
+	RET_ON_FAIL(port, error_inval_pointer);
 	ret |= platform_clk_en(port->clk_id);
 	_adc_enable(port);
 	ret |= _adc_set_prescaler(port);
@@ -132,7 +132,7 @@ status_t adc_setup(adc_port_t *port)
 status_t adc_shutdown(adc_port_t *port)
 {
 	status_t ret = success;
-	assert(port);
+	RET_ON_FAIL(port, error_inval_pointer);
 	ret |= adc_int_dis(port);
 	_adc_disable(port);
 	ret |= platform_clk_dis(port->clk_id);
@@ -149,14 +149,14 @@ bool adc_busy(adc_port_t *port)
 
 status_t adc_int_en(adc_port_t *port)
 {
-	assert(port);
+	RET_ON_FAIL(port, error_inval_pointer);
 	MMIO8(port->baddr + ADCSRA_OFFSET) |= (1 << ADIE);
 	return success;
 }
 
 status_t adc_int_dis(adc_port_t *port)
 {
-	assert(port);
+	RET_ON_FAIL(port, error_inval_pointer);
 	MMIO8(port->baddr + ADCSRA_OFFSET) &= ~(1 << ADIE);
 	return success;
 }
@@ -164,7 +164,7 @@ status_t adc_int_dis(adc_port_t *port)
 status_t adc_config_pin(adc_port_t *port, uint8_t pin, adc_trig_t trigger, uint8_t resolution, adc_ref_t vref)
 {
 	status_t ret = success;
-	assert(port);
+	RET_ON_FAIL(port, error_inval_pointer);
 	if(pin > N_ADC_PINS)
 		return error_func_inval_arg;
 	ret |= _adc_config_vref(port, vref);
@@ -178,8 +178,8 @@ status_t adc_config_pin(adc_port_t *port, uint8_t pin, adc_trig_t trigger, uint8
 status_t adc_read(adc_port_t *port, uint16_t *adc_val)
 {
 	status_t ret = success;
-	assert(port);
-	assert(adc_val);
+	RET_ON_FAIL(port, error_inval_pointer);
+	RET_ON_FAIL(adc_val, error_inval_pointer);
 	if(MMIO8(port->baddr + ADMUX_OFFSET) & (1 << ADLAR))
 	{
 		*adc_val = MMIO8(port->baddr + ADCH_OFFSET);

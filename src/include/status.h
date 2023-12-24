@@ -22,6 +22,7 @@ typedef enum status
 	error_func_inval		= 0x0002,
 	error_func_inval_arg		= 0x0003,
 	error_overflow			= 0x0004,
+	error_inval_pointer		= 0x0005,
 /* Driver related error */
 	error_driver			= 0x0100,
 	error_driver_init_done		= 0x0101,

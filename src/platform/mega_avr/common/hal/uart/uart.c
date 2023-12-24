@@ -27,7 +27,7 @@
 status_t uart_setup(uart_port_t *port, direction_t d, parity_t p)
 {
 	status_t ret = success;
-	assert(port);
+	RET_ON_FAIL(port, error_inval_pointer);
 	MMIO8(port->baddr + UCSRA_OFFSET) = 0x00;
 	platform_clk_en(port->clk_id);
 	vret_t vres;
@@ -94,7 +94,7 @@ uart_setup_exit:
 status_t uart_shutdown(uart_port_t *port)
 {
 	status_t ret = success;
-	assert(port);
+	RET_ON_FAIL(port, error_inval_pointer);
 	if(port->tx_irq)
 	{
 		ret |= uart_tx_int_dis(port);
@@ -140,7 +140,7 @@ bool uart_frame_error(const uart_port_t *port)
 
 status_t uart_tx(const uart_port_t *port, const char data)
 {
-	assert(port);
+	RET_ON_FAIL(port, error_inval_pointer);
 	while(!uart_buffer_available(port))
 		arch_nop();
 	MMIO8(port->baddr + UDR_OFFSET) = data;
@@ -149,7 +149,7 @@ status_t uart_tx(const uart_port_t *port, const char data)
 
 status_t uart_rx(const uart_port_t *port, char *data)
 {
-	assert(port);
+	RET_ON_FAIL(port, error_inval_pointer);
 	if(uart_frame_error(port))
 		return error_driver_data;
 	*data = MMIO8(port->baddr + UDR_OFFSET);
@@ -158,28 +158,28 @@ status_t uart_rx(const uart_port_t *port, char *data)
 
 status_t uart_tx_int_en(const uart_port_t *port)
 {
-	assert(port);
+	RET_ON_FAIL(port, error_inval_pointer);
 	MMIO8(port->baddr + UCSRB_OFFSET) |= (1 << TXCIE);
 	return success;
 }
 
 status_t uart_tx_int_dis(const uart_port_t *port)
 {
-	assert(port);
+	RET_ON_FAIL(port, error_inval_pointer);
 	MMIO8(port->baddr + UCSRB_OFFSET) &= ~(1 << TXCIE);
 	return success;
 }
 
 status_t uart_rx_int_en(const uart_port_t *port)
 {
-	assert(port);
+	RET_ON_FAIL(port, error_inval_pointer);
 	MMIO8(port->baddr + UCSRB_OFFSET) |= (1 << RXCIE);
 	return success;
 }
 
 status_t uart_rx_int_dis(const uart_port_t *port)
 {
-	assert(port);
+	RET_ON_FAIL(port, error_inval_pointer);
 	MMIO8(port->baddr + UCSRB_OFFSET) &= ~(1 << RXCIE);
 	return success;
 }
