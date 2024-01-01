@@ -25,8 +25,8 @@ void _NAKED init()
 	arch_di();
 	asm volatile("la	tp, _tls_start");
 #if USE_PRNG
-        /* Capture unique seed value before memory initialization */
-        arch_rseed_capture();
+	/* Capture unique seed value before memory initialization */
+	arch_rseed_capture();
 #endif
 	/* Boot framework */
 #if CCSMP == 0

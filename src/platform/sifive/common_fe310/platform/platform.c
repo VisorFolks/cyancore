@@ -26,7 +26,7 @@ void platform_early_setup()
 {
 	status_t ret = success;
 #if USE_PRNG
-        unsigned int temp_randomnumber = rand();
+	unsigned int temp_randomnumber = rand();
 #endif
 	ret |= platform_copy_data();
 	ret |= platform_copy_itim();

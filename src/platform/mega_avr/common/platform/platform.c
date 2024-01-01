@@ -50,7 +50,7 @@ void platform_early_setup()
 	ret |= platform_bss_clear();
 	ret |= platform_init_heap();
 	ret |= platform_resources_setup();
-        srand(temp_randomnumber);
+	srand(temp_randomnumber);
 	/* Setup memory syslogger */
 	driver_setup("mslog");
 

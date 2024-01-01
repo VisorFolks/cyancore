@@ -35,7 +35,7 @@ void _NAKED init()
 	/* Set resisters to architecturally defined reset */
 	zero_reg();
 	/* Capture unique seed value before memory initialization */
-        arch_rseed_capture();
+	arch_rseed_capture();
 	/* Boot framework */
 	engine();
 

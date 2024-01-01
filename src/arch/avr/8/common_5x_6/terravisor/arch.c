@@ -148,6 +148,6 @@ void arch_signal_resume(void)
  */
 void arch_rseed_capture()
 {
-    extern uintptr_t *_bss_start;
-    srand(*_bss_start);
+	extern uintptr_t *_bss_start;
+	srand(*_bss_start);
 }

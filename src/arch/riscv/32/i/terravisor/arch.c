@@ -169,6 +169,6 @@ _WEAK void arch_unhandled_irq()
  */
 void arch_rseed_capture()
 {
-    extern uintptr_t *_bss_start;
-    srand(*_bss_start);
+	extern uintptr_t *_bss_start;
+	srand(*_bss_start);
 }
