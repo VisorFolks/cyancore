@@ -39,4 +39,34 @@ typedef const struct gpio_module
 #define add_ports(x)		.ports = x,		\
 				.n_ports = propsize(x)
 
+/**
+ * create_gpio_module - Instantiates gpio module
+ *
+ * @param[in] _name - Name of the module
+ * @param[in] _id - id of the module
+ * @param[in] _baddr - base address of the module
+ * @param[in] _stride - stride of the address space
+ */
+#define create_gpio_module(_name, _id, _baddr, _stride)	\
+	gpio_module_t _name =		\
+	{				\
+		.id = _id,		\
+		.baddr = _baddr,	\
+		.stride = _stride	\
+	}
+
+/**
+ * create_gpio_list - Creates a list of gpio module
+ *
+ * @param[in] _name - Name of the list
+ * @param[in] _gpio - name of first module
+ * @param[in] ... - variable args if there is more than 1 module
+ */
+#define create_gpio_list(_name, gpio, ...)	\
+	gpio_module_t * const _name[] =		\
+	{					\
+		gpio,				\
+		##__VA_ARGS__			\
+	}
+
 gpio_module_t *dp_get_port_info(hw_devid_t);

@@ -1,6 +1,6 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2024, Cyancore Team
  *
  * File Name		: stdio.h
  * Description		: This file contains sources of libc-stdio
@@ -44,4 +44,4 @@ int vprintf(const FILE *, bool, const char *fmt, va_list args);
 #endif
 
 #define printf(fmt, ...)	if(!NOLOGS) __printf(fmt, ##__VA_ARGS__)
-#define eprintf(fmt, ...)	if(!NOLOGS) __eprintf(fmt, ##__VA_ARGS__))
+#define eprintf(fmt, ...)	if(!NOLOGS) __eprintf(fmt, ##__VA_ARGS__)
