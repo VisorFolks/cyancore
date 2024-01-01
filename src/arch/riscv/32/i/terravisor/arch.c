@@ -93,6 +93,7 @@ void arch_di_save_state(istate_t *istate)
 void arch_ei_restore_state(istate_t *istate)
 {
 	asm volatile("csrs mie, %0" : : "r" (*istate));
+	arch_ei();
 }
 
 static cpu_sleep_t sleep_flag[N_CORES];
