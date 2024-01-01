@@ -20,7 +20,7 @@
     "editor.trimAutoWhitespace": true,
     "editor.autoClosingQuotes": "always",
     "editor.autoClosingBrackets": "always",
-    "editor.wordBasedSuggestions": "matchingDocuments",
+    "editor.wordBasedSuggestions": "true",
     "editor.insertSpaces": false,
     "editor.autoIndent": "advanced",
     "editor.detectIndentation": true,
