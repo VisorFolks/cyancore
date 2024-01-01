@@ -61,7 +61,7 @@ status_t wdt_setup(const wdt_port_t *port)
 {
 	status_t ret;
 	istate_t istate;
-	RET_ON_FAIL(port, error_inval_pointer);
+	STATUS_CHECK_POINTER(port);
 
 	if(port->wdt_handler == NULL)
 		return error_func_inval_arg;
@@ -93,7 +93,7 @@ status_t wdt_setup(const wdt_port_t *port)
 status_t wdt_shutdown(const wdt_port_t *port)
 {
 	istate_t istate;
-	RET_ON_FAIL(port, error_inval_pointer);
+	STATUS_CHECK_POINTER(port);
 	lock_acquire(&wdt_lock);
 	arch_di_save_state(&istate);
 	arch_wdt_reset();
@@ -123,7 +123,7 @@ status_t wdt_set_timeout(const wdt_port_t *port)
 	status_t ret = success;
 	uint8_t timeout;
 	istate_t istate;
-	RET_ON_FAIL(port, error_inval_pointer);
+	STATUS_CHECK_POINTER(port);
 	RET_ON_FAIL(port->timeout <= 9, error_driver_data);
 
 	timeout = get_timeout(port->timeout);

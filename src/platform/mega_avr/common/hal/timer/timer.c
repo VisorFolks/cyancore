@@ -27,7 +27,7 @@ status_t timer_setup(const timer_port_t *port, unsigned int mode, unsigned int p
 {
 	status_t ret;
 	unsigned id;
-	RET_ON_FAIL(port, error_inval_pointer);
+	STATUS_CHECK_POINTER(port);
 	id = port->port_id & 0xf0;
 	ret = platform_clk_en(port->clk_id);
 	if(id == 0 || id == 0x20)
@@ -59,7 +59,7 @@ status_t timer_shutdown(const timer_port_t *port)
 {
 	status_t ret = success;
 	unsigned id;
-	RET_ON_FAIL(port, error_inval_pointer);
+	STATUS_CHECK_POINTER(port);
 	id = port->port_id & 0xf0;
 	if(id == 0 || id == 0x20)
 	{
@@ -81,7 +81,7 @@ status_t timer_shutdown(const timer_port_t *port)
 status_t timer_read(const timer_port_t *port, size_t *value)
 {
 	unsigned id;
-	RET_ON_FAIL(port, error_inval_pointer);
+	STATUS_CHECK_POINTER(port);
 	id = port->port_id & 0xf0;
 	if(id == 0 || id == 0x20)
 		*value = timer8_read(port);
@@ -95,7 +95,7 @@ status_t timer_pwm_set(const timer_port_t *port, bool invert, size_t value)
 {
 	status_t ret = success;
 	unsigned id;
-	RET_ON_FAIL(port, error_inval_pointer);
+	STATUS_CHECK_POINTER(port);
 	id = port->port_id & 0xf0;
 	if(id == 0 || id == 0x20)
 	{
