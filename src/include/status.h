@@ -91,4 +91,4 @@ typedef enum status
 } status_t;
 
 #define STATUS_CHECK_POINTER(x)		RET_ON_FAIL(x, error_inval_pointer)
-#define STATUS_CHECK_COREID(x)		RET_ON_FAIL((x <= N_CORES), error_system_inval_cpu)
+#define STATUS_CHECK_COREID(x)		RET_ON_FAIL((x < N_CORES), error_system_inval_cpu)

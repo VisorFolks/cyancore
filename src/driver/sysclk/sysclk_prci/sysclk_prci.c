@@ -186,6 +186,7 @@ static void sysclk_configure_clk(call_arg_t a0, call_arg_t a1, call_arg_t a2 _UN
 	clock_type_t type = (clock_type_t) a0;
 	unsigned int clk = (unsigned int) a1;
 
+	ret->status = error_inval_pointer;
 	RET_ON_FAIL(port && port->baddr && port->base_clk,);
 
 	ret->p = 0;
@@ -230,6 +231,7 @@ static void sysclk_get_freq(call_arg_t a0 _UNUSED, call_arg_t a1 _UNUSED,
 	istate_t ist;
 	unsigned int getclk;
 
+	ret->status = error_inval_pointer;
 	RET_ON_FAIL(port && port->baddr && port->base_clk,);
 
 	lock_acquire(&sysclk_key);
