@@ -58,8 +58,7 @@ static status_t clint_exit()
 
 status_t clint_send_softirq(size_t core_id)
 {
-	if(core_id >= N_CORES)
-		return error_func_inval_arg;
+	STATUS_CHECK_COREID(core_id);
 	MMIO32(port->baddr + MSIP_OFFSET(core_id)) = 1;
 	arch_dsb();
 	return success;
@@ -67,8 +66,7 @@ status_t clint_send_softirq(size_t core_id)
 
 status_t clint_config_tcmp(size_t core_id, uint64_t value)
 {
-	if(core_id >= N_CORES)
-		return error_func_inval_arg;
+	STATUS_CHECK_COREID(core_id);
 	MMIO64(port->baddr + MTCMP_OFFSET(core_id)) = value;
 	arch_dsb();
 	return success;

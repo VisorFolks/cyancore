@@ -26,7 +26,7 @@ status_t spi_master_setup(spi_port_t *port, dataframe_format_t df_format, clk_po
 	status_t ret = success;
 	uint8_t spcr_value = 0;
 	gpio_port_t spi_mosi, spi_miso, spi_sck, spi_ss;
-	RET_ON_FAIL(port, error_inval_pointer);
+	STATUS_CHECK_POINTER(port);
 	platform_clk_en(port->clk_id);
 	spcr_value |= (1 << SPE) | (1 << MSTR);
 	switch(port->fdiv)
@@ -69,7 +69,7 @@ status_t spi_slave_setup(spi_port_t *port, dataframe_format_t df_format, clk_pol
 	status_t ret = success;
 	uint8_t spcr_value = 0;
 	gpio_port_t spi_mosi, spi_miso, spi_sck, spi_ss;
-	RET_ON_FAIL(port, error_inval_pointer);
+	STATUS_CHECK_POINTER(port);
 	platform_clk_en(port->clk_id);
 	spcr_value |= (1 << SPE);
 	switch(port->fdiv)
@@ -121,28 +121,29 @@ bool spi_trx_done(spi_port_t *port)
 
 status_t spi_int_en(spi_port_t *port)
 {
-	RET_ON_FAIL(port, error_inval_pointer);
+	STATUS_CHECK_POINTER(port);
 	MMIO8(port->baddr + SPCR_OFFSET) |= (1 << SPIE);
 	return success;
 }
 
 status_t spi_int_dis(spi_port_t * port)
 {
-	RET_ON_FAIL(port, error_inval_pointer);
+	STATUS_CHECK_POINTER(port);
 	MMIO8(port->baddr + SPCR_OFFSET) &= ~(1 << SPIE);
 	return success;
 }
 
 status_t spi_tx(spi_port_t *port, char data)
 {
-	RET_ON_FAIL(port, error_inval_pointer);
+	STATUS_CHECK_POINTER(port);
 	MMIO8(port->baddr + SPDR_OFFSET) = data;
 	return success;
 }
 
 status_t spi_rx(spi_port_t *port, char *data)
 {
-	RET_ON_FAIL(port, error_inval_pointer);
+	STATUS_CHECK_POINTER(port);
+	STATUS_CHECK_POINTER(data);
 	*data = MMIO8(port->baddr + SPDR_OFFSET);
 	return success;
 }

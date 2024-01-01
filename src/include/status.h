@@ -16,7 +16,7 @@
 
 typedef enum status
 {
-	success				=  0x0000,
+	success				= 0x0000,
 /* Generic error */
 	error_generic			= 0x0001,
 	error_func_inval		= 0x0002,
@@ -62,6 +62,7 @@ typedef enum status
 	error_system_irq_unlink_fail	= 0x0b02,
 	error_system_clk_caliberation	= 0x0b03,
 	error_system_prog_fail		= 0x0b04,
+	error_system_inval_cpu		= 0x0b05,
 /* Network related error */
 	error_net			= 0x0c00,
 	error_net_con_timeout		= 0x0c01,
@@ -88,3 +89,6 @@ typedef enum status
 	error_list_node_exists		= 0x1101,
 	error_list_node_not_found	= 0x1102,
 } status_t;
+
+#define STATUS_CHECK_POINTER(x)		RET_ON_FAIL(x, error_inval_pointer)
+#define STATUS_CHECK_COREID(x)		RET_ON_FAIL((x <= N_CORES), error_system_inval_cpu)
