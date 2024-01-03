@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <status.h>
 #include <stdlib.h>
+#include <rand.h>
 #include <arch.h>
 #include <driver.h>
 #include <syslog.h>
@@ -20,15 +21,17 @@
 #include <visor/workers.h>
 #include <platform.h>
 
+
 void platform_early_setup()
 {
 	status_t ret = success;
-
+        unsigned int temp_randomnumber = rand();
 	ret |= platform_copy_data();
 	ret |= platform_copy_itim();
 	ret |= platform_bss_clear();
 	ret |= platform_init_heap();
 	ret |= platform_resources_setup();
+	srand(temp_randomnumber);
 	syslog_stdout_disable();
 	driver_setup("mslog");
 
@@ -110,4 +113,3 @@ void platform_cpu_setup()
 	arch_ei();
 	return;
 }
-
