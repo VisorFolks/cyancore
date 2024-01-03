@@ -16,6 +16,7 @@
 #include <lock/lock.h>
 #include <visor/workers.h>
 #include <interrupt.h>
+#include <rand.h>
 
 static void arch_vcall_handler()
 {
@@ -159,4 +160,15 @@ _WEAK void arch_unhandled_irq()
 	syslog(info, "Info:\nIRQ ID\t: 0x%x\n", frame->mcause & ~(1U << 31));
 	while(1)
 		arch_wfi();
+}
+
+/**
+ * arch_rseed_capture
+ *
+ * @brief This function is intended to capture unique seed value
+ */
+void arch_rseed_capture()
+{
+    extern uintptr_t *_bss_start;
+    srand(*_bss_start);
 }
