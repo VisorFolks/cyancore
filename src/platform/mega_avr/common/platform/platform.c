@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <rand.h>
 #include <status.h>
 #include <arch.h>
 #include <visor_call.h>
@@ -37,19 +38,19 @@ uint8_t reset_syndrome;
  * Function like bss clear, data copy, clock reset, etc are called
  * in this function. As reset_syndrome is bss variable, it must be
  * updated only after the bss is cleared. Ideally it should be
- * updated at last. < ! > This function should be made to run on 
+ * updated at last. < ! > This function should be made to run on
  * boot core only!
  */
 void platform_early_setup()
 {
 	status_t ret = success;
-
+	unsigned int temp_randomnumber = rand();
 	/* Setup platform memories */
 	ret |= platform_copy_data();
 	ret |= platform_bss_clear();
 	ret |= platform_init_heap();
 	ret |= platform_resources_setup();
-
+        srand(temp_randomnumber);
 	/* Setup memory syslogger */
 	driver_setup("mslog");
 
@@ -133,4 +134,3 @@ void _NAKED plat_panic_handler_callback()
 	syslog(info, "SP=%p\tSREG = %p\n", frame, frame->sreg);
 	exit(EXIT_FAILURE);
 }
-
