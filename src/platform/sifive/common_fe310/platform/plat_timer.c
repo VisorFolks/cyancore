@@ -19,6 +19,7 @@
 #include <interrupt.h>
 #include <visor_call.h>
 #include <resource.h>
+#include <platform.h>
 #include <hal/clint.h>
 #include <terravisor/timer.h>
 
@@ -50,7 +51,13 @@ static void plat_tmr_isr(void)
 {
 	arch_di_mtime();
 	uint64_t t = clint_read_time();
-	clint_config_tcmp(arch_core_index(), (t + ticks));
+	status_t ret = clint_config_tcmp(arch_core_index(), (t + ticks));
+	if(ret)
+	{
+		syslog_stdout_enable();
+		syslog(fail, "Failed to configure timer, Err = %p\n", ret);
+		plat_panic_handler();
+	}
 	arch_ei_mtime();
 
 	if(tmr_cb != NULL)
@@ -119,7 +126,13 @@ static void plat_timer_set_period(unsigned int p)
 	ticks = plat_get_timer_ticks_msec(tm->clk);
 	ticks *= p;
 	nt = ticks + clint_read_time();
-	clint_config_tcmp(arch_core_index(), nt);
+	status_t ret = clint_config_tcmp(arch_core_index(), nt);
+	if(ret)
+	{
+		syslog_stdout_enable();
+		syslog(fail, "Failed to configure timer, Err = %p\n", ret);
+		plat_panic_handler();
+	}
 	arch_ei_mtime();
 }
 

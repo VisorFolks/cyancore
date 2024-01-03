@@ -61,7 +61,7 @@ status_t wdt_setup(const wdt_port_t *port)
 {
 	status_t ret;
 	istate_t istate;
-	assert(port);
+	STATUS_CHECK_POINTER(port);
 
 	if(port->wdt_handler == NULL)
 		return error_func_inval_arg;
@@ -93,7 +93,7 @@ status_t wdt_setup(const wdt_port_t *port)
 status_t wdt_shutdown(const wdt_port_t *port)
 {
 	istate_t istate;
-	assert(port);
+	STATUS_CHECK_POINTER(port);
 	lock_acquire(&wdt_lock);
 	arch_di_save_state(&istate);
 	arch_wdt_reset();
@@ -123,8 +123,8 @@ status_t wdt_set_timeout(const wdt_port_t *port)
 	status_t ret = success;
 	uint8_t timeout;
 	istate_t istate;
-	assert(port);
-	assert(port->timeout <= 9);
+	STATUS_CHECK_POINTER(port);
+	RET_ON_FAIL(port->timeout <= 9, error_driver_data);
 
 	timeout = get_timeout(port->timeout);
 	if(timeout)
@@ -153,7 +153,6 @@ status_t wdt_set_timeout(const wdt_port_t *port)
  */
 void wdt_hush(const wdt_port_t *port _UNUSED)
 {
-	assert(port);
 	arch_wdt_reset();
 }
 
@@ -166,10 +165,9 @@ void wdt_hush(const wdt_port_t *port _UNUSED)
  *
  * @return status: return the execution status of wdt_sre
  */
-status_t wdt_sre(const wdt_port_t *port)
+status_t wdt_sre(const wdt_port_t *port _UNUSED)
 {
 	istate_t istate;
-	assert(port);
 	uint8_t val = MMIO8(WDTCSR);
 	val |= (1 << WDE);
 
@@ -195,10 +193,9 @@ status_t wdt_sre(const wdt_port_t *port)
  *
  * @return status: return the execution status of wdt_srd
  */
-status_t wdt_srd(const wdt_port_t *port)
+status_t wdt_srd(const wdt_port_t *port _UNUSED)
 {
 	istate_t istate;
-	assert(port);
 	uint8_t val = MMIO8(WDTCSR);
 	val &= ~(1 << WDE);
 

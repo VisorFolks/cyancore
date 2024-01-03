@@ -93,8 +93,8 @@ status_t timer_release_device()
  * programs to link timer event call back functions.
  *
  * @brief This is a helper function which lets other programs to link
- * timer event call back functions. It allows to link onlt 1 callback
- * which will be exeuted as part of timer ISR handler.
+ * timer event call back functions. It allows to link only 1 callback
+ * which will be executed as part of timer ISR handler.
  *
  * @param[in] p: period of timer irq
  * @param[in] cb: call back function pointer
