@@ -161,6 +161,7 @@ _WEAK void arch_unhandled_irq()
 	while(1)
 		arch_wfi();
 }
+
 /**
  * arch_rseed_capture
  *

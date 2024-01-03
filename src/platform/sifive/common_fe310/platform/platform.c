@@ -25,13 +25,17 @@
 void platform_early_setup()
 {
 	status_t ret = success;
+#if USE_PRNG
         unsigned int temp_randomnumber = rand();
+#endif
 	ret |= platform_copy_data();
 	ret |= platform_copy_itim();
 	ret |= platform_bss_clear();
 	ret |= platform_init_heap();
 	ret |= platform_resources_setup();
+#if USE_PRNG
 	srand(temp_randomnumber);
+#endif
 	syslog_stdout_disable();
 	driver_setup("mslog");
 
