@@ -119,3 +119,6 @@ bool arch_suspended_state_was(cpu_sleep_t);
 void arch_signal_suspend(cpu_sleep_t);
 void arch_signal_resume(void);
 #endif
+
+void arch_rseed_capture();
+

@@ -13,6 +13,7 @@
 #include <mmio.h>
 #include <plat_arch.h>
 #include <engine.h>
+#include <arch.h>
 
 extern uint16_t stack_start;
 
@@ -33,7 +34,8 @@ void _NAKED init()
 {
 	/* Set resisters to architecturally defined reset */
 	zero_reg();
-
+	/* Capture unique seed value before memory initialization */
+        arch_rseed_capture();
 	/* Boot framework */
 	engine();
 
