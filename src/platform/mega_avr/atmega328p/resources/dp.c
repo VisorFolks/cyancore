@@ -1,8 +1,8 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2024, Cyancore Team
  *
- * File Name		: platform_dp.c
+ * File Name		: dp.c
  * Description		: This file contains sources for platform
  *			  device properties
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
@@ -19,119 +19,41 @@
 WARN(< ! > FCLK is not defined!)
 #endif
 
-cpu_t core0 =
-{
-	.name = "avr5",
-	.id = 0x0000
-};
+create_cpu(core0, "avr5", 0);
 
-memory_t mem =
-{
-	.start = 0,
-	.size = DMEM_LENGTH
-};
+create_memory(mem, 0, DMEM_LENGTH);
 
-module_t uart0 =
-{
-	.id = uart | 0,
-	.baddr = 0xc0,
-	.clk_id = 0x01,
-	.stride = 0x06,
-	.clk = 115200,
-	.interrupt[0] = {int_arch, 18, int_level},
-	.interrupt[1] = {int_arch, 20, int_level},
-};
+create_module(uart0, (uart | 0), 0xc0, 0x06, 115200, 1,
+		add_irq(0, int_arch, 18, int_level),
+		add_irq(1, int_arch, 20, int_level));
 
-gpio_module_t port0 =
-{
-	.id = gpio | PORTB,
-	.baddr = 0x23,
-	.stride = 3
-};
+create_gpio_module(port0, (gpio | PORTB), 0x23, 3);
+create_gpio_module(port1, (gpio | PORTC), 0x26, 3);
+create_gpio_module(port2, (gpio | PORTD), 0x29, 3);
 
-gpio_module_t port1 =
-{
-	.id = gpio | PORTC,
-	.baddr = 0x26,
-	.stride = 3
-};
+create_module(wdt0, (wdt | 0), 0x60, 0x1, 0x7, 0,
+		add_irq(0, int_arch, 0x6, int_level));
 
-gpio_module_t port2 =
-{
-	.id = gpio | PORTD,
-	.baddr = 0x29,
-	.stride = 3
-};
+create_module(timer0, (timer | 0x00), 0x44, 5, FCLK, 5,
+		add_irq(0, int_arch, 14, int_level),
+		add_irq(1, int_arch, 15, int_level));
 
-module_t wdt0 =
-{
-	.id = wdt | 0,
-	.baddr=0x60,
-	.stride=0x1,
-	.interrupt[0] = {int_arch, 0x6, int_level},
-	.clk = 0x7
-};
+create_module(timer1, (timer | 0x10), 0x80, 12, FCLK, 3,
+		add_irq(0, int_arch, 11, int_level),
+		add_irq(1, int_arch, 12, int_level));
 
-module_t timer0 =
-{
-	.id = timer | 0x00,
-	.baddr = 0x44,
-	.stride = 5,
-	.clk = FCLK,
-	.interrupt[0] = {int_arch, 14, int_level},
-	.interrupt[1] = {int_arch, 15, int_level},
-	.clk_id = 5,
-};
+create_module(timer2, (timer | 0x20), 0xb0, 5, FCLK, 6,
+		add_irq(0, int_arch, 7, int_level),
+		add_irq(1, int_arch, 8, int_level));
 
-module_t timer1 =
-{
-	.id = timer | 0x10,
-	.baddr = 0x80,
-	.stride = 12,
-	.clk = FCLK,
-	.interrupt[0] = {int_arch, 11, int_level},
-	.interrupt[1] = {int_arch, 12, int_level},
-	.clk_id = 3,
-};
+create_module(adc0, (adc | 0x00), 0x78, 8, 0, 0,
+		add_irq(0, int_arch, 21, int_level),
+		add_irq(1, int_arch, 23, int_level));
 
-module_t timer2 =
-{
-	.id = timer | 0x20,
-	.baddr = 0xb0,
-	.stride = 5,
-	.clk = FCLK,
-	.interrupt[0] = {int_arch, 7, int_level},
-	.interrupt[1] = {int_arch, 8, int_level},
-	.clk_id = 6,
-};
+create_gpio_list(port_list, &port0, &port1, &port2);
 
-module_t adc0 =
-{
-	.id = adc | 0x00,
-	.baddr = 0x78,
-	.stride = 8,
-	.interrupt[0] = {int_arch, 21, int_level},
-	.interrupt[1] = {int_arch, 23, int_level},
-	.clk_id = 0,
-};
+create_module_list(mod_list, &uart0, &wdt0, &timer0,
+		&timer1, &timer2, &adc0);
 
-gpio_module_t *port_list[] =
-{
-	&port0, &port1, &port2,
-};
-
-module_t *mod_list[] =
-{
-	&uart0, &wdt0, &timer0, &timer1, &timer2, &adc0,
-};
-
-dp_t device_prop =
-{
-	.base_clock = FCLK,
-	.core[0] = &core0,
-	.memory = &mem,
-
-	add_ports(port_list),
-
-	add_modules(mod_list),
-};
+create_dp(device_prop, FCLK, mem, port_list, mod_list,
+		add_cpu(0, core0));

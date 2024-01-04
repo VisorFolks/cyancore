@@ -1,8 +1,8 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2023, Cyancore Team
+ * Copyrights (C) 2024, Cyancore Team
  *
- * File Name		: platform_dp.c
+ * File Name		: dp.c
  * Description		: This file contains sources for platform
  *			  device properties
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
@@ -19,72 +19,25 @@
 WARN(< ! > XCLK is not defined!)
 #endif
 
-cpu_t core0 =
-{
-	.name = "riscv-e310",
-	.id = 0x0000
-};
+create_cpu(core0, "riscv-e310", 0);
 
-memory_t mem =
-{
-	.start = V_DMEM_START,
-	.size = DMEM_LENGTH
-};
+create_memory(mem, V_DMEM_START, DMEM_LENGTH);
 
-module_t clint0 =
-{
-	.id = clint,
-	.baddr = 0x02000000,
-	.stride = 0xc000,
-};
+create_module(clint0, clint, 0x02000000, 0xc000, 0, 0);
 
-module_t uart0 =
-{
-	.id = uart | 0,
-	.baddr = 0x10013000,
-	.stride = 0x20,
-	.clk = 115200,
-	.interrupt[0] = {int_plat, 3, int_rising_edge},
-};
+create_module(uart0, (uart | 0), 0x10013000, 0x20, 115200, 0,
+		add_irq(0, int_plat, 3, int_rising_edge));
 
-gpio_module_t port0 =
-{
-	.id = gpio | PORTA,
-	.baddr = 0x10012000,
-	.stride = 0x4c,
-};
+create_module(aon0, (aon | 0), 0x10000000, 0x1000, 0, 0);
 
-module_t aon0 =
-{
-	.id = aon | 0,
-	.baddr = 0x10000000,
-	.stride = 0x1000,
-};
+create_module(timer_core0, (timer | 0), 0, 0, 32768, 0,
+		add_irq(0, int_local, 7, int_level));
 
-module_t timer_core0 =
-{
-	.id = timer | 0,
-	.clk = 1e7,
-	.interrupt[0] = {int_local, 7, int_level},
-};
+create_gpio_module(port0, (gpio | PORTA), 0x10012000, 0x4c);
 
-gpio_module_t * const port_list[] =
-{
-	&port0,
-};
+create_gpio_list(port_list, &port0);
 
-module_t * const mod_list[] =
-{
-	&uart0, &clint0, &aon0, &timer_core0
-};
+create_module_list(mod_list, &uart0, &clint0, &aon0, &timer_core0);
 
-dp_t device_prop =
-{
-	.base_clock = XCLK,
-	.core[0] = &core0,
-	.memory = &mem,
-
-	add_ports(port_list),
-
-	add_modules(mod_list),
-};
+create_dp(device_prop, XCLK, mem, port_list, mod_list,
+	add_cpu(0, core0));
