@@ -145,8 +145,7 @@ static bool plic_get_pending(uint32_t irq_id)
 
 static void plic_register_irq_handler(uint32_t id, void (* handler)(void))
 {
-	assert(id);
-	assert(handler);
+	RET_ON_FAIL(id && handler,);
 	plic_irq_handler[id] = handler;
 	arch_dsb();
 }

@@ -96,6 +96,8 @@ $(eval $(call add_define,PRCI_CLK))
 # Bootload Configuration
 #======================================================================
 USE_TIMER	?= 0
+USE_PRNG	:= 0
 $(eval $(call add_define,USE_TIMER))
+$(eval $(call add_define,USE_PRNG))
 $(eval $(call add_define,BOOTLOADER))
 #======================================================================

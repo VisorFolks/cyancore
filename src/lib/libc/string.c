@@ -204,3 +204,4 @@ char *strchr_rev(const char *i, int r)
 	}
 	return ret;
 }
+

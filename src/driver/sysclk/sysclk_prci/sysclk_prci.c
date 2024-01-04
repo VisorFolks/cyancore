@@ -37,8 +37,9 @@ static status_t sysclk_setup()
 	istate_t ist;
 
 	sysclk = (sysclk_port_t *)malloc(sizeof(sysclk_port_t));
-	if(!sysclk)
-		return error_memory_low;
+
+	RET_ON_FAIL(sysclk, error_memory_low);
+
 	port = sysclk;
 
 	arch_visor_call(fetch_dp, clock, 0, 0, &vres);
@@ -84,10 +85,8 @@ static status_t sysclk_disable()
 	istate_t ist;
 	sysclk_port_t *port = sysclk;
 
-	if(!port)
-		return error_driver_init_failed;
-
-	assert(port->baddr && port->base_clk);
+	RET_ON_FAIL(port && port->baddr && port->base_clk,
+			error_driver_data);
 
 	lock_acquire(&sysclk_key);
 	arch_di_save_state(&ist);
@@ -111,10 +110,9 @@ status_t sysclk_reset()
 	status_t ret;
 	sysclk_port_t *port = sysclk;
 	istate_t ist;
-	if(!port)
-		return error_driver_init_failed;
 
-	assert(port->baddr && port->base_clk);
+	RET_ON_FAIL(port && port->baddr && port->base_clk,
+			error_driver_data);
 
 	lock_acquire(&sysclk_key);
 	arch_di_save_state(&ist);
@@ -136,8 +134,6 @@ static inline void sysclk_set_internal(unsigned int clk _UNUSED)
 {
 	status_t ret;
 	sysclk_port_t *port = sysclk;
-	if(!port)
-		return;
 	ret = prci_hfxocs_enable(port);
 	prci_pll_bypass(port);
 	ret |= prci_hfosc_enable(port);
@@ -155,8 +151,6 @@ static inline void sysclk_set_external(void)
 {
 	status_t ret;
 	sysclk_port_t *port = sysclk;
-	if(!port)
-		return;
 	ret = prci_hfosc_enable(port);
 	ret |= prci_hfxocs_enable(port);
 	prci_pll_select_xosc(port);
@@ -172,8 +166,6 @@ static inline void sysclk_set_pll(unsigned int clk)
 {
 	status_t ret;
 	sysclk_port_t *port = sysclk;
-	if(!port)
-		return;
 	ret = prci_hfosc_enable(port);
 	ret |= prci_hfxocs_enable(port);
 	prci_pll_bypass(port);
@@ -193,10 +185,9 @@ static void sysclk_configure_clk(call_arg_t a0, call_arg_t a1, call_arg_t a2 _UN
 	istate_t ist;
 	clock_type_t type = (clock_type_t) a0;
 	unsigned int clk = (unsigned int) a1;
-	if(!port)
-		return;
 
-	assert(port->baddr && port->base_clk);
+	ret->status = error_inval_pointer;
+	RET_ON_FAIL(port && port->baddr && port->base_clk,);
 
 	ret->p = 0;
 	ret->size = 0;
@@ -239,10 +230,9 @@ static void sysclk_get_freq(call_arg_t a0 _UNUSED, call_arg_t a1 _UNUSED,
 	sysclk_port_t *port = sysclk;
 	istate_t ist;
 	unsigned int getclk;
-	if(!port)
-		return;
 
-	assert(port->baddr && port->base_clk);
+	ret->status = error_inval_pointer;
+	RET_ON_FAIL(port && port->baddr && port->base_clk,);
 
 	lock_acquire(&sysclk_key);
 	arch_di_save_state(&ist);

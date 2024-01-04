@@ -18,6 +18,7 @@
 #include <mmio.h>
 #include <arch.h>
 #include <visor/workers.h>
+#include <rand.h>
 
 /**
  * arch_early_setup - This function is called in the early stages of boot
@@ -138,4 +139,15 @@ void arch_signal_suspend(cpu_sleep_t state)
 void arch_signal_resume(void)
 {
 	sleep_flag = resume;
+}
+
+/**
+ * arch_rseed_capture
+ *
+ * @brief This function is intended to capture unique seed value
+ */
+void arch_rseed_capture()
+{
+	extern uintptr_t *_bss_start;
+	srand(*_bss_start);
 }

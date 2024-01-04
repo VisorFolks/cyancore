@@ -123,3 +123,10 @@ size_t strnlen(const char *i, size_t size);
  * ret = pointer to first occurance
  */
 char *strchr_rev(const char *i, int r);
+
+/*
+ * Strcpy
+ * i = destination address
+ * j = source address
+ */
+#define strcpy(i, j)	strlcpy(i, j, strlen(j));
