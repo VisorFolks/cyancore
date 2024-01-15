@@ -28,6 +28,9 @@ void *calloc(size_t, size_t);
 void *realloc(void *, size_t);
 void __heap_status(bool);
 size_t heap_usage(void);
+double atof(char *);
+int atoi(char *);
+long atol(char *);
 
 static inline void heap_status(void)
 {
