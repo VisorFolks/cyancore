@@ -148,7 +148,7 @@ double atof(char *s)
 	/**
 	 * Parse scientific notation of form xe-2 or xe+2
 	*/
-	s = scientific_notation(s, &a, &r, &e);
+	scientific_notation(s, &a, &r, &e);
 	return (N && r != 0.0) ? -r : r;
 }
 
@@ -176,7 +176,7 @@ long atol(char *s)
 	/**
 	 * Parse integral part of the number
 	*/
-	s = integer_traverse(s, &a);
+	integer_traverse(s, &a);
 	return (N && a != 0) ? -a : a;
 }
 
