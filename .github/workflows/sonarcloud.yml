@@ -14,6 +14,7 @@ on:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
     env:
       SONAR_SCANNER_VERSION: 4.4.0.2170
@@ -25,14 +26,8 @@ jobs:
         fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
     - name: Install Dependencies
-      run: |
-        wget https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
-        sudo apt-get install cppcheck unzip -y
-        unzip build-wrapper-linux-x86.zip
-        ls -las build-wrapper-linux-x86
-        export BUILD_WRAPPER_PATH=$(pwd)/build-wrapper-linux-x86
-        echo $BUILD_WRAPPER_PATH
-  
+      run: sudo apt install cppcheck -y
+
     - name: Configure Git
       env:
         TOKEN: ${{ secrets.AKASH_VF }}
@@ -40,31 +35,43 @@ jobs:
 
     - name: Get Toolchains
       run: |
-        make get_avr_tc AVR_TC_REPO=https://github.com/VisorFolks/avr-toolchain.git
-        make get_riscv_tc RISC_V_TC_REPO=https://github.com/VisorFolks/risc-v-toolchain.git
-    - name: Build
+        make get_avr_tc
+        make get_riscv_tc
+    - name: Set up JDK 17
       run: |
-        pwd
-        build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir build_wrapper_output_directory make demo_riscv
-        ls -las
-        export BUILD_WRAPPER_OUTPUT_PATH=$(pwd)/build_wrapper_output_directory
-        echo "BUILD_WRAPPER_OUTPUT_PATH = $BUILD_WRAPPER_OUTPUT_PATH"
+        sudo apt install openjdk-17-jre openjdk-17-jdk -y
+        java --version
+    - name: Download and set up sonar-scanner
+      env:
+        SONAR_SCANNER_DOWNLOAD_URL: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.SONAR_SCANNER_VERSION }}-linux.zip
+      run: |
+        mkdir -p $HOME/.sonar
+        curl -sSLo $HOME/.sonar/sonar-scanner.zip ${{ env.SONAR_SCANNER_DOWNLOAD_URL }}
+        unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
+        echo "$HOME/.sonar/sonar-scanner-${{ env.SONAR_SCANNER_VERSION }}-linux/bin" >> $GITHUB_PATH
 
-    - uses: actions/checkout@v3
-      with:
-        # Disabling shallow clone is recommended for improving relevancy of reporting
-        fetch-depth: 0
-    - name: SonarCloud Scan
-      uses: sonarsource/sonarcloud-github-action@master
+    - name: Download and set up build-wrapper
+      env:
+        BUILD_WRAPPER_DOWNLOAD_URL: ${{ env.SONAR_SERVER_URL }}/static/cpp/build-wrapper-linux-x86.zip
+      run: |
+        curl -sSLo $HOME/.sonar/build-wrapper-linux-x86.zip ${{ env.BUILD_WRAPPER_DOWNLOAD_URL }}
+        unzip -o $HOME/.sonar/build-wrapper-linux-x86.zip -d $HOME/.sonar/
+        echo "$HOME/.sonar/build-wrapper-linux-x86" >> $GITHUB_PATH
+
+    - name: Run build-wrapper
+      run: |
+        build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} make all_projects
+
+    - name: Run sonar-scanner
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      with:
-        projectBaseDir: /home/runner/work/cyancore/cyancore/
-        args: >
-          -Dsonar.organization=cyancore
-          -Dsonar.projectKey=VisorFolks_cyancore
-          -Dsonar.sources=src
-          -Dsonar.verbose=true
-          -Dsonar.cfamily.threads=4
-          -Dsonar.cfamily.build-wrapper-output=/home/runner/work/cyancore/cyancore/build_wrapper_output_directory
+      run: |
+        sonar-scanner \
+        --define sonar.host.url="${{ env.SONAR_SERVER_URL }}" \
+        --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" \
+        --define sonar.organization=cyancore \
+        --define sonar.projectKey=VisorFolks_cyancore \
+        --define sonar.sources=src \
+        --define sonar.verbose=true \
+        --define sonar.cfamily.threads=4
