@@ -26,8 +26,13 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        sudo apt-get install cppcheck bear -y
-
+        wget https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
+        sudo apt-get install cppcheck unzip -y
+        unzip build-wrapper-linux-x86.zip
+        ls -las build-wrapper-linux-x86
+        export BUILD_WRAPPER_PATH=$(pwd)/build-wrapper-linux-x86
+        echo $BUILD_WRAPPER_PATH
+  
     - name: Configure Git
       env:
         TOKEN: ${{ secrets.AKASH_VF }}
@@ -40,9 +45,11 @@ jobs:
     - name: Build
       run: |
         pwd
-        build-wrapper-linux-x86-64 --out-dir build_wrapper_output_directory make demo_riscv
-        ls -las 
-        
+        $BUILD_WRAPPER_PATH/build-wrapper-linux-x86-64 --out-dir build_wrapper_output_directory make demo_riscv
+        ls -las
+        export BUILD_WRAPPER_OUTPUT_PATH=$(pwd)/build_wrapper_output_directory
+        echo "BUILD_WRAPPER_OUTPUT_PATH = $BUILD_WRAPPER_OUTPUT_PATH"
+
     - uses: actions/checkout@v3
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
@@ -59,4 +66,4 @@ jobs:
           -Dsonar.sources=src
           -Dsonar.verbose=true
           -Dsonar.cfamily.threads=4
-          -Dsonar.cfamily.compile-commands=/home/runner/work/cyancore/cyancore/compile_commands.json
+          -Dsonar.sonar.cfamily.build-wrapper-output=$BUILD_WRAPPER_OUTPUT_PATH
