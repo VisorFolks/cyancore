@@ -40,7 +40,7 @@ jobs:
     - name: Set up JDK 17
       run: |
         sudo apt install openjdk-17-jre openjdk-17-jdk -y
-        java --version
+        echo "*** java version: $(java --version)"
     - name: Download and set up sonar-scanner
       env:
         SONAR_SCANNER_DOWNLOAD_URL: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.SONAR_SCANNER_VERSION }}-linux.zip
