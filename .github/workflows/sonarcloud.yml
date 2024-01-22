@@ -67,4 +67,4 @@ jobs:
           -Dsonar.sources=src
           -Dsonar.verbose=true
           -Dsonar.cfamily.threads=4
-          -Dsonar.cfamily.build-wrapper-output=build_wrapper_output_directory
+          -Dsonar.cfamily.build-wrapper-output=/home/runner/work/cyancore/cyancore/build_wrapper_output_directory
