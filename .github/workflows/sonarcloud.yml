@@ -45,7 +45,7 @@ jobs:
     - name: Build
       run: |
         pwd
-        $BUILD_WRAPPER_PATH/build-wrapper-linux-x86-64 --out-dir build_wrapper_output_directory make demo_riscv
+        build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir build_wrapper_output_directory make demo_riscv
         ls -las
         export BUILD_WRAPPER_OUTPUT_PATH=$(pwd)/build_wrapper_output_directory
         echo "BUILD_WRAPPER_OUTPUT_PATH = $BUILD_WRAPPER_OUTPUT_PATH"
