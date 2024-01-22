@@ -27,8 +27,6 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get install cppcheck bear -y
-        bear --version
-        bear --help
 
     - name: Configure Git
       env:
@@ -60,4 +58,4 @@ jobs:
           -Dsonar.sources=src
           -Dsonar.verbose=true
           -Dsonar.cfamily.threads=4
-          -Dsonar.cfamily.compile-commands=compile_commands.json
+          -Dsonar.cfamily.compile-commands=/home/runner/work/cyancore/cyancore/compile_commands.json
