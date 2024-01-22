@@ -14,7 +14,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     env:
       SONAR_SCANNER_VERSION: 4.4.0.2170
@@ -35,43 +34,30 @@ jobs:
 
     - name: Get Toolchains
       run: |
+        sudo apt-get install bear
         make get_avr_tc AVR_TC_REPO=https://github.com/VisorFolks/avr-toolchain.git
         make get_riscv_tc RISC_V_TC_REPO=https://github.com/VisorFolks/risc-v-toolchain.git
-    - name: Set up JDK 17
-      uses: actions/setup-java@v1
+    - name: Build
+      run: |
+        bear -o out/compile_commands_riscv.json make demo_riscv
+
+  sonarcloud:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
       with:
-        java-version: 17
-    - name: Download and set up sonar-scanner
-      env:
-        SONAR_SCANNER_DOWNLOAD_URL: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.SONAR_SCANNER_VERSION }}-linux.zip
-      run: |
-        mkdir -p $HOME/.sonar
-        curl -sSLo $HOME/.sonar/sonar-scanner.zip ${{ env.SONAR_SCANNER_DOWNLOAD_URL }}
-        unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
-        echo "$HOME/.sonar/sonar-scanner-${{ env.SONAR_SCANNER_VERSION }}-linux/bin" >> $GITHUB_PATH
-
-    - name: Download and set up build-wrapper
-      env:
-        BUILD_WRAPPER_DOWNLOAD_URL: ${{ env.SONAR_SERVER_URL }}/static/cpp/build-wrapper-linux-x86.zip
-      run: |
-        curl -sSLo $HOME/.sonar/build-wrapper-linux-x86.zip ${{ env.BUILD_WRAPPER_DOWNLOAD_URL }}
-        unzip -o $HOME/.sonar/build-wrapper-linux-x86.zip -d $HOME/.sonar/
-        echo "$HOME/.sonar/build-wrapper-linux-x86" >> $GITHUB_PATH
-
-    - name: Run build-wrapper
-      run: |
-        build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} make all_projects
-
-    - name: Run sonar-scanner
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: |
-        sonar-scanner \
-        --define sonar.host.url="${{ env.SONAR_SERVER_URL }}" \
-        --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" \
-        --define sonar.organization=cyancore \
-        --define sonar.projectKey=VisorFolks_cyancore \
-        --define sonar.sources=src \
-        --define sonar.verbose=true \
-        --define sonar.cfamily.threads=4
+      with:
+        args: >
+          -Dsonar.organization=cyancore
+          -Dsonar.projectKey=VisorFolks_cyancore
+          -Dsonar.sources=src
+          -Dsonar.verbose=true
+          -Dsonar.cfamily.threads=4
+          -Dsonar.cfamily.compile-commands=out/compile_commands_riscv.json
