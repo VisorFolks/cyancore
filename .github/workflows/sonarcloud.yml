@@ -60,10 +60,11 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       with:
+        projectBaseDir: /home/runner/work/cyancore/cyancore/
         args: >
           -Dsonar.organization=cyancore
           -Dsonar.projectKey=VisorFolks_cyancore
           -Dsonar.sources=src
           -Dsonar.verbose=true
           -Dsonar.cfamily.threads=4
-          -Dsonar.sonar.cfamily.build-wrapper-output=/home/runner/work/cyancore/cyancore/build_wrapper_output_directory
+          -Dsonar.sonar.cfamily.build-wrapper-output=build_wrapper_output_directory
