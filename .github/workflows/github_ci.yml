@@ -39,7 +39,7 @@ jobs:
           make get_riscv_tc RISC_V_TC_REPO=${RISCVTC}
 
       - name: Init CodeQL
-        uses: github/codeql-action/init@v1
+        uses: github/codeql-action/init@v2
         with:
           languages: ${{ matrix.language }}
           debug: true
@@ -53,7 +53,7 @@ jobs:
           make demo_helios_riscv
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v1
+        uses: github/codeql-action/analyze@v2
 
       - name: Clean Up
         run: |
