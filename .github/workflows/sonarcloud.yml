@@ -41,7 +41,7 @@ jobs:
         make get_riscv_tc RISC_V_TC_REPO=https://github.com/VisorFolks/risc-v-toolchain.git
     - name: Build
       run: |
-        bear make demo_riscv
+        bear --output compile_commands.json -- make demo_riscv
     - uses: actions/checkout@v3
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
