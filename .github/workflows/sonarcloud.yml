@@ -39,6 +39,7 @@ jobs:
         make get_riscv_tc
     - name: Set up JDK 17
       run: |
+        sudo apt remove openjdk-11* -y
         sudo apt install openjdk-17-jre openjdk-17-jdk -y
         echo "*** java version: $(java --version)"
     - name: Download and set up sonar-scanner
