@@ -28,6 +28,7 @@ jobs:
       run: |
         sudo apt-get install cppcheck bear -y
         bear --version
+        bear --help
 
     - name: Configure Git
       env:
@@ -41,10 +42,6 @@ jobs:
     - name: Build
       run: |
         bear make demo_riscv
-
-  sonarcloud:
-    runs-on: ubuntu-latest
-    steps:
     - uses: actions/checkout@v3
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
@@ -61,4 +58,4 @@ jobs:
           -Dsonar.sources=src
           -Dsonar.verbose=true
           -Dsonar.cfamily.threads=4
-          -Dsonar.cfamily.compile-commands=compile_commands_riscv.json
+          -Dsonar.cfamily.compile-commands=compile_commands.json
