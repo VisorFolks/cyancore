@@ -25,7 +25,7 @@ jobs:
         fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
     - name: Install Dependencies
-      run: sudo apt install cppcheck -y
+      run: sudo apt-get install cppcheck bear -y
 
     - name: Configure Git
       env:
@@ -34,12 +34,11 @@ jobs:
 
     - name: Get Toolchains
       run: |
-        sudo apt-get install bear
         make get_avr_tc AVR_TC_REPO=https://github.com/VisorFolks/avr-toolchain.git
         make get_riscv_tc RISC_V_TC_REPO=https://github.com/VisorFolks/risc-v-toolchain.git
     - name: Build
       run: |
-        bear -o out/compile_commands_riscv.json make demo_riscv
+        bear make demo_riscv
 
   sonarcloud:
     runs-on: ubuntu-latest
@@ -60,4 +59,4 @@ jobs:
           -Dsonar.sources=src
           -Dsonar.verbose=true
           -Dsonar.cfamily.threads=4
-          -Dsonar.cfamily.compile-commands=out/compile_commands_riscv.json
+          -Dsonar.cfamily.compile-commands=compile_commands_riscv.json
