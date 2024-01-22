@@ -39,10 +39,10 @@ jobs:
         make get_riscv_tc RISC_V_TC_REPO=https://github.com/VisorFolks/risc-v-toolchain.git
     - name: Build
       run: |
-        bear -- make demo_riscv
         pwd
-        ls -las
-
+        build-wrapper-linux-x86-64 --out-dir build_wrapper_output_directory make demo_riscv
+        ls -las 
+        
     - uses: actions/checkout@v3
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
