@@ -8,9 +8,8 @@
 # Organisation		: Cyancore Core-Team
 #
 
-.PHONY:	version
-NAME		= Beryllium
-VERSION		= 0x01000302
+NAME		= Boron
+VERSION		= 0x01000400
 
 $(eval $(call add_define,VERSION))
 

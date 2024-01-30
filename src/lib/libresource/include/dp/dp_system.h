@@ -1,6 +1,6 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2024, Cyancore Team
  *
  * File Name		: dp_system.h
  * Description		: This file contains prototypes of device
@@ -52,7 +52,7 @@ typedef const struct cpu
 {
 	char name[10];
 	uint16_t id;
-	cpu_sleep_t **states;
+	cpu_sleep_t *states;
 	size_t n_sleep_states;
 
 } cpu_t;
@@ -73,3 +73,53 @@ typedef enum clock_type
 cpu_t *dp_get_cpu_info(uint8_t);
 const unsigned long *dp_get_base_clock();
 memory_t *dp_get_memory_info();
+
+/**
+ * create_memory - Instantiates memory module
+ *
+ * @param[in] _name - Name of the module
+ * @param[in] _start - start address of the memory
+ * @param[in] _size - size of memory segment
+ */
+#define create_memory(_name, _start, _size)	\
+	static memory_t _name =			\
+	{					\
+		.start = _start,		\
+		.size = _size			\
+	}
+
+/**
+ * create_sleep_list - Creates CPU states list
+ *
+ * @param[in] _name - Name of the list
+ * @param[in] state1 - Minimum of 1 states is required
+ * @param[in] ... - Variable args for more states
+ */
+#define create_sleep_list(_name, state1, ...)	\
+	static cpu_sleep_t _name[] = {state1, ##__VA_ARGS__}
+
+/**
+ * add_cpu_sleep_states - Adds cpu states to create_cpu
+ *
+ * @param[in] x = CPU states list
+ */
+#define add_cpu_sleep_states(x)			\
+	.states = &x,				\
+	.n_sleep_states = propsize(x)
+
+/**
+ * create_cpu - Instantitates cpu module
+ *
+ * @param[in] _name - Name of the module
+ * @param[in] _cpu - type of cpu
+ * @param[in] _id - ID of the cpu
+ * @param[in] ... - Variable args for sleep modes
+ */
+#define create_cpu(_name, _cpu, _id, ...)		\
+	static cpu_t _name =				\
+	{						\
+		.name = _cpu,				\
+		.id = _id,				\
+		##__VA_ARGS__				\
+	}
+

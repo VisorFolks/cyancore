@@ -1,6 +1,6 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2024, Cyancore Team
  *
  * File Name		: arch.c
  * Description		: This file consists of architecture specific function that
@@ -170,5 +170,5 @@ _WEAK void arch_unhandled_irq()
 void arch_rseed_capture()
 {
 	extern uintptr_t *_bss_start;
-	srand(*_bss_start);
+	srand((size_t)_bss_start);
 }

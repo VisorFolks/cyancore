@@ -1,0 +1,59 @@
+name: SonarCloud Scan
+
+on:
+  push:
+    branches:
+    - stable
+    - development
+    - helios_stage
+  pull_request:
+    branches:
+    - stable
+    - development
+    - helios_stage
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SONAR_SCANNER_VERSION: 4.4.0.2170
+      SONAR_SERVER_URL: "https://sonarcloud.io"
+      BUILD_WRAPPER_OUT_DIR: bw-output # Directory where build-wrapper output will be placed
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
+    - name: Install Dependencies
+      run: sudo apt install cppcheck -y
+
+    - name: Configure Git
+      env:
+        TOKEN: ${{ secrets.AKASH_VF }}
+      run: git config --global url."https://${TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+
+    - name: Get Toolchains
+      run: |
+        sudo apt-get install bear
+        make get_avr_tc AVR_TC_REPO=https://github.com/VisorFolks/avr-toolchain.git
+        make get_riscv_tc RISC_V_TC_REPO=https://github.com/VisorFolks/risc-v-toolchain.git
+    - name: Build
+      run: |
+        bear make demo_riscv
+    - uses: actions/checkout@v3
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        args: >
+          -Dsonar.organization=cyancore
+          -Dsonar.projectKey=VisorFolks_cyancore
+          -Dsonar.sources=src
+          -Dsonar.verbose=true
+          -Dsonar.cfamily.threads=4
+          -Dsonar.cfamily.compile-commands=compile_commands.json
