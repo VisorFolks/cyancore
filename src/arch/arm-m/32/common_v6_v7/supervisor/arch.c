@@ -1,11 +1,12 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2024, Cyancore Team
  *
  * File Name		: arch.c
  * Description		: This file consists of architecture specific function that
  *			  cannot be inlined. Hence, present in c file.
- * Primary Author	: Mayuri Lokhande [mayurilokhande01@gmail.com]
+ * Primary Author	: Mayuri Lokhande [mayurilokhande01@gmail.com],
+ *			  Akash Kollipara [akashkollipara@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 
@@ -14,18 +15,40 @@
 #include <assert.h>
 #include <status.h>
 #include <syslog.h>
-#include <mmio.h>
 #include <arch.h>
+#include <interrupt.h>
 #include <visor/workers.h>
+#include <rand.h>
+#include <lock/lock.h>
 
-static void arch_ecall_handler()
+static void arch_vcall_handler()
 {
 	context_frame_t *frame = get_context_frame();
 	vret_t vres;
-	machine_call(frame->r0, frame->r1, frame->r3, &vres);
+	vcall_handler(frame->r0, frame->r1, frame->r2, frame->r3, &vres);
 	frame->r0 = vres.p;
 	frame->r1 = vres.size;
 	frame->r2 = vres.status;
+	return;
+}
+
+static lock_t boot_key = LOCK_INITAL_VALUE;
+void arch_early_signal_boot_start()
+{
+	boot_key = LOCK_INITAL_VALUE;
+	return;
+}
+
+void arch_wait_till_boot_done()
+{
+	lock_acquire(&boot_key);
+	lock_release(&boot_key);
+	return;
+}
+
+void arch_signal_boot_done()
+{
+	lock_release(&boot_key);
 	return;
 }
 
@@ -38,7 +61,6 @@ static void arch_ecall_handler()
 void arch_early_setup()
 {
 	arch_di();
-
 }
 
 /**
@@ -48,15 +70,15 @@ void arch_early_setup()
  */
 void arch_setup()
 {
+	link_interrupt(int_arch, 10,&arch_vcall_handler);
 	return;
 }
 
-void arch_di_save_state(istate_t *sreg_i_backup)
+void arch_di_save_state(istate_t *istate _UNUSED)
 {
-	*
 }
 
-void arch_ei_restore_state(istate_t *sreg_i_backup)
+void arch_ei_restore_state(istate_t *istate _UNUSED)
 {
 
 }
@@ -79,12 +101,10 @@ void _NORETURN arch_panic_handler_callback()
 	syslog_stdout_enable();
 	sysdbg("r0=%p\tr1=%p\tr2=%p\tr3=%p\tr4=%p\tr5=%p\n",
 		frame->r0, frame->r1, frame->r2, frame->r3, frame->r4, frame->r5);
-	sysdbg("r6=%p\tr7=%p\tr8=%p\tr9=%p\tr10=%p\tr11=%p\n",
-		frame->r6, frame->r7, frame->r8, frame->r9, frame->r10, frame->r11);
-	sysdbg("r12=%p\tr13=%p\tr14=%p\tr15=%p\tAPSR=%p\n",
-		frame->r12, frame->r13, frame->r14, frame->r15, frame->apsr);
+	sysdbg("r6=%p\tr7=%p\tPSR=%p\tLR=%p\n",
+		frame->r6, frame->r7, frame->psr, frame->lr);
 #if DEBUG==0
-	syslog(info, "APSR=%p\n", frame->apsr);
+	syslog(info, "PSR=%p\n", frame->psr);
 #endif
 panic:
 	while(1) arch_wfi();
@@ -131,4 +151,29 @@ void arch_signal_suspend(cpu_sleep_t state)
 void arch_signal_resume(void)
 {
 	sleep_flag = resume;
+}
+
+/**
+ * arch_rseed_capture
+ *
+ * @brief This function is intended to capture unique seed value
+ */
+void arch_rseed_capture()
+{
+	extern uintptr_t *_bss_start;
+	srand((size_t)_bss_start);
+}
+
+_WEAK void arch_panic_handler()
+{
+	syslog_stdout_enable();
+	syslog(fail, "Arch Panic!\n");
+	arch_panic_handler_callback();
+}
+
+_WEAK void arch_unhandled_irq()
+{
+	syslog_stdout_enable();
+	syslog(fail, "Arch Unhandled IRQ!\n");
+	arch_panic_handler_callback();
 }

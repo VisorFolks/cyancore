@@ -1,11 +1,12 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2022-2023, Cyancore Team
+ * Copyrights (C) 2024, Cyancore Team
  *
  * File Name		: asm.S
  * Description		: This file consists of all the function written in asm
  *			  like ISR, context management and panic handler
- * Primary Author	: Mayuri Lokhande [mayurilokhande01@gmail.com]
+ * Primary Author	: Mayuri Lokhande [mayurilokhande01@gmail.com],
+ *			  Akash Kollipara [akashkollipara@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 
@@ -30,23 +31,21 @@ function int_\id
 .weak isr
 function isr
 	push	{r1-r7, lr}
+	mrs	r1, psr
+	push	{r1}
 	mrs	r1, msp
 	bl	exception_handler
-	pop	{r1-r7}
+	pop	{r1}
+	msr	epsr, r1
 	pop	{r0}
 	mov	lr, r0
+	pop	{r1-r7}
 	pop	{r0}
 	mov	pc, lr
 
-/**
- * Interrupt Router Declaration Table
- * 1-14 Interrupt routers are define as of now. If possible more can
- * be added. But during compile time only necessary interrupt router
- * functions will be retained and others are cleaned up.
- */
 /*==========< Interrupt router functions >==========*/
 .set i, 1
-.rept 14
+.rept (N_IRQ + N_EXCEP)
 	INT %i
 .set i, i+1
 .endr

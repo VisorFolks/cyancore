@@ -1,10 +1,11 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2024, Cyancore Team
  *
  * File Name		: interrupt_handler.c
  * Description		: This file consists of arch interrupt handler sources.
- * Primary Author	: Mayuri Lokhande [mayurilokhande01@gmail.com]
+ * Primary Author	: Mayuri Lokhande [mayurilokhande01@gmail.com],
+ *			  Akash Kollipara [akashkollipara@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 
@@ -17,93 +18,60 @@
 #include <arch.h>
 #include <assert.h>
 
-static context_frame_t *local_frame;
-
-static void set_context_frame(*frame)
-{
-	local_frame = frame;
-}
+static void (* exhandler[N_CORES][N_EXCEP])(void) = {{[0 ... N_EXCEP-1] = arch_panic_handler}};
+static void (* irqhandler[N_CORES][N_IRQ])(void) = {{[0 ... N_IRQ-1] = arch_unhandled_irq}};
+static context_frame_t *local_frame[N_CORES];
 
 bool in_isr(void)
 {
-	return (local_frame != NULL) ? true : false ;
+	unsigned int cpuid = arch_core_index();
+	return (local_frame[cpuid] != NULL) ? true : false;
 }
 
-/**
- * int_handler - Array of Interrupt handler pointers
- *
- * @brief This is a function pointer array which consists of addresses of corresponding
- * interrupt handler functions. This is by default assigned as arch_panic_handler.
- */
-static void (* exhandler[N_EXCEP])(void) = {{[0 ... N_EXCEP-1] = arch_panic_handler}};
-
-/**
- * arch_register_interrupt_handlers - Registers arch interrupt handlers
- *  @brief This function is responsible to registers all architectural level
- * Interrupt handling functions.
- *
- *  @param[in] id: Interrupt ID
- *  @param[in] *handler - function pointer of interrupt handling function.
- */
-
-void arch_register_interrupt_handler(unsigned int id, void(* handler)(void))
+static void set_context_frame(context_frame_t *frame)
 {
-	/*Check if Interrupt ID is valid*/
-	assert((id > 0) && (id <= N_EXCEP));
-
-	/*
-	 * Decrement ID as array indexing starts from 0.
-	 * ID = 0 is CPU entry address.
-	*/
-	id --;
-
-	/*Store interrupt handler*/
-	exhandler[id] = handler;
-}
-
-/**
- * Exception handler - Executes Interrupt handler corresponding to int ID
- *
- * @brief This function is called by ISR. It executes function pointed by int_handler.
- * It accepts int ID as argument, which indexes the interrupt handling function.
- *
- * @param[in] id: Interrupt ID
- */
-
-void exception_handler(unsigned int id, context_frame_t *frame)
-{
-	set_context_frame(frame);
-
-	/*Check if Interrupt ID is valid*/
-	if((id > 0) && (id <= N_EXCEP))
-	{
-		/*
-		 * Decrement ID as array indexing starts from 0.
-		 * ID = 0 is CPU entry address.
-		*/
-		id --;
-
-		/* Get corresponding interrupt handling function */
-		void (*handler)(void) = exhandler[id]
-
-		/* Check if the handler is valid*/
-		assert(handler)
-
-		/* Execute exception handler */
-		handler();
-	}
-	else if(id == 65535)
-		plat_panic_handler_callback();
-	else if(id == 65536)
-		arch_panic_handler_callback();
-	else{}
-	set_context_frame(NULL);
-	return;
+	unsigned int cpuid = arch_core_index();
+	local_frame[cpuid] = frame;
+	arch_dsb();
 }
 
 context_frame_t *get_context_frame()
 {
-	if(local_frame)
-		return local_frame;
-	return NULL;
+	unsigned int cpuid = arch_core_index();
+	return local_frame[cpuid];
+}
+
+void arch_register_interrupt_handler(unsigned int id, void (*handler)(void))
+{
+	unsigned int cpuid = arch_core_index();
+	assert(id < N_EXCEP);
+	exhandler[cpuid][id] = handler;
+	arch_dsb();
+}
+
+void local_register_interrupt_handler(unsigned int id, void (*handler)(void))
+{
+	unsigned int cpuid = arch_core_index();
+	assert(id < N_IRQ);
+	irqhandler[cpuid][id] = handler;
+	arch_dsb();
+}
+
+void exception_handler(uint32_t id, context_frame_t *frame)
+{
+	unsigned int cpuid = arch_core_index();
+
+	set_context_frame(frame);
+
+	if(id != 10 && id != 1)
+		frame->lr -= 4;		// point to previous instruction
+
+	if(id >= N_EXCEP)
+		irqhandler[cpuid][id - N_EXCEP]();
+	else
+	{
+		exhandler[cpuid][id]();
+	}
+	set_context_frame(NULL);
+	arch_dsb();
 }

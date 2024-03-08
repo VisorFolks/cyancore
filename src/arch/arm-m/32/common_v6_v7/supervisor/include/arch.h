@@ -1,11 +1,12 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2024, Cyancore Team
  *
  * File Name		: arch.h
  * Description		: This file prototypes arch related functions and
  *			  defines inline-able arch functions.
- * Primary Author	: Mayuri Lokhande [mayurilokhande01@gmail.com]
+ * Primary Author	: Mayuri Lokhande [mayurilokhande01@gmail.com],
+ *			  Akash Kollipara [akashkollipara@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 
@@ -13,6 +14,7 @@
 #define _ARCH_H_
 
 #include <arm.h>
+#include <resource.h>
 #include <visor_call.h>
 
 /**
@@ -25,17 +27,19 @@ void arch_early_setup();
  */
 void arch_setup();
 
-/**
- * arch_wfi - Wait for interrupt, with sleep mode
- */
-void arch_wfi();
-void arch_di_save_state(istate *);
-void arch_ei_restore_state(istate *);
+void arch_di_save_state(istate_t *);
+void arch_ei_restore_state(istate_t *);
+unsigned int arch_core_index();
 
 /**
  * arch_panic_handler - Executes when arch error occurs
  */
 void arch_panic_handler();
+void arch_unhandled_irq();
+
+void arch_early_signal_boot_start();
+void arch_wait_till_boot_done();
+void arch_signal_boot_done();
 
 /**
  * arch_register_interrupt_handler - Registers interrupt handler for
@@ -44,7 +48,8 @@ void arch_panic_handler();
 void arch_register_interrupt_handler(unsigned int, void(*)(void));
 
 /**
- * arch_super_call - perform machine call
+ * arch_visor_call - perform supervisor call
+ *
  * @brief This function performs svc call
  *
  * @param[in] code: universal call code
@@ -53,8 +58,7 @@ void arch_register_interrupt_handler(unsigned int, void(*)(void));
  * @param[in] r2: third argument
  * @param[in] *ret: return struct
  */
-#define arch_visor_call	arch_super_call
-static inline void arch_super_call(unsigned int code, unsigned int arg0, unsigned int arg1, unsigned int arg2, vret_t *ret)
+static inline void arch_visor_call(unsigned int code, unsigned int arg0, unsigned int arg1, unsigned int arg2, vret_t *ret)
 {
 	if(ret == NULL)
 		return;
@@ -62,9 +66,9 @@ static inline void arch_super_call(unsigned int code, unsigned int arg0, unsigne
 	register uint32_t r1 asm("r1") = arg0;
 	register uint32_t r2 asm("r2") = arg1;
 	register uint32_t r3 asm("r3") = arg2;
-	asm volatile("svc"
+	asm volatile("svc 0"
 				:"+r" (r0), "+r" (r1), "+r"(r2)
-				:"r" (r0), "r" (r1), "r" (r2), "r" (r3)
+				:"r" (r0), "r" (r0), "r" (r1), "r" (r2), "r" (r3)
 				:"memory");
 
 	ret->p = r0;
@@ -78,7 +82,7 @@ static inline void arch_super_call(unsigned int code, unsigned int arg0, unsigne
  */
 static inline void arch_ei()
 {
-	asm volatile("cpsie iaf");
+	asm volatile("cpsie if");
 }
 
 /**
@@ -86,7 +90,7 @@ static inline void arch_ei()
  */
 static inline void arch_di()
 {
-	asm volatile("cpsid iaf");
+	asm volatile("cpsid if");
 }
 
 static inline void arch_nop()
