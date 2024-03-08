@@ -9,7 +9,6 @@
 #
 
 COMPILER	:= gcc
-TC_VER		:= 5.4.0
 FAMILY		:= mega_avr
 PLATFORM	:= atmega328p
 HEAP_SIZE 	:= 500

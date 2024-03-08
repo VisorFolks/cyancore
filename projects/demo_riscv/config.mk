@@ -9,7 +9,6 @@
 #
 
 COMPILER	:= gcc
-TC_VER		:= 10.2.0
 FAMILY		:= sifive
 PLATFORM	:= fe310g002
 STDLOG_MEMBUF	:= 0

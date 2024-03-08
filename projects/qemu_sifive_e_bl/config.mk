@@ -9,7 +9,6 @@
 #
 
 COMPILER	:= gcc
-TC_VER		:= 10.2.0
 FAMILY		:= sifive
 PLATFORM	:= qemu-sifive-e-bl
 USE_FLOAT	:= 0

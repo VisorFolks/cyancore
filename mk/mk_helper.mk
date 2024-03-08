@@ -33,3 +33,7 @@ ifeq ($($(1)),1)
 include $(2)
 endif
 endef
+
+define get_tc_version
+	TC_VER	:= $(firstword $(strip $(shell $(1)-gcc --version | grep -m 1 -Po '\s(\d{1,}\.\d{1,}\.\d{1,})')))
+endef
