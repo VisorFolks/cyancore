@@ -44,7 +44,7 @@ context_frame_t *get_context_frame()
 void arch_register_interrupt_handler(unsigned int id, void (*handler)(void))
 {
 	unsigned int cpuid = arch_core_index();
-	assert(id < N_EXCEP);
+	id--;
 	exhandler[cpuid][id] = handler;
 	arch_dsb();
 }
@@ -52,7 +52,7 @@ void arch_register_interrupt_handler(unsigned int id, void (*handler)(void))
 void local_register_interrupt_handler(unsigned int id, void (*handler)(void))
 {
 	unsigned int cpuid = arch_core_index();
-	assert(id < N_IRQ);
+	id--;
 	irqhandler[cpuid][id] = handler;
 	arch_dsb();
 }
@@ -62,9 +62,7 @@ void exception_handler(uint32_t id, context_frame_t *frame)
 	unsigned int cpuid = arch_core_index();
 
 	set_context_frame(frame);
-
-	if(id != 10 && id != 1)
-		frame->lr -= 4;		// point to previous instruction
+	id--;
 
 	if(id >= N_EXCEP)
 		irqhandler[cpuid][id - N_EXCEP]();

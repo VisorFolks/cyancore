@@ -1,6 +1,6 @@
 #
 # CYANCORE LICENSE
-# Copyrights (C) 2023, Cyancore Team
+# Copyrights (C) 2024, Cyancore Team
 #
 # File Name		: build.mk
 # Description		: Build script for this directory.

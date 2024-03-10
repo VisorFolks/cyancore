@@ -21,6 +21,12 @@
 #include <rand.h>
 #include <lock/lock.h>
 
+/**
+ * arch_vcall_handler
+ *
+ * @brief This function handles svc calls. In Cyancore all exception calls
+ * will be called as visor-calls.
+ */
 static void arch_vcall_handler()
 {
 	context_frame_t *frame = get_context_frame();
@@ -32,6 +38,7 @@ static void arch_vcall_handler()
 	return;
 }
 
+/* This the key for boot lock */
 static lock_t boot_key = LOCK_INITAL_VALUE;
 void arch_early_signal_boot_start()
 {
@@ -70,7 +77,7 @@ void arch_early_setup()
  */
 void arch_setup()
 {
-	link_interrupt(int_arch, 10,&arch_vcall_handler);
+	link_interrupt(int_arch, 10 ,&arch_vcall_handler);
 	return;
 }
 
@@ -99,10 +106,10 @@ void _NORETURN arch_panic_handler_callback()
 	if(!frame)
 		goto panic;
 	syslog_stdout_enable();
-	sysdbg("r0=%p\tr1=%p\tr2=%p\tr3=%p\tr4=%p\tr5=%p\n",
-		frame->r0, frame->r1, frame->r2, frame->r3, frame->r4, frame->r5);
-	sysdbg("r6=%p\tr7=%p\tPSR=%p\tLR=%p\n",
-		frame->r6, frame->r7, frame->psr, frame->lr);
+	sysdbg("r0=%p\tr1=%p\tr2=%p\tr3=%p\n",
+		frame->r0, frame->r1, frame->r2, frame->r3);
+	sysdbg("r12=%p\tLR=%p\tPSR=%p\tReturns To=%p\n",
+		frame->r12, frame->lr, frame->psr, frame->ret_addr);
 #if DEBUG==0
 	syslog(info, "PSR=%p\n", frame->psr);
 #endif

@@ -19,8 +19,8 @@
 
 typedef struct context_frame
 {
-	uint32_t psr, lr, r7, r6, r5,
-		 r4, r3, r2, r1, r0;
+	uint32_t elr, psr, ret_addr, lr,
+		 r12, r3, r2, r1, r0;
 } context_frame_t;
 
 typedef uint32_t call_arg_t;
