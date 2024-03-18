@@ -1,41 +1,42 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019, Cyancore Team
+ * Copyrights (C) 2024, Cyancore Team
  *
  * File Name		: platform.c
- * Description		: This file contains sources for platform apis
+ * Description		: This file contains sources for platform functions
  * Primary Author	: Akash Kollipara [akashkollipara@gmail.com]
  * Organisation		: Cyancore Core-Team
  */
 
-#include <status.h>
 #include <stdint.h>
+#include <status.h>
 #include <stdlib.h>
+#include <rand.h>
 #include <arch.h>
+#include <driver.h>
 #include <syslog.h>
+#include <driver/sysclk.h>
 #include <insignia.h>
+#include <terravisor/platform.h>
+#include <visor/workers.h>
 #include <platform.h>
-#include <syslog.h>
 
-uint32_t reset_syndrome;
 
 void platform_early_setup()
 {
 	status_t ret = success;
-
-	/* Setup platform memories*/
+#if USE_PRNG
+	unsigned int temp_randomnumber = rand();
+#endif
 	ret |= platform_copy_data();
 	ret |= platform_bss_clear();
 	ret |= platform_init_heap();
 	ret |= platform_resources_setup();
-
-	/* Setup memory syslogger*/
+#if USE_PRNG
+	srand(temp_randomnumber);
+#endif
+	syslog_stdout_disable();
 	driver_setup("mslog");
-
-	reset_syndrome = MMIO32(CHIP_RESET) & 0x01110100;
-	MMIO32(CHIP_RESET) = 0;
-
-	ret |= platform_clk_reset();
 
 	if(ret != success)
 		exit(EXIT_FAILURE);
@@ -46,67 +47,69 @@ void platform_early_setup()
 static void platform_memory_layout()
 {
 	extern uint32_t _text_start, _text_size, _text_end,
-	_data_vstart, _data_size, _data_end,
-	_stack_start, _stack_size, _stack_end,
+	_rodata_start, _rodata_size, _rodata_end,
+	_data_vstart, _data_size, _data_vend,
+	_stack_start, _stack_end, _stack_size,
 	_bss_start, _bss_size, _bss_end,
 	_heap_start, _heap_size, _heap_end,
+	_itim_vstart, _itim_size, _itim_vend,
 	_flash_size, _ram_size;
 
-	syslog(info, "Memory Info >\n");
-	syslog(info, "Flash Size : %u\n", &_flash_size);
-	syslog(info, "RAM Size    : %u\n", &_ram_size);
 	syslog(info, "\n");
 	syslog(info, "Program Memory Layout >\n");
-	syslog(info, "text Region\t: %06p - %06p : Size: %u\n",
+	syslog(info, "Flash Size\t: %u\n", &_flash_size);
+	syslog(info, "RAM Size\t: %u\n", &_ram_size);
+	syslog(info, "text Region\t: %010p - %010p : Size: %u\n",
 			&_text_start, &_text_end, &_text_size);
-	syslog(info, "bss Region\t: %06p - %06p : Size: %u\n",
+	syslog(info, "rodata Region\t: %010p - %010p : Size: %u\n",
+			&_rodata_start, &_rodata_end, &_rodata_size);
+	syslog(info, "ITIM Region\t: %010p - %010p : Size: %u\n",
+			&_itim_vstart, &_itim_vend, &_itim_size);
+	syslog(info, "bss Region\t: %010p - %010p : Size: %u\n",
 			&_bss_start, &_bss_end, &_bss_size);
-	syslog(info, "data Region\t: %06p - %06p : Size: %u\n",
+	syslog(info, "data Region\t: %010p - %010p : Size: %u\n",
 			&_data_vstart, &_data_vend, &_data_size);
-	syslog(info, "stack Region\t: %06p - %06p : Size: %u\n",
-			&_stack_start, &_stack_end, &_stack_size);
-	syslog(info, "heap Region\t: %06p - %06p : Size: %u\n",
+	syslog(info, "stack Region\t: %010p - %010p : Size: %u\n",
+			&_stack_end, &_stack_start, &_stack_size);
+	syslog(info, "heap Region\t: %010p - %010p : Size: %u\n",
 			&_heap_start, &_heap_end, &_heap_size);
 	syslog(info, "\n");
 }
 #endif
 
-/**
- * platform_setup - Executes functions to make platform read to init
- *
- * @brief This function performs calls to function which make the
- * framework ready to execute. This function should be made to run on boot core only.
- */
 void platform_setup()
 {
-	sysdbg3("In %s\n", __func__);
+/*
+	status_t ret = success;
+*/
+
+#if PRCI_CLK
+	status_t ret = success;
+	if(ret != success)
+		exit(EXIT_FAILURE);
+#endif
+
 	driver_setup("earlycon");
 	bootmsgs_enable();
+#ifdef BOOTLOADER
 	cyancore_insignia_lite();
+#else
+	cyancore_insignia();
+#endif
+
 #if PRINT_MEMORY_LAYOUT
 	platform_memory_layout();
 #endif
+/* Uncomment this and remove above check if more conditions
+ * are introduced.
+	if(ret != success)
+		exit(EXIT_FAILURE);
+*/
 	return;
 }
 
-/**
- * platform_cpu_setup - Perform platform setup calls on all cpus
- *
- * @brief This function performs calls to functions that should be executed
- * on all cores to make the cpu ready for the platform drivers.
- */
 void platform_cpu_setup()
 {
-	sysdbg3("In %s\n", __func__);
 	arch_ei();
 	return;
-}
-
-void _NAKED plat_panic_handler_callback()
-{
-	context_frame_t *frame;
-	sysdbg3("In %s\n", __func__);
-	frame = get_context_frame();
-	syslog(info, "SP=%p \tSREG = %P\n", frame, frame->sreg);
-	exit(EXIT_FAILURE);
 }

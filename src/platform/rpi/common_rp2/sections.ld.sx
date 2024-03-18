@@ -21,6 +21,7 @@ MEMORY
 	/* VM Addresses */
 	vma_imem (irx!aw)	: ORIGIN = V_IMEM_START, LENGTH = IMEM_LENGTH
 	vma_dmem (arw!xi)	: ORIGIN = V_DMEM_START, LENGTH = DMEM_LENGTH
+	vma_stak (rw!axi)	: ORIGIN = V_STAK_START, LENGTH = STACK_SIZE
 
 	/* LM Addresses */
 	lma_mem			: ORIGIN = L_MEM_START, LENGTH = L_MEM_LENGTH
@@ -32,7 +33,7 @@ SECTIONS
 {
 	.text : ALIGN(4)
 	{
-		KEEP(*(.text.entry))
+		KEEP(*(.text.arch))
 		*(.text)
 		*(.text.*)
 		. = ALIGN(8);
@@ -71,7 +72,7 @@ SECTIONS
 		*(.data.*)
 		KEEP(*(.data))
 		DRIVER_TABLE
-		ECALL_TABLE
+		VCALL_TABLE
 	} > vma_dmem AT > lma_mem
 
 	.heap : ALIGN(HEAP_ALIGN)
@@ -86,7 +87,7 @@ SECTIONS
 		*(.stack)
 		KEEP(*(.stack))
 		. = . + STACK_SIZE;
-	} > vma_dmem
+	} > vma_stak
 
 	PROVIDE(_text_start = ADDR(.text));
 	PROVIDE(_text_size = SIZEOF(.text));
@@ -113,7 +114,7 @@ SECTIONS
 	PROVIDE(_heap_size = SIZEOF(.heap));
 	PROVIDE(_heap_end = _heap_start + _heap_size - 1);
 
-	PROVIDE(_flash_size = _data_size + SIZEOF(.text) + _itim_size + SIZEOF(.rodata));
+	PROVIDE(_flash_size = _data_size + SIZEOF(.text) + SIZEOF(.rodata));
 	PROVIDE(_ram_size = _bss_size + _data_size + SIZEOF(.stack) + SIZEOF(.heap));
 
 	ASSERT((_flash_size < FLASH_SIZE), "< x > Flash size exceeded ...")

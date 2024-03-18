@@ -1,6 +1,6 @@
 /*
  * CYANCORE LICENSE
- * Copyrights (C) 2019-2022, Cyancore Team
+ * Copyrights (C) 2024, Cyancore Team
  *
  * File Name		: platform_resource.c
  * Description		: This file contains sources for platform

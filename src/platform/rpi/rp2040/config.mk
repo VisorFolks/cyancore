@@ -32,8 +32,8 @@ FLASH_SIZE	:= 0x1000000	# 16M
 RAM_START	:= 0x20000000
 RAM_SIZE	:= 0x42000	# 264K
 HEAP_SIZE	?= 16K
-STACK_SIZE	?= 16K
-STACK_SIZE_PCPU	?= 8K
+STACK_SIZE	?= 8K
+STACK_SIZE_PCPU	?= 4K
 
 $(eval $(call add_define,HEAP_SIZE))
 $(eval $(call add_define,STACK_SIZE))
@@ -48,8 +48,8 @@ $(eval $(call add_define,ICLK))
 N_EXCEP		:= 15
 $(eval $(call add_define,N_EXCEP))
 
-N_PLAT_IRQS	:= 32
-$(eval $(call add_define,N_PLAT_IRQS))
+N_IRQ		:= 26
+$(eval $(call add_define,N_IRQ))
 
 MAX_INTERRUPTS_PER_DEVICE	:= 1
 $(eval $(call add_define,MAX_INTERRUPTS_PER_DEVICE))
